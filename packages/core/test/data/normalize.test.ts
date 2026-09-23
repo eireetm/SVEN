@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { CardDataError, groupPrintings, normalizePrinting, type RawCardJson } from "../../src";
 import { parseCardType, parseTraits } from "../../src/data/normalize";
+import { englishText, japaneseKey, sameCardText, treatedAs } from "../../src/data/english-text";
+import { applyDataFixes } from "../../src/data/fixes";
 
 function raw(over: Partial<RawCardJson>): RawCardJson {
   return {
@@ -53,19 +55,55 @@ describe("normalizePrinting", () => {
   });
 
   it("CR 2.4 — takes traits from the Japanese data only", () => {
-    expect(normalizePrinting(raw({ traits: ["Pixie", "Beast"], traits_ja: "妖精・獣" })).def.traits).toEqual(["妖精", "獣"]);
-    expect(normalizePrinting(raw({ traits: ["Something else"] })).def.traits).toEqual(["兵士"]); // English is ignored
-    expect(normalizePrinting(raw({ traits_ja: "-" })).def.traits).toEqual([]);
+    expect(normalizePrinting(raw({ traits: ["Pixie", "Beast"], traits_ja: "妖精・獣" })).traits).toEqual(["妖精", "獣"]);
+    expect(normalizePrinting(raw({ traits: ["Something else"] })).traits).toEqual(["兵士"]); // English is ignored
+    expect(normalizePrinting(raw({ traits_ja: "-" })).traits).toEqual([]);
+    expect(normalizePrinting(raw({ traits_ja: null })).traits).toBeNull(); // taken from another printing
     // A "・" inside 〈〉 belongs to the trait name.
     expect(parseTraits("x", "プリコネ・〈ジオ・ゲヘナ〉")).toEqual(["プリコネ", "〈ジオ・ゲヘナ〉"]);
-    expect(() => parseTraits("x", null)).toThrow(/missing Japanese traits/);
     expect(() => parseTraits("x", "自然\u00b7指挥官")).toThrow(CardDataError); // Chinese data
     expect(() => parseTraits("x", "妖精・")).toThrow(CardDataError);
   });
+});
 
-  it("prefers the official English text", () => {
-    const p = normalizePrinting(raw({ effect_en: "fan text", effect_en_official: "official text" }));
-    expect(p.def.text.en).toBe("official text");
+describe("English text", () => {
+  const en = (over: Partial<RawCardJson>) => englishText(raw(over));
+
+  it("takes the English text from effect_en (CLAUDE.md), comparing the official text only for the report", () => {
+    const fan = "Ward.\nThis follower takes 1 less damage.";
+    expect(en({ effect_en: fan, effect_en_official: "Ward.\nReduce damage dealt to this follower by 1." }))
+      .toEqual({ text: fan, source: "effect_en", officialMismatch: false });
+  });
+
+  it("detects an official text that belongs to another card (matched by the wrong number)", () => {
+    // BP02-110 Archangel Reina: the official field holds another card's Strike ability.
+    const fan = "{[evolve]} {[cost01]}: Evolve this follower.\nWard.";
+    const official = "{[evolve]}{[cost01]}: Evolve this follower.\nStrike: Give your leader {[defense]}+2.";
+    expect(sameCardText(official, fan)).toBe(false);
+    expect(en({ effect_en: fan, effect_en_official: official })).toEqual({ text: fan, source: "effect_en", officialMismatch: true });
+    // PR official texts are known to be wrong and are not even compared.
+    expect(en({ set: "PR", effect_en: fan, effect_en_official: official }).officialMismatch).toBe(false);
+  });
+
+  it("treats Japanese in effect_en as no English text (Japan-only printings)", () => {
+    expect(en({ effect_en: "カードを1枚引く。", effect_en_official: "Ward." })).toEqual({ text: "", source: "none", officialMismatch: false });
+  });
+
+  it("CR 2.13 — an alternate-name printing joins the card it is treated as", () => {
+    expect(treatedAs("(This card is treated as Vania, Vampire Princess.)\n{[fanfare]} ...")).toBe("Vania, Vampire Princess");
+    const p = normalizePrinting(raw({ card_no: "XX01-002", name_en: "La+", effect_en: "(This card is treated as Test.)\nDraw a card." }));
+    expect([p.def.name, p.def.text.en, p.alternateName?.en]).toEqual(["Test", "Draw a card.", "La+"]);
+  });
+
+  it("compares Japanese texts without reminder text", () => {
+    const k = (effect_ja: string) => japaneseKey(raw({ effect_ja }));
+    expect(k("【守護】（説明）\n\nカードを1枚引く。")).toBe(k("【守護】カードを1枚引く。"));
+    expect(k("カードを1枚引く。\n―――\n『トークン』")).toBe(k("カードを1枚引く。"));
+  });
+
+  it("applies the documented data fixes", () => {
+    expect(applyDataFixes(raw({ card_no: "ETD02-007", name_en: "Undying Resentment" })).name_en).toBe("Soul Conversion");
+    expect(applyDataFixes(raw({ card_no: "XX01-001" })).name_en).toBe("Test");
   });
 });
 
@@ -79,25 +117,47 @@ describe("groupPrintings", () => {
     expect(cards[0]!.printings).toEqual(["XX01-001", "XX01-P01"]);
   });
 
+  it("attaches printings of other sets, and skips cards without a printing in a supported set", () => {
+    const a = normalizePrinting(raw({ card_no: "XX01-001" }));
+    const promo = normalizePrinting(raw({ card_no: "PR-001", set: "PR", traits_ja: null }));
+    const other = normalizePrinting(raw({ card_no: "YY01-001", set: "YY01", name_en: "Other" }));
+    const { cards, setOf } = groupPrintings([promo, other, a], ["XX01"]);
+    expect(cards.map((c) => [c.id, c.printings, c.traits])).toEqual([["XX01-001", ["XX01-001", "PR-001"], ["兵士"]]]);
+    expect(setOf).toEqual({ "XX01-001": "XX01" });
+  });
+
+  it("gives the earlier supported set the canonical printing, and prefers the card's own name to alternate names", () => {
+    const later = normalizePrinting(raw({ card_no: "XX02-001", set: "XX02" }));
+    const earlier = normalizePrinting(raw({ card_no: "XX01-050" }));
+    const alias = normalizePrinting(raw({ card_no: "XX01-001", name_en: "La+", effect_en: "(This card is treated as Test.)" }));
+    const [card] = groupPrintings([later, alias, earlier], ["XX01", "XX02"]).cards;
+    expect([card!.id, card!.printings, card!.alternateNames]).toEqual([
+      "XX01-050",
+      ["XX01-050", "XX01-001", "XX02-001"],
+      { "XX01-001": { en: "La+", cn: "测试", ja: "テスト" } },
+    ]);
+  });
+
   it("keeps a base card and its evolved card apart even though they share a name", () => {
     const base = normalizePrinting(raw({ card_no: "XX01-001" }));
     const evo = normalizePrinting(raw({ card_no: "XX01-002", name_en: "Test (Evolved)", card_type: ["Follower", "Evolved"], cost: null }));
     expect(groupPrintings([base, evo], ["XX01"]).cards).toHaveLength(2);
   });
 
-  it("refuses same-name printings with different game information", () => {
+  it("refuses same-name printings with different game information or traits, and cards without traits", () => {
     const a = normalizePrinting(raw({ card_no: "XX01-001" }));
-    const b = normalizePrinting(raw({ card_no: "XX01-P01", atk: 3 }));
-    expect(() => groupPrintings([a, b], ["XX01"])).toThrow(CardDataError);
+    expect(() => groupPrintings([a, normalizePrinting(raw({ card_no: "XX01-P01", atk: 3 }))], ["XX01"])).toThrow(CardDataError);
+    expect(() => groupPrintings([a, normalizePrinting(raw({ card_no: "XX01-P01", traits_ja: "妖精" }))], ["XX01"])).toThrow(/traits/);
+    expect(() => groupPrintings([normalizePrinting(raw({ traits_ja: null }))], ["XX01"])).toThrow(/no printing/);
   });
 
-  it("reports (but tolerates) wording differences between printings", () => {
-    const a = normalizePrinting(raw({ card_no: "XX01-001", effect_en_official: "Draw a card." }));
-    const b = normalizePrinting(raw({ card_no: "XX01-P01", effect_en_official: "Draw 1 card." }));
-    const { cards, textVariants } = groupPrintings([b, a], ["XX01"]);
+  it("reports (but tolerates) text differences between printings", () => {
+    const a = normalizePrinting(raw({ card_no: "XX01-001", effect_en: "Draw a card.", effect_ja: "1枚引く。" }));
+    const reworded = normalizePrinting(raw({ card_no: "XX01-P01", effect_en: "Draw a card. (Reminder text.)", effect_ja: "1枚引く。" }));
+    const other = normalizePrinting(raw({ card_no: "XX01-P02", effect_en: "Deal 3 damage to an enemy follower.", effect_ja: "3ダメージ。" }));
+    const { cards, textVariants, japaneseVariants } = groupPrintings([other, reworded, a], ["XX01"]);
     expect(cards[0]!.text.en).toBe("Draw a card.");
-    expect(textVariants).toEqual([
-      { canonical: "XX01-001", variant: "XX01-P01", canonicalText: "Draw a card.", variantText: "Draw 1 card." },
-    ]);
+    expect(textVariants.map((v) => v.variant)).toEqual(["XX01-P02"]);
+    expect(japaneseVariants).toEqual([{ canonical: "XX01-001", variant: "XX01-P02" }]);
   });
 });

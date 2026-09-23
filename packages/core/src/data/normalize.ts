@@ -1,12 +1,13 @@
-import { CARD_CLASSES, type CardClass, type CardDefinition, type CardType } from "../model/card";
+import { CARD_CLASSES, type CardClass, type CardDefinition, type CardType, type LocalizedText } from "../model/card";
+import { englishText, japaneseKey, treatedAs, withoutReminders, withoutTreatedAs, wordDice, type TextSource } from "./english-text";
 import type { RawCardJson } from "./raw";
 
 /**
  * Raw scraped JSON -> CardDefinition.
  *
  * Pure functions: no file system access (the build tool reads files and calls these).
- * Every data anomaly is either fixed by an explicit, documented table or reported as an
- * error — never silently guessed.
+ * Every data anomaly is either fixed by an explicit, documented table (`data/fixes.ts`) or
+ * reported as an error — never silently guessed.
  */
 
 export class CardDataError extends Error {
@@ -15,11 +16,25 @@ export class CardDataError extends Error {
 
 const EVOLVED_SUFFIX = " (Evolved)";
 
+export type { TextSource };
+
 /** One printing after normalization, before alternate-art grouping. */
 export interface NormalizedPrinting {
   printing: string;
   set: string;
-  def: Omit<CardDefinition, "id" | "printings">;
+  def: Omit<CardDefinition, "id" | "printings" | "traits">;
+  /**
+   * Japanese traits of this printing, or null when its data has none. Resolved per card from
+   * all its printings (see groupPrintings).
+   */
+  traits: string[] | null;
+  textSource: TextSource;
+  /** The printing's official English text describes another card (see english-text.ts; report only). */
+  officialMismatch: boolean;
+  /** CR 2.13 — the printed name, when it is an alternate name of the card (`def.name`). */
+  alternateName: LocalizedText | null;
+  /** Japanese text, normalized, to check that printings grouped together say the same thing. */
+  jaKey: string;
 }
 
 /** CR 2.3 — `card_type` array -> primary type + special types. */
@@ -78,9 +93,10 @@ function parseClass(cardNo: string, raw: string): CardClass {
  *
  * Several traits are joined with "・". A trait may itself contain "・" inside 〈〉 brackets
  * (e.g. "プリコネ・〈ジオ・ゲヘナ〉"), so separators inside brackets do not split.
+ * Returns null when the printing has no Japanese traits (another printing may have them).
  */
-export function parseTraits(cardNo: string, raw: string | null): string[] {
-  if (raw === null) throw new CardDataError(`${cardNo}: missing Japanese traits (traits_ja)`);
+export function parseTraits(cardNo: string, raw: string | null): string[] | null {
+  if (raw === null) return null;
   const text = raw.trim();
   if (text === "-" || text === "") return []; // "-" means "no trait" (e.g. leaders)
   // Japanese card data never uses U+00B7; it shows up when a source filled in Chinese traits.
@@ -131,53 +147,68 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   const { type, evolved, token } = parseCardType(cardNo, raw.card_type);
   checkStats(cardNo, type, evolved, raw.cost, raw.atk, raw.def);
 
-  let name = raw.name_en.trim();
-  if (evolved) {
-    if (!name.endsWith(EVOLVED_SUFFIX)) {
-      throw new CardDataError(`${cardNo}: evolved card name "${name}" lacks the "${EVOLVED_SUFFIX}" suffix`);
-    }
-    // CR 5.16.1.1.1: an evolved card corresponds to the card with the *same* name.
-    name = name.slice(0, -EVOLVED_SUFFIX.length);
-  }
+  const printedName = stripEvolvedSuffix(cardNo, raw.name_en.trim(), evolved);
+  const en = englishText(raw);
+  // CR 2.13: "(This card is treated as X.)" — X is the card name, the printed name an alternate name.
+  const alias = treatedAs(en.text);
+  const name = alias === null ? printedName : stripEvolvedSuffix(cardNo, alias, false);
   if (name === "") throw new CardDataError(`${cardNo}: empty English name`);
 
-  const textEn = raw.effect_en_official ?? raw.effect_en ?? "";
   return {
     printing: cardNo,
     set: raw.set,
     def: {
       name,
-      names: { en: name, cn: raw.name_cn, ja: raw.name_ja },
+      names: alias === null ? { en: name, cn: raw.name_cn, ja: raw.name_ja } : { en: name, cn: null, ja: null },
       class: parseClass(cardNo, raw.class),
       type,
       evolved,
       token,
-      traits: parseTraits(cardNo, raw.traits_ja),
       cost: raw.cost,
       attack: raw.atk,
       defense: raw.def,
       text: {
-        en: textEn.trim(),
+        en: withoutTreatedAs(en.text),
         cn: raw.effect_cn?.trim() ?? null,
         ja: (raw.effect_ja_sve ?? raw.effect_ja)?.trim() ?? null,
       },
     },
+    traits: parseTraits(cardNo, raw.traits_ja),
+    textSource: en.source,
+    officialMismatch: en.officialMismatch,
+    alternateName: alias === null ? null : { en: printedName, cn: raw.name_cn, ja: raw.name_ja },
+    jaKey: japaneseKey(raw),
   };
 }
 
-/** Identity key for alternate-art grouping (CR 2.1.1: card names are unique). */
-export function identityKey(d: NormalizedPrinting["def"]): string {
-  return `${d.type}|${d.evolved ? "evolved" : "base"}|${d.token ? "token" : "card"}|${d.name}`;
+/** CR 5.16.1.1.1: an evolved card has the *same* name as its base card; the data adds " (Evolved)". */
+function stripEvolvedSuffix(cardNo: string, name: string, evolved: boolean): string {
+  if (!evolved) return name;
+  if (!name.endsWith(EVOLVED_SUFFIX)) {
+    throw new CardDataError(`${cardNo}: evolved card name "${name}" lacks the "${EVOLVED_SUFFIX}" suffix`);
+  }
+  return name.slice(0, -EVOLVED_SUFFIX.length);
 }
 
 /**
- * Game-relevant fields that must agree exactly between printings of the same card.
- * Card text is deliberately excluded: reprints may carry wording updates (e.g. BP01-P16
- * says "Piercing Attack", the pre-rename wording of Assail, CR 12.11). Text differences are
- * reported as variants and the canonical printing's text is used.
+ * Identity key for alternate-art grouping (CR 2.1.1: card names are unique). Leaders also
+ * key on their class: two different leader cards share a name (CP04-PR02 / CP04-PR09,
+ * "Pecorine [Princess Form]", Forestcraft and Swordcraft).
+ */
+export function identityKey(d: NormalizedPrinting["def"]): string {
+  const base = `${d.type}|${d.evolved ? "evolved" : "base"}|${d.token ? "token" : "card"}|${d.name}`;
+  return d.type === "leader" ? `${base}|${d.class}` : base;
+}
+
+/**
+ * Game-relevant fields that must agree exactly between printings of the same card (traits
+ * are checked separately because some printings lack them). Card text is deliberately
+ * excluded: reprints may carry wording updates (e.g. "Piercing Attack", the pre-rename wording
+ * of Assail, CR 12.11). Substantial differences are reported and the canonical printing's text
+ * is used.
  */
 function functionalSignature(d: NormalizedPrinting["def"]): string {
-  return JSON.stringify([d.class, d.traits, d.cost, d.attack, d.defense]);
+  return JSON.stringify([d.class, d.cost, d.attack, d.defense]);
 }
 
 export interface TextVariant {
@@ -189,8 +220,16 @@ export interface TextVariant {
 
 export interface GroupResult {
   cards: CardDefinition[];
-  /** Printings whose English text differs from their canonical printing. */
+  /** Definition id -> the set of its canonical printing (the set whose data file holds it). */
+  setOf: Readonly<Record<string, string>>;
+  /** Printings whose English text says something substantially different from the canonical printing's. */
   textVariants: TextVariant[];
+  /** Definitions with Japanese text but no English text (Japan-only printings). */
+  noEnglishText: string[];
+  /** Definitions whose canonical printing has an official English text describing another card. */
+  officialMismatches: string[];
+  /** Printings grouped with a card whose Japanese text differs from the canonical printing's. */
+  japaneseVariants: { canonical: string; variant: string }[];
 }
 
 const PRINTING_KIND_ORDER: readonly RegExp[] = [
@@ -205,14 +244,16 @@ function printingRank(p: string): number {
 }
 
 /**
- * Merge printings that are the same card into definitions.
- * The canonical printing (definition id) is chosen by: earlier set in `setOrder`, then
- * regular > token > leader > promo/alt-art numbering, then lexical order.
+ * Merge printings that are the same card into definitions, across all sets.
+ *
+ * Only cards with a printing in one of the `supported` sets become definitions; printings of
+ * the same card in other sets (promos, reprints, alternate art, alternate names) are attached
+ * to them. The canonical printing (definition id) is chosen by: earlier set in `supported`
+ * (new sets are appended, so existing ids never change), then printings under the card's own
+ * name before alternate-name printings (CR 2.13), then regular > token > leader > other
+ * numbering, then lexical order.
  */
-export function groupPrintings(
-  printings: readonly NormalizedPrinting[],
-  setOrder: readonly string[],
-): GroupResult {
+export function groupPrintings(printings: readonly NormalizedPrinting[], supported: readonly string[]): GroupResult {
   const groups = new Map<string, NormalizedPrinting[]>();
   for (const p of printings) {
     const key = identityKey(p.def);
@@ -221,15 +262,21 @@ export function groupPrintings(
     else groups.set(key, [p]);
   }
   const setRank = (s: string) => {
-    const i = setOrder.indexOf(s);
-    return i === -1 ? setOrder.length : i;
+    const i = supported.indexOf(s);
+    return i === -1 ? supported.length : i;
   };
   const defs: CardDefinition[] = [];
+  const setOf: Record<string, string> = {};
   const textVariants: TextVariant[] = [];
+  const noEnglishText: string[] = [];
+  const officialMismatches: string[] = [];
+  const japaneseVariants: GroupResult["japaneseVariants"] = [];
   for (const list of groups.values()) {
+    if (!list.some((p) => supported.includes(p.set))) continue;
     list.sort(
       (a, b) =>
         setRank(a.set) - setRank(b.set) ||
+        Number(a.alternateName !== null) - Number(b.alternateName !== null) ||
         printingRank(a.printing) - printingRank(b.printing) ||
         (a.printing < b.printing ? -1 : a.printing > b.printing ? 1 : 0),
     );
@@ -241,7 +288,8 @@ export function groupPrintings(
           `${other.printing} has the same name as ${canonical.printing} ("${canonical.def.name}") but different game information`,
         );
       }
-      if (other.def.text.en !== canonical.def.text.en) {
+      const differs = wordDice(withoutReminders(other.def.text.en), withoutReminders(canonical.def.text.en)) < 0.6;
+      if (other.textSource !== "none" && canonical.textSource !== "none" && differs) {
         textVariants.push({
           canonical: canonical.printing,
           variant: other.printing,
@@ -249,9 +297,27 @@ export function groupPrintings(
           variantText: other.def.text.en,
         });
       }
+      if (other.jaKey !== "" && canonical.jaKey !== "" && other.jaKey !== canonical.jaKey) {
+        japaneseVariants.push({ canonical: canonical.printing, variant: other.printing });
+      }
     }
-    defs.push({ id: canonical.printing, printings: list.map((p) => p.printing), ...canonical.def });
+    const withTraits = list.filter((p) => p.traits !== null);
+    const traits = withTraits[0]?.traits;
+    if (!traits) throw new CardDataError(`${canonical.printing}: no printing of "${canonical.def.name}" has Japanese traits`);
+    const conflict = withTraits.find((p) => JSON.stringify(p.traits) !== JSON.stringify(traits));
+    if (conflict) {
+      throw new CardDataError(
+        `${conflict.printing}: traits ${JSON.stringify(conflict.traits)} differ from ${withTraits[0]!.printing} ${JSON.stringify(traits)}`,
+      );
+    }
+    if (canonical.textSource === "none" && canonical.jaKey !== "") noEnglishText.push(canonical.printing);
+    if (canonical.officialMismatch) officialMismatches.push(canonical.printing);
+    const def: CardDefinition = { id: canonical.printing, printings: list.map((p) => p.printing), ...canonical.def, traits: [...traits] };
+    const alternates = list.filter((p) => p.alternateName !== null);
+    if (alternates.length > 0) def.alternateNames = Object.fromEntries(alternates.map((p) => [p.printing, p.alternateName!]));
+    defs.push(def);
+    setOf[canonical.printing] = canonical.set;
   }
   defs.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-  return { cards: defs, textVariants };
+  return { cards: defs, setOf, textVariants, noEnglishText, officialMismatches, japaneseVariants };
 }

@@ -64,4 +64,10 @@ export interface CardDefinition {
   /** CR 2.8. null when the card has no defense value. */
   defense: number | null;
   text: LocalizedText;
+  /**
+   * CR 2.13 — printings that show another name (an alternate name), e.g. BP02-070 "La+ Darkness,
+   * Laplace's Demon" is a printing of Vania, Vampire Princess. Display only: rules and effects
+   * use the card name (2.13.2), and alternate names cannot be declared (5.33.1.1).
+   */
+  alternateNames?: Readonly<Record<PrintingId, LocalizedText>>;
 }

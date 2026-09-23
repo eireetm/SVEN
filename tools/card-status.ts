@@ -1,16 +1,17 @@
 /**
- * Generate docs/card-status.md: implementation and test status of every BP01 card.
+ * Generate the implementation and test status of every supported set:
+ * docs/card-status.md (summary) and docs/card-status/<SET>.md (one row per card definition).
  *
  *   npm run cards:status
  */
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createEngine } from "../packages/core/src";
-import { BP01_CARDS, BP01_SCRIPTS } from "../packages/core/src/sets/bp01";
+import { ALL_CARDS, ALL_SCRIPTS, SETS, SUPPORTED_SETS } from "../packages/core/src/sets";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const engine = createEngine({ cards: BP01_CARDS, scripts: BP01_SCRIPTS });
+const engine = createEngine({ cards: ALL_CARDS, scripts: ALL_SCRIPTS });
 
 /**
  * Cards with a dedicated card test: a file named after the card, or a test title that starts
@@ -19,6 +20,7 @@ const engine = createEngine({ cards: BP01_CARDS, scripts: BP01_SCRIPTS });
 function testedCards(set: string): Set<string> {
   const dir = join(repoRoot, "packages", "core", "test", "cards", set);
   const ids = new Set<string>();
+  if (!existsSync(dir)) return ids;
   for (const file of readdirSync(dir)) {
     if (file.startsWith(`${set}-`)) ids.add(file.replace(/\.test\.ts$/, ""));
     for (const [, title] of readFileSync(join(dir, file), "utf8").matchAll(/\bit\("([^"]*)"/g)) {
@@ -29,32 +31,43 @@ function testedCards(set: string): Set<string> {
   return ids;
 }
 
-const tested = testedCards("BP01");
-const rows = BP01_CARDS.map((c) => {
-  const status = engine.implementationStatus(c.id);
-  const hasTest = tested.has(c.id);
-  const kind = [c.type, c.evolved ? "evolved" : "", c.token ? "token" : ""].filter(Boolean).join(" ");
-  return { c, status, tested: hasTest, kind };
-});
-
-const count = (s: string) => rows.filter((r) => r.status === s).length;
 const label: Record<string, string> = { vanilla: "无需脚本", scripted: "已实现", missing: "未实现" };
-const lines = [
-  "# BP01 卡牌实现状态",
-  "",
-  "由 `npm run cards:status` 生成，勿手改。",
-  "",
-  `- 定义总数：${rows.length}（${BP01_CARDS.reduce((n, c) => n + c.printings.length, 0)} 个印刷版本）`,
-  `- 无需脚本（无卡面文本）：${count("vanilla")}`,
-  `- 已实现：${count("scripted")}（其中有专门的卡牌用例：${rows.filter((r) => r.status === "scripted" && r.tested).length}；其余由同组用例和整弹冒烟测试覆盖）`,
-  `- 未实现：${count("missing")}`,
-  "",
-  "| 卡号 | 名称 | 中文名 | 类型 | 职业 | 状态 | 测试 | 其他印刷 |",
-  "|---|---|---|---|---|---|---|---|",
-  ...rows.map(
-    ({ c, status, tested, kind }) =>
-      `| ${c.id} | ${c.name} | ${c.names.cn ?? ""} | ${kind} | ${c.class} | ${label[status]} | ${tested ? "✓" : ""} | ${c.printings.slice(1).join(" ")} |`,
-  ),
-];
-writeFileSync(join(repoRoot, "docs", "card-status.md"), lines.join("\n") + "\n", "utf8");
-console.log(`BP01: ${count("scripted")} scripted, ${count("vanilla")} vanilla, ${count("missing")} missing -> docs/card-status.md`);
+const summary: string[] = [];
+mkdirSync(join(repoRoot, "docs", "card-status"), { recursive: true });
+for (const set of SUPPORTED_SETS) {
+  const cards = SETS[set].cards;
+  const tested = testedCards(set);
+  const rows = cards.map((c) => {
+    const status = engine.implementationStatus(c.id);
+    const kind = [c.type, c.evolved ? "evolved" : "", c.token ? "token" : ""].filter(Boolean).join(" ");
+    return { c, status, tested: tested.has(c.id), kind };
+  });
+  const count = (s: string) => rows.filter((r) => r.status === s).length;
+  const printings = cards.reduce((n, c) => n + c.printings.length, 0);
+  const scriptedTested = rows.filter((r) => r.status === "scripted" && r.tested).length;
+  const lines = [
+    `# ${set} 卡牌实现状态`,
+    "",
+    "由 `npm run cards:status` 生成，勿手改。",
+    "",
+    `- 定义总数：${rows.length}（${printings} 个印刷版本，含其他卡包里的异画、再录）`,
+    `- 无需脚本（无卡面文本）：${count("vanilla")}`,
+    `- 已实现：${count("scripted")}（其中有专门的卡牌用例：${scriptedTested}；其余由同组用例和整弹冒烟测试覆盖）`,
+    `- 未实现：${count("missing")}`,
+    "",
+    "| 卡号 | 名称 | 中文名 | 类型 | 职业 | 状态 | 测试 | 其他印刷 |",
+    "|---|---|---|---|---|---|---|---|",
+    ...rows.map(
+      ({ c, status, tested: t, kind }) =>
+        `| ${c.id} | ${c.name} | ${c.names.cn ?? ""} | ${kind} | ${c.class} | ${label[status]} | ${t ? "✓" : ""} | ${c.printings.slice(1).join(" ")} |`,
+    ),
+  ];
+  writeFileSync(join(repoRoot, "docs", "card-status", `${set}.md`), lines.join("\n") + "\n", "utf8");
+  summary.push(`| [${set}](card-status/${set}.md) | ${rows.length} | ${count("vanilla")} | ${count("scripted")} | ${count("missing")} |`);
+  console.log(`${set}: ${count("scripted")} scripted, ${count("vanilla")} vanilla, ${count("missing")} missing -> docs/card-status/${set}.md`);
+}
+writeFileSync(
+  join(repoRoot, "docs", "card-status.md"),
+  ["# 卡牌实现状态", "", "由 `npm run cards:status` 生成，勿手改。", "", "| 卡包 | 定义 | 无需脚本 | 已实现 | 未实现 |", "|---|---|---|---|---|", ...summary, ""].join("\n"),
+  "utf8",
+);

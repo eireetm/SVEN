@@ -41,11 +41,11 @@ describe("BP01-171 Goblin", () => {
     expect(g.state.players[0]).toMatchObject({ playPoints: 0, evolutionPoints: 0 });
   });
 
-  it("an alternate-art evolved printing works the same (definitions are shared)", () => {
+  it("another printing of the evolved card works the same (definitions are shared)", () => {
     const g = scenario(engine, {
-      players: [{ field: ["BP01-171"], evolveDeck: ["BP01-172"], playPoints: 4 }, {}],
+      players: [{ field: ["BP01-171"], evolveDeck: ["SD01-018"], playPoints: 4 }, {}],
     });
-    expect(engine.db.ofPrinting("BP01-172").printings).toEqual(["BP01-172"]);
+    expect(engine.db.ofPrinting("SD01-018").id).toBe("BP01-172"); // starter-deck reprint
     expect(evolves(g)).toHaveLength(1);
   });
 });

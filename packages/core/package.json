@@ -6,7 +6,9 @@
   "description": "Headless, deterministic Shadowverse: Evolve rules engine.",
   "exports": {
     ".": "./src/index.ts",
+    "./sets": "./src/sets/index.ts",
     "./sets/bp01": "./src/sets/bp01.ts",
+    "./sets/bp02": "./src/sets/bp02.ts",
     "./testing": "./src/testing/index.ts"
   }
 }

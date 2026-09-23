@@ -4,15 +4,17 @@
  *
  *   npm run scripts:index
  */
-import { readdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { SUPPORTED_SETS } from "../packages/core/src/sets/supported";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const scriptRoot = join(repoRoot, "packages", "core", "src", "script");
 
-for (const set of ["BP01"]) {
+for (const set of SUPPORTED_SETS) {
   const dir = join(scriptRoot, set);
+  mkdirSync(dir, { recursive: true });
   const ids = readdirSync(dir)
     .filter((f) => /^[A-Za-z0-9]+-[A-Za-z0-9]+\.ts$/.test(f))
     .map((f) => f.slice(0, -3))

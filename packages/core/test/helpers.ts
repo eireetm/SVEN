@@ -13,6 +13,7 @@ import {
   type ScriptRegistry,
 } from "../src";
 import { BP01_CARDS, BP01_SCRIPTS } from "../src/sets/bp01";
+import { ALL_CARDS, ALL_SCRIPTS } from "../src/sets";
 import {
   checkInvariants,
   testAmulet,
@@ -197,9 +198,14 @@ export function testEngine(): Engine {
   return createEngine({ cards: TEST_CARDS, scripts: TEST_SCRIPTS });
 }
 
-/** BP01 cards plus the synthetic test cards (for card tests that need simple helpers). */
+/** The whole card pool (all supported sets). */
+export function poolEngine(): Engine {
+  return createEngine({ cards: ALL_CARDS, scripts: ALL_SCRIPTS });
+}
+
+/** All supported sets plus the synthetic test cards (for card tests that need simple helpers). */
 export function cardEngine(): Engine {
-  return createEngine({ cards: [...BP01_CARDS, ...TEST_CARDS], scripts: { ...BP01_SCRIPTS, ...TEST_SCRIPTS } });
+  return createEngine({ cards: [...ALL_CARDS, ...TEST_CARDS], scripts: { ...ALL_SCRIPTS, ...TEST_SCRIPTS } });
 }
 
 /** Apply an answer and assert the game invariants afterwards. */

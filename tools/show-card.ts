@@ -12,7 +12,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createEngine, type CardDefinition } from "../packages/core/src";
 import type { RawCardJson } from "../packages/core/src/data/raw";
-import { BP01_CARDS, BP01_SCRIPTS } from "../packages/core/src/sets/bp01";
+import { ALL_CARDS, ALL_SCRIPTS } from "../packages/core/src/sets";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2);
@@ -25,7 +25,7 @@ if (args.length === 0) {
   process.exit(1);
 }
 
-const engine = createEngine({ cards: BP01_CARDS, scripts: BP01_SCRIPTS });
+const engine = createEngine({ cards: ALL_CARDS, scripts: ALL_SCRIPTS });
 const db = engine.db;
 
 function raw(printing: string): RawCardJson | null {
@@ -49,6 +49,7 @@ for (const ref of args) {
   const setDir = def.id.split("-")[0]!;
   console.log(`\n### ${def.id} ${def.name} / ${def.names.ja ?? ""} / ${def.names.cn ?? ""}`);
   console.log(`printings: ${def.printings.join(" ")}`);
+  for (const [p, n] of Object.entries(def.alternateNames ?? {})) console.log(`alternate name (CR 2.13) on ${p}: ${n.en} / ${n.ja ?? ""}`);
   console.log(stats(def));
   console.log(`script: ${status}${status === "vanilla" ? "" : ` — packages/core/src/script/${setDir}/${def.id}.ts`}`);
   console.log(`\n[EN]\n${def.text.en || "(no text)"}\n\n[JA]\n${def.text.ja ?? ""}\n\n[CN]\n${def.text.cn ?? ""}`);

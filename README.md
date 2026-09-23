@@ -4,7 +4,7 @@
 
 当前阶段只有 Core：纯逻辑、确定性、可 headless 运行，不依赖任何 GUI / IO。
 
-进度：BP01 全部卡牌已实现（209 个卡牌定义：187 个有脚本，22 个没有卡面文本无需脚本；异画共用脚本），见 [docs/card-status.md](docs/card-status.md)。
+进度：BP01 全部卡牌已实现，BP02 进行中，见 [docs/card-status.md](docs/card-status.md)。异画和其他卡包里的再录共用同一个卡牌定义和脚本。
 
 ## 快速开始
 
@@ -18,9 +18,9 @@ npm run typecheck    # 类型检查（源码 / 测试 / 工具）
 
 ```ts
 import { createEngine } from "@sve/core";
-import { BP01_CARDS, BP01_SCRIPTS } from "@sve/core/sets/bp01";
+import { ALL_CARDS, ALL_SCRIPTS } from "@sve/core/sets";
 
-const engine = createEngine({ cards: BP01_CARDS, scripts: BP01_SCRIPTS });
+const engine = createEngine({ cards: ALL_CARDS, scripts: ALL_SCRIPTS });
 const game = engine.newGame({
   seed: 42,
   players: [deckA, deckB], // { leader?, main: 卡号[], evolve: 卡号[] }
@@ -33,9 +33,9 @@ while (game.decision) game.act(chooseAnswer(game.decision));
 
 | 命令 | 作用 |
 |---|---|
-| `npm run build:cards` | 从 `../assets` 重新生成 `packages/core/data/BP01.json` |
-| `npm run cards:status` | 生成 `docs/card-status.md`（每张卡的实现 / 测试状态） |
-| `npm run scripts:index` | 重新生成 `src/script/BP01/index.ts`（卡牌脚本注册表） |
+| `npm run build:cards` | 从 `../assets` 重新生成 `packages/core/data/<卡包>.json` 和 `docs/card-data-report.md` |
+| `npm run cards:status` | 生成 `docs/card-status.md` 和 `docs/card-status/<卡包>.md`（每张卡的实现 / 测试状态） |
+| `npm run scripts:index` | 重新生成 `src/script/<卡包>/index.ts`（卡牌脚本注册表） |
 | `npm run card -- <卡号>` | 打印一张卡的全部信息：各语言文本、日文种族、相关卡、官方 QA、脚本状态 |
 | `npm run rules:clauses` | 从 `../rules/*.pdf` 提取条款编号表 `docs/cr-clauses.json` |
 | `npm run rules:index` | 生成「条款 → 代码 / 测试」对照表 `docs/rules-index.md` |
