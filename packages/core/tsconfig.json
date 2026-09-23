@@ -1,0 +1,9 @@
+{
+  // Core source: ES built-ins only. No DOM, no Node types, so the engine cannot
+  // accidentally depend on rendering, IO or host APIs (architecture constraint).
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": []
+  },
+  "include": ["src/**/*.ts", "data/**/*.json"]
+}

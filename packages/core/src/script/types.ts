@@ -1,0 +1,205 @@
+import type { DefId } from "../model/card";
+import type { CardId, PlayerId } from "../model/ids";
+import type { Keyword } from "../model/keyword";
+import type { TriggerData, ZoneName } from "../model/state";
+import type { GameEvent } from "../events/types";
+import type { Proc } from "../engine/runtime/proc";
+import type { GameReader } from "../engine/query";
+import type { EffectContext } from "../engine/effects/context";
+
+/**
+ * Card behaviour. One script per card definition (alternate printings share it), in
+ * `script/<SET>/<CARD-NO>.ts`. Scripts are static code; everything they know about a game
+ * comes from the GameReader / EffectContext they are handed, and they must be deterministic.
+ *
+ * The ability model follows CR 10.1 (activated / automatic / passive / spell abilities) and
+ * the play procedure CR 10.6.2 (choices -> targets -> costs -> resolve).
+ */
+export interface CardScript {
+  /** Keyword abilities printed on the card (CR 12, 13). */
+  keywords?: readonly Keyword[];
+  abilities?: readonly AbilityDef[];
+  /**
+   * Passive change of this card's own play cost (e.g. "Spellchain (5): This card costs 3 less
+   * to play"). Valid in the zone it is played from (CR 10.3.4). Negative = cheaper.
+   */
+  playCost?(game: GameReader, self: CardId, controller: PlayerId): number;
+  /** CR 10.4.7.3 "When playing this card, [process]: [effect]" — optional ways to play it. */
+  playOptions?: readonly PlayOption[];
+  /** Passive abilities that work while this card is on the field (CR 10.1.1.3, 10.3.5). */
+  field?: FieldPassives;
+  /** CR 8.4.3.2.1 "This follower can't attack enemies." */
+  cannotAttack?: boolean;
+  /** "This card is put onto the field engaged." */
+  entersEngaged?: boolean;
+}
+
+export type ScriptRegistry = Readonly<Record<DefId, CardScript>>;
+
+/** Information about one instance of damage, for damage-changing passives (CR 5.14.2). */
+export interface DamageInfo {
+  source: CardId | null;
+  target: CardId;
+  amount: number;
+  kind: "attack" | "combat" | "ability";
+}
+
+/** Passive abilities of a card on the field. */
+export interface FieldPassives {
+  /** Change to the play cost of `card` played by `player`, e.g. "your Golem followers cost 1 less". */
+  playCostOf?(game: GameReader, self: CardId, card: CardId, player: PlayerId): number;
+  /**
+   * Keywords this card gives to `card`, e.g. "your Dragon tokens have Rush". Must only use
+   * `game.card()` / `game.db` (not `game.info()`), because it is part of computing info.
+   */
+  keywordsFor?(game: GameReader, self: CardId, card: CardId): readonly Keyword[];
+  /** "Your followers deal damage equal to their defense" — attack damage only (BP01-129 ruling). */
+  combatDamageFromDefense?: boolean;
+  /** Replacement effect on damage this card deals; returns the change (CR 5.14.2, 10.2.1.3.2). */
+  damageDealt?(game: GameReader, self: CardId, damage: DamageInfo): number;
+  /** Replacement effect on damage this card takes; returns the change. */
+  damageTaken?(game: GameReader, self: CardId, damage: DamageInfo): number;
+}
+
+/** A cost the engine cannot express with the standard parts (select and move cards, counters...). */
+export interface CustomCost {
+  canPay(game: GameReader, controller: PlayerId, self: CardId): boolean;
+  pay(fx: EffectContext): Proc<void>;
+}
+
+/** CR 10.4 — the cost of an activated ability, paid in this order (10.4.2.1). */
+export interface CostSpec {
+  /** CR 10.4.4 play-point icon. */
+  playPoints?: number;
+  /** CR 10.4.6 engage icon without a specified card: engage this reserved card. */
+  engageSelf?: boolean;
+  custom?: CustomCost;
+  /** "Give your leader -X defense" — CR 10.4.5: the leader needs at least X defense. */
+  leaderDefense?: number;
+  /** "put this card into its owner's cemetery" */
+  burySelf?: boolean;
+}
+
+/**
+ * CR 13.3.3 Earth Rite: remove a Stack counter as an additional cost.
+ *  - "optional": the player may pay while playing; `fx.earthRitePaid` tells the effect.
+ *  - "required": the whole effect depends on it. Activated abilities / modes with it are only
+ *    offered when it can be paid (and then it is paid); an automatic ability with it asks
+ *    whether to pay, and does nothing if not.
+ */
+export interface EarthRiteSpec {
+  mode: "optional" | "required";
+  count?: number;
+}
+
+/**
+ * CR 10.6.2.3 — a target selection made while playing the card or ability.
+ * "Select N": exactly N, and the card / ability cannot be played with fewer than N legal
+ * targets. "Select up to N": 0..N. (Confirmed interpretation, docs/open-questions.md.)
+ * Opponent's cards with Aura on the field are removed from the candidates (CR 12.15).
+ */
+export interface TargetSpec {
+  /**
+   * Legal targets for the given controller. `self` is the card with the ability.
+   * Must return the candidates as they will be when the selection is made (e.g. a spell is
+   * already in the resolution zone then), because playability is decided from it.
+   */
+  candidates(game: GameReader, controller: PlayerId, self: CardId): CardId[];
+  /** Number of targets. */
+  count: number;
+  /** "up to [count]" (CR 10.6.2.3.2) — zero is allowed. */
+  upTo?: boolean;
+  /** The selection is only part of the effect when this holds (e.g. "Combo (3): Select ..."). */
+  when?(game: GameReader, controller: PlayerId, self: CardId): boolean;
+}
+
+/** CR 5.18 — one option of a "choose" ability. */
+export interface Mode {
+  id: string;
+  label: string;
+  targets?: readonly TargetSpec[];
+  /** Choosing this option pays Earth Rite (the option cannot be performed without it). */
+  earthRite?: boolean;
+  /** Extra condition for the option to be performable (CR 5.18.3.1.2). */
+  available?(game: GameReader, controller: PlayerId, self: CardId): boolean;
+  resolve(fx: EffectContext): Proc<void>;
+}
+
+/** CR 10.4.7.3 — "When playing this card, [process]: [effect]". */
+export interface PlayOption {
+  id: string;
+  label: string;
+  canPay(game: GameReader, controller: PlayerId, self: CardId): boolean;
+  pay(fx: EffectContext): Proc<void>;
+  /** Cards paying moves off the controller's field (for the field-limit check, CR 10.6.2.6). */
+  freesFieldSlots?: number;
+  /** "This card costs N to play" — applied before other cost changes (CR 10.10.2.4). */
+  setCost?: number;
+  /** "This card costs N less to play" (negative). */
+  costDelta?: number;
+}
+
+/** CR 10.1.1.1 */
+export interface ActivatedAbility {
+  kind: "activated";
+  /** CR 12.2 — an evolve ability ("Evolve [cost]: Evolve this follower"). */
+  evolve?: boolean;
+  /** CR 12.3.3 — Quick activated ability. */
+  quick?: boolean;
+  cost: CostSpec;
+  /** "This ability can be activated once per turn." */
+  oncePerTurn?: boolean;
+  earthRite?: EarthRiteSpec;
+  targets?: readonly TargetSpec[];
+  /** Not used for evolve abilities (the engine performs CR 5.16). */
+  resolve?(fx: EffectContext): Proc<void>;
+}
+
+/**
+ * Who / what an automatic ability belongs to when a trigger is checked.
+ * `card` is the object's current id; for look-back checks (CR 10.7.4.1, e.g. Last Words
+ * after the card left the field) it is the id the card had in the zone it left.
+ */
+export interface TriggerSubject {
+  card: CardId;
+  controller: PlayerId;
+  zone: ZoneName;
+  lookBack: boolean;
+}
+
+/** CR 10.1.1.2 */
+export interface AutomaticAbility {
+  kind: "automatic";
+  /** The keyword this ability is written with, for UI / docs (CR 12.4–12.7, 12.17). */
+  timing: "fanfare" | "lastWords" | "onEvolve" | "onSuperEvolve" | "strike" | "other";
+  /** Zones where the ability is valid (CR 10.3.5 default: field). */
+  validIn?: readonly ZoneName[];
+  /**
+   * Trigger condition (CR 10.1.1.2.1.1). `true` = triggers once; an array = triggers once per
+   * element, each pending instance getting that data (CR 10.7.2.1).
+   */
+  trigger(event: GameEvent, me: TriggerSubject, game: GameReader): boolean | readonly TriggerData[];
+  /** "if ..." condition checked when it triggers and again when it is played. */
+  condition?(game: GameReader, controller: PlayerId, self: CardId): boolean;
+  /** CR 10.7.2.2 — becomes pending at most once per turn. */
+  oncePerTurn?: boolean;
+  /** Only used through delayed triggers created by effects (CR 10.7.5). */
+  delayed?: boolean;
+  /** CR 10.4.7.4 "when [event], [cost]: [effect]" — the controller may pay to play it. */
+  cost?: CustomCost;
+  earthRite?: EarthRiteSpec;
+  modes?: readonly Mode[];
+  targets?: readonly TargetSpec[];
+  resolve?(fx: EffectContext): Proc<void>;
+}
+
+/** CR 10.1.1.4 — the text of a spell card. */
+export interface SpellAbility {
+  kind: "spell";
+  earthRite?: EarthRiteSpec;
+  modes?: readonly Mode[];
+  targets?: readonly TargetSpec[];
+  resolve?(fx: EffectContext): Proc<void>;
+}
+
+export type AbilityDef = ActivatedAbility | AutomaticAbility | SpellAbility;

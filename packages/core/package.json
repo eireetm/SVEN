@@ -1,0 +1,12 @@
+{
+  "name": "@sve/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Headless, deterministic Shadowverse: Evolve rules engine.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./sets/bp01": "./src/sets/bp01.ts",
+    "./testing": "./src/testing/index.ts"
+  }
+}

@@ -1,0 +1,92 @@
+import type { CardDatabase } from "../data/database";
+import type { DefId } from "../model/card";
+import type { CardId, PlayerId } from "../model/ids";
+import { opponentOf } from "../model/ids";
+import type { Keyword } from "../model/keyword";
+import type { CardInstance, GameState, PlayerZone } from "../model/state";
+import type { Env } from "./state/access";
+import { leaderOf } from "./state/access";
+import { characteristics, isFollowerOnField, type Characteristics } from "./state/characteristics";
+import { playVariants } from "./flow/play-card";
+
+/**
+ * Read-only access to a game for card scripts, bots and views. Scripts must go through this
+ * (or EffectContext) instead of touching GameState internals, so internal representation
+ * can change without rewriting card scripts.
+ */
+export interface GameReader {
+  readonly state: Readonly<GameState>;
+  readonly db: CardDatabase;
+  readonly activePlayer: PlayerId;
+  card(id: CardId): Readonly<CardInstance> | undefined;
+  /** Current information of a card object (CR 10.9). */
+  info(id: CardId): Characteristics;
+  hasKeyword(id: CardId, keyword: Keyword): boolean;
+  controller(id: CardId): PlayerId;
+  /** Card ids in one of a player's zones (a copy). */
+  cards(player: PlayerId, zone: PlayerZone): CardId[];
+  /** Followers on a player's field (CR 4.4). */
+  followers(player: PlayerId): CardId[];
+  leader(player: PlayerId): CardId;
+  opponent(player: PlayerId): PlayerId;
+  /** CR 15.1 */
+  counters(id: CardId, counter: string): number;
+  /** Does this definition have an evolve ability (printed "{[evolve]}")? */
+  hasEvolveAbility(def: DefId): boolean;
+  /** CR 13.2.1 — cards the player has played this turn. */
+  playedThisTurn(player: PlayerId): number;
+  /** CR 13.2.1.2 — Combo (X) ("including this card" — call it after this card was played). */
+  combo(player: PlayerId, x: number): boolean;
+  /** CR 13.3.1.1 — spells in the player's cemetery. */
+  spellsInCemetery(player: PlayerId): number;
+  /** CR 13.3.1.2 — Spellchain (X). */
+  spellchain(player: PlayerId, x: number): boolean;
+  /** CR 13.5.1.2 — Necrocharge (X): at least X cards in the cemetery. */
+  necrocharge(player: PlayerId, x: number): boolean;
+  /** CR 13.4.1.2 — Overflow: maximum play points at least 7. */
+  overflow(player: PlayerId): boolean;
+  /** CR 13.5.2.2 — Sanguine: it is this player's turn and their leader lost defense this turn. */
+  sanguine(player: PlayerId): boolean;
+  /** Amulets with Stack on the player's field (CR 13.3.2). */
+  stackCards(player: PlayerId): CardId[];
+  /** Could `player` play `card` right now as part of an effect (optionally for a set cost)? */
+  canPlay(card: CardId, player: PlayerId, opts?: { cost?: number }): boolean;
+}
+
+export function makeReader(env: Env): GameReader {
+  const state = () => env.state;
+  const ps = (p: PlayerId) => env.state.players[p];
+  const reader: GameReader = {
+    get state() {
+      return env.state;
+    },
+    db: env.db,
+    get activePlayer() {
+      return env.state.activePlayer;
+    },
+    card: (id) => state().cards[id],
+    info: (id) => characteristics(env, id),
+    hasKeyword: (id, k) => characteristics(env, id).keywords.includes(k),
+    controller: (id) => state().cards[id]!.controller,
+    cards: (p, zone) => [...ps(p).zones[zone]],
+    followers: (p) => ps(p).zones.field.filter((id) => isFollowerOnField(env, id)),
+    leader: (p) => leaderOf(state(), p),
+    opponent: opponentOf,
+    counters: (id, counter) => state().cards[id]?.counters[counter] ?? 0,
+    hasEvolveAbility: (def) => env.db.get(def).text.en.includes("{[evolve]}"),
+    playedThisTurn: (p) => (ps(p).cardsPlayed.turn === state().turn ? ps(p).cardsPlayed.count : 0),
+    combo: (p, x) => reader.playedThisTurn(p) >= x,
+    spellsInCemetery: (p) => ps(p).zones.cemetery.filter((id) => env.db.get(state().cards[id]!.def).type === "spell").length,
+    spellchain: (p, x) => reader.spellsInCemetery(p) >= x,
+    necrocharge: (p, x) => ps(p).zones.cemetery.length >= x,
+    overflow: (p) => ps(p).maxPlayPoints >= 7,
+    sanguine: (p) => state().activePlayer === p && ps(p).leaderDefenseLostTurn === state().turn,
+    stackCards: (p) =>
+      ps(p).zones.field.filter((id) => {
+        const i = characteristics(env, id);
+        return i.type === "amulet" && i.keywords.includes("stack");
+      }),
+    canPlay: (card, p, opts = {}) => playVariants(env, p, card, "effect", { setCost: opts.cost }).length > 0,
+  };
+  return reader;
+}
