@@ -57,8 +57,16 @@ export const anyFollower = (o: Opts = {}) => spec((g, c) => [...g.followers(c), 
 export const anotherFollower = (o: Opts = {}) =>
   spec((g, c, self) => [...g.followers(c), ...g.followers(g.opponent(c))].filter((id) => id !== self), o);
 
-/** Cards in one of your zones (public zones: cemetery, EX area). */
-export const inYourZone = (zone: PlayerZone, o: Opts = {}) => spec((g, c) => g.cards(c, zone), o);
+/** CR 4.1.2 — zones whose cards are not visible to all players. */
+const NON_PUBLIC: readonly PlayerZone[] = ["hand", "deck", "evolveDeck"];
+
+/**
+ * Cards in one of your zones. In a non-public zone (hand, deck) a card cannot be guaranteed to
+ * satisfy a condition and the player may treat it as if it didn't exist (CR 4.1.2.2), so
+ * selecting from there is always "up to" (e.g. BP02-092 Kaguya — ruling).
+ */
+export const inYourZone = (zone: PlayerZone, o: Opts = {}) =>
+  spec((g, c) => g.cards(c, zone), NON_PUBLIC.includes(zone) ? { ...o, upTo: true } : o);
 
 /** Cards in one of the opponent's zones. */
 export const inOpponentZone = (zone: PlayerZone, o: Opts = {}) => spec((g, c) => g.cards(g.opponent(c), zone), o);

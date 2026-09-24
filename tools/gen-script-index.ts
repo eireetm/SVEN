@@ -16,7 +16,7 @@ for (const set of SUPPORTED_SETS) {
   const dir = join(scriptRoot, set);
   mkdirSync(dir, { recursive: true });
   const ids = readdirSync(dir)
-    .filter((f) => /^[A-Za-z0-9]+-[A-Za-z0-9]+\.ts$/.test(f))
+    .filter((f) => f.startsWith(`${set}-`) && f.endsWith(".ts")) // card scripts; other files are helpers
     .map((f) => f.slice(0, -3))
     .sort();
   const ident = (id: string) => `c_${id.replace(/-/g, "_")}`;

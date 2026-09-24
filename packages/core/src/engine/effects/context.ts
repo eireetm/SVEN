@@ -95,9 +95,14 @@ export interface EffectContext {
   mill(count: number, player?: PlayerId): Proc<CardId[]>;
   /**
    * CR 5.8 search the player's deck for up to `max` cards matching `filter`, reveal them
-   * (5.8.1.2), put them into the hand (or onto the field), then shuffle (5.8.2).
+   * (5.8.1.2), put them into the hand (or onto the field / into the EX area), then shuffle
+   * (5.8.2). Searches without a condition besides the number ("up to 2 cards") are not revealed
+   * (`reveal: false`).
    */
-  search(filter: (card: CardId) => boolean, opts?: { max?: number; to?: "hand" | "field"; player?: PlayerId }): Proc<CardId[]>;
+  search(
+    filter: (card: CardId) => boolean,
+    opts?: { max?: number; to?: "hand" | "field" | "ex"; player?: PlayerId; reveal?: boolean },
+  ): Proc<CardId[]>;
   /** CR 5.11 the top cards of a deck (the player looks at them). */
   topCards(count: number, player?: PlayerId): CardId[];
   /** Put cards on the bottom of their owner's deck in an order the player chooses. */
@@ -270,9 +275,10 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       const max = Math.min(opts.max ?? 1, matching.length);
       // A card in a non-public zone need not be found (CR 4.1.2.2), so the minimum is 0.
       const chosen = yield* selectCards(g, player, "search", matching, 0, max, selfIfPresent(), deck);
-      revealCards(g, player, chosen);
+      if (opts.reveal ?? true) revealCards(g, player, chosen);
       let moved: CardId[];
       if (opts.to === "field") moved = yield* putOntoField(g, chosen, player, "effect", { chooser: ctrl });
+      else if (opts.to === "ex") moved = yield* putIntoEx(g, chosen, ctrl);
       else moved = moveCards(g, chosen.map((card) => ({ card, to: "hand" as const, player })), "effect");
       shuffleDeck(g, player); // CR 5.8.2
       return moved;

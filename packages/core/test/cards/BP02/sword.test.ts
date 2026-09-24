@@ -27,11 +27,14 @@ describe("BP02 Swordcraft", () => {
     expect([leader.leader("opp"), leader.engaged("BP02-020")]).toEqual([15, true]);
   });
 
-  it("021 Amelia — choose: put a follower costing 3 or less from your hand onto the field, or deal 4 (options need targets)", () => {
-    const t = d({ me: { hand: ["BP02-021", "V3", "V5"], playPoints: 4 }, opp: { field: ["V5"] } }).play("BP02-021").choose("1");
+  it("021 Amelia — choose: put a follower costing 3 or less from your hand onto the field, or deal 4", () => {
+    const t = d({ me: { hand: ["BP02-021", "V3", "V5"], playPoints: 4 }, opp: { field: ["V5"] } }).play("BP02-021").choose("1").pick("V3");
     expect([t.field(), t.hand()]).toEqual([["BP02-021", "V3"], ["V5"]]);
-    const dmg = d({ me: { hand: ["BP02-021", "V5"], playPoints: 4 }, opp: { field: ["V5"] } }).play("BP02-021");
-    expect(dmg.stats("opp:V5")).toEqual([5, 1]); // (1) had no target: (2) was chosen automatically
+    const dmg = d({ me: { hand: ["BP02-021", "V5"], playPoints: 4 }, opp: { field: ["V5"] } }).play("BP02-021").choose("2");
+    expect(dmg.stats("opp:V5")).toEqual([5, 1]);
+    // (1) selects in the hand (non-public, CR 4.1.2.2): always available, may put nothing; (2) needs a target.
+    const noTarget = d({ me: { hand: ["BP02-021", "V5"], playPoints: 4 } }).play("BP02-021");
+    expect([noTarget.field(), noTarget.hand()]).toEqual([["BP02-021"], ["V5"]]);
   });
 
   it("023 Leonidas (Evolved) — 5 damage to an enemy follower and itself; Last Words: Leonidas's Resolve buffs Swordcraft followers", () => {

@@ -51,8 +51,77 @@ import c_BP02_048 from "./BP02-048";
 import c_BP02_049 from "./BP02-049";
 import c_BP02_050 from "./BP02-050";
 import c_BP02_051 from "./BP02-051";
+import c_BP02_052 from "./BP02-052";
+import c_BP02_053 from "./BP02-053";
+import c_BP02_054 from "./BP02-054";
+import c_BP02_055 from "./BP02-055";
+import c_BP02_056 from "./BP02-056";
+import c_BP02_057 from "./BP02-057";
+import c_BP02_058 from "./BP02-058";
+import c_BP02_059 from "./BP02-059";
+import c_BP02_060 from "./BP02-060";
+import c_BP02_061 from "./BP02-061";
+import c_BP02_062 from "./BP02-062";
+import c_BP02_063 from "./BP02-063";
+import c_BP02_064 from "./BP02-064";
+import c_BP02_065 from "./BP02-065";
+import c_BP02_066 from "./BP02-066";
+import c_BP02_067 from "./BP02-067";
+import c_BP02_068 from "./BP02-068";
+import c_BP02_069 from "./BP02-069";
+import c_BP02_071 from "./BP02-071";
+import c_BP02_072 from "./BP02-072";
+import c_BP02_073 from "./BP02-073";
+import c_BP02_074 from "./BP02-074";
+import c_BP02_075 from "./BP02-075";
+import c_BP02_076 from "./BP02-076";
+import c_BP02_078 from "./BP02-078";
+import c_BP02_079 from "./BP02-079";
+import c_BP02_080 from "./BP02-080";
+import c_BP02_081 from "./BP02-081";
+import c_BP02_083 from "./BP02-083";
+import c_BP02_084 from "./BP02-084";
+import c_BP02_085 from "./BP02-085";
+import c_BP02_086 from "./BP02-086";
+import c_BP02_087 from "./BP02-087";
+import c_BP02_088 from "./BP02-088";
+import c_BP02_089 from "./BP02-089";
+import c_BP02_090 from "./BP02-090";
+import c_BP02_091 from "./BP02-091";
+import c_BP02_092 from "./BP02-092";
+import c_BP02_093 from "./BP02-093";
+import c_BP02_094 from "./BP02-094";
+import c_BP02_095 from "./BP02-095";
+import c_BP02_096 from "./BP02-096";
+import c_BP02_097 from "./BP02-097";
+import c_BP02_098 from "./BP02-098";
+import c_BP02_099 from "./BP02-099";
+import c_BP02_100 from "./BP02-100";
+import c_BP02_101 from "./BP02-101";
+import c_BP02_102 from "./BP02-102";
+import c_BP02_103 from "./BP02-103";
+import c_BP02_104 from "./BP02-104";
+import c_BP02_105 from "./BP02-105";
+import c_BP02_106 from "./BP02-106";
+import c_BP02_107 from "./BP02-107";
+import c_BP02_108 from "./BP02-108";
+import c_BP02_109 from "./BP02-109";
+import c_BP02_110 from "./BP02-110";
+import c_BP02_111 from "./BP02-111";
+import c_BP02_112 from "./BP02-112";
+import c_BP02_113 from "./BP02-113";
+import c_BP02_114 from "./BP02-114";
+import c_BP02_115 from "./BP02-115";
+import c_BP02_116 from "./BP02-116";
+import c_BP02_117 from "./BP02-117";
+import c_BP02_118 from "./BP02-118";
+import c_BP02_119 from "./BP02-119";
+import c_BP02_120 from "./BP02-120";
 import c_BP02_T02 from "./BP02-T02";
 import c_BP02_T03 from "./BP02-T03";
+import c_BP02_T06 from "./BP02-T06";
+import c_BP02_T07 from "./BP02-T07";
+import c_BP02_T08 from "./BP02-T08";
 
 /**
  * Card scripts of BP02, keyed by canonical definition id (alternate printings resolve to the
@@ -110,6 +179,75 @@ export const BP02_SCRIPTS: ScriptRegistry = {
   "BP02-049": c_BP02_049,
   "BP02-050": c_BP02_050,
   "BP02-051": c_BP02_051,
+  "BP02-052": c_BP02_052,
+  "BP02-053": c_BP02_053,
+  "BP02-054": c_BP02_054,
+  "BP02-055": c_BP02_055,
+  "BP02-056": c_BP02_056,
+  "BP02-057": c_BP02_057,
+  "BP02-058": c_BP02_058,
+  "BP02-059": c_BP02_059,
+  "BP02-060": c_BP02_060,
+  "BP02-061": c_BP02_061,
+  "BP02-062": c_BP02_062,
+  "BP02-063": c_BP02_063,
+  "BP02-064": c_BP02_064,
+  "BP02-065": c_BP02_065,
+  "BP02-066": c_BP02_066,
+  "BP02-067": c_BP02_067,
+  "BP02-068": c_BP02_068,
+  "BP02-069": c_BP02_069,
+  "BP02-071": c_BP02_071,
+  "BP02-072": c_BP02_072,
+  "BP02-073": c_BP02_073,
+  "BP02-074": c_BP02_074,
+  "BP02-075": c_BP02_075,
+  "BP02-076": c_BP02_076,
+  "BP02-078": c_BP02_078,
+  "BP02-079": c_BP02_079,
+  "BP02-080": c_BP02_080,
+  "BP02-081": c_BP02_081,
+  "BP02-083": c_BP02_083,
+  "BP02-084": c_BP02_084,
+  "BP02-085": c_BP02_085,
+  "BP02-086": c_BP02_086,
+  "BP02-087": c_BP02_087,
+  "BP02-088": c_BP02_088,
+  "BP02-089": c_BP02_089,
+  "BP02-090": c_BP02_090,
+  "BP02-091": c_BP02_091,
+  "BP02-092": c_BP02_092,
+  "BP02-093": c_BP02_093,
+  "BP02-094": c_BP02_094,
+  "BP02-095": c_BP02_095,
+  "BP02-096": c_BP02_096,
+  "BP02-097": c_BP02_097,
+  "BP02-098": c_BP02_098,
+  "BP02-099": c_BP02_099,
+  "BP02-100": c_BP02_100,
+  "BP02-101": c_BP02_101,
+  "BP02-102": c_BP02_102,
+  "BP02-103": c_BP02_103,
+  "BP02-104": c_BP02_104,
+  "BP02-105": c_BP02_105,
+  "BP02-106": c_BP02_106,
+  "BP02-107": c_BP02_107,
+  "BP02-108": c_BP02_108,
+  "BP02-109": c_BP02_109,
+  "BP02-110": c_BP02_110,
+  "BP02-111": c_BP02_111,
+  "BP02-112": c_BP02_112,
+  "BP02-113": c_BP02_113,
+  "BP02-114": c_BP02_114,
+  "BP02-115": c_BP02_115,
+  "BP02-116": c_BP02_116,
+  "BP02-117": c_BP02_117,
+  "BP02-118": c_BP02_118,
+  "BP02-119": c_BP02_119,
+  "BP02-120": c_BP02_120,
   "BP02-T02": c_BP02_T02,
   "BP02-T03": c_BP02_T03,
+  "BP02-T06": c_BP02_T06,
+  "BP02-T07": c_BP02_T07,
+  "BP02-T08": c_BP02_T08,
 };

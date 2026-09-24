@@ -4,7 +4,7 @@
 
 当前阶段只有 Core：纯逻辑、确定性、可 headless 运行，不依赖任何 GUI / IO。
 
-进度：BP01 全部卡牌已实现，BP02 进行中，见 [docs/card-status.md](docs/card-status.md)。异画和其他卡包里的再录共用同一个卡牌定义和脚本。
+进度：BP01、BP02 全部卡牌已实现，见 [docs/card-status.md](docs/card-status.md)。异画和其他卡包里的再录共用同一个卡牌定义和脚本。
 
 ## 快速开始
 

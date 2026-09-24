@@ -1,7 +1,8 @@
 // BP02-021 Amelia, Silver Paladin — Swordcraft follower, 4, 3/3.
 // {[fanfare]} Choose one of the following. (1) Select a follower that costs 3 play points or less
 // in your hand and put it onto your field. (2) Select an enemy follower on the field and deal it 4
-// damage. (An option without a target cannot be chosen — ruling, CR 5.18.3.1.2.)
+// damage. (An option without a target cannot be chosen — ruling, CR 5.18.3.1.2. Option (1) selects
+// in the hand, a non-public zone, so it can always be chosen and may put nothing — CR 4.1.2.2.)
 import { defineCard, fanfare } from "../helpers";
 import { and, costAtMost, enemyFollower, inYourZone, isFollower } from "../targets";
 
