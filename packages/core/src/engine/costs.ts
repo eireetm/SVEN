@@ -1,4 +1,5 @@
 import type { CardId, PlayerId } from "../model/ids";
+import type { NextPlayModifier } from "../model/state";
 import type { PlayOption } from "../script/types";
 import { EngineError } from "./errors";
 import type { G } from "./runtime/context";
@@ -33,10 +34,22 @@ export function playCost(g: Env, card: CardId, player: PlayerId, option: PlayOpt
   }
   for (const e of g.state.effects) if (e.target === card && e.change.kind === "playCost") cost += e.change.amount;
   cost += option?.costDelta ?? 0;
-  // BP03-038 "the next spell you play this turn costs N less", after set-to-value changes
-  // (the Transcendence ruling: a cost set to 7 is then reduced by 4).
-  if (characteristics(g, card).type === "spell") cost -= g.state.players[player].nextSpellReduction;
+  // "The next [matching] card you play this turn costs N less" (BP03-038), after set-to-value
+  // changes (its Transcendence ruling: a cost set to 7 is then reduced by 4).
+  for (const m of nextPlayModifiersFor(g, card, player)) cost += m.costDelta;
   return Math.max(0, cost);
+}
+
+/** The "next card you play this turn" modifiers of `player` that apply to `card`. */
+export function nextPlayModifiersFor(g: Env, card: CardId, player: PlayerId): NextPlayModifier[] {
+  if (g.state.nextPlay.length === 0) return [];
+  const reader = makeReader(g);
+  return g.state.nextPlay.filter((m) => {
+    if (m.player !== player) return false;
+    const matches = g.scripts[m.sourceDef]?.nextPlay?.[m.key];
+    if (!matches) throw new EngineError(`${m.sourceDef} has no nextPlay "${m.key}"`);
+    return matches(reader, card, player);
+  });
 }
 
 /** CR 13.3.3.2 — amulets with Stack on the field that have at least `count` Stack counters. */

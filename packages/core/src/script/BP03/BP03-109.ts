@@ -1,8 +1,8 @@
 // BP03-109 Angel of Chaos — Neutral follower, 7, 5/5. 天使・堕天使.
 // Ward.
 // Activate, banish 3 Fallen Angel cards in your cemetery: Select an enemy follower. Steal it and
-// refresh it. Once per turn. (CR 5.22: not a new entry, keeps damage and evolution. A full field
-// does not move it, CR 4.4.4.2.)
+// refresh it. Once per turn. (CR 5.22: not a new entry, keeps damage and evolution. With your
+// field full it is not stolen, CR 4.4.4.2, but it is still refreshed on its field — ruling.)
 import { activated, defineCard } from "../helpers";
 import { enemyFollower, hasTrait } from "../targets";
 
@@ -26,7 +26,7 @@ export default defineCard({
           const id = fx.targets[0]?.[0];
           if (!id) return;
           const neu = yield* fx.steal(id);
-          if (neu) yield* fx.refresh([neu]);
+          yield* fx.refresh([neu ?? id]);
         },
       },
     ),

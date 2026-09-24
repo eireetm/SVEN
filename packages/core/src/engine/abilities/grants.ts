@@ -29,6 +29,17 @@ export const GRANT_ABILITIES: Record<GrantedAbilityId, AutomaticAbility> = {
       if (fx.game.card(fx.self)?.zone === "field") yield* fx.putOnDeck([fx.self], "bottom");
     },
   },
+  // BP03-011 (given by Wood of Brambles while it is on the field): "Follower Strike: Deal 2
+  // damage to the enemy follower." Not a select, so it hits through Aura (ruling).
+  followerStrike2: {
+    kind: "automatic",
+    timing: "strike",
+    trigger: (e, me, game) =>
+      !me.lookBack && e.type === "attackDeclared" && e.attacker === me.card && game.card(e.target)?.zone === "field",
+    *resolve(fx) {
+      if (fx.event?.type === "attackDeclared") yield* fx.dealDamage(fx.event.target, 2);
+    },
+  },
   // BP03-083 "Strike: Select an enemy follower and deal it damage equal to this follower's attack."
   strikeByAttack: {
     kind: "automatic",

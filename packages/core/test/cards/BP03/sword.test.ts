@@ -94,10 +94,13 @@ describe("BP03 Swordcraft", () => {
     const full = d({
       me: { field: ["BP03-023", "V1", "V1", "V1", "V1"], evolveDeck: ["BP03-024"], cemetery: ["BP03-036", "BP03-037"], deck: ["V2"], playPoints: 3 },
     });
-    full.evolve("BP03-023");
+    // Field full: the follower can still be selected and stays in the cemetery (ruling), so the
+    // player is not forced into the Heroic spell.
+    full.evolve("BP03-023").pick("BP03-036");
     expect(full.field()).toHaveLength(5);
     expect(full.cemetery()).toEqual(["BP03-036", "BP03-037"]);
     expect(full.zone("me", "deck")).toEqual(["V2"]);
+    expect(full.decision?.type).toBe("mainPhase");
   });
 
   it("025 Castle in the Sky — search a follower that has Storm now; buff one; put Storm followers from hand", () => {
@@ -135,6 +138,13 @@ describe("BP03 Swordcraft", () => {
     const big = d({ me: { field: ["BP03-027"], hand: ["V2"], deck: ["V1"] }, opp: { field: ["BP03-001"] } });
     big.attack("BP03-027", "opp:BP03-001");
     expect([big.hand(), big.zone("me", "deck"), big.stats("opp:BP03-001")]).toEqual([["V2"], ["V1"], [5, 2]]);
+    // The defender destroyed by another Strike first (Wood of Brambles' 2 damage): it is no
+    // longer "the enemy follower", so nothing is drawn (docs/open-questions.md).
+    const gone = d({ me: { field: ["BP03-027", "BP03-011"], hand: ["V2"], deck: ["V1"] }, opp: { field: [{ card: "V1", engaged: true }] } });
+    gone.attack("BP03-027", "opp:V1");
+    const brambles = gone.game.state.pending.find((p) => p.sourceDef === "grant:followerStrike2")!.id;
+    gone.answer({ type: "selectPending", id: brambles }).flush();
+    expect([gone.field("opp"), gone.hand(), gone.zone("me", "deck")]).toEqual([[], ["V2"], ["V1"]]);
   });
 
   it("028 / 029 Mach Knight — Storm when played from outside hand; evolve deals 2, or 4 with 2 Heroes in the cemetery", () => {

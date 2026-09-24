@@ -40,11 +40,9 @@ export function* endPhase(g: G): Proc<void> {
   // 7.4.8 "until the end of the turn" effects end; "... and during each opponent's next turn"
   // effects end with the first turn of the controller's opponent after their creation turn.
   const { turn } = g.state;
-  // "This turn" player modifiers (BP03-038, BP03-089) end with the turn (CR 7.4.8).
-  for (const p of g.state.players) {
-    p.nextSpellReduction = 0;
-    p.nextFollowerBuff = 0;
-  }
+  // "This turn" next-play cost changes (BP03-038) and delayed triggers (BP03-089) end too.
+  g.state.nextPlay = [];
+  g.state.delayed = g.state.delayed.filter((d) => d.until !== "endOfTurn");
   g.state.effects = g.state.effects.filter(
     (e) =>
       e.until !== "endOfTurn" &&

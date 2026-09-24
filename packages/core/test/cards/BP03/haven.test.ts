@@ -121,9 +121,12 @@ describe("BP03 Havencraft", () => {
   });
 
   it("102 / 103 Pinion Prince — a buried Fable card to EX, and you may mark it; evolved has Assail", () => {
-    const yes = d({ me: { hand: ["BP03-102"], cemetery: ["BP03-090", "BP03-101"], playPoints: 5 } });
+    const yes = d({ me: { hand: ["BP03-102"], cemetery: ["BP03-090", "BP03-101"], playPoints: 7 } });
     yes.play("BP03-102").pick("BP03-090").yes();
     expect([yes.ex(), yes.counters("BP03-090", "fable")]).toEqual([["BP03-090"], 1]);
+    // Played from the EX area, it keeps the counter (CR 10.6.2.1.3, 10.6.2.8.1.1; ruling).
+    yes.play("BP03-090").none(); // no Ward engage
+    expect([yes.counters("BP03-090@field", "fable"), yes.stats("BP03-090")]).toEqual([1, [3, 3]]);
     const no = d({ me: { hand: ["BP03-102"], cemetery: ["BP03-090"], playPoints: 5 } });
     no.play("BP03-102").no();
     expect([no.ex(), no.counters("BP03-090", "fable")]).toEqual([["BP03-090"], 0]);

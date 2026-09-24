@@ -95,16 +95,6 @@ export interface PlayerState {
   /** Last turn in which this player's leader lost defense (CR 13.5.2 Sanguine). */
   leaderDefenseLostTurn: number | null;
   /**
-   * "The next spell you play this turn costs N less" (BP03-038), summed. Cleared when a spell
-   * is played or at the end of the turn (CR 7.4.8).
-   */
-  nextSpellReduction: number;
-  /**
-   * How many "+1/+1" the next follower this player plays this turn receives (BP03-089).
-   * Cleared when that follower is played or at the end of the turn (CR 7.4.8).
-   */
-  nextFollowerBuff: number;
-  /**
    * What happened in turn `turn`, for card conditions such as "if you discarded a card this
    * turn" (BP02-062/063), "if any of your followers have been destroyed this turn" (BP02-033)
    * and "if your followers attacked at least 3 times this turn" (BP02-098).
@@ -182,11 +172,12 @@ export type EffectChange =
   /**
    * An ability given to this card by an effect (CR 10.9.1.2). The id is resolved by
    * `engine/abilities/grants.ts`. Ends when the card changes zones (CR 10.9.2) unless `until` says sooner.
+   * (Abilities a card on the field gives while it is there use `FieldPassives.grantsFor`.)
    */
   | { kind: "grantedAbility"; grant: GrantedAbilityId };
 
 /** Abilities an effect can give a card. Each one is defined in engine/abilities/grants.ts. */
-export type GrantedAbilityId = "destroyAtEnd" | "bottomAtEnd" | "strikeByAttack";
+export type GrantedAbilityId = "destroyAtEnd" | "bottomAtEnd" | "strikeByAttack" | "followerStrike2";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {
@@ -220,6 +211,29 @@ export interface DelayedTrigger {
   sourceDef: DefId;
   /** Index of the automatic ability (marked `delayed`) in the source definition's script. */
   ability: number;
+  createdTurn: number;
+  /**
+   * "... this turn" (e.g. BP03-089 "the next time ... this turn"): the trigger is removed at
+   * the end of the turn if it has not triggered (CR 7.4.8). Null = until it triggers.
+   */
+  until: "endOfTurn" | null;
+}
+
+/**
+ * "The next [matching] card you play this turn costs N less" (BP03-038). Which cards match
+ * is defined by the creating card's script (`CardScript.nextPlay[key]`), so the state stays
+ * plain JSON. It changes the play cost of every matching card of the player; playing one
+ * uses it up, even a card played by an effect (BP03-038 ruling). It ends with the turn
+ * (CR 7.4.8).
+ */
+export interface NextPlayModifier {
+  id: string;
+  seq: number;
+  player: PlayerId;
+  sourceDef: DefId;
+  key: string;
+  /** Change to the play cost (negative = cheaper), applied after set-to-value changes (BP03-038 ruling). */
+  costDelta: number;
   createdTurn: number;
 }
 
@@ -273,6 +287,8 @@ export interface GameState {
   pending: PendingAbility[];
   /** CR 10.7.5 delayed triggers waiting for their event. */
   delayed: DelayedTrigger[];
+  /** "The next [matching] card you play this turn costs N less" effects in force. */
+  nextPlay: NextPlayModifier[];
   /** CR 5.28 players who take another turn, most recent instruction last. */
   extraTurns: PlayerId[];
   /** CR 5.21 cards currently revealed to all players (cleared when the effect ends). */

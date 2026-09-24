@@ -21,8 +21,10 @@ export default defineCard({
     followerStrike({
       *resolve(fx) {
         if (fx.event?.type !== "attackDeclared") return;
-        const defense = fx.game.info(fx.event.target).defense ?? 99;
-        if (defense > 5) return;
+        // A follower that has left the field (e.g. destroyed by another Strike first) is no
+        // longer "the enemy follower": the condition is not met (docs/open-questions.md).
+        const target = fx.event.target;
+        if (fx.game.card(target)?.zone !== "field" || (fx.game.info(target).defense ?? 99) > 5) return;
         yield* fx.draw(1);
         yield* fx.discard(fx.controller, 1, 1);
       },

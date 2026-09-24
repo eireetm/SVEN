@@ -9,14 +9,19 @@ import type { CustomCost } from "./types";
  */
 type Filter = (game: GameReader, card: CardId) => boolean;
 
+/** "Return another [matching] card on your field to its owner's hand" (e.g. BP03-002: a follower). */
+export function returnAnotherFromYourField(filter: Filter = () => true): CustomCost {
+  return {
+    canPay: (g, c, self) => g.cards(c, "field").some((id) => id !== self && filter(g, id)),
+    *pay(fx) {
+      const cards = fx.game.cards(fx.controller, "field").filter((id) => id !== fx.self && filter(fx.game, id));
+      yield* fx.returnToHand(yield* fx.chooseCards(cards, 1, 1));
+    },
+  };
+}
+
 /** "Return another card on your field to its owner's hand" (BP01-002 / 003). */
-export const returnAnotherCardOnYourField: CustomCost = {
-  canPay: (g, c, self) => g.cards(c, "field").some((id) => id !== self),
-  *pay(fx) {
-    const cards = fx.game.cards(fx.controller, "field").filter((id) => id !== fx.self);
-    yield* fx.returnToHand(yield* fx.chooseCards(cards, 1, 1));
-  },
-};
+export const returnAnotherCardOnYourField: CustomCost = returnAnotherFromYourField();
 
 /** "Discard a [matching] card" from your hand. */
 export function discardA(filter: Filter): CustomCost {

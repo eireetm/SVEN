@@ -23,6 +23,11 @@ describe("BP03 Neutral", () => {
     expect([t.counters("BP03-101", "fable"), t.counters("BP03-107", "fable")]).toEqual([1, 0]);
     t.evolve("BP03-107").pick("BP03-090", "BP03-101").order();
     expect([t.stats("BP03-107"), t.ex(), t.zone("me", "deck")]).toEqual([[4, 4], ["BP03-101", "BP03-090", "BP03-101"], ["V1", "V5"]]);
+    // The counter on the EX card stays when it is played (CR 10.6.2.1.3, 10.6.2.8.1.1; ruling):
+    // Tin Soldier then gets one more from its own Fanfare.
+    const play = d({ me: { field: [{ card: "BP03-107", counters: { fable: 1 } }], ex: ["BP03-101"], playPoints: 3 } });
+    play.activate("BP03-107").pick("BP03-101@ex").play("BP03-101");
+    expect(play.counters("BP03-101", "fable")).toBe(2);
   });
 
   it("109 Angel of Chaos — banish 3 Fallen Angels, Steal an enemy follower and refresh it, once per turn", () => {
@@ -42,7 +47,8 @@ describe("BP03 Neutral", () => {
       opp: { field: [{ card: "V5", engaged: true }] },
     });
     full.activate("BP03-109");
-    expect([full.field("opp"), full.engaged("opp:V5")]).toEqual([["V5"], true]);
+    // Not stolen (field full), but still refreshed on its own field (ruling).
+    expect([full.field("opp"), full.engaged("opp:V5"), full.zone("me", "banished")]).toEqual([["V5"], false, ["BP03-118", "BP03-119", "BP03-111"]]);
   });
 
   it("110 Rapunzel — Ward; it cannot attack until it has a Fable counter", () => {
@@ -105,15 +111,23 @@ describe("BP03 Neutral", () => {
   });
 
   it("117 Winged Inversion — discard an Angel to destroy, or a Fallen Angel for +3 defense and a draw", () => {
-    expect(d({ me: { hand: ["BP03-117"], playPoints: 1 }, opp: { field: ["V5"] } }).canPlay("BP03-117")).toBe(false);
+    // The discards are optional additional costs: the spell can be played for 1 play point with
+    // no effect, even without an Angel or Fallen Angel follower in hand (ruling).
+    const bare = d({ me: { hand: ["BP03-117"], playPoints: 1 }, opp: { field: ["V5"] } });
+    expect(bare.canPlay("BP03-117")).toBe(true);
+    bare.play("BP03-117").choose("angel"); // the only enemy follower is selected automatically
+    expect([bare.field("opp"), bare.pp(), bare.cemetery()]).toEqual([["V5"], 0, ["BP03-117"]]);
     const angel = d({
       me: { hand: ["BP03-117", "BP03-112", "BP03-109"], playPoints: 1 },
       opp: { field: ["V5", "V3"] },
     });
-    angel.play("BP03-117").choose("angel").pick("opp:V5").pick("BP03-112");
+    angel.play("BP03-117").choose("angel").pick("opp:V5").yes().pick("BP03-112");
     expect([angel.field("opp"), angel.cemetery()]).toEqual([["V3"], ["BP03-112", "BP03-117"]]);
+    const decline = d({ me: { hand: ["BP03-117", "BP03-112"], playPoints: 1 }, opp: { field: ["V5"] } });
+    decline.play("BP03-117").choose("angel").no();
+    expect([decline.field("opp"), decline.hand()]).toEqual([["V5"], ["BP03-112"]]);
     const fallen = d({ me: { hand: ["BP03-117", "BP03-119"], deck: ["V1"], playPoints: 1 } });
-    fallen.play("BP03-117");
+    fallen.play("BP03-117").yes();
     expect([fallen.leader(), fallen.hand(), fallen.cemetery()]).toEqual([23, ["V1"], ["BP03-119", "BP03-117"]]);
   });
 

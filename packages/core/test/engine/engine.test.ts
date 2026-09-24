@@ -11,11 +11,20 @@ describe("Engine", () => {
     expect(() => createEngine({ cards, scripts: { A: { keywords: ["ward", "storm", "assail", "aura", "drain"] } } })).not.toThrow();
   });
 
+  it("refuses to give a keyword the engine does not implement at runtime", () => {
+    const g = scenario(testEngine(), { players: [{ hand: ["GIVE-UNKNOWN"], field: ["V1"] }, {}] });
+    doMain(g, { type: "play", card: only(cardsOf(g, 0, "hand", "GIVE-UNKNOWN")) });
+    expect(() => g.act({ type: "selectCards", cards: g.state.players[0].zones.field.slice(0, 1) })).toThrow(
+      /"fuse" is not implemented/,
+    );
+  });
+
   it("can give Drain, which is implemented (CR 12.13)", () => {
     const g = scenario(testEngine(), { players: [{ hand: ["GIVE-DRAIN"], field: ["V1"] }, {}] });
     doMain(g, { type: "play", card: only(cardsOf(g, 0, "hand", "GIVE-DRAIN")) });
     g.act({ type: "selectCards", cards: g.state.players[0].zones.field.slice(0, 1) });
-    expect(g.state.players[0].zones.field.length).toBeGreaterThan(0);
+    const v1 = g.state.players[0].zones.field[0]!;
+    expect(g.reader().info(v1).keywords).toContain("drain");
   });
 
   it("refuses scripts for cards that are not in the card pool", () => {

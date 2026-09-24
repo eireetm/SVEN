@@ -2,7 +2,7 @@ import type { CardId, PlayerId } from "../../model/ids";
 import type { Mode } from "../../script/types";
 import { performableModes } from "../flow/play-card";
 import type { G } from "../runtime/context";
-import { chooseOptions } from "../runtime/decide";
+import { chooseOptions, confirm } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { makeReader, type GameReader } from "../query";
 import { chooseTargets } from "./targets";
@@ -42,4 +42,19 @@ export function* chooseModeTargets(g: G, player: PlayerId, modes: readonly Mode[
     all.push(targets);
   }
   return all;
+}
+
+/**
+ * An option written "[cost]: [effect]" has an optional additional cost (BP03-117 ruling: the
+ * player may choose the option and not pay; the option then does nothing). The choice is made
+ * while playing (10.6.2.2.1) and the cost is paid with the other costs (10.6.2.5).
+ * Returns, per chosen option, whether its cost will be paid (false for options without one).
+ */
+export function* chooseModeCosts(g: G, player: PlayerId, modes: readonly Mode[], self: CardId): Proc<boolean[]> {
+  const reader = makeReader(g);
+  const paid: boolean[] = [];
+  for (const m of modes) {
+    paid.push(m.cost !== undefined && m.cost.canPay(reader, player, self) && (yield* confirm(g, player, "optionalCost", self)));
+  }
+  return paid;
 }

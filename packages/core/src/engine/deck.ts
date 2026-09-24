@@ -112,8 +112,6 @@ function emptyPlayer(id: PlayerId, leaderDefense: number): PlayerState {
     drewFromEmptyDeck: false,
     cardsPlayed: { turn: 0, count: 0 },
     leaderDefenseLostTurn: null,
-    nextSpellReduction: 0,
-    nextFollowerBuff: 0,
     thisTurn: { turn: 0, discarded: 0, followersDestroyed: 0, followerAttacks: 0, returnedToHand: 0 },
   };
 }
@@ -143,6 +141,7 @@ export function createInitialState(
     effects: [],
     pending: [],
     delayed: [],
+    nextPlay: [],
     extraTurns: [],
     revealed: [],
     attack: null,

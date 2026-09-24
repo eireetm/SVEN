@@ -138,12 +138,15 @@ export function* chooseOptions(
   min = 1,
   max = 1,
   source: CardId | null = null,
+  subject?: CardId,
 ): Proc<string[]> {
   if (min < 0 || max < min || max > options.length) {
     throw new EngineError(`bad choice bounds ${min}..${max} of ${options.length} (${reason})`);
   }
   if (max === 0) return [];
-  const a = yield* decide(g, { type: "choose", player, reason, options: [...options], min, max, source });
+  const d: Decision = { type: "choose", player, reason, options: [...options], min, max, source };
+  if (subject !== undefined) d.subject = cardRefs(g, [subject])[0]!;
+  const a = yield* decide(g, d);
   if (a.type !== "choose") throw new EngineError("unreachable");
   return options.map((o) => o.id).filter((id) => a.ids.includes(id));
 }

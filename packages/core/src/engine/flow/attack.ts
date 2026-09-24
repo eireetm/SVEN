@@ -9,7 +9,6 @@ import { characteristics, hasKeyword, infoDefId, isFollowerOnField } from "../st
 import { makeReader } from "../query";
 import { effectPreventsAttack } from "../state/effects";
 import { thisTurn } from "../state/turn-counts";
-import { changeLeaderDefense } from "../actions/leader";
 import { quickWindow } from "./quick";
 
 /**
@@ -67,11 +66,6 @@ export function canAttackWith(g: G, player: PlayerId, attacker: CardId): boolean
   return eligible && attackTargets(g, attacker).length > 0;
 }
 
-/**
- * The damage a follower deals in combat (CR 8.4.9): its attack, or its defense while its
- * controller has a card with "your followers deal damage equal to their defense" on the field
- * (BP01-129/130; only attack damage, per their ruling).
- */
 /** CR 8.4.3.2.1 — printed "can't attack", a conditional form of it, or an effect that says so. */
 function cannotAttackNow(g: G, attacker: CardId): boolean {
   const ban = g.scripts[infoDefId(g, attacker)]?.cannotAttack;
@@ -80,6 +74,11 @@ function cannotAttackNow(g: G, attacker: CardId): boolean {
   return effectPreventsAttack(g.state, attacker);
 }
 
+/**
+ * The damage a follower deals in combat (CR 8.4.9): its attack, or its defense while its
+ * controller has a card with "your followers deal damage equal to their defense" on the field
+ * (BP01-129/130; only attack damage, per their ruling).
+ */
 function combatDamageOf(g: G, follower: CardId): number {
   const ch = characteristics(g, follower);
   const controller = g.state.cards[follower]!.controller;
@@ -114,15 +113,7 @@ export function* performAttack(g: G, attacker: CardId, target: CardId): Proc<voi
       // 8.4.9.1 the attack target simultaneously deals damage to the attacker
       damage.push({ source: target, controller: g.state.cards[target]!.controller, target: attacker, amount: combatDamageOf(g, target), kind: "combat" });
     }
-    const dealt = dealDamage(g, damage);
-    // CR 12.13 — Drain: attack damage (8.4.9) heals the attacker's leader. Combat damage the
-    // defender deals back, and ability damage, do not (12.13.2.1, 12.13.2.2). One instance
-    // even if the card somehow had Drain twice (12.13.3).
-    const attackHit = dealt.find((d) => d.source === attacker && d.kind === "attack");
-    const attackerCard = g.state.cards[attacker];
-    if (attackHit && attackerCard && hasKeyword(g, attacker, "drain")) {
-      changeLeaderDefense(g, attackerCard.controller, attackHit.amount);
-    }
+    dealDamage(g, damage); // Drain (CR 12.13) triggers on the attack damage: keyword-abilities.ts
     // 8.4.9.2 still in combat -> they have fought
     if (inCombat && isOnField(g.state, attacker) && isOnField(g.state, target)) {
       g.state.fights.push({

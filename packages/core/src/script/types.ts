@@ -1,7 +1,7 @@
 import type { DefId } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import type { Keyword } from "../model/keyword";
-import type { TriggerData, ZoneName } from "../model/state";
+import type { GrantedAbilityId, TriggerData, ZoneName } from "../model/state";
 import type { GameEvent } from "../events/types";
 import type { Proc } from "../engine/runtime/proc";
 import type { GameReader } from "../engine/query";
@@ -56,6 +56,11 @@ export interface CardScript {
   cannotBeDestroyedByAbilities?: boolean;
   /** "This card is put onto the field engaged." */
   entersEngaged?: boolean;
+  /**
+   * Which cards a "the next [matching] card you play this turn costs N less" effect created by
+   * this card applies to, by key (`fx.nextPlayCostsLess(key, n)`, BP03-038).
+   */
+  nextPlay?: Readonly<Record<string, (game: GameReader, card: CardId, player: PlayerId) => boolean>>;
 }
 
 export type ScriptRegistry = Readonly<Record<DefId, CardScript>>;
@@ -97,6 +102,12 @@ export interface FieldPassives {
    * (CR 13.3.1.1 counts spells in the cemetery).
    */
   spellchainCountsRunecraftFollowers?: boolean;
+  /**
+   * Abilities this card gives other cards while it is on the field, e.g. BP03-011 "your
+   * followers have 'Follower Strike: Deal 2 damage to the enemy follower'". They are the
+   * receiving card's abilities: it is their source (CR 10.9.1.2). One instance per giving card.
+   */
+  grantsFor?(game: GameReader, self: CardId, card: CardId): readonly GrantedAbilityId[];
 }
 
 /** A cost the engine cannot express with the standard parts (select and move cards, counters...). */
@@ -147,6 +158,12 @@ export interface TargetSpec {
   count: number;
   /** "up to [count]" (CR 10.6.2.3.2) — zero is allowed. */
   upTo?: boolean;
+  /**
+   * Lowers the maximum of an "up to" selection (only), evaluated when the selection is made. E.g.
+   * BP03-007 "deal X damage divided between up to 2": each selected follower must get at least
+   * 1 damage (rulings BP08-028 / EBD02-015), so at most X can be selected.
+   */
+  max?(game: GameReader, controller: PlayerId, self: CardId): number;
   /** The selection is only part of the effect when this holds (e.g. "Combo (3): Select ..."). */
   when?(game: GameReader, controller: PlayerId, self: CardId): boolean;
 }
@@ -158,6 +175,11 @@ export interface Mode {
   targets?: readonly TargetSpec[];
   /** Choosing this option pays Earth Rite (the option cannot be performed without it). */
   earthRite?: boolean;
+  /**
+   * "(1) [cost]: [effect]" — an optional additional cost of this option (BP03-117 ruling): the
+   * option can be chosen even if the cost is not paid (or cannot be), and then does nothing.
+   */
+  cost?: CustomCost;
   /** Extra condition for the option to be performable (CR 5.18.3.1.2). */
   available?(game: GameReader, controller: PlayerId, self: CardId): boolean;
   resolve(fx: EffectContext): Proc<void>;

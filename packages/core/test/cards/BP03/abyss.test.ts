@@ -57,6 +57,13 @@ describe("BP03 Abysscraft", () => {
     const self = d({ me: { field: [{ card: "BP03-074", evolvedInto: "BP03-075" }], hand: ["QUICK-SAC"] } });
     self.play("QUICK-SAC");
     expect([self.ex(), self.field(), self.zone("me", "evolveDeck")]).toEqual([["BP03-074"], [], ["BP03-075"]]);
+    // Leaving at the same time as a Ghost still counts (CR 10.7.4.2): Humpty Dumpty's 5 damage
+    // destroys the evolved Masquerade Ghost, a Ghost token and Humpty Dumpty together.
+    const together = d({
+      me: { field: [{ card: "BP03-074", evolvedInto: "BP03-075" }, GHOST, "BP03-115"], evolveDeck: ["BP03-116"], playPoints: 0 },
+    });
+    together.evolve("BP03-115").flush().none(); // no Ward engage for the Gargantuan Ghost
+    expect([together.field(), together.ex()]).toEqual([[GIANT], ["BP03-074"]]);
   });
 
   it("076 Odile, Black Swan — 2 damage to the enemy leader and followers; Storm at Necrocharge 20; Strike repeats it", () => {
@@ -162,13 +169,22 @@ describe("BP03 Abysscraft", () => {
   });
 
   it("089 Infernal Orchestration — 1 to your leader; the next follower you play gets +1/+1, not one an ability puts", () => {
+    // Two copies: two delayed triggers, both on the next follower played (ruling).
     const stacked = d({ me: { hand: ["BP03-089", "BP03-089", "V1", "V1"], playPoints: 5 } });
-    stacked.play("BP03-089").play("BP03-089").play("V1").play("V1");
+    stacked.play("BP03-089").play("BP03-089").play("V1").flush().play("V1");
     const attacks = stacked.game.state.players[0].zones.field.map((id) => stacked.game.reader().info(id).attack);
     expect([stacked.leader(), attacks]).toEqual([18, [4, 2]]);
     const summoned = d({ me: { hand: ["BP03-089", "BP03-086", "V1"], playPoints: 4 } });
-    summoned.play("BP03-089").play("BP03-086").yes();
+    summoned.play("BP03-089").play("BP03-086").flush().yes();
     expect([summoned.stats("BP03-086"), summoned.stats(GHOST)]).toEqual([[3, 3], [1, 1]]);
+    // It is a trigger: it goes pending together with the follower's Fanfare, in either order.
+    const order = d({ me: { hand: ["BP03-089", "BP03-086", "V1"], playPoints: 4 } });
+    order.play("BP03-089").play("BP03-086");
+    expect(order.game.decision?.type).toBe("selectPending");
+    // Not played by the next turn: it has ended (CR 7.4.8).
+    const late = d({ me: { hand: ["BP03-089", "V1"], deck: ["V2"], playPoints: 1 }, opp: { deck: ["V3"] } });
+    late.play("BP03-089").end().end();
+    expect(late.game.state.delayed).toEqual([]);
   });
 
   it("T06 Gargantuan Ghost — Ward, and banish it at the start of your main phase", () => {

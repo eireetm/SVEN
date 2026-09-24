@@ -5,6 +5,7 @@
 import { activated, defineCard, fanfare } from "../helpers";
 
 export default defineCard({
+  nextPlay: { spell: (g, card) => g.info(card).type === "spell" },
   abilities: [
     fanfare({
       *resolve(fx) {
@@ -20,7 +21,7 @@ export default defineCard({
         oncePerTurn: true,
         earthRite: { mode: "required" },
         *resolve(fx) {
-          yield* fx.nextSpellCostsLess(4);
+          yield* fx.nextPlayCostsLess("spell", 4);
         },
       },
     ),

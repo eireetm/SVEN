@@ -74,6 +74,8 @@ export type ChooseReason =
   | "token"
   /** Top or bottom of the deck. */
   | "deckPosition"
+  /** How much of divided damage `subject` is dealt (at least 1 each, BP03-007). */
+  | "divideDamage"
   /** Any other choice made while an effect resolves. */
   | "effect";
 
@@ -134,6 +136,8 @@ export type Decision =
       min: number;
       max: number;
       source: CardId | null;
+      /** The card the choice is about, when there is one (e.g. the card divided damage goes to). */
+      subject?: CardRef;
     })
   /** Put cards in an order (first = topmost), e.g. "on the bottom of your deck in any order". */
   | (DecisionBase & { type: "orderCards"; reason: "deckBottom" | "deckTop"; cards: CardRef[]; source: CardId | null })

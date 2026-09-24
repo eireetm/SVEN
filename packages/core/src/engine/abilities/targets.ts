@@ -64,8 +64,10 @@ export function* chooseTargets(
   const chosen: CardId[][] = [];
   for (const spec of specs) {
     if (spec.count < 0) throw new EngineError("negative target count");
+    if (spec.max && !spec.upTo) throw new EngineError("a target maximum is only for \"up to\" selections");
     const candidates = candidatesOf(g, spec, controller, self);
-    const max = Math.min(spec.count, candidates.length);
+    const cap = spec.max ? Math.max(0, spec.max(makeReader(g), controller, self)) : spec.count;
+    const max = Math.min(spec.count, cap, candidates.length);
     const min = required(g, spec, controller, self);
     // Selecting does not change the state, so targetsAvailable() above guarantees this.
     if (min > max) throw new EngineError("target selection became impossible after playing started");

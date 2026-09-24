@@ -1,15 +1,16 @@
 import type { DefId } from "../../model/card";
 import type { CardId, PlayerId } from "../../model/ids";
-import type { PendingAbility, PlayerZone, TriggerData, ZoneName } from "../../model/state";
+import type { GrantedAbilityId, PendingAbility, PlayerZone, TriggerData, ZoneName } from "../../model/state";
 import type { GameEvent } from "../../events/types";
 import type { AutomaticAbility, TriggerSubject } from "../../script/types";
 import { cloneJson } from "../../util/json";
 import type { G } from "../runtime/context";
 import { nextSeq } from "../state/access";
-import { infoDefId } from "../state/characteristics";
+import { hasKeyword, infoDefId } from "../state/characteristics";
 import { makeReader, type GameReader } from "../query";
 import { abilityKey, getAbility } from "./play-ability";
 import { GRANT_ABILITIES, GRANT_PREFIX } from "./grants";
+import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX, KEYWORD_TRIGGERS } from "./keyword-abilities";
 import { effectInForce } from "../state/effects";
 
 interface Candidate {
@@ -100,16 +101,41 @@ export function collectTriggers(g: G, event: GameEvent): void {
     });
   }
 
-  // Abilities an effect gave a card on the field (BP03-062, 083, 112). Each effect is its own
-  // instance, so two copies of the same gift both trigger (BP03-083 ruling).
+  // Given abilities of cards on the field, each gift its own instance (two copies both
+  // trigger, BP03-083 ruling): those an effect gave (BP03-062, 083, 112) and those a card on
+  // the field gives while it is there (BP03-011). The receiving card is the source.
+  const granted: { card: CardId; grant: GrantedAbilityId }[] = [];
   for (const e of state.effects) {
     if (e.change.kind !== "grantedAbility" || !effectInForce(state, e)) continue;
-    const card = state.cards[e.target];
-    if (!card || card.zone !== "field") continue;
-    const ability = GRANT_ABILITIES[e.change.grant];
-    const subject: TriggerSubject = { card: card.id, controller: card.controller, zone: "field", lookBack: false };
-    for (const data of matches(ability, event, subject, reader)) {
-      addPending(g, card.controller, card.id, `${GRANT_PREFIX}${e.change.grant}`, 0, event, data);
+    if (state.cards[e.target]?.zone === "field") granted.push({ card: e.target, grant: e.change.grant });
+  }
+  const onField = [...state.players[0].zones.field, ...state.players[1].zones.field];
+  for (const giver of onField) {
+    const grantsFor = scripts[infoDefId(g, giver)]?.field?.grantsFor;
+    if (!grantsFor) continue;
+    for (const card of onField) for (const grant of grantsFor(reader, giver, card)) granted.push({ card, grant });
+  }
+  for (const { card, grant } of granted) {
+    const controller = state.cards[card]!.controller;
+    const subject: TriggerSubject = { card, controller, zone: "field", lookBack: false };
+    for (const data of matches(GRANT_ABILITIES[grant], event, subject, reader)) {
+      addPending(g, controller, card, `${GRANT_PREFIX}${grant}`, 0, event, data);
+    }
+  }
+
+  // Automatic abilities a keyword stands for (CR 12.13 Drain); one instance per keyword even
+  // if the card has it more than once (12.13.3).
+  for (const card of onField) {
+    for (const keyword of KEYWORD_TRIGGERS) {
+      if (!hasKeyword(g, card, keyword)) continue;
+      const controller = state.cards[card]!.controller;
+      const subject: TriggerSubject = { card, controller, zone: "field", lookBack: false };
+      KEYWORD_ABILITIES[keyword]!.forEach((ability, index) => {
+        if (ability.kind !== "automatic") return;
+        for (const data of matches(ability, event, subject, reader)) {
+          addPending(g, controller, card, `${KEYWORD_DEF_PREFIX}${keyword}`, index, event, data);
+        }
+      });
     }
   }
 

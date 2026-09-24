@@ -31,6 +31,12 @@ export interface MoveSpec {
    * Otherwise they end, because the moved card is a new card (CR 4.1.4, 10.9.2).
    */
   keepEffects?: boolean;
+  /**
+   * Keep the card's counters (CR 10.6.2.1.3 EX area -> resolution zone, 10.6.2.8.1.1 resolution
+   * zone -> field). A card moved from the EX area directly onto the field keeps its effects
+   * (CR 4.8.3.3) and its counters (BP03-102 ruling) without asking.
+   */
+  keepCounters?: boolean;
   /** Overrides the batch's reason for this card (e.g. rules handling destroys some cards and
    *  moves others to the cemetery in the same simultaneous step, CR 11.1.3). */
   reason?: MoveReason;
@@ -147,11 +153,16 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
   if (specs.length === 0) return [];
   // Look-back information is captured before anything moves (CR 10.7.4.1).
   const olds = specs.map((s) => getCard(state, s.card));
-  const befores = olds.map((c) => ({
-    abilityDef: c.zone === "field" ? characteristics(g, c.id).def.id : c.def,
-    controller: c.controller,
-    counters: { ...c.counters },
-  }));
+  const befores = olds.map((c) => {
+    const onField = c.zone === "field" ? characteristics(g, c.id) : null;
+    return {
+      abilityDef: onField ? onField.def.id : c.def,
+      controller: c.controller,
+      counters: { ...c.counters },
+      // Every name it had there, e.g. "this follower's name is also Ghost" (CR 10.7.4.1.2).
+      names: onField ? [...onField.names] : [g.db.get(c.def).name],
+    };
+  });
 
   const moves: CardMove[] = [];
   const newIds: CardId[] = [];
@@ -163,6 +174,10 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
     const toPlayer = spec.player ?? old.owner;
     const card = freshInstance(state, old.printing, old.def, old.owner, toPlayer, spec.to, spec);
     initFieldCounters(g, card);
+    const exToField = old.zone === "ex" && spec.to === "field"; // CR 4.8.3.3, BP03-102 ruling
+    if ((spec.keepCounters || exToField) && Object.keys(old.counters).length > 0) {
+      card.counters = { ...card.counters, ...old.counters };
+    }
     if (spec.keepState) {
       // CR 5.22 — a stolen card is not newly put onto the field and keeps its state.
       card.damage = old.damage;
@@ -182,7 +197,7 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
     }
     attach(state, card, spec.position);
 
-    if (spec.keepEffects) {
+    if (spec.keepEffects || exToField) {
       for (const e of state.effects) if (e.target === old.id) e.target = card.id;
     } else if (state.effects.some((e) => e.target === old.id)) {
       state.effects = state.effects.filter((e) => e.target !== old.id);

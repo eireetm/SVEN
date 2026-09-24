@@ -213,12 +213,20 @@ export const whenThisIsSelected = (spec: TimingSpec) =>
     spec,
   );
 
-/** "Whenever one of your [matching] followers attacks". Data: the attacker. */
-export function whenYourFollowerAttacks(spec: TimingSpec, filter: (game: GameReader, card: CardId) => boolean): AutomaticAbility {
+/** "Whenever one of your [matching] followers attacks" ("another": not this card). Data: the attacker. */
+export function whenYourFollowerAttacks(
+  spec: TimingSpec,
+  filter: (game: GameReader, card: CardId) => boolean,
+  opts: { another?: boolean } = {},
+): AutomaticAbility {
   return automatic(
     "other",
     (e, me, game) =>
-      !me.lookBack && e.type === "attackDeclared" && e.player === me.controller && filter(game, e.attacker)
+      !me.lookBack &&
+      e.type === "attackDeclared" &&
+      e.player === me.controller &&
+      !(opts.another && e.attacker === me.card) &&
+      filter(game, e.attacker)
         ? [{ card: e.attacker }]
         : false,
     spec,

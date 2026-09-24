@@ -59,7 +59,8 @@ export const TEST_CARDS = [
   testSpell("KILL2", 1, { text: "Destroy 2 enemy followers." }),
   testSpell("PING-UPTO2", 0, { text: "Deal 1 damage to up to 2 enemy followers." }),
   testSpell("GIVE-STORM", 0, { text: "Give one of your followers Storm until the end of the turn." }),
-  testSpell("GIVE-DRAIN", 0, { text: "Give one of your followers Drain (not implemented)." }),
+  testSpell("GIVE-DRAIN", 0, { text: "Give one of your followers Drain." }),
+  testSpell("GIVE-UNKNOWN", 0, { text: "Give one of your followers a keyword the engine does not know." }),
   testFollower("INTIM", 1, 1, 1, { text: "Intimidate" }),
   testFollower("BANE", 1, 1, 1, { text: "Bane" }),
   testFollower("FAN-DMG", 2, 2, 2, { text: "Fanfare: deal 1 damage to an enemy follower." }),
@@ -131,6 +132,17 @@ export const TEST_SCRIPTS: ScriptRegistry = {
         targets: [ownFollower],
         *resolve(fx) {
           yield* fx.giveKeyword(fx.targets[0]![0]!, "drain");
+        },
+      },
+    ],
+  }),
+  "GIVE-UNKNOWN": s({
+    abilities: [
+      {
+        kind: "spell",
+        targets: [ownFollower],
+        *resolve(fx) {
+          yield* fx.giveKeyword(fx.targets[0]![0]!, "fuse" as "ward");
         },
       },
     ],

@@ -1,18 +1,14 @@
 // BP03-075 Masquerade Ghost (Evolved) — Abysscraft, 5/5.
 // Whenever a Ghost is put onto your field, +1 attack.
 // Whenever a Ghost you control leaves the field, summon a Gargantuan Ghost.
-// A card whose name is also Ghost counts (it had that name on the field). Gargantuan Ghost does not.
+// A card whose name is also Ghost counts: the names it had on the field are used (CR 10.7.4.1.2).
+// Gargantuan Ghost does not. It also triggers when this card leaves the field at the same time
+// as the Ghost, e.g. both destroyed by one effect (CR 10.7.4.2).
 // {[lastwords]} Put this card into its owner's EX area.
 import type { GameEvent } from "../../events/types";
 import type { TriggerSubject } from "../types";
-import type { GameReader } from "../../engine/query";
 import { defineCard, lastWords, whenFollowerEntersYourField } from "../helpers";
 import { named } from "../targets";
-
-function isGhostOnField(game: GameReader, abilityDef: string, printed: string): boolean {
-  const def = game.db.get(abilityDef || printed);
-  return def.name === "Ghost" || def.text.en.includes("name is also Ghost");
-}
 
 export default defineCard({
   abilities: [
@@ -28,8 +24,8 @@ export default defineCard({
     {
       kind: "automatic",
       timing: "other",
-      trigger: (e: GameEvent, me: TriggerSubject, game: GameReader) => {
-        if (me.lookBack || e.type !== "cardsMoved") return [];
+      trigger: (e: GameEvent, me: TriggerSubject) => {
+        if (e.type !== "cardsMoved") return [];
         return e.moves
           .filter(
             (m) =>
@@ -37,7 +33,7 @@ export default defineCard({
               m.from?.zone === "field" &&
               m.to.zone !== "field" &&
               m.before?.controller === me.controller &&
-              isGhostOnField(game, m.before.abilityDef, m.def),
+              m.before.names.includes("Ghost"),
           )
           .map(() => ({}));
       },

@@ -46,10 +46,11 @@ export interface CardMove {
   reason: MoveReason;
   /**
    * Look-back information (CR 10.7.4.1): the definition that provided the card's abilities,
-   * its controller, and the counters it had in the zone it left (e.g. BP03-090 "if this card
-   * had a Fable counter" — counters are removed by the move itself, CR 15.1).
+   * its controller, the counters it had (e.g. BP03-090 "if this card had a Fable counter"; the
+   * moved card is a new card without them, CR 4.1.4) and every name it had in the zone it
+   * left (e.g. BP03-075 "whenever a Ghost you control leaves the field", CR 10.7.4.1.2).
    */
-  before: { abilityDef: DefId; controller: PlayerId; counters: Record<string, number> } | null;
+  before: { abilityDef: DefId; controller: PlayerId; counters: Record<string, number>; names: string[] } | null;
 }
 
 export type GameEvent =

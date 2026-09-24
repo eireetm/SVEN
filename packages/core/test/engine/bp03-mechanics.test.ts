@@ -21,6 +21,9 @@ const extra = [
   testEvolved("FORM", "Evo Host, Attack Form", 7, 5, { text: "Also Evo Host." }),
   testFollower("GRANT", 1, 1, 1, { text: "Grant destroy." }),
   testFollower("NOATK", 2, 3, 3, { text: "Can't attack without a counter." }),
+  testFollower("CHEAPF", 3, 1, 1, { text: "Deal 1." }),
+  testSpell("EX-OUT", 0, { text: "Put a follower from your EX area onto your field." }),
+  testSpell("MARK", 0, { text: "Give a card in your EX area +1/+1 and a Fable counter." }),
 ];
 
 const s = (x: CardScript) => defineCard(x);
@@ -50,10 +53,11 @@ const scripts: Record<string, CardScript> = {
     ],
   }),
   OZ: s({
+    nextPlay: { spell: (g, card) => g.info(card).type === "spell" },
     abilities: [
       fanfare({
         *resolve(fx) {
-          yield* fx.nextSpellCostsLess(4);
+          yield* fx.nextPlayCostsLess("spell", 4);
         },
       }),
     ],
@@ -106,6 +110,28 @@ const scripts: Record<string, CardScript> = {
     ],
   }),
   NOATK: s({ cannotAttack: (g, self) => g.counters(self, "fable") === 0 }),
+  CHEAPF: s({}),
+  "EX-OUT": s({
+    abilities: [
+      spell({
+        *resolve(fx) {
+          yield* fx.putOntoField(fx.game.cards(fx.controller, "ex"));
+        },
+      }),
+    ],
+  }),
+  MARK: s({
+    abilities: [
+      spell({
+        *resolve(fx) {
+          for (const id of fx.game.cards(fx.controller, "ex")) {
+            yield* fx.giveStats(id, 1, 1);
+            yield* fx.addCounters(id, "fable", 1);
+          }
+        },
+      }),
+    ],
+  }),
 };
 
 const engine = createEngine({ cards: [...TEST_CARDS, ...extra], scripts });
@@ -121,6 +147,8 @@ describe("BP03 mechanics", () => {
     // Attack damage 3 heals; the defender's combat damage does not.
     expect(t.leader()).toBe(10 + 3);
     expect(t.stats("DRAINER")).toEqual([3, 1]);
+    // It is an automatic ability (CR 12.13.1): it became pending and was played.
+    expect(t.events.some((e) => e.type === "abilityTriggered" && e.sourceDef === "kw:drain")).toBe(true);
   });
 
   it("steal keeps damage and does not grant a new fanfare (CR 5.22)", () => {
@@ -167,6 +195,20 @@ describe("BP03 mechanics", () => {
     expect(t.pp()).toBe(9 - 2);
     t.play("CHEAP");
     expect(t.pp()).toBe(1);
+  });
+
+  it("a next-play reduction ignores cards it does not match and ends with the turn (CR 7.4.8)", () => {
+    const t = d({ me: { hand: ["OZ", "CHEAPF", "CHEAP"], deck: ["V1"], playPoints: 10 }, opp: { deck: ["V1"] } });
+    t.play("OZ").play("CHEAPF");
+    expect([t.pp(), t.game.state.nextPlay.length]).toEqual([6, 1]); // the follower paid full price
+    t.end();
+    expect(t.game.state.nextPlay).toEqual([]);
+  });
+
+  it("a card moved from the EX area directly onto the field keeps its effects (CR 4.8.3.3) and counters", () => {
+    const t = d({ me: { hand: ["MARK", "EX-OUT"], ex: ["V1"] } });
+    t.play("MARK").play("EX-OUT");
+    expect([t.field(), t.stats("V1"), t.counters("V1", "fable")]).toEqual([["V1"], [3, 3], 1]);
   });
 
   it("divided damage lets the player assign the split", () => {

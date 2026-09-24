@@ -3,14 +3,14 @@ import type { Mode, PlayOption, SpellAbility } from "../../script/types";
 import { putOntoField } from "../actions/cards";
 import { canPayPlayPoints, payPlayPoints } from "../actions/points";
 import { chooseTargets, targetsAvailable } from "../abilities/targets";
-import { earthRiteSources, payEarthRite, playCost } from "../costs";
+import { earthRiteSources, nextPlayModifiersFor, payEarthRite, playCost } from "../costs";
 import { makeEffectContext, type EffectInit } from "../effects/context";
-import { chooseModes, chooseModeTargets } from "../abilities/modes";
+import { chooseModeCosts, chooseModes, chooseModeTargets } from "../abilities/modes";
 import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import { chooseOptions, confirm } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
-import { getCard, nextSeq, type Env } from "../state/access";
+import { getCard, type Env } from "../state/access";
 import { characteristics } from "../state/characteristics";
 import { fieldLimit } from "../state/limits";
 import { moveCards } from "../state/zones";
@@ -93,8 +93,10 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
   const def = getCard(g.state, card).def;
   const ch = characteristics(g, card);
 
-  // 10.6.2.1 reveal it and move it to the resolution zone (EX effects carry over, 10.6.2.1.3)
-  const [played] = moveCards(g, [{ card, to: "resolution", player, keepEffects: from === "ex" }], "play");
+  // 10.6.2.1 reveal it and move it to the resolution zone (effects and counters it had in the
+  // EX area carry over, 10.6.2.1.3)
+  const fromEx = from === "ex";
+  const [played] = moveCards(g, [{ card, to: "resolution", player, keepEffects: fromEx, keepCounters: fromEx }], "play");
   if (played === undefined) throw new EngineError("played card vanished");
   const spell = ch.type === "spell" ? spellAbilityOf(g, played) : undefined;
 
@@ -120,6 +122,8 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
   const targets = spell && modes.length === 0 ? yield* chooseTargets(g, spell.targets, player, played) : [];
   const modeTargets = yield* chooseModeTargets(g, player, modes, played);
   if (targets === null || modeTargets === null) throw new EngineError("card played without legal targets");
+  // 10.6.2.2.1 whether to pay each chosen option's optional additional cost (BP03-117 ruling)
+  const modePaid = yield* chooseModeCosts(g, player, modes, played);
   const fx = (extra: Partial<EffectInit> = {}) =>
     makeEffectContext(g, {
       controller: player,
@@ -131,11 +135,15 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
       earthRitePaid: earthRite,
       ...extra,
     });
-  // 10.6.2.5 determine and pay the cost: the play option's process, Earth Rite, play points
+  // 10.6.2.5 determine and pay the cost: the play option's process, the options' additional
+  // costs, Earth Rite, play points
   if (option) yield* option.pay(fx());
+  for (const [i, m] of modes.entries()) if (modePaid[i]) yield* m.cost!.pay(fx({ mode: m.id }));
   if (earthRite) yield* payEarthRite(g, player, spell?.earthRite?.count ?? 1, played);
+  const nextPlay = nextPlayModifiersFor(g, played, player);
   payPlayPoints(g, player, playCost(g, played, player, option, opts.setCost));
-  if (ch.type === "spell") g.state.players[player].nextSpellReduction = 0; // BP03-038 consumed by this play
+  // "The next card you play this turn costs N less" is used up by this play (BP03-038 ruling).
+  if (nextPlay.length > 0) g.state.nextPlay = g.state.nextPlay.filter((m) => !nextPlay.includes(m));
   // 10.6.2.6 field limit: verified by playVariants before anything moved.
   // 10.6.2.7 the card has been played (counts for Combo, 13.2.1.3)
   const ps = g.state.players[player];
@@ -144,28 +152,17 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
 
   // 10.6.2.8 resolve
   if (ch.type === "follower" || ch.type === "amulet") {
-    // 10.6.2.8.1 onto the field if under the limit; effects from the resolution zone carry over (10.6.2.8.1.1)
-    const entered = yield* putOntoField(g, [played], player, "resolve", { keepEffects: true });
-    // BP03-089 — the next follower put onto the field by playing it gets +1/+1 per pending copy.
-    const buff = g.state.players[player].nextFollowerBuff;
-    if (ch.type === "follower" && buff > 0 && entered[0] !== undefined) {
-      g.state.players[player].nextFollowerBuff = 0;
-      const seq = nextSeq(g.state);
-      g.state.effects.push({
-        id: `e${seq}`,
-        seq,
-        target: entered[0],
-        source: entered[0],
-        controller: player,
-        until: null,
-        createdTurn: g.state.turn,
-        change: { kind: "stats", attack: buff, defense: buff },
-      });
-    }
+    // 10.6.2.8.1 onto the field if under the limit; effects and counters from the resolution
+    // zone carry over (10.6.2.8.1.1)
+    yield* putOntoField(g, [played], player, "resolve", { keepEffects: true, keepCounters: true });
   } else if (spell) {
-    // 10.6.2.8.2 perform the spell's text in order (the chosen options in listed order, 5.18.1)
+    // 10.6.2.8.2 perform the spell's text in order (the chosen options in listed order, 5.18.1).
+    // An option whose optional additional cost was not paid does nothing (BP03-117 ruling).
     if (modes.length > 0) {
-      for (const [i, m] of modes.entries()) yield* m.resolve(fx({ targets: modeTargets[i]!, mode: m.id }));
+      for (const [i, m] of modes.entries()) {
+        if (m.cost && !modePaid[i]) continue;
+        yield* m.resolve(fx({ targets: modeTargets[i]!, mode: m.id }));
+      }
     } else if (spell.resolve) {
       yield* spell.resolve(fx());
     }

@@ -14,6 +14,7 @@ interface Opts {
   upTo?: boolean;
   filter?: Filter;
   when?: TargetSpec["when"];
+  max?: TargetSpec["max"];
 }
 
 function spec(candidates: (g: GameReader, controller: PlayerId, self: CardId) => CardId[], o: Opts): TargetSpec {
@@ -23,6 +24,7 @@ function spec(candidates: (g: GameReader, controller: PlayerId, self: CardId) =>
     candidates: (g, c, self) => candidates(g, c, self).filter((id) => o.filter?.(g, id) ?? true),
   };
   if (o.when) t.when = o.when;
+  if (o.max) t.max = o.max;
   return t;
 }
 

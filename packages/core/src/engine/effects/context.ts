@@ -104,7 +104,17 @@ export interface EffectContext {
    */
   search(
     filter: (card: CardId) => boolean,
-    opts?: { max?: number; to?: "hand" | "field" | "ex"; player?: PlayerId; reveal?: boolean },
+    opts?: {
+      max?: number;
+      to?: "hand" | "field" | "ex";
+      /**
+       * Decide the destination per found card after it is revealed, e.g. BP03-002 "add it to your
+       * hand; if it costs 2 or less, you may put it onto your field instead". Overrides `to`.
+       */
+      destination?: (card: CardId) => Proc<"hand" | "field" | "ex">;
+      player?: PlayerId;
+      reveal?: boolean;
+    },
   ): Proc<CardId[]>;
   /** CR 5.11 the top cards of a deck (the player looks at them). */
   topCards(count: number, player?: PlayerId): CardId[];
@@ -174,7 +184,7 @@ export interface EffectContext {
   /** Play a card from anywhere as part of this effect, optionally for a set cost (e.g. "for 0"). */
   playCard(card: CardId, opts?: { cost?: number }): Proc<void>;
   /** CR 10.7.5 register a delayed trigger: ability `index` of this ability's definition. */
-  delay(index: number): Proc<void>;
+  delay(index: number, until?: "endOfTurn"): Proc<void>;
   /**
    * A slot a cost's `pay` can fill for the effect that follows it. Shared by the pay and the
    * resolve of one ability. Not stored in GameState — a replay re-runs the ability.
@@ -190,11 +200,15 @@ export interface EffectContext {
   cantActivate(card: CardId, exceptEvolve: boolean, until?: Until): Proc<void>;
   /** Give a card an ability defined in engine/abilities/grants.ts (BP03-062, 083, 112). */
   grant(card: CardId, id: GrantedAbilityId, until?: Until | null): Proc<void>;
-  /** "The next spell you play this turn costs N less" (BP03-038). */
-  nextSpellCostsLess(amount: number): Proc<void>;
-  /** "The next follower you play this turn gets +1/+1" (BP03-089). Each call stacks. */
-  buffNextPlayedFollower(): Proc<void>;
-  /** Deal `total` ability damage divided as chosen among the targets (BP03-007). */
+  /**
+   * "The next [matching] card you play this turn costs `amount` less" (BP03-038). Which cards
+   * match is `CardScript.nextPlay[key]` of this ability's definition.
+   */
+  nextPlayCostsLess(key: string, amount: number): Proc<void>;
+  /**
+   * Deal `total` ability damage divided as the controller chooses among the targets, at least 1
+   * to each (rulings BP08-028 / EBD02-015; select at most `total` targets, see TargetSpec.max).
+   */
   dealDividedDamage(targets: readonly CardId[], total: number): Proc<void>;
   /** Shuffle these cards onto the bottom of their owner's deck (CR 5.9). */
   shuffleToBottom(cards: readonly CardId[]): Proc<void>;
@@ -306,10 +320,12 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       // A card in a non-public zone need not be found (CR 4.1.2.2), so the minimum is 0.
       const chosen = yield* selectCards(g, player, "search", matching, 0, max, selfIfPresent(), deck);
       if (opts.reveal ?? true) revealCards(g, player, chosen);
-      let moved: CardId[];
-      if (opts.to === "field") moved = yield* putOntoField(g, chosen, player, "effect", { chooser: ctrl });
-      else if (opts.to === "ex") moved = yield* putIntoEx(g, chosen, ctrl);
-      else moved = moveCards(g, chosen.map((card) => ({ card, to: "hand" as const, player })), "effect");
+      const groups: Record<"hand" | "field" | "ex", CardId[]> = { hand: [], field: [], ex: [] };
+      for (const card of chosen) groups[opts.destination ? yield* opts.destination(card) : (opts.to ?? "hand")].push(card);
+      const moved: CardId[] = [];
+      if (groups.hand.length > 0) moved.push(...moveCards(g, groups.hand.map((card) => ({ card, to: "hand" as const, player })), "effect"));
+      if (groups.field.length > 0) moved.push(...(yield* putOntoField(g, groups.field, player, "effect", { chooser: ctrl })));
+      if (groups.ex.length > 0) moved.push(...(yield* putIntoEx(g, groups.ex, ctrl)));
       shuffleDeck(g, player); // CR 5.8.2
       return moved;
     },
@@ -457,7 +473,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *playCard(card, opts = {}) {
       yield* playCard(g, ctrl, card, { setCost: opts.cost, byEffect: true });
     },
-    *delay(index) {
+    *delay(index, until) {
       const seq = nextSeq(g.state);
       g.state.delayed.push({
         id: `d${seq}`,
@@ -467,6 +483,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
         sourceDef: init.sourceDef,
         ability: index,
         createdTurn: g.state.turn,
+        until: until ?? null,
       });
     },
     memory,
@@ -485,11 +502,18 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *grant(card, id, until = null) {
       if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "grantedAbility", grant: id });
     },
-    *nextSpellCostsLess(amount) {
-      if (amount > 0) g.state.players[ctrl].nextSpellReduction += amount;
-    },
-    *buffNextPlayedFollower() {
-      g.state.players[ctrl].nextFollowerBuff += 1;
+    *nextPlayCostsLess(key, amount) {
+      if (!g.scripts[init.sourceDef]?.nextPlay?.[key]) throw new EngineError(`${init.sourceDef} has no nextPlay "${key}"`);
+      const seq = nextSeq(g.state);
+      g.state.nextPlay.push({
+        id: `n${seq}`,
+        seq,
+        player: ctrl,
+        sourceDef: init.sourceDef,
+        key,
+        costDelta: -amount,
+        createdTurn: g.state.turn,
+      });
     },
     *dealDividedDamage(targets, total) {
       const present = targets.filter((id) => {
@@ -497,12 +521,16 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
         return c !== undefined && (c.zone === "field" || c.zone === "leader");
       });
       if (present.length === 0 || total <= 0) return;
+      // Each selected card gets at least 1 (rulings BP08-028 / EBD02-015). Selections are capped
+      // at the damage when made (TargetSpec.max), so this only fails for a wrong script.
+      if (total < present.length) throw new EngineError(`cannot divide ${total} damage among ${present.length} cards`);
       const amounts: number[] = [];
       let left = total;
       for (let i = 0; i < present.length - 1; i++) {
-        const options = Array.from({ length: left + 1 }, (_, n) => ({ id: String(n), label: String(n) }));
-        const [pick] = yield* chooseOptions(g, ctrl, "effect", options, 1, 1, selfIfPresent());
-        const n = Number(pick ?? 0);
+        const most = left - (present.length - 1 - i); // leave at least 1 for each later card
+        const options = Array.from({ length: most }, (_, k) => ({ id: String(k + 1), label: String(k + 1) }));
+        const [pick] = yield* chooseOptions(g, ctrl, "divideDamage", options, 1, 1, selfIfPresent(), present[i]);
+        const n = Number(pick);
         amounts.push(n);
         left -= n;
       }

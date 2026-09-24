@@ -23,11 +23,11 @@ export default defineCard({
     whenYourFollowerAttacks(
       {
         *resolve(fx) {
-          if (fx.data?.card === fx.self) return;
           yield* fx.dealDamage(fx.game.leader(fx.game.opponent(fx.controller)), 1);
         },
       },
       stormOrWard,
+      { another: true },
     ),
   ],
 });

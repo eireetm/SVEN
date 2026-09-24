@@ -30,6 +30,26 @@ export const KEYWORD_ABILITIES: Partial<Record<Keyword, readonly AbilityDef[]>> 
       },
     },
   ],
+  // CR 12.13.2 Drain: "Whenever this follower deals attack damage, increase your leader's
+  // defense by a value equal to the amount of damage it dealt." Attack damage is what the
+  // attacking follower deals its attack target (12.13.2.1); damage dealt back to it, or by an
+  // ability, does not count (12.13.2.2). An automatic ability (12.13.1), so it waits for the
+  // next Confirmation Timing like any other.
+  drain: [
+    {
+      kind: "automatic",
+      timing: "other",
+      trigger: (e, me) => !me.lookBack && e.type === "damageDealt" && e.source === me.card && e.kind === "attack" && e.amount > 0,
+      *resolve(fx) {
+        if (fx.event?.type === "damageDealt") yield* fx.giveLeaderDefense(fx.controller, fx.event.amount);
+      },
+    },
+  ],
 };
+
+/** Keywords that stand for automatic abilities: checked after every event (triggers.ts). */
+export const KEYWORD_TRIGGERS: readonly Keyword[] = (Object.keys(KEYWORD_ABILITIES) as Keyword[]).filter((k) =>
+  KEYWORD_ABILITIES[k]!.some((a) => a.kind === "automatic"),
+);
 
 export const KEYWORD_DEF_PREFIX = "kw:";

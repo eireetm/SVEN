@@ -56,6 +56,8 @@ describe("BP03 Forestcraft", () => {
     const cheap = d({ me: { hand: ["BP03-002"], deck: ["BP03-009", "V5"], playPoints: 5 } });
     cheap.play("BP03-002").pick("BP03-009").yes();
     expect(cheap.field()).toEqual(["BP03-002", "BP03-009"]);
+    // "Instead": straight from the deck onto the field, never through the hand.
+    expect(cheap.game.state.cards[cheap.id("BP03-009")]!.enteredFrom).toBe("deck");
     const keep = d({ me: { hand: ["BP03-002"], deck: ["BP03-009", "V5"], playPoints: 5 } });
     keep.play("BP03-002").pick("BP03-009").no();
     expect([keep.hand(), keep.field()]).toEqual([["BP03-009"], ["BP03-002"]]);
@@ -66,6 +68,8 @@ describe("BP03 Forestcraft", () => {
     const skip = d({ me: { hand: ["BP03-002"], deck: ["BP03-009", "V5"], playPoints: 5 } }).play("BP03-002").none();
     expect(skip.hand()).toEqual([]);
 
+    // The evolve cost returns another follower: an amulet cannot pay it.
+    expect(d({ me: { field: ["BP03-002", "AMULET"], evolveDeck: ["BP03-003"], playPoints: 1 } }).canEvolve("BP03-002")).toBe(false);
     const base = { me: { field: ["BP03-002", "V1"], evolveDeck: ["BP03-003"], playPoints: 1 } };
     const destroy = d({ ...base, opp: { field: ["V5", { card: "BP03-014", evolvedInto: "BP03-015" }] } });
     destroy.evolve("BP03-002").pick("opp:BP03-014");
@@ -109,11 +113,22 @@ describe("BP03 Forestcraft", () => {
   });
 
   it("007 Elf Twins' Assault — X divided between up to 2 enemies, X equal to your EX area", () => {
-    const t = d({ me: { hand: ["BP03-007"], ex: ["V1", "V2"], playPoints: 2 }, opp: { field: ["V5", "V3"] } });
-    t.play("BP03-007").pick("opp:V5", "opp:V3").choose("1");
-    expect([t.stats("opp:V5"), t.stats("opp:V3")]).toEqual([[5, 4], [3, 3]]);
-    const none = d({ me: { hand: ["BP03-007"], playPoints: 2 }, opp: { field: ["V5"] } }).play("BP03-007").none();
-    expect(none.stats("opp:V5")).toEqual([5, 5]);
+    // X = 3 between two followers: at least 1 each (rulings BP08-028 / EBD02-015).
+    const t = d({ me: { hand: ["BP03-007"], ex: ["V1", "V2", "V3"], playPoints: 2 }, opp: { field: ["V5", "V3"] } });
+    t.play("BP03-007").pick("opp:V5", "opp:V3");
+    const split = t.decision?.type === "choose" ? t.decision : null;
+    expect([split?.reason, split?.options.map((o) => o.id), split?.subject?.def]).toEqual(["divideDamage", ["1", "2"], "V5"]);
+    t.choose("2");
+    expect([t.stats("opp:V5"), t.stats("opp:V3")]).toEqual([[5, 3], [3, 3]]);
+    // X = 1: only one follower can be selected; X = 0: none.
+    const one = d({ me: { hand: ["BP03-007"], ex: ["V1"], playPoints: 2 }, opp: { field: ["V5", "V3"] } }).play("BP03-007");
+    expect(one.decision).toMatchObject({ type: "selectCards", min: 0, max: 1 });
+    const none = d({ me: { hand: ["BP03-007"], playPoints: 2 }, opp: { field: ["V5"] } }).play("BP03-007");
+    expect([none.decision?.type, none.stats("opp:V5")]).toEqual(["mainPhase", [5, 5]]);
+    // Two Diamond Masters must both be selected when X allows (ruling), and each gets damage.
+    const dm = d({ me: { hand: ["BP03-007"], ex: ["V1", "V2"], playPoints: 2 }, opp: { field: ["BP03-091", "BP03-091", "V1"] } });
+    dm.play("BP03-007");
+    expect(dm.decision).toMatchObject({ type: "selectCards", min: 2, max: 2 });
     const all = d({ me: { hand: ["BP03-007"], ex: ["V1", "V2", "V3"], playPoints: 2 }, opp: { field: ["V5"] } });
     all.play("BP03-007").pick("opp:V5");
     expect(all.stats("opp:V5")).toEqual([5, 2]);
@@ -162,6 +177,20 @@ describe("BP03 Forestcraft", () => {
     const aura = d({ me: { field: ["BP03-011", "V5"] }, opp: { field: [{ card: "BP03-001", engaged: true }] } });
     aura.attack("V5", "opp:BP03-001");
     expect([aura.field(), aura.field("opp")]).toEqual([["BP03-011"], []]);
+    // The follower has the ability, so the follower deals the damage (CR 10.9.1.2); two Woods
+    // give it twice.
+    const two = d({ me: { field: ["BP03-011", "BP03-011", "V1"] }, opp: { field: [{ card: "V5", engaged: true }] } });
+    two.attack("V1", "opp:V5");
+    const pending = two.game.state.pending.map((p) => [p.sourceDef, two.game.state.cards[p.source]?.def]);
+    expect(pending).toEqual([
+      ["grant:followerStrike2", "V1"],
+      ["grant:followerStrike2", "V1"],
+    ]);
+    two.flush(); // 2 + 2 from the Strikes, then 2 combat damage: the 5/5 is destroyed
+    expect(two.field("opp")).toEqual([]);
+    const one = d({ me: { field: ["BP03-011", "V1"] }, opp: { field: [{ card: "V5", engaged: true }] } });
+    one.attack("V1", "opp:V5");
+    expect(one.stats("opp:V5@field")).toEqual([5, 1]);
 
     const gone = d({ me: { hand: ["BP03-011"], deck: ["V1"], playPoints: 1 }, opp: { deck: ["V1"] } });
     gone.play("BP03-011").end().end();
