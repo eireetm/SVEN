@@ -1,3 +1,4 @@
+import type { CardType } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import type { TriggerData } from "../model/state";
 import type { CardMove, GameEvent } from "../events/types";
@@ -32,6 +33,7 @@ export interface TimingSpec {
   cost?: CustomCost;
   earthRite?: EarthRiteSpec;
   modes?: readonly Mode[];
+  modeCount?: AutomaticAbility["modeCount"];
   condition?: AutomaticAbility["condition"];
   oncePerTurn?: boolean;
   resolve?(fx: EffectContext): Proc<void>;
@@ -91,6 +93,10 @@ export const followerStrike = (spec: TimingSpec) =>
 export const atStartOfYourEndPhase = (spec: TimingSpec) =>
   automatic("other", (e, me) => !me.lookBack && e.type === "phaseStarted" && e.phase === "end" && e.player === me.controller, spec);
 
+/** "At the start of your main phase" (CR 7.3.1). */
+export const atStartOfYourMainPhase = (spec: TimingSpec) =>
+  automatic("other", (e, me) => !me.lookBack && e.type === "phaseStarted" && e.phase === "main" && e.player === me.controller, spec);
+
 /** "At the start of each player's main phase" (CR 7.3.1). Trigger data: that player. */
 export const atStartOfEachMainPhase = (spec: TimingSpec) =>
   automatic(
@@ -100,12 +106,13 @@ export const atStartOfEachMainPhase = (spec: TimingSpec) =>
   );
 
 /**
- * "Whenever [another] follower [matching] is put onto your field" — once per follower
- * (CR 10.7.2.1). Evolving is not being put onto the field (BP01-021 ruling). Data: the card.
+ * "Whenever [another] [follower / amulet / card] [matching] is put onto your field" — once per
+ * card (CR 10.7.2.1). Evolving is not being put onto the field (BP01-021 ruling). A card that
+ * moves from one player's field to the other's is not "put onto" it (10.7.4.3). Data: the card.
  */
-export function whenFollowerEntersYourField(
+export function whenCardEntersYourField(
   spec: TimingSpec,
-  opts: { another?: boolean; filter?: (game: GameReader, card: CardId) => boolean } = {},
+  opts: { type?: CardType; another?: boolean; filter?: (game: GameReader, card: CardId) => boolean } = {},
 ): AutomaticAbility {
   return automatic(
     "other",
@@ -120,7 +127,7 @@ export function whenFollowerEntersYourField(
                 m.to.player === me.controller &&
                 m.newCard !== null &&
                 game.card(m.newCard)?.zone === "field" &&
-                game.info(m.newCard).type === "follower" &&
+                (opts.type === undefined || game.info(m.newCard).type === opts.type) &&
                 !(opts.another && m.newCard === me.card) &&
                 (opts.filter?.(game, m.newCard) ?? true),
             )
@@ -128,6 +135,47 @@ export function whenFollowerEntersYourField(
     spec,
   );
 }
+
+/** "Whenever [another] follower [matching] is put onto your field" (see whenCardEntersYourField). */
+export function whenFollowerEntersYourField(
+  spec: TimingSpec,
+  opts: { another?: boolean; filter?: (game: GameReader, card: CardId) => boolean } = {},
+): AutomaticAbility {
+  return whenCardEntersYourField(spec, { ...opts, type: "follower" });
+}
+
+/**
+ * "Whenever one of your followers evolves" / "Whenever a follower on your field evolves"
+ * (CR 5.16.1.3; super-evolving is evolving, 12.2.4). Data: the evolved follower.
+ */
+export function whenYourFollowerEvolves(spec: TimingSpec): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game) =>
+      !me.lookBack && e.type === "evolved" && game.card(e.card)?.controller === me.controller ? [{ card: e.card }] : false,
+    spec,
+  );
+}
+
+/** "When your leader gains defense" (CR 5.27: its defense is increased). */
+export const whenYourLeaderGainsDefense = (spec: TimingSpec) =>
+  automatic("other", (e, me) => !me.lookBack && e.type === "leaderDefenseChanged" && e.player === me.controller && e.delta > 0, spec);
+
+/**
+ * "[During your turn,] whenever this follower deals combat damage" (CR 5.14.3.2: damage it deals
+ * to, or receives from, the follower it fights; not attack damage to a leader).
+ */
+export const whenThisDealsCombatDamage = (spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}) =>
+  automatic(
+    "other",
+    (e, me, game) =>
+      !me.lookBack &&
+      e.type === "damageDealt" &&
+      e.source === me.card &&
+      e.combat &&
+      (!opts.onlyYourTurn || game.activePlayer === me.controller),
+    spec,
+  );
 
 /** "When this card leaves the field" (look-back, CR 10.7.4.1.2). */
 export const whenThisLeavesField = (spec: TimingSpec) =>
@@ -214,6 +262,29 @@ export function whenAnotherAmuletLeaves(spec: TimingSpec, opts: { onlyYourTurn?:
 /** A delayed trigger "at the start of your next end phase" (register it with fx.delay). */
 export const delayedAtStartOfYourEndPhase = (spec: TimingSpec) =>
   automatic("other", (e, me) => e.type === "phaseStarted" && e.phase === "end" && e.player === me.controller, spec, { delayed: true });
+
+/**
+ * "Look at the top N cards of your deck. You may [reveal a matching card from among them and add
+ * it to your hand / put a matching card from among them onto your field]. Put the remaining
+ * cards on the bottom of your deck in any order." (CR 5.11, 5.21, 5.5). Returns the moved card.
+ */
+export function* lookAtTopCards(
+  fx: EffectContext,
+  count: number,
+  opts: { filter: (game: GameReader, card: CardId) => boolean; to: "hand" | "field" },
+): Proc<CardId[]> {
+  const top = fx.topCards(count);
+  const chosen = yield* fx.selectCards(top.filter((id) => opts.filter(fx.game, id)), 0, 1, fx.controller, top);
+  let moved: CardId[];
+  if (opts.to === "hand") {
+    yield* fx.reveal(chosen);
+    moved = yield* fx.returnToHand(chosen);
+  } else {
+    moved = yield* fx.putOntoField(chosen);
+  }
+  yield* fx.bottomInAnyOrder(top.filter((id) => fx.game.card(id)?.zone === "deck"));
+  return moved;
+}
 
 /** An activated ability. */
 export function activated(cost: CostSpec, spec: Omit<ActivatedAbility, "kind" | "cost"> = {}): ActivatedAbility {

@@ -9,6 +9,8 @@ import type { Proc } from "../runtime/proc";
 import { getCard, nextSeq } from "../state/access";
 import { characteristics } from "../state/characteristics";
 import { moveCards } from "../state/zones";
+import { makeReader } from "../query";
+import { makeEffectContext } from "../effects/context";
 
 type EvolveAction = Extract<MainAction, { type: "evolve" }>;
 
@@ -53,6 +55,7 @@ export interface EvolvePayment {
 export function evolvePayment(
   g: G,
   p: PlayerId,
+  card: CardId,
   cost: CostSpec,
   useEvolutionPoint: boolean,
   superEvolve: boolean,
@@ -60,6 +63,7 @@ export function evolvePayment(
   const ps = g.state.players[p];
   const costPlayPoints = cost.playPoints ?? 0;
   if (cost.leaderDefense && !canPayLeaderDefense(g, p, cost.leaderDefense)) return null; // CR 10.4.5
+  if (cost.custom && !cost.custom.canPay(makeReader(g), p, card)) return null; // e.g. BP02-089 "Discard 3 cards"
   let playPoints = costPlayPoints;
   let evolutionPoints = 0;
   if (useEvolutionPoint) {
@@ -89,7 +93,7 @@ export function evolveActions(g: G, p: PlayerId): EvolveAction[] {
         seen.add(def);
         for (const useEvolutionPoint of [false, true]) {
           for (const superEvolve of [false, true]) {
-            if (evolvePayment(g, p, ability.cost, useEvolutionPoint, superEvolve)) {
+            if (evolvePayment(g, p, card, ability.cost, useEvolutionPoint, superEvolve)) {
               out.push({ type: "evolve", card, ability: index, evolveCard, useEvolutionPoint, superEvolve });
             }
           }
@@ -109,10 +113,14 @@ export function* playEvolveAbility(g: G, p: PlayerId, action: EvolveAction): Pro
   }
   // 10.6.2.5 — cost: reveal the corresponding card (12.2.2), pay play / evolution points
   // (12.2.3) and optionally a super-evolution point (12.2.4).
-  const payment = evolvePayment(g, p, ref.ability.cost, action.useEvolutionPoint, action.superEvolve);
+  const payment = evolvePayment(g, p, action.card, ref.ability.cost, action.useEvolutionPoint, action.superEvolve);
   if (!payment) throw new EngineError("evolve cost cannot be paid");
   payPlayPoints(g, p, payment.playPoints);
   if (ref.ability.cost.leaderDefense) changeLeaderDefense(g, p, -ref.ability.cost.leaderDefense);
+  if (ref.ability.cost.custom) {
+    const init = { controller: p, self: action.card, sourceDef: ch.def.id, targets: [], event: null };
+    yield* ref.ability.cost.custom.pay(makeEffectContext(g, init));
+  }
   spendPoints(g, p, payment.evolutionPoints, payment.superEvolutionPoints);
   // 10.6.2.7 — played; counts as this turn's evolve ability (8.3.2.1)
   g.state.players[p].evolveAbilityTurn = g.state.turn;
@@ -144,6 +152,7 @@ export function evolveCard(g: G, fieldCard: CardId, evolveDeckCard: CardId, supe
       source: fieldCard,
       controller: c.controller,
       until: null,
+      createdTurn: g.state.turn,
       change: { kind: "stats", attack: 1, defense: 1 },
     });
     c.superEvolved = true;

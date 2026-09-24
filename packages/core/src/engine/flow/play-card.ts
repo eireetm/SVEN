@@ -4,7 +4,8 @@ import { putOntoField } from "../actions/cards";
 import { canPayPlayPoints, payPlayPoints } from "../actions/points";
 import { chooseTargets, targetsAvailable } from "../abilities/targets";
 import { earthRiteSources, payEarthRite, playCost } from "../costs";
-import { makeEffectContext } from "../effects/context";
+import { makeEffectContext, type EffectInit } from "../effects/context";
+import { chooseModes, chooseModeTargets } from "../abilities/modes";
 import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import { chooseOptions, confirm } from "../runtime/decide";
@@ -104,28 +105,29 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
     const [id] = yield* chooseOptions(g, player, "playOption", labeled, 1, 1, played);
     option = variants.find((v) => (v?.id ?? "normal") === id) ?? null;
   }
-  let mode: Mode | null = null;
+  let modes: Mode[] = [];
   if (spell?.modes) {
-    const modes = performableModes(g, spell.modes, player, played);
-    const [id] = yield* chooseOptions(g, player, "mode", modes.map((m) => ({ id: m.id, label: m.label })), 1, 1, played);
-    mode = modes.find((m) => m.id === id)!;
+    const chosen = yield* chooseModes(g, player, spell, played);
+    if (chosen === null) throw new EngineError("card played without a performable option");
+    modes = chosen;
   }
   let earthRite = false;
-  if (mode?.earthRite || spell?.earthRite?.mode === "required") earthRite = true;
+  if (modes.some((m) => m.earthRite) || spell?.earthRite?.mode === "required") earthRite = true;
   else if (spell?.earthRite && earthRiteSources(g, player, spell.earthRite.count).length > 0) {
     earthRite = yield* confirm(g, player, "earthRite", played);
   }
-  // 10.6.2.3 targets
-  const targets = spell ? yield* chooseTargets(g, mode?.targets ?? spell.targets, player, played) : [];
-  if (targets === null) throw new EngineError("card played without legal targets");
-  const fx = (extra = {}) =>
+  // 10.6.2.3 targets (of each chosen option, 5.18.4)
+  const targets = spell && modes.length === 0 ? yield* chooseTargets(g, spell.targets, player, played) : [];
+  const modeTargets = yield* chooseModeTargets(g, player, modes, played);
+  if (targets === null || modeTargets === null) throw new EngineError("card played without legal targets");
+  const fx = (extra: Partial<EffectInit> = {}) =>
     makeEffectContext(g, {
       controller: player,
       self: played,
       sourceDef: def,
       targets,
       event: null,
-      mode: mode?.id ?? null,
+      mode: null,
       earthRitePaid: earthRite,
       ...extra,
     });
@@ -144,9 +146,12 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
     // 10.6.2.8.1 onto the field if under the limit; effects from the resolution zone carry over (10.6.2.8.1.1)
     yield* putOntoField(g, [played], player, "resolve", { keepEffects: true });
   } else if (spell) {
-    // 10.6.2.8.2 perform the spell's text in order
-    const resolve = mode?.resolve ?? spell.resolve;
-    if (resolve) yield* resolve(fx());
+    // 10.6.2.8.2 perform the spell's text in order (the chosen options in listed order, 5.18.1)
+    if (modes.length > 0) {
+      for (const [i, m] of modes.entries()) yield* m.resolve(fx({ targets: modeTargets[i]!, mode: m.id }));
+    } else if (spell.resolve) {
+      yield* spell.resolve(fx());
+    }
   }
   // 10.6.2.8.2.3 anything still in the resolution zone goes to its owner's cemetery
   if (g.state.cards[played]?.zone === "resolution") moveCards(g, [{ card: played, to: "cemetery" }], "resolve");

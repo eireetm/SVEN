@@ -11,7 +11,7 @@ export default defineCard({
       targets: [enemyFollower()],
       *resolve(fx) {
         const t = fx.targets[0]![0]!;
-        const sc = fx.game.spellsInCemetery(fx.controller); // fixed now (CR 13.3.1.4)
+        const sc = fx.game.spellchainCount(fx.controller); // fixed now (CR 13.3.1.4)
         const damage = [{ target: t, amount: sc >= 5 ? 4 : 2 }];
         if (sc >= 10) damage.push({ target: fx.game.leader(fx.game.controller(t)), amount: 2 });
         yield* fx.dealDamages(damage);

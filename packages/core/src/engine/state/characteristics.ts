@@ -5,6 +5,7 @@ import type { AbilityDef } from "../../script/types";
 import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX } from "../abilities/keyword-abilities";
 import { makeReader } from "../query";
 import { getCard, type Env } from "./access";
+import { effectInForce } from "./effects";
 
 /** An ability together with where it is defined (definition id + index in its script). */
 export interface AbilityRef {
@@ -53,7 +54,7 @@ export function infoDefId(env: Env, id: CardId): DefId {
  *  1. printed information, or the linked evolve-zone card's information on the field
  *     (excluding cost) (10.9.1.1, 10.9.1.1.1, 5.16.1.2);
  *  2. abilities given by effects and by passive abilities of cards on the field (10.9.1.2);
- *  3. (non-numeric changes — none implemented yet, 10.9.1.3);
+ *  3. non-numeric changes: traits given by effects (10.9.1.3, e.g. BP02-T07);
  *  4. numeric changes in timestamp order (10.9.1.4, 10.9.1.6);
  * then damage reduces defense (2.8.2). Leaders use the player's leader defense (2.8.3).
  */
@@ -70,10 +71,13 @@ export function characteristics(env: Env, id: CardId): Characteristics {
   };
   let attack = def.attack;
   let defense = def.defense;
+  const traits = [...def.traits];
   for (const e of state.effects) {
-    if (e.target !== id) continue; // state.effects is kept in timestamp order
+    if (e.target !== id || !effectInForce(state, e)) continue; // state.effects is kept in timestamp order
     if (e.change.kind === "keyword") addKeyword(e.change.keyword);
-    else if (e.change.kind === "stats") {
+    else if (e.change.kind === "trait") {
+      if (!traits.includes(e.change.trait)) traits.push(e.change.trait);
+    } else if (e.change.kind === "stats") {
       if (attack !== null) attack += e.change.attack;
       if (defense !== null) defense += e.change.defense;
     }
@@ -108,7 +112,7 @@ export function characteristics(env: Env, id: CardId): Characteristics {
     name: def.name,
     class: def.class,
     type: def.type,
-    traits: def.traits,
+    traits,
     cost: baseDef.cost,
     attack,
     defense,

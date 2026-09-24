@@ -157,11 +157,11 @@ export class Driver {
     return this.main((a) => a.type === "endMainPhase", "end the main phase");
   }
 
-  /** Quick window: play a Quick card, or pass when no card is given. */
+  /** Quick window: play a Quick card or activate a Quick ability of the card; pass when no card is given. */
   quick(ref?: string): this {
     const d = this.game.decision;
     if (d?.type !== "quick") throw new Error(`expected a quick window, got ${d?.type ?? "none"}`);
-    const action = ref ? d.actions.find((a) => a.type === "play" && this.matches(a.card, ref)) : { type: "pass" as const };
+    const action = ref ? d.actions.find((a) => a.type !== "pass" && this.matches(a.card, ref)) : { type: "pass" as const };
     if (!action) throw new Error(`${ref} cannot be played in this quick window`);
     return this.answer({ type: "quick", action });
   }

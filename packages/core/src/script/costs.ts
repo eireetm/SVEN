@@ -51,6 +51,26 @@ export function banishFromYourEx(filter: Filter): CustomCost {
   };
 }
 
+/** A play-point cost of an automatic ability, e.g. "{[fanfare]} {[cost03]} ..." (CR 10.4.4, 10.4.7.4). */
+export function playPointsCost(n: number): CustomCost {
+  return {
+    canPay: (g, c) => g.state.players[c].playPoints >= n,
+    *pay(fx) {
+      yield* fx.payPlayPoints(n);
+    },
+  };
+}
+
+/** "Discard N cards" from your hand (CR 5.12), e.g. BP02-089 "Evolve Discard 3 cards". */
+export function discardCardsCost(n: number): CustomCost {
+  return {
+    canPay: (g, c) => g.cards(c, "hand").length >= n,
+    *pay(fx) {
+      yield* fx.discardCards(yield* fx.chooseCards(fx.game.cards(fx.controller, "hand"), n, n));
+    },
+  };
+}
+
 /** "Give your leader -X defense" as a cost (CR 10.4.5: needs at least X; BP01-119 ruling). */
 export function leaderDefenseCost(x: number): CustomCost {
   return {

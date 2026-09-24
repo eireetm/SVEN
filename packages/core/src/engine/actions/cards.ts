@@ -1,7 +1,8 @@
 import type { DefId } from "../../model/card";
 import type { CardId, PlayerId } from "../../model/ids";
 import type { MoveReason } from "../../events/types";
-import { shuffleInPlace } from "../../rng/rng";
+import { randomInt, shuffleInPlace } from "../../rng/rng";
+import { infoDefId } from "../state/characteristics";
 import type { G } from "../runtime/context";
 import { chooseOptions, selectCards } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
@@ -51,7 +52,11 @@ export function setEngaged(g: G, cards: readonly CardId[], engaged: boolean): Ca
 
 /** CR 5.6 — destroy cards on the field: move them to their owners' cemeteries. */
 export function destroyCards(g: G, cards: readonly CardId[]): CardId[] {
-  const onField = cards.filter((id) => g.state.cards[id]?.zone === "field");
+  // CR 1.3.3 — "This card can't be destroyed by abilities" prohibits destroying it here (this
+  // is only called for effects; rules handling destroys through moveCards directly).
+  const onField = cards.filter(
+    (id) => g.state.cards[id]?.zone === "field" && !g.scripts[infoDefId(g, id)]?.cannotBeDestroyedByAbilities,
+  );
   if (onField.length === 0) return [];
   return moveCards(g, onField.map((card) => ({ card, to: "cemetery" as const })), "destroy");
 }
@@ -78,6 +83,14 @@ export function returnToHand(g: G, cards: readonly CardId[]): CardId[] {
 export function discardCards(g: G, cards: readonly CardId[]): CardId[] {
   if (cards.length === 0) return [];
   return moveCards(g, cards.map((card) => ({ card, to: "cemetery" as const })), "discard");
+}
+
+/** CR 5.19 / 5.12 — discard `count` cards chosen at random from the player's hand (seeded RNG). */
+export function discardRandomCards(g: G, p: PlayerId, count: number): CardId[] {
+  const hand = [...g.state.players[p].zones.hand];
+  const chosen: CardId[] = [];
+  for (let i = 0; i < count && hand.length > 0; i++) chosen.push(hand.splice(randomInt(g.state.rng, hand.length), 1)[0]!);
+  return discardCards(g, chosen);
 }
 
 /** CR 5.21 — reveal cards to all players until the current effect has been resolved. */

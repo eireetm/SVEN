@@ -30,6 +30,16 @@ export interface CardScript {
   field?: FieldPassives;
   /** CR 8.4.3.2.1 "This follower can't attack enemies." */
   cannotAttack?: boolean;
+  /**
+   * "This follower can't attack enemy leaders" while the condition holds (e.g. BP02-107
+   * "If there are at least 2 enemy followers on the field, ..."); CR 8.4.3.
+   */
+  cannotAttackLeader?(game: GameReader, self: CardId): boolean;
+  /**
+   * "This card can't be destroyed by abilities" (BP02-089/090/091): prohibits destroying it by
+   * an ability's effect (CR 1.3.3). Rules handling still destroys it (defense 0, 11.3).
+   */
+  cannotBeDestroyedByAbilities?: boolean;
   /** "This card is put onto the field engaged." */
   entersEngaged?: boolean;
 }
@@ -39,9 +49,13 @@ export type ScriptRegistry = Readonly<Record<DefId, CardScript>>;
 /** Information about one instance of damage, for damage-changing passives (CR 5.14.2). */
 export interface DamageInfo {
   source: CardId | null;
+  /** Controller of the ability or of the fighting card dealing it (CR 3.1.2.4). */
+  controller: PlayerId | null;
   target: CardId;
   amount: number;
   kind: "attack" | "combat" | "ability";
+  /** CR 5.14.3.2 — combat damage (between an attacking follower and the follower it attacks). */
+  combat: boolean;
 }
 
 /** Passive abilities of a card on the field. */
@@ -59,6 +73,16 @@ export interface FieldPassives {
   damageDealt?(game: GameReader, self: CardId, damage: DamageInfo): number;
   /** Replacement effect on damage this card takes; returns the change. */
   damageTaken?(game: GameReader, self: CardId, damage: DamageInfo): number;
+  /**
+   * Replacement effect on damage any follower takes (e.g. BP02-004 "your followers take 1 less
+   * damage from enemy abilities"); returns the change (-amount prevents it).
+   */
+  damageToFollower?(game: GameReader, self: CardId, damage: DamageInfo): number;
+  /**
+   * BP02-035/036 "include both spells and Runecraft followers when counting your Spellchain"
+   * (CR 13.3.1.1 counts spells in the cemetery).
+   */
+  spellchainCountsRunecraftFollowers?: boolean;
 }
 
 /** A cost the engine cannot express with the standard parts (select and move cards, counters...). */
@@ -149,6 +173,8 @@ export interface ActivatedAbility {
   cost: CostSpec;
   /** "This ability can be activated once per turn." */
   oncePerTurn?: boolean;
+  /** "This ability can be activated if ..." (e.g. BP02-054 "if Overflow is active for you"). */
+  condition?(game: GameReader, controller: PlayerId, self: CardId): boolean;
   earthRite?: EarthRiteSpec;
   targets?: readonly TargetSpec[];
   /** Not used for evolve abilities (the engine performs CR 5.16). */
@@ -189,6 +215,8 @@ export interface AutomaticAbility {
   cost?: CustomCost;
   earthRite?: EarthRiteSpec;
   modes?: readonly Mode[];
+  /** See SpellAbility.modeCount. */
+  modeCount?(game: GameReader, controller: PlayerId, self: CardId): number;
   targets?: readonly TargetSpec[];
   resolve?(fx: EffectContext): Proc<void>;
 }
@@ -198,6 +226,11 @@ export interface SpellAbility {
   kind: "spell";
   earthRite?: EarthRiteSpec;
   modes?: readonly Mode[];
+  /**
+   * "Choose up to N of the following" (CR 5.18.2.1: 1 to N options). Without it, exactly one
+   * option is chosen. Evaluated when the card or ability is played (5.18.3.1, 5.18.3.1.1).
+   */
+  modeCount?(game: GameReader, controller: PlayerId, self: CardId): number;
   targets?: readonly TargetSpec[];
   resolve?(fx: EffectContext): Proc<void>;
 }

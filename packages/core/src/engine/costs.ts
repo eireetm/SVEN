@@ -22,7 +22,11 @@ import { makeReader } from "./query";
 export function playCost(g: Env, card: CardId, player: PlayerId, option: PlayOption | null = null, setTo?: number): number {
   const reader = makeReader(g);
   const base = characteristics(g, card).cost ?? 0;
-  let cost = setTo ?? option?.setCost ?? base;
+  // Effects that set the cost (e.g. BP02-091 "Those cards cost 0 play points to play"); the
+  // latest one applies (timestamp order, 10.9.1.6).
+  let setByEffect: number | undefined;
+  for (const e of g.state.effects) if (e.target === card && e.change.kind === "playCostSet") setByEffect = e.change.value;
+  let cost = setTo ?? option?.setCost ?? setByEffect ?? base;
   cost += g.scripts[getCard(g.state, card).def]?.playCost?.(reader, card, player) ?? 0;
   for (const f of g.state.players[player].zones.field) {
     cost += g.scripts[infoDefId(g, f)]?.field?.playCostOf?.(reader, f, card, player) ?? 0;

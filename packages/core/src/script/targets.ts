@@ -63,6 +63,9 @@ export const inYourZone = (zone: PlayerZone, o: Opts = {}) => spec((g, c) => g.c
 /** Cards in one of the opponent's zones. */
 export const inOpponentZone = (zone: PlayerZone, o: Opts = {}) => spec((g, c) => g.cards(g.opponent(c), zone), o);
 
+/** "a card in an EX area" (either player's, e.g. BP02-061). */
+export const inAnyExArea = (o: Opts = {}) => spec((g, c) => [...g.cards(c, "ex"), ...g.cards(g.opponent(c), "ex")], o);
+
 // Common predicates -------------------------------------------------------------------------
 
 export const isFollower: Filter = (g, id) => ofType(g, id, "follower");
@@ -74,4 +77,9 @@ export const costAtMost = (n: number): Filter => (g, id) => (g.info(id).cost ?? 
 export const costAtLeast = (n: number): Filter => (g, id) => (g.info(id).cost ?? -Infinity) >= n;
 export const named = (name: string): Filter => (g, id) => g.info(id).name === name;
 export const isToken: Filter = (g, id) => g.info(id).baseDef.token;
+/** Has the special type "evolved" (CR 2.3.3.1): an evolved follower on the field. */
+export const isEvolved: Filter = (g, id) => g.info(id).evolved;
+export const isUnevolved: Filter = (g, id) => !g.info(id).evolved;
+/** Put onto the field during this turn (CR 8.4.2.1), e.g. BP02-101. */
+export const enteredThisTurn: Filter = (g, id) => g.enteredFieldThisTurn(id);
 export const and = (...fs: Filter[]): Filter => (g, id) => fs.every((f) => f(g, id));

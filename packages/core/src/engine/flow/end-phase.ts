@@ -37,6 +37,12 @@ export function* endPhase(g: G): Proc<void> {
     yield* confirmationTiming(g);
   }
 
-  // 7.4.8 "until the end of the turn" effects end
-  g.state.effects = g.state.effects.filter((e) => e.until !== "endOfTurn");
+  // 7.4.8 "until the end of the turn" effects end; "... and during each opponent's next turn"
+  // effects end with the first turn of the controller's opponent after their creation turn.
+  const { turn } = g.state;
+  g.state.effects = g.state.effects.filter(
+    (e) =>
+      e.until !== "endOfTurn" &&
+      !(e.until === "endOfOpponentsNextTurn" && e.controller !== player && turn > e.createdTurn),
+  );
 }

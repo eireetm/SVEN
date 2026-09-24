@@ -83,6 +83,23 @@ export interface PlayerState {
   cardsPlayed: { turn: number; count: number };
   /** Last turn in which this player's leader lost defense (CR 13.5.2 Sanguine). */
   leaderDefenseLostTurn: number | null;
+  /**
+   * What happened in turn `turn`, for card conditions such as "if you discarded a card this
+   * turn" (BP02-062/063), "if any of your followers have been destroyed this turn" (BP02-033)
+   * and "if your followers attacked at least 3 times this turn" (BP02-098).
+   */
+  thisTurn: TurnCounts;
+}
+
+/** Per-turn counts of one player (valid only while `turn` is the current turn). */
+export interface TurnCounts {
+  turn: number;
+  /** Cards this player discarded (CR 5.12). */
+  discarded: number;
+  /** This player's followers destroyed (CR 5.6, including rules handling 11.3). */
+  followersDestroyed: number;
+  /** Attacks by this player's followers (CR 8.4.5). */
+  followerAttacks: number;
 }
 
 /** A persistent effect (CR 10.2.1.2) applied to one card object. */
@@ -93,10 +110,20 @@ export interface PersistentEffect {
   target: CardId;
   source: CardId | null;
   controller: PlayerId;
-  /** "until the end of the turn" effects are removed in CR 7.4.8. null = no end. */
-  until: "endOfTurn" | null;
+  /** When the effect ends; null = no end (it still ends when the card changes zones, 10.9.2). */
+  until: EffectDuration;
+  /** Turn in which the effect was created. */
+  createdTurn: number;
   change: EffectChange;
 }
+
+/**
+ * - "endOfTurn": "for the rest of this turn", removed in CR 7.4.8;
+ * - "endOfOpponentsNextTurn": "for the rest of this turn and during each opponent's next turn"
+ *   (BP02-090): applies in the creation turn and in the next turn of the controller's opponent,
+ *   removed at the end of that turn.
+ */
+export type EffectDuration = "endOfTurn" | "endOfOpponentsNextTurn" | null;
 
 export type EffectChange =
   /** CR 5.27 give +/-X attack and defense (numeric change, CR 10.9.1.4). */
@@ -108,8 +135,20 @@ export type EffectChange =
    * information itself does not change). Negative = cheaper.
    */
   | { kind: "playCost"; amount: number }
+  /**
+   * "It costs N to play" (CR 10.4.4.1, 10.10.2.4: set-to-value changes apply first), e.g.
+   * BP02-091 "Those cards cost 0 play points to play".
+   */
+  | { kind: "playCostSet"; value: number }
   /** "It cannot deal damage" (e.g. BP01-024) — its damage is replaced by no damage (5.14.2). */
-  | { kind: "cannotDealDamage" };
+  | { kind: "cannotDealDamage" }
+  /**
+   * "It doesn't take damage" / "doesn't take combat damage" (BP02-019, BP02-090): the damage
+   * is replaced by no damage (5.14.2, 1.3.2.2). "combat" follows CR 5.14.3.2.
+   */
+  | { kind: "preventDamage"; damage: "all" | "combat" }
+  /** Gain a trait (e.g. BP02-T07 "the Armed trait", CR 2.4). */
+  | { kind: "trait"; trait: string };
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {

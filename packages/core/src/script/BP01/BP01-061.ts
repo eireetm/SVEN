@@ -6,7 +6,7 @@ import { defineCard } from "../helpers";
 export default defineCard({
   keywords: ["rush"],
   playCost(g, _self, controller) {
-    const sc = g.spellsInCemetery(controller);
+    const sc = g.spellchainCount(controller);
     return sc >= 15 ? -9 : sc >= 10 ? -6 : sc >= 5 ? -3 : 0;
   },
 });

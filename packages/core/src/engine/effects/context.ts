@@ -1,7 +1,7 @@
 import type { DefId } from "../../model/card";
 import type { CardId, PlayerId } from "../../model/ids";
 import { IMPLEMENTED_KEYWORDS, type Keyword } from "../../model/keyword";
-import type { EffectChange, TriggerData } from "../../model/state";
+import type { EffectChange, EffectDuration, TriggerData } from "../../model/state";
 import type { GameEvent } from "../../events/types";
 import {
   banishCards,
@@ -9,6 +9,7 @@ import {
   createTokens,
   destroyCards,
   discardCards,
+  discardRandomCards,
   drawCards,
   millCards,
   putIntoEx,
@@ -21,8 +22,8 @@ import {
 } from "../actions/cards";
 import { addCounters, removeCounters } from "../actions/counters";
 import { dealDamage } from "../actions/damage";
-import { changeLeaderDefense } from "../actions/leader";
-import { recoverPlayPoints, setMaxPlayPoints } from "../actions/points";
+import { changeLeaderDefense, setLeaderDefense } from "../actions/leader";
+import { gainEvolutionPoints, payPlayPoints, recoverPlayPoints, setMaxPlayPoints } from "../actions/points";
 import { selectableBy } from "../abilities/targets";
 import { EngineError } from "../errors";
 import { playCard } from "../flow/play-card";
@@ -34,7 +35,7 @@ import { exAreaLimit } from "../state/limits";
 import { moveCards } from "../state/zones";
 import { makeReader, type GameReader } from "../query";
 
-type Until = "endOfTurn" | null;
+type Until = EffectDuration;
 
 /**
  * What a card script can do while its ability resolves (CR 10.6.2.8). Every operation is a
@@ -81,9 +82,15 @@ export interface EffectContext {
   putOntoField(cards: readonly CardId[], player?: PlayerId): Proc<CardId[]>;
   /** CR 5.4 */
   engage(cards: readonly CardId[]): Proc<void>;
+  /** CR 5.4 refresh: turn cards to the reserved state. */
+  refresh(cards: readonly CardId[]): Proc<void>;
   /** CR 5.12 the player selects `min`..`max` cards from their hand and discards them. */
   discard(player: PlayerId, min: number, max: number): Proc<CardId[]>;
   discardCards(cards: readonly CardId[]): Proc<CardId[]>;
+  /** CR 5.19 "discards a random card": `count` cards chosen at random from the player's hand. */
+  discardRandom(count: number, player?: PlayerId): Proc<CardId[]>;
+  /** "Discard your hand". */
+  discardHand(player?: PlayerId): Proc<CardId[]>;
   /** Put the top cards of a deck into its owner's cemetery. */
   mill(count: number, player?: PlayerId): Proc<CardId[]>;
   /**
@@ -116,9 +123,23 @@ export interface EffectContext {
   /** "It cannot deal damage" (e.g. BP01-024). */
   cannotDealDamage(target: CardId, until?: Until): Proc<void>;
   /** "It costs N less to play" (CR 10.4.4.1): changes only the cost of playing it. */
-  changePlayCost(target: CardId, amount: number): Proc<void>;
+  changePlayCost(target: CardId, amount: number, until?: Until): Proc<void>;
+  /** "It costs N to play" (CR 10.4.4.1, 10.10.2.4), e.g. BP02-091. */
+  setPlayCost(target: CardId, value: number): Proc<void>;
+  /** "It doesn't take (combat) damage" (CR 5.14.2 replacement, 5.14.3.2). */
+  preventDamage(target: CardId, damage: "all" | "combat", until: Until): Proc<void>;
+  /** Give a trait (CR 2.4), e.g. BP02-T07 "the Armed trait". */
+  giveTrait(target: CardId, trait: string, until?: Until): Proc<void>;
   /** CR 5.27 give a leader +X / -X defense. */
   giveLeaderDefense(player: PlayerId, delta: number): Proc<void>;
+  /** CR 5.27.2 change a leader's defense to a value (e.g. BP02-075). */
+  setLeaderDefense(player: PlayerId, value: number): Proc<void>;
+  /** CR 3.2.5 gain evolution points (e.g. BP02-106). */
+  gainEvolutionPoints(amount: number, player?: PlayerId): Proc<void>;
+  /** CR 10.4.4 pay play points (for costs of automatic abilities, e.g. "{[fanfare]} {[cost03]}"). */
+  payPlayPoints(amount: number): Proc<void>;
+  /** CR 4.2.3 / 4.6.3 turn cards facedown (e.g. BP02-111, faceup cards in the evolve deck). */
+  turnFacedown(cards: readonly CardId[]): Proc<void>;
   /** CR 5.15 */
   recoverPlayPoints(amount: number, player?: PlayerId): Proc<void>;
   increaseMaxPlayPoints(amount: number, player?: PlayerId): Proc<void>;
@@ -171,7 +192,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
   const addEffect = (target: CardId, until: Until, change: EffectChange) => {
     if (!g.state.cards[target]) return; // CR 1.3.2 — impossible actions are not performed
     const seq = nextSeq(g.state);
-    g.state.effects.push({ id: `e${seq}`, seq, target, source: selfIfPresent(), controller: ctrl, until, change });
+    g.state.effects.push({ id: `e${seq}`, seq, target, source: selfIfPresent(), controller: ctrl, until, createdTurn: g.state.turn, change });
   };
 
   const fx: EffectContext = {
@@ -189,13 +210,16 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       return drawCards(g, player, count);
     },
     *dealDamage(target, amount) {
-      dealDamage(g, [{ source: selfIfPresent(), target, amount, kind: "ability" }]);
+      dealDamage(g, [{ source: selfIfPresent(), controller: ctrl, target, amount, kind: "ability" }]);
     },
     *dealDamageEach(targets, amount) {
-      dealDamage(g, targets.map((target) => ({ source: selfIfPresent(), target, amount, kind: "ability" as const })));
+      dealDamage(g, targets.map((target) => ({ source: selfIfPresent(), controller: ctrl, target, amount, kind: "ability" as const })));
     },
     *dealDamages(instances) {
-      dealDamage(g, instances.map((i) => ({ source: selfIfPresent(), target: i.target, amount: i.amount, kind: "ability" as const })));
+      dealDamage(
+        g,
+        instances.map((i) => ({ source: selfIfPresent(), controller: ctrl, target: i.target, amount: i.amount, kind: "ability" as const })),
+      );
     },
     *destroy(cards) {
       return destroyCards(g, cards);
@@ -218,6 +242,9 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *engage(cards) {
       setEngaged(g, cards, true);
     },
+    *refresh(cards) {
+      setEngaged(g, cards, false);
+    },
     *discard(player, min, max) {
       const hand = g.state.players[player].zones.hand;
       const n = Math.min(max, hand.length);
@@ -226,6 +253,12 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *discardCards(cards) {
       return discardCards(g, cards);
+    },
+    *discardRandom(count, player = ctrl) {
+      return discardRandomCards(g, player, count);
+    },
+    *discardHand(player = ctrl) {
+      return discardCards(g, [...g.state.players[player].zones.hand]);
     },
     *mill(count, player = ctrl) {
       return millCards(g, player, count);
@@ -306,11 +339,35 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *cannotDealDamage(target, until = null) {
       addEffect(target, until, { kind: "cannotDealDamage" });
     },
-    *changePlayCost(target, amount) {
-      addEffect(target, null, { kind: "playCost", amount });
+    *changePlayCost(target, amount, until = null) {
+      addEffect(target, until, { kind: "playCost", amount });
+    },
+    *setPlayCost(target, value) {
+      addEffect(target, null, { kind: "playCostSet", value });
+    },
+    *preventDamage(target, damage, until) {
+      addEffect(target, until, { kind: "preventDamage", damage });
+    },
+    *giveTrait(target, trait, until = null) {
+      addEffect(target, until, { kind: "trait", trait });
     },
     *giveLeaderDefense(player, delta) {
       changeLeaderDefense(g, player, delta);
+    },
+    *setLeaderDefense(player, value) {
+      setLeaderDefense(g, player, value);
+    },
+    *gainEvolutionPoints(amount, player = ctrl) {
+      gainEvolutionPoints(g, player, amount);
+    },
+    *payPlayPoints(amount) {
+      payPlayPoints(g, ctrl, amount);
+    },
+    *turnFacedown(cards) {
+      for (const id of cards) {
+        const c = g.state.cards[id];
+        if (c) c.faceUp = false;
+      }
     },
     *recoverPlayPoints(amount, player = ctrl) {
       recoverPlayPoints(g, player, amount);

@@ -7,6 +7,7 @@ import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import { getCard, nextSeq } from "./access";
 import { characteristics } from "./characteristics";
+import { thisTurn } from "./turn-counts";
 
 /**
  * Low-level zone movement. No decisions, no limit checks: callers that need CR 4.4.4.2 /
@@ -174,6 +175,12 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
     });
     newIds.push(card.id);
     if (g.db.get(old.def).token && !TOKEN_ZONES.includes(spec.to)) eliminated.push(card.id);
+    // "This turn" counts for card conditions (turn-counts.ts).
+    const why = spec.reason ?? reason;
+    if (why === "discard") thisTurn(state, old.controller).discarded += 1; // CR 5.12
+    if (why === "destroy" && old.zone === "field" && g.db.get(befores[i]!.abilityDef).type === "follower") {
+      thisTurn(state, old.controller).followersDestroyed += 1; // CR 5.6
+    }
   });
 
   g.emit({ type: "cardsMoved", moves });

@@ -77,15 +77,21 @@ export type GameEvent =
   | { type: "cardsRevealed"; player: PlayerId; cards: { id: CardId; def: DefId }[] }
   /** CR 5.28 a player will take another turn. */
   | { type: "extraTurnGranted"; player: PlayerId }
-  /** CR 5.14. `kind` follows CR 5.14.3 (attack / combat / ability damage). */
+  /**
+   * CR 5.14. `kind` follows CR 5.14.3 (attack / combat / ability damage); `combat` tells
+   * whether it is combat damage (5.14.3.2: damage exchanged by an attacking follower and the
+   * follower it attacks).
+   */
   | {
       type: "damageDealt";
       source: CardId | null;
       target: CardId;
       amount: number;
       kind: "attack" | "combat" | "ability";
+      combat: boolean;
     }
-  | { type: "leaderDefenseChanged"; player: PlayerId; defense: number }
+  /** A leader's defense changed by `delta` (damage, CR 5.14; or "give +/-X", 5.27). */
+  | { type: "leaderDefenseChanged"; player: PlayerId; defense: number; delta: number }
   /** CR 5.16 / 12.2.4. */
   | { type: "evolved"; card: CardId; evolveCard: CardId; superEvolved: boolean }
   /** CR 10.6.2.7 a card has been played (it is now in the resolution zone). */

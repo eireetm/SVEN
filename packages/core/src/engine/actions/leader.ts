@@ -11,7 +11,15 @@ export function changeLeaderDefense(g: G, player: PlayerId, delta: number): void
   const ps = g.state.players[player];
   ps.leaderDefense += delta;
   if (delta < 0) ps.leaderDefenseLostTurn = g.state.turn;
-  g.emit({ type: "leaderDefenseChanged", player, defense: ps.leaderDefense });
+  g.emit({ type: "leaderDefenseChanged", player, defense: ps.leaderDefense, delta });
+}
+
+/**
+ * CR 5.27.2 — change a leader's defense to a value (e.g. BP02-075 "Change each enemy leader's
+ * defense to 10"): a higher value counts as increased, a lower one as decreased.
+ */
+export function setLeaderDefense(g: G, player: PlayerId, value: number): void {
+  changeLeaderDefense(g, player, value - g.state.players[player].leaderDefense);
 }
 
 /** CR 10.4.5 — "give your leader -X defense" as a cost needs at least X defense. */

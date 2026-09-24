@@ -53,6 +53,19 @@ export function payPlayPoints(g: G, p: PlayerId, amount: number): void {
   emitPlayPoints(g, p);
 }
 
+/** CR 3.2.5 — gain evolution points (no upper limit, 3.2.5.1), e.g. BP02-106. */
+export function gainEvolutionPoints(g: G, p: PlayerId, amount: number): void {
+  if (amount <= 0) return; // CR 1.3.2.2
+  const ps = g.state.players[p];
+  ps.evolutionPoints += amount;
+  g.emit({
+    type: "evolutionPointsChanged",
+    player: p,
+    evolutionPoints: ps.evolutionPoints,
+    superEvolutionPoints: ps.superEvolutionPoints,
+  });
+}
+
 /** CR 3.2.5 / 3.2.6 — spend evolution / super-evolution points (lower limit 0). */
 export function spendPoints(g: G, p: PlayerId, evolution: number, superEvolution: number): void {
   if (evolution === 0 && superEvolution === 0) return;

@@ -6,6 +6,8 @@ import type { G } from "../runtime/context";
 import type { Proc } from "../runtime/proc";
 import { isOnField, leaderOf } from "../state/access";
 import { characteristics, hasKeyword, infoDefId, isFollowerOnField } from "../state/characteristics";
+import { makeReader } from "../query";
+import { thisTurn } from "../state/turn-counts";
 import { quickWindow } from "./quick";
 
 /**
@@ -29,6 +31,7 @@ function onFieldSinceTurnStart(g: G, id: CardId): boolean {
  *    Assail attacker (confirmed, docs/open-questions.md Q4).
  * Storm: that it also lifts the leader restriction of 8.4.3.1 is confirmed by the project
  * owner and by the official play guide (docs/open-questions.md Q1).
+ * A card's "can't attack enemy leaders" (e.g. BP02-107) removes the leader.
  */
 export function attackTargets(g: G, attacker: CardId): CardId[] {
   const c = g.state.cards[attacker];
@@ -40,7 +43,9 @@ export function attackTargets(g: G, attacker: CardId): CardId[] {
   );
   const wards = followers.filter((id) => g.state.cards[id]!.engaged && hasKeyword(g, id, "ward"));
   if (wards.length > 0) return wards;
-  const leaderAllowed = onFieldSinceTurnStart(g, attacker) || hasKeyword(g, attacker, "storm");
+  const leaderAllowed =
+    (onFieldSinceTurnStart(g, attacker) || hasKeyword(g, attacker, "storm")) &&
+    !g.scripts[infoDefId(g, attacker)]?.cannotAttackLeader?.(makeReader(g), attacker);
   return leaderAllowed ? [...followers, leaderOf(g.state, opp)] : followers;
 }
 
@@ -82,6 +87,7 @@ export function* performAttack(g: G, attacker: CardId, target: CardId): Proc<voi
   // 8.4.5 it has "attacked"; attacker and a follower target are in combat (8.4.5.1)
   const targetIsLeader = g.state.cards[target]!.zone === "leader";
   g.state.attack = { attacker, target, targetIsLeader };
+  thisTurn(g.state, player).followerAttacks += 1;
   g.emit({ type: "attackDeclared", player, attacker, target });
   // 8.4.6
   yield* confirmationTiming(g);
@@ -92,11 +98,11 @@ export function* performAttack(g: G, attacker: CardId, target: CardId): Proc<voi
     const inCombat = !targetIsLeader && isOnField(g.state, target);
     const damage: DamageInstance[] = [
       // CR 5.14.3.1 attack damage (also combat damage when the target is a follower, 5.14.3.2)
-      { source: attacker, target, amount: combatDamageOf(g, attacker), kind: "attack" },
+      { source: attacker, controller: player, target, amount: combatDamageOf(g, attacker), kind: "attack" },
     ];
     if (inCombat) {
       // 8.4.9.1 the attack target simultaneously deals damage to the attacker
-      damage.push({ source: target, target: attacker, amount: combatDamageOf(g, target), kind: "combat" });
+      damage.push({ source: target, controller: g.state.cards[target]!.controller, target: attacker, amount: combatDamageOf(g, target), kind: "combat" });
     }
     dealDamage(g, damage);
     // 8.4.9.2 still in combat -> they have fought

@@ -66,7 +66,7 @@ export function* setupGame(g: G): Proc<void> {
       evolutionPoints: ps.evolutionPoints,
       superEvolutionPoints: ps.superEvolutionPoints,
     });
-    g.emit({ type: "leaderDefenseChanged", player: p, defense: ps.leaderDefense });
+    g.emit({ type: "leaderDefenseChanged", player: p, defense: ps.leaderDefense, delta: 0 }); // initial value, not a gain
   }
   // 6.2.1.13 abilities that apply "after redrawing": none in the supported sets.
   state.activePlayer = first; // 6.2.1.14

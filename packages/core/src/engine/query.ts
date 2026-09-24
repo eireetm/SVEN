@@ -8,6 +8,7 @@ import type { Env } from "./state/access";
 import { leaderOf } from "./state/access";
 import { characteristics, isFollowerOnField, type Characteristics } from "./state/characteristics";
 import { playVariants } from "./flow/play-card";
+import { countsThisTurn } from "./state/turn-counts";
 
 /**
  * Read-only access to a game for card scripts, bots and views. Scripts must go through this
@@ -37,8 +38,13 @@ export interface GameReader {
   playedThisTurn(player: PlayerId): number;
   /** CR 13.2.1.2 — Combo (X) ("including this card" — call it after this card was played). */
   combo(player: PlayerId, x: number): boolean;
-  /** CR 13.3.1.1 — spells in the player's cemetery. */
+  /** Spells in the player's cemetery (e.g. BP01-057 "banish 10 spells in your cemetery"). */
   spellsInCemetery(player: PlayerId): number;
+  /**
+   * CR 13.3.1.1 — the player's Spellchain count: spells in their cemetery, plus Runecraft
+   * followers while a card like BP02-035 says to include them.
+   */
+  spellchainCount(player: PlayerId): number;
   /** CR 13.3.1.2 — Spellchain (X). */
   spellchain(player: PlayerId, x: number): boolean;
   /** CR 13.5.1.2 — Necrocharge (X): at least X cards in the cemetery. */
@@ -51,6 +57,16 @@ export interface GameReader {
   stackCards(player: PlayerId): CardId[];
   /** Could `player` play `card` right now as part of an effect (optionally for a set cost)? */
   canPlay(card: CardId, player: PlayerId, opts?: { cost?: number }): boolean;
+  /** "If you discarded a card this turn" (CR 5.12). */
+  discardedThisTurn(player: PlayerId): number;
+  /** "If any of your followers have been destroyed this turn" (CR 5.6, 11.3). */
+  followersDestroyedThisTurn(player: PlayerId): number;
+  /** "If your followers attacked at least N times this turn" (CR 8.4.5). */
+  followerAttacksThisTurn(player: PlayerId): number;
+  /** Was the card put onto the field it is on during this turn? (CR 8.4.2.1) */
+  enteredFieldThisTurn(id: CardId): boolean;
+  /** CR 4.6.3 — faceup cards in the player's evolve deck area. */
+  faceUpEvolveDeck(player: PlayerId): CardId[];
 }
 
 export function makeReader(env: Env): GameReader {
@@ -77,7 +93,14 @@ export function makeReader(env: Env): GameReader {
     playedThisTurn: (p) => (ps(p).cardsPlayed.turn === state().turn ? ps(p).cardsPlayed.count : 0),
     combo: (p, x) => reader.playedThisTurn(p) >= x,
     spellsInCemetery: (p) => ps(p).zones.cemetery.filter((id) => env.db.get(state().cards[id]!.def).type === "spell").length,
-    spellchain: (p, x) => reader.spellsInCemetery(p) >= x,
+    spellchainCount: (p) => {
+      const withFollowers = ps(p).zones.field.some((id) => env.scripts[characteristics(env, id).def.id]?.field?.spellchainCountsRunecraftFollowers);
+      return ps(p).zones.cemetery.filter((id) => {
+        const d = env.db.get(state().cards[id]!.def);
+        return d.type === "spell" || (withFollowers && d.type === "follower" && d.class === "Runecraft");
+      }).length;
+    },
+    spellchain: (p, x) => reader.spellchainCount(p) >= x,
     necrocharge: (p, x) => ps(p).zones.cemetery.length >= x,
     overflow: (p) => ps(p).maxPlayPoints >= 7,
     sanguine: (p) => state().activePlayer === p && ps(p).leaderDefenseLostTurn === state().turn,
@@ -87,6 +110,11 @@ export function makeReader(env: Env): GameReader {
         return i.type === "amulet" && i.keywords.includes("stack");
       }),
     canPlay: (card, p, opts = {}) => playVariants(env, p, card, "effect", { setCost: opts.cost }).length > 0,
+    discardedThisTurn: (p) => countsThisTurn(state(), p).discarded,
+    followersDestroyedThisTurn: (p) => countsThisTurn(state(), p).followersDestroyed,
+    followerAttacksThisTurn: (p) => countsThisTurn(state(), p).followerAttacks,
+    enteredFieldThisTurn: (id) => state().cards[id]?.zone === "field" && state().cards[id]!.enteredFieldTurn === state().turn,
+    faceUpEvolveDeck: (p) => ps(p).zones.evolveDeck.filter((id) => state().cards[id]!.faceUp),
   };
   return reader;
 }

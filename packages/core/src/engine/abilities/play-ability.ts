@@ -7,9 +7,9 @@ import { canPayPlayPoints, payPlayPoints } from "../actions/points";
 import { earthRiteSources, payEarthRite } from "../costs";
 import { makeEffectContext, type EffectInit } from "../effects/context";
 import { EngineError } from "../errors";
-import { performableModes } from "../flow/play-card";
+import { chooseModes, chooseModeTargets } from "./modes";
 import type { G } from "../runtime/context";
-import { chooseOptions, confirm } from "../runtime/decide";
+import { confirm } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { characteristics } from "../state/characteristics";
 import { makeReader } from "../query";
@@ -52,18 +52,16 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
   const reader = makeReader(g);
   if (ability.condition && !ability.condition(reader, ctrl, self)) return;
 
-  // 10.6.2.2 choices: option (5.18), Earth Rite (13.3.3.2), whether to pay the cost (10.4.7.4)
-  let mode: Mode | null = null;
+  // 10.6.2.2 choices: options (5.18), Earth Rite (13.3.3.2), whether to pay the cost (10.4.7.4)
+  let modes: Mode[] = [];
   if (ability.modes) {
-    const modes = performableModes(g, ability.modes, ctrl, self);
-    if (modes.length === 0) return; // 10.7.3.2
-    const [id] = yield* chooseOptions(g, ctrl, "mode", modes.map((m) => ({ id: m.id, label: m.label })), 1, 1, self);
-    mode = modes.find((m) => m.id === id)!;
+    const chosen = yield* chooseModes(g, ctrl, ability, self);
+    if (chosen === null) return; // 10.7.3.2
+    modes = chosen;
   }
-  const specs = mode?.targets ?? ability.targets;
-  if (!targetsAvailable(g, specs, ctrl, self)) return; // 10.6.2.3.3 -> 10.7.3.2
-  let earthRite = mode?.earthRite ?? false;
-  if (!mode && ability.earthRite) {
+  if (modes.length === 0 && !targetsAvailable(g, ability.targets, ctrl, self)) return; // 10.6.2.3.3 -> 10.7.3.2
+  let earthRite = modes.some((m) => m.earthRite);
+  if (modes.length === 0 && ability.earthRite) {
     if (earthRitePayable(g, ctrl, ability.earthRite)) earthRite = yield* confirm(g, ctrl, "earthRite", self);
     if (!earthRite && ability.earthRite.mode === "required") return; // nothing would happen
   }
@@ -71,9 +69,10 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
     if (!ability.cost.canPay(reader, ctrl, self)) return;
     if (!(yield* confirm(g, ctrl, "optionalCost", self))) return;
   }
-  // 10.6.2.3 targets
-  const targets = yield* chooseTargets(g, specs, ctrl, self);
-  if (targets === null) return;
+  // 10.6.2.3 targets (of each chosen option, 5.18.4)
+  const targets = modes.length === 0 ? yield* chooseTargets(g, ability.targets, ctrl, self) : [];
+  const modeTargets = yield* chooseModeTargets(g, ctrl, modes, self);
+  if (targets === null || modeTargets === null) return;
   const init: EffectInit = {
     controller: ctrl,
     self,
@@ -81,7 +80,7 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
     targets,
     event: pending.event,
     data: pending.data,
-    mode: mode?.id ?? null,
+    mode: null,
     earthRitePaid: earthRite,
   };
   // 10.6.2.5 costs
@@ -89,9 +88,13 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
   if (earthRite) yield* payEarthRite(g, ctrl, ability.earthRite?.count ?? 1, self);
   // 10.6.2.7
   g.emit({ type: "abilityPlayed", player: ctrl, source: self, sourceDef: pending.sourceDef, ability: pending.ability });
-  // 10.6.2.8.2 — resolved even if the source has changed zones (10.6.2.8.2.1, 10.7.7)
-  const resolve = mode?.resolve ?? ability.resolve;
-  if (resolve) yield* resolve(makeEffectContext(g, init));
+  // 10.6.2.8.2 — resolved even if the source has changed zones (10.6.2.8.2.1, 10.7.7); chosen
+  // options in listed order (5.18.1)
+  if (modes.length > 0) {
+    for (const [i, m] of modes.entries()) yield* m.resolve(makeEffectContext(g, { ...init, targets: modeTargets[i]!, mode: m.id }));
+  } else if (ability.resolve) {
+    yield* ability.resolve(makeEffectContext(g, init));
+  }
   g.state.revealed = []; // CR 5.21.1.1
 }
 
@@ -113,6 +116,7 @@ export function canPlayActivated(g: G, player: PlayerId, card: CardId, index: nu
   const { ability, def } = found;
   if (timing === "quick" && !ability.quick) return false; // CR 12.3.3
   if (ability.oncePerTurn && c.abilityUses[abilityKey(def, index)] === g.state.turn) return false;
+  if (ability.condition && !ability.condition(makeReader(g), player, card)) return false; // "can be activated if ..."
   // CR 10.6.2.1.2 — cannot be specified if the cost cannot be paid or targets are missing.
   const cost = ability.cost;
   if (!canPayPlayPoints(g, player, cost.playPoints ?? 0)) return false;
