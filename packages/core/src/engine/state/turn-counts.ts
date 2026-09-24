@@ -8,7 +8,7 @@ import type { GameState, TurnCounts } from "../../model/state";
 export function thisTurn(state: GameState, player: PlayerId): TurnCounts {
   const ps = state.players[player];
   if (ps.thisTurn.turn !== state.turn) {
-    ps.thisTurn = { turn: state.turn, discarded: 0, followersDestroyed: 0, followerAttacks: 0 };
+    ps.thisTurn = { turn: state.turn, discarded: 0, followersDestroyed: 0, followerAttacks: 0, returnedToHand: 0 };
   }
   return ps.thisTurn;
 }
@@ -16,5 +16,7 @@ export function thisTurn(state: GameState, player: PlayerId): TurnCounts {
 /** Read-only view of `thisTurn` (zero when nothing happened this turn). */
 export function countsThisTurn(state: Readonly<GameState>, player: PlayerId): TurnCounts {
   const t = state.players[player].thisTurn;
-  return t.turn === state.turn ? t : { turn: state.turn, discarded: 0, followersDestroyed: 0, followerAttacks: 0 };
+  return t.turn === state.turn
+    ? t
+    : { turn: state.turn, discarded: 0, followersDestroyed: 0, followerAttacks: 0, returnedToHand: 0 };
 }

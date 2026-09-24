@@ -33,6 +33,9 @@ export function playCost(g: Env, card: CardId, player: PlayerId, option: PlayOpt
   }
   for (const e of g.state.effects) if (e.target === card && e.change.kind === "playCost") cost += e.change.amount;
   cost += option?.costDelta ?? 0;
+  // BP03-038 "the next spell you play this turn costs N less", after set-to-value changes
+  // (the Transcendence ruling: a cost set to 7 is then reduced by 4).
+  if (characteristics(g, card).type === "spell") cost -= g.state.players[player].nextSpellReduction;
   return Math.max(0, cost);
 }
 

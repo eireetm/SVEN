@@ -93,10 +93,16 @@ export const RULES_PROCESSES: readonly RulesProcess[] = [
       // 11.6.1 — evolve-zone cards not linked to a card on the field.
       // (11.6.2 / 11.6.3 need multiple links, which the state model cannot represent: a
       // field card links to at most one evolve-zone card and re-evolving is impossible, 5.16.4.)
+      // A link counts wherever the field card is. A stolen evolved follower (CR 5.22) is on
+      // the thief's field while its evolve-zone card stays in the owner's evolve zone.
+      const linked = new Set<string>();
       for (const p of BOTH) {
-        const linked = new Set(
-          g.state.players[p].zones.field.map((id) => g.state.cards[id]!.evolvedWith).filter((x) => x !== null),
-        );
+        for (const id of g.state.players[p].zones.field) {
+          const evo = g.state.cards[id]!.evolvedWith;
+          if (evo !== null) linked.add(evo);
+        }
+      }
+      for (const p of BOTH) {
         for (const id of g.state.players[p].zones.evolveZone) if (!linked.has(id)) plan.toEvolveDeck.add(id);
       }
     },

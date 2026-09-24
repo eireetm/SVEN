@@ -14,13 +14,18 @@ import type { Proc } from "../runtime/proc";
 import { characteristics } from "../state/characteristics";
 import { makeReader } from "../query";
 import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX } from "./keyword-abilities";
+import { GRANT_ABILITIES, GRANT_PREFIX } from "./grants";
 import { chooseTargets, targetsAvailable } from "./targets";
+import { activationBlocked } from "../state/effects";
+import type { GrantedAbilityId } from "../../model/state";
 
 /** The ability `index` of a definition (or of a keyword, for "kw:<keyword>" ids). */
 export function getAbility(g: G, def: DefId, index: number): AbilityDef {
   const ability = def.startsWith(KEYWORD_DEF_PREFIX)
     ? KEYWORD_ABILITIES[def.slice(KEYWORD_DEF_PREFIX.length) as keyof typeof KEYWORD_ABILITIES]?.[index]
-    : g.scripts[def]?.abilities?.[index];
+    : def.startsWith(GRANT_PREFIX)
+      ? GRANT_ABILITIES[def.slice(GRANT_PREFIX.length) as GrantedAbilityId]
+      : g.scripts[def]?.abilities?.[index];
   if (!ability) throw new EngineError(`${def} has no ability #${index}`);
   return ability;
 }
@@ -116,6 +121,7 @@ export function canPlayActivated(g: G, player: PlayerId, card: CardId, index: nu
   const { ability, def } = found;
   if (timing === "quick" && !ability.quick) return false; // CR 12.3.3
   if (ability.oncePerTurn && c.abilityUses[abilityKey(def, index)] === g.state.turn) return false;
+  if (activationBlocked(g.state, card, false)) return false; // BP03-039/040
   if (ability.condition && !ability.condition(makeReader(g), player, card)) return false; // "can be activated if ..."
   // CR 10.6.2.1.2 — cannot be specified if the cost cannot be paid or targets are missing.
   const cost = ability.cost;

@@ -16,6 +16,12 @@ export const DATA_FIXES: Readonly<Record<string, Partial<RawCardJson>>> = {
   // An evolved card without the " (Evolved)" suffix; its Japanese name, type and stats are those
   // of BP07-070 "Mono, Garnet Rebel (Evolved)".
   "BP21-PR01": { name_en: "Mono, Garnet Rebel (Evolved)" },
+  // Evolved followers whose printed English name is intentionally different from the base card
+  // (レーヴァテインドラゴン・アタックモード). The "(Evolved)" suffix is only the data convention
+  // stripEvolvedSuffix removes; the card name stays "Lævateinn Dragon, Attack Form".
+  // BP03-SL13 is the alternate art of BP03-058 (docs/data-notes.md).
+  "BP03-058": { name_en: "Lævateinn Dragon, Attack Form (Evolved)" },
+  "BP03-SL13": { name_en: "Lævateinn Dragon, Attack Form (Evolved)" },
   // "Akiha Ikebukuro (Evolved)" listed as a plain follower (no cost, "(Evolved)" in its name,
   // On Evolve text).
   "CSD02a-008": { card_type: ["Follower", "Evolved"] },

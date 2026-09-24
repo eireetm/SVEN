@@ -44,28 +44,47 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number }): void 
     const skipped: string[] = [];
     for (const card of defs) {
       if (card.type === "leader") continue;
-      const base = card.evolved ? defs.find((d) => d.name === card.name && !d.evolved)! : card;
+      // An evolved card normally shares its base's name (CR 5.16.1.1.1). BP03-058 does not:
+      // it is evolved into from the card whose name it contains.
+      const base = card.evolved
+        ? (defs.find((d) => d.name === card.name && !d.evolved) ??
+          defs
+            .filter((d) => !d.evolved && !d.token && d.type === "follower" && card.name.includes(d.name))
+            .sort((a, b) => b.name.length - a.name.length)[0])
+        : card;
+      if (!base) throw new Error(`${card.id} has no base card`);
       const g = scenario(engine, {
         seed: card.id,
         players: [
           {
             // Tokens cannot exist in a hand (CR 9.1.4.1 / 9.1.4.3), so they are played from the EX area.
-            hand: card.evolved || card.token ? ["BP01-042"] : [card.id],
+            hand:
+              card.evolved || card.token
+                ? ["BP01-042", ...(set === "BP03" ? ["BP03-111"] : [])]
+                : [card.id, ...(set === "BP03" && card.type === "spell" ? ["BP03-111"] : [])],
             field: [
               ...(card.evolved ? [base.id] : []),
               "BP01-T10", // a Stack amulet for Earth Rite
               "BP01-042",
               { card: "BP01-173", engaged: true },
+              // An Armed follower so BP03-072 can select one. Fits under the field limit.
+              ...(set === "BP03" ? ["BP03-060"] : []),
             ],
             evolveDeck: card.evolved ? [card.id] : [],
             ex: ["BP01-T03", "BP01-T11", ...(card.token ? [card.id] : [])],
             // 10 spells for Spellchain, plus a few other cards for Necrocharge.
-            cemetery: [...pick(`${card.id}:spells`, spells, 10), ...pick(`${card.id}:cem`, playable, 6)],
+            cemetery: [
+              ...pick(`${card.id}:spells`, spells, 10),
+              ...pick(`${card.id}:cem`, playable, 6),
+              // Cheap followers and trait cards several BP03 effects must be able to select.
+              ...(set === "BP03" ? ["BP03-033", "BP03-036", "BP03-051", "BP03-111", "BP01-006"] : []),
+            ],
             deck: pick(`${card.id}:deck`, playable, 12),
             playPoints: 10,
             maxPlayPoints: 10,
             evolutionPoints: 2,
             leaderDefense: 12,
+            ...(set === "BP03" ? { returnedToHand: 1 } : {}),
           },
           {
             hand: ["BP01-179", "BP01-042"],

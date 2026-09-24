@@ -9,6 +9,8 @@ import { nextSeq } from "../state/access";
 import { infoDefId } from "../state/characteristics";
 import { makeReader, type GameReader } from "../query";
 import { abilityKey, getAbility } from "./play-ability";
+import { GRANT_ABILITIES, GRANT_PREFIX } from "./grants";
+import { effectInForce } from "../state/effects";
 
 interface Candidate {
   subject: TriggerSubject;
@@ -96,6 +98,19 @@ export function collectTriggers(g: G, event: GameEvent): void {
         addPending(g, c.subject.controller, c.source, c.abilityDef, index, event, data);
       }
     });
+  }
+
+  // Abilities an effect gave a card on the field (BP03-062, 083, 112). Each effect is its own
+  // instance, so two copies of the same gift both trigger (BP03-083 ruling).
+  for (const e of state.effects) {
+    if (e.change.kind !== "grantedAbility" || !effectInForce(state, e)) continue;
+    const card = state.cards[e.target];
+    if (!card || card.zone !== "field") continue;
+    const ability = GRANT_ABILITIES[e.change.grant];
+    const subject: TriggerSubject = { card: card.id, controller: card.controller, zone: "field", lookBack: false };
+    for (const data of matches(ability, event, subject, reader)) {
+      addPending(g, card.controller, card.id, `${GRANT_PREFIX}${e.change.grant}`, 0, event, data);
+    }
   }
 
   for (const d of [...state.delayed]) {

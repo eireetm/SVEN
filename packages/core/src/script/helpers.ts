@@ -23,8 +23,14 @@ export function defineCard(script: CardScript): CardScript {
 }
 
 /** CR 12.2 — "Evolve [cost]: Evolve this follower." (a number = play points) */
-export function evolveAbility(cost: number | CostSpec): ActivatedAbility {
-  return { kind: "activated", evolve: true, cost: typeof cost === "number" ? { playPoints: cost } : cost };
+export function evolveAbility(cost: number | CostSpec, opts: { nameIncludes?: string } = {}): ActivatedAbility {
+  const ability: ActivatedAbility = {
+    kind: "activated",
+    evolve: true,
+    cost: typeof cost === "number" ? { playPoints: cost } : cost,
+  };
+  if (opts.nameIncludes !== undefined) ability.evolveNameIncludes = opts.nameIncludes;
+  return ability;
 }
 
 /** Everything an automatic ability may specify besides its trigger. */
@@ -192,6 +198,19 @@ export const whenDiscarded = (spec: TimingSpec) =>
     (e, me) => me.lookBack && moves(e).some((m) => m.card === me.card && m.reason === "discard" && m.from?.zone === "hand"),
     spec,
     { validIn: ["hand"] },
+  );
+
+/**
+ * "Once on each of your turns, when this follower is selected for an ability" (BP03-071).
+ * Only a "select" of a card in a public zone counts — not damage that was not targeted,
+ * and not a cost. The ability resolves after the effect that selected it.
+ */
+export const whenThisIsSelected = (spec: TimingSpec) =>
+  automatic(
+    "other",
+    (e, me, game) =>
+      !me.lookBack && e.type === "cardsSelected" && game.activePlayer === me.controller && e.cards.includes(me.card),
+    spec,
   );
 
 /** "Whenever one of your [matching] followers attacks". Data: the attacker. */

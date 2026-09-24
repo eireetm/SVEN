@@ -11,6 +11,8 @@ import { characteristics } from "../state/characteristics";
 import { moveCards } from "../state/zones";
 import { makeReader } from "../query";
 import { makeEffectContext } from "../effects/context";
+import { activationBlocked } from "../state/effects";
+import { confirm, selectCards } from "../runtime/decide";
 
 type EvolveAction = Extract<MainAction, { type: "evolve" }>;
 
@@ -31,13 +33,16 @@ export function canSuperEvolve(g: G, p: PlayerId): boolean {
  * evolved cards with the same card name. Faceup cards are not part of the evolve deck
  * (CR 4.6.3) and cannot be used.
  */
-export function correspondingEvolveCards(g: G, fieldCard: CardId): CardId[] {
+export function correspondingEvolveCards(g: G, fieldCard: CardId, nameIncludes?: string): CardId[] {
   const c = getCard(g.state, fieldCard);
   const name = characteristics(g, fieldCard).name;
   return g.state.players[c.controller].zones.evolveDeck.filter((id) => {
     const e = getCard(g.state, id);
     const def = g.db.get(e.def);
-    return !e.faceUp && def.evolved && def.name === name;
+    if (e.faceUp || !def.evolved) return false;
+    // CR 5.16.1.1.1 — "unless specified otherwise", corresponding means the same name.
+    // BP03-056 specifies evolved followers with a string in the name instead.
+    return nameIncludes !== undefined ? def.name.includes(nameIncludes) : def.name === name;
   });
 }
 
@@ -85,9 +90,11 @@ export function evolveActions(g: G, p: PlayerId): EvolveAction[] {
     if (ch.evolved) continue; // CR 12.2.5
     ch.abilities.forEach(({ ability }, index) => {
       if (ability.kind !== "activated" || !ability.evolve) return;
+      if (ability.condition && !ability.condition(makeReader(g), p, card)) return;
+      if (activationBlocked(g.state, card, true)) return; // BP03-039 "except Evolve" still allows this
       // Identical evolve cards are interchangeable: offer one per definition.
       const seen = new Set<string>();
-      for (const evolveCard of correspondingEvolveCards(g, card)) {
+      for (const evolveCard of correspondingEvolveCards(g, card, ability.evolveNameIncludes)) {
         const def = getCard(g.state, evolveCard).def;
         if (seen.has(def)) continue;
         seen.add(def);
@@ -159,4 +166,25 @@ export function evolveCard(g: G, fieldCard: CardId, evolveDeckCard: CardId, supe
   }
   g.emit({ type: "evolved", card: fieldCard, evolveCard: linked, superEvolved: superEvolve });
   return linked;
+}
+
+/**
+ * CR 5.16.1.1 — evolve `card` by an effect, not by playing its evolve ability (BP03-021):
+ * no evolve cost, and it does not count as this turn's evolve ability (CR 8.3.2.1). The
+ * controller may decline even when a corresponding card exists (official ruling). Returns
+ * whether the follower evolved.
+ */
+export function* effectEvolve(g: G, card: CardId): Proc<boolean> {
+  const c = g.state.cards[card];
+  if (!c || c.zone !== "field" || characteristics(g, card).evolved) return false; // 5.16.4
+  const options = correspondingEvolveCards(g, card);
+  if (options.length === 0) return false;
+  if (!(yield* confirm(g, c.controller, "effect", card))) return false;
+  let chosen = options[0]!;
+  if (options.length > 1) {
+    const picked = yield* selectCards(g, c.controller, "pick", options, 1, 1, card);
+    if (picked[0] === undefined) return false;
+    chosen = picked[0];
+  }
+  return evolveCard(g, card, chosen, false) !== null;
 }

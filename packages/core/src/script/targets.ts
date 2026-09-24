@@ -83,7 +83,10 @@ export const hasTrait = (trait: string): Filter => (g, id) => g.info(id).traits.
 export const isClass = (cls: string): Filter => (g, id) => g.info(id).class === cls;
 export const costAtMost = (n: number): Filter => (g, id) => (g.info(id).cost ?? Infinity) <= n;
 export const costAtLeast = (n: number): Filter => (g, id) => (g.info(id).cost ?? -Infinity) >= n;
-export const named = (name: string): Filter => (g, id) => g.info(id).name === name;
+/** Printed name or an extra name the card has on the field (BP03-078 "also Ghost"). */
+export const named = (name: string): Filter => (g, id) => g.info(id).names.includes(name);
+/** "With [text] in its name" (CR 2.1.2, BP03-056). Matches every name the card currently has. */
+export const nameIncludes = (part: string): Filter => (g, id) => g.info(id).names.some((n) => n.includes(part));
 export const isToken: Filter = (g, id) => g.info(id).baseDef.token;
 /** Has the special type "evolved" (CR 2.3.3.1): an evolved follower on the field. */
 export const isEvolved: Filter = (g, id) => g.info(id).evolved;

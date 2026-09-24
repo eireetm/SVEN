@@ -112,7 +112,9 @@ function emptyPlayer(id: PlayerId, leaderDefense: number): PlayerState {
     drewFromEmptyDeck: false,
     cardsPlayed: { turn: 0, count: 0 },
     leaderDefenseLostTurn: null,
-    thisTurn: { turn: 0, discarded: 0, followersDestroyed: 0, followerAttacks: 0 },
+    nextSpellReduction: 0,
+    nextFollowerBuff: 0,
+    thisTurn: { turn: 0, discarded: 0, followersDestroyed: 0, followerAttacks: 0, returnedToHand: 0 },
   };
 }
 

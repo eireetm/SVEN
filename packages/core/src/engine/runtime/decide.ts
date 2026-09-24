@@ -13,6 +13,7 @@ import type { Anchor } from "../../model/state";
 import { EngineError } from "../errors";
 import type { G } from "./context";
 import type { Proc } from "./proc";
+import { infoDefId } from "../state/characteristics";
 
 /**
  * The only way engine code asks a player something. If the decision has exactly one legal
@@ -69,6 +70,23 @@ export function cardRefs(g: G, ids: readonly CardId[]): CardRef[] {
   return ids.map((id) => ({ id, def: g.state.cards[id]?.def ?? "" }));
 }
 
+/** Zones whose cards may be named in a cardsSelected event (CR 4.1.2 — not the hand or a deck). */
+const PUBLIC_ZONE = new Set(["field", "ex", "cemetery", "banished", "evolveZone", "leader", "resolution"]);
+
+/**
+ * BP03-091 — while Diamond Master is on the field, an opponent who can select it must.
+ * CR 1.3.2.3: satisfy as many such requirements as the selection count allows. Costs,
+ * discards and attacks are not "selecting for an ability" (official rulings).
+ */
+function mandatoryTargets(g: G, player: PlayerId, reason: SelectReason, candidates: readonly CardId[]): CardId[] {
+  if (reason !== "target" && reason !== "effect") return [];
+  return candidates.filter((id) => {
+    const c = g.state.cards[id];
+    if (!c || c.zone !== "field" || c.controller === player) return false;
+    return g.scripts[infoDefId(g, id)]?.mustBeSelected === true;
+  });
+}
+
 export function* selectCards(
   g: G,
   player: PlayerId,
@@ -83,19 +101,31 @@ export function* selectCards(
     throw new EngineError(`bad selection bounds ${min}..${max} of ${candidates.length} (${reason})`);
   }
   if (max === 0) return []; // nothing can be selected: not a decision at all
+  const mandatory = mandatoryTargets(g, player, reason, candidates);
+  // Take as many forced cards as the maximum allows, and at least that many cards.
+  const forced = Math.min(max, mandatory.length);
+  const lo = Math.max(min, forced);
   const decision: Decision = {
     type: "selectCards",
     player,
     reason,
     candidates: [...candidates],
     candidateDefs: candidates.map((id) => g.state.cards[id]?.def ?? ""),
-    min,
+    min: lo,
     max,
     source,
   };
+  if (mandatory.length > 0) decision.mandatory = mandatory;
   if (peek) decision.peek = cardRefs(g, peek);
   const a = yield* decide(g, decision);
   if (a.type !== "selectCards") throw new EngineError("unreachable");
+  if ((reason === "target" || reason === "effect") && a.cards.length > 0) {
+    const visible = a.cards.filter((id) => {
+      const zone = g.state.cards[id]?.zone;
+      return zone !== undefined && PUBLIC_ZONE.has(zone);
+    });
+    if (visible.length > 0) g.emit({ type: "cardsSelected", player, cards: visible, source });
+  }
   return a.cards;
 }
 

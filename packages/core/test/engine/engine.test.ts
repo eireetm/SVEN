@@ -7,16 +7,15 @@ describe("Engine", () => {
   const cards = [testFollower("A", 1, 1, 1)];
 
   it("refuses scripts using keywords the engine does not implement (no silent no-ops)", () => {
-    expect(() => createEngine({ cards, scripts: { A: { keywords: ["drain"] } } })).toThrow(EngineError);
-    expect(() => createEngine({ cards, scripts: { A: { keywords: ["ward", "storm", "assail", "aura"] } } })).not.toThrow();
+    expect(() => createEngine({ cards, scripts: { A: { keywords: ["fuse" as "ward"] } } })).toThrow(EngineError);
+    expect(() => createEngine({ cards, scripts: { A: { keywords: ["ward", "storm", "assail", "aura", "drain"] } } })).not.toThrow();
   });
 
-  it("refuses to give an unimplemented keyword at runtime", () => {
+  it("can give Drain, which is implemented (CR 12.13)", () => {
     const g = scenario(testEngine(), { players: [{ hand: ["GIVE-DRAIN"], field: ["V1"] }, {}] });
     doMain(g, { type: "play", card: only(cardsOf(g, 0, "hand", "GIVE-DRAIN")) });
-    expect(() => g.act({ type: "selectCards", cards: g.state.players[0].zones.field.slice(0, 1) })).toThrow(
-      /"drain" is not implemented/,
-    );
+    g.act({ type: "selectCards", cards: g.state.players[0].zones.field.slice(0, 1) });
+    expect(g.state.players[0].zones.field.length).toBeGreaterThan(0);
   });
 
   it("refuses scripts for cards that are not in the card pool", () => {

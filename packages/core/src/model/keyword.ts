@@ -19,7 +19,7 @@ export type Keyword =
  * Keywords the engine implements. Scripts may only use these (checked when an engine is
  * created, and when an effect gives a keyword), so a card can never silently lose a keyword
  * the engine does not know yet.
- *  - drain: no card of the supported sets has it yet.
+ * Drain (CR 12.13) heals the controller's leader when the follower deals attack damage.
  */
 export const IMPLEMENTED_KEYWORDS: readonly Keyword[] = [
   "quick",
@@ -31,4 +31,5 @@ export const IMPLEMENTED_KEYWORDS: readonly Keyword[] = [
   "bane",
   "aura",
   "stack",
+  "drain",
 ];

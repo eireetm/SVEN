@@ -39,6 +39,8 @@ export interface ScenarioSide {
   evolutionPoints?: number;
   superEvolutionPoints?: number;
   turnsPassed?: number;
+  /** Cards already returned from this player's field to a hand this turn (BP03-005). */
+  returnedToHand?: number;
 }
 
 export interface ScenarioSpec {
@@ -109,6 +111,7 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
     ps.leaderDefense = side.leaderDefense ?? config.rules.leaderDefense;
     ps.evolutionPoints = side.evolutionPoints ?? config.rules.evolutionPoints[p === first ? 0 : 1];
     ps.superEvolutionPoints = side.superEvolutionPoints ?? config.rules.superEvolutionPoints;
+    if (side.returnedToHand) ps.thisTurn = { ...ps.thisTurn, turn, returnedToHand: side.returnedToHand };
   });
 
   return engine.restore({ format: 1, checkpoint: state, inputs: [] }, options);

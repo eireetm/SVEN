@@ -9,6 +9,7 @@
     "./sets": "./src/sets/index.ts",
     "./sets/bp01": "./src/sets/bp01.ts",
     "./sets/bp02": "./src/sets/bp02.ts",
+    "./sets/bp03": "./src/sets/bp03.ts",
     "./testing": "./src/testing/index.ts"
   }
 }

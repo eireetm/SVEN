@@ -28,8 +28,22 @@ export interface CardScript {
   playOptions?: readonly PlayOption[];
   /** Passive abilities that work while this card is on the field (CR 10.1.1.3, 10.3.5). */
   field?: FieldPassives;
-  /** CR 8.4.3.2.1 "This follower can't attack enemies." */
-  cannotAttack?: boolean;
+  /**
+   * CR 8.4.3.2.1 "This follower can't attack enemies." A function is the conditional form
+   * (BP03-110 "if this follower has no Fable counters").
+   */
+  cannotAttack?: boolean | ((game: GameReader, self: CardId) => boolean);
+  /**
+   * Extra names this card has while it is on the field (BP03-058/078 "This follower's name is
+   * also X"). Only the name is shared — not the other card's abilities (official ruling).
+   */
+  alsoNames?: readonly string[];
+  /**
+   * "Whenever an opponent is selecting cards for an ability, if they can select this card, they
+   * must select it" (BP03-091, CR 1.3.2.3). Only while this card is on the field, and only for
+   * a "select", not an attack, a discard, or a cost.
+   */
+  mustBeSelected?: boolean;
   /**
    * "This follower can't attack enemy leaders" while the condition holds (e.g. BP02-107
    * "If there are at least 2 enemy followers on the field, ..."); CR 8.4.3.
@@ -168,6 +182,12 @@ export interface ActivatedAbility {
   kind: "activated";
   /** CR 12.2 — an evolve ability ("Evolve [cost]: Evolve this follower"). */
   evolve?: boolean;
+  /**
+   * "Evolve this follower into an evolved follower with [name] in its name" (BP03-056).
+   * The corresponding evolve-deck cards are evolved cards whose name contains this string
+   * (CR 5.16.1.1.1 "unless specified otherwise"), instead of the same name.
+   */
+  evolveNameIncludes?: string;
   /** CR 12.3.3 — Quick activated ability. */
   quick?: boolean;
   cost: CostSpec;

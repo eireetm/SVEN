@@ -36,7 +36,7 @@ export function randomAnswer(rng: RngState, d: Decision): Answer {
       const n = d.min + randomInt(rng, d.max - d.min + 1);
       const pool = [...d.candidates];
       shuffleInPlace(rng, pool);
-      return { type: "selectCards", cards: pool.slice(0, n) };
+      return { type: "selectCards", cards: legalSelection(pool, d.mandatory ?? [], n) };
     }
     case "choose": {
       const n = d.min + randomInt(rng, d.max - d.min + 1);
@@ -54,6 +54,17 @@ export function randomAnswer(rng: RngState, d: Decision): Answer {
   }
 }
 
+/**
+ * A legal selection of `n` cards that includes as many `mandatory` cards as the size allows
+ * (CR 1.3.2.3). `order` decides which cards are preferred.
+ */
+function legalSelection(order: readonly string[], mandatory: readonly string[], n: number): string[] {
+  const must = new Set(mandatory);
+  const first = order.filter((id) => must.has(id));
+  const rest = order.filter((id) => !must.has(id));
+  return [...first, ...rest].slice(0, n);
+}
+
 /** Always takes the first option / minimum selection. Deterministic and cheap. */
 export const firstOptionAgent: Agent = (d) => {
   switch (d.type) {
@@ -68,7 +79,7 @@ export const firstOptionAgent: Agent = (d) => {
     case "selectPending":
       return { type: "selectPending", id: d.options[0]! };
     case "selectCards":
-      return { type: "selectCards", cards: d.candidates.slice(0, d.min) };
+      return { type: "selectCards", cards: legalSelection(d.candidates, d.mandatory ?? [], d.min) };
     case "choose":
       return { type: "choose", ids: d.options.slice(0, d.min).map((o) => o.id) };
     case "orderCards":

@@ -3,7 +3,7 @@ import type { DefId } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import { opponentOf } from "../model/ids";
 import type { Keyword } from "../model/keyword";
-import type { CardInstance, GameState, PlayerZone } from "../model/state";
+import type { CardInstance, GameState, PlayerZone, ZoneName } from "../model/state";
 import type { Env } from "./state/access";
 import { leaderOf } from "./state/access";
 import { characteristics, isFollowerOnField, type Characteristics } from "./state/characteristics";
@@ -67,6 +67,12 @@ export interface GameReader {
   enteredFieldThisTurn(id: CardId): boolean;
   /** CR 4.6.3 — faceup cards in the player's evolve deck area. */
   faceUpEvolveDeck(player: PlayerId): CardId[];
+  /** Zone a field card was put onto the field from (CR 5.5.3). Null when it was not newly put there. */
+  enteredFrom(id: CardId): ZoneName | null;
+  /** Cards returned from this player's field to a hand this turn (BP03-005). */
+  returnedToHandThisTurn(player: PlayerId): number;
+  /** The card's script has an Earth Rite cost (CR 13.3.3), so a search for "a card with Earth Rite" finds it. */
+  hasEarthRite(id: CardId): boolean;
 }
 
 export function makeReader(env: Env): GameReader {
@@ -115,6 +121,18 @@ export function makeReader(env: Env): GameReader {
     followerAttacksThisTurn: (p) => countsThisTurn(state(), p).followerAttacks,
     enteredFieldThisTurn: (id) => state().cards[id]?.zone === "field" && state().cards[id]!.enteredFieldTurn === state().turn,
     faceUpEvolveDeck: (p) => ps(p).zones.evolveDeck.filter((id) => state().cards[id]!.faceUp),
+    enteredFrom: (id) => state().cards[id]?.enteredFrom ?? null,
+    returnedToHandThisTurn: (p) => countsThisTurn(state(), p).returnedToHand,
+    hasEarthRite: (id) => {
+      const def = state().cards[id]?.def;
+      if (def === undefined) return false;
+      const abilities = env.scripts[def]?.abilities ?? [];
+      return abilities.some(
+        (a) =>
+          ("earthRite" in a && a.earthRite !== undefined) ||
+          ("modes" in a && a.modes?.some((m) => m.earthRite)),
+      );
+    },
   };
   return reader;
 }

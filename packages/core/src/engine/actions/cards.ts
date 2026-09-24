@@ -11,6 +11,28 @@ import { hasKeyword, isFollowerOnField } from "../state/characteristics";
 import { exAreaLimit, fieldLimit } from "../state/limits";
 import { createCards, moveCards } from "../state/zones";
 
+/**
+ * CR 5.22 — steal a card on an opponent's field: move it onto `newController`'s field.
+ * Nothing happens when that field is full (CR 4.4.4.2, 1.3.2). Returns the card's new id.
+ */
+export function stealCard(g: G, card: CardId, newController: PlayerId): CardId | null {
+  const c = g.state.cards[card];
+  if (!c || c.zone !== "field" || c.controller === newController) return null;
+  const room = fieldLimit(g, newController) - g.state.players[newController].zones.field.length;
+  if (room <= 0) return null;
+  const [id] = moveCards(g, [{ card, to: "field", player: newController, keepEffects: true, keepState: true }], "effect");
+  return id ?? null;
+}
+
+/** Shuffle these cards and put them on the bottom of their owner's deck (CR 5.9). */
+export function shuffleToBottom(g: G, cards: readonly CardId[]): void {
+  const present = cards.filter((id) => g.state.cards[id] !== undefined);
+  if (present.length === 0) return;
+  const order = [...present];
+  shuffleInPlace(g.state.rng, order);
+  moveCards(g, order.map((card) => ({ card, to: "deck" as const, position: "bottom" as const })), "effect");
+}
+
 /** CR 5.9 — shuffle a deck (5.9.1.1: with 0–1 cards nothing changes but it still counts). */
 export function shuffleDeck(g: G, p: PlayerId): void {
   shuffleInPlace(g.state.rng, g.state.players[p].zones.deck);

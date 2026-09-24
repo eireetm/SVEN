@@ -31,7 +31,8 @@ export function checkInvariants(state: GameState, db: CardDatabase, decision: De
         if (def.token && !["field", "ex"].includes(zone)) errors.push(`token ${id} in ${zone} (CR 9.1.4)`);
         if (zone === "field" && c.evolvedWith !== null) {
           const e = state.cards[c.evolvedWith];
-          if (!e || e.zone !== "evolveZone" || e.controller !== p) errors.push(`${id} linked to invalid evolve card ${c.evolvedWith}`);
+          // The evolve-zone card stays with its owner when the follower is stolen (CR 5.22).
+          if (!e || e.zone !== "evolveZone") errors.push(`${id} linked to invalid evolve card ${c.evolvedWith}`);
         }
       }
     }
@@ -46,7 +47,10 @@ export function checkInvariants(state: GameState, db: CardDatabase, decision: De
       if (ps.zones.field.length > state.config.rules.fieldLimit) errors.push(`P${p} field over the limit`);
       if (ps.zones.ex.length > state.config.rules.exAreaLimit) errors.push(`P${p} EX area over the limit`);
       // After Confirmation Timing every evolve-zone card is linked (CR 11.6.1).
-      const linked = new Set(ps.zones.field.map((id) => state.cards[id]?.evolvedWith));
+      const linked = new Set<string | null | undefined>();
+      for (const q of [0, 1] as const) {
+        for (const id of state.players[q].zones.field) linked.add(state.cards[id]?.evolvedWith);
+      }
       for (const id of ps.zones.evolveZone) if (!linked.has(id)) errors.push(`unlinked evolve card ${id} at a main phase decision`);
     }
   }

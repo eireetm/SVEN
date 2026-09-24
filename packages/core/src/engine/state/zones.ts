@@ -34,6 +34,12 @@ export interface MoveSpec {
   /** Overrides the batch's reason for this card (e.g. rules handling destroys some cards and
    *  moves others to the cemetery in the same simultaneous step, CR 11.1.3). */
   reason?: MoveReason;
+  /**
+   * CR 5.22 — keep damage, counters, evolution and the engaged state. The card is not treated
+   * as newly put onto the field. `enteredFieldTurn` is still set to this turn: the card has
+   * not remained under the new controller since the turn started (CR 8.4.2.1).
+   */
+  keepState?: boolean;
 }
 
 /** CR 4.2.3.3 — default faceup state per zone. */
@@ -103,6 +109,8 @@ function freshInstance(
     superEvolved: false,
     counters: {},
     abilityUses: {},
+    playedFrom: null,
+    enteredFrom: null,
   };
 }
 
@@ -142,6 +150,7 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
   const befores = olds.map((c) => ({
     abilityDef: c.zone === "field" ? characteristics(g, c.id).def.id : c.def,
     controller: c.controller,
+    counters: { ...c.counters },
   }));
 
   const moves: CardMove[] = [];
@@ -154,6 +163,23 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
     const toPlayer = spec.player ?? old.owner;
     const card = freshInstance(state, old.printing, old.def, old.owner, toPlayer, spec.to, spec);
     initFieldCounters(g, card);
+    if (spec.keepState) {
+      // CR 5.22 — a stolen card is not newly put onto the field and keeps its state.
+      card.damage = old.damage;
+      card.counters = { ...old.counters };
+      card.evolvedWith = old.evolvedWith;
+      card.evolvedTurn = old.evolvedTurn;
+      card.superEvolved = old.superEvolved;
+      card.abilityUses = { ...old.abilityUses };
+      card.engaged = old.engaged;
+      // CR 8.4.2.1 — it has not remained under the new controller since the turn started.
+      card.enteredFieldTurn = state.turn;
+      card.enteredFrom = null;
+    } else if (spec.to === "resolution" && (spec.reason ?? reason) === "play") {
+      card.playedFrom = old.zone; // CR 5.5.3 the zone the card is played from
+    } else if (spec.to === "field") {
+      card.enteredFrom = old.zone === "resolution" ? (old.playedFrom ?? old.zone) : old.zone;
+    }
     attach(state, card, spec.position);
 
     if (spec.keepEffects) {
@@ -178,6 +204,7 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
     // "This turn" counts for card conditions (turn-counts.ts).
     const why = spec.reason ?? reason;
     if (why === "discard") thisTurn(state, old.controller).discarded += 1; // CR 5.12
+    if (old.zone === "field" && spec.to === "hand") thisTurn(state, old.controller).returnedToHand += 1;
     if (why === "destroy" && old.zone === "field" && g.db.get(befores[i]!.abilityDef).type === "follower") {
       thisTurn(state, old.controller).followersDestroyed += 1; // CR 5.6
     }

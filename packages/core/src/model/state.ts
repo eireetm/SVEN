@@ -61,6 +61,17 @@ export interface CardInstance {
    * "once per turn" activated abilities (e.g. BP01-013) and automatic abilities (10.7.2.2).
    */
   abilityUses: Record<string, number>;
+  /**
+   * While this object is in the resolution zone: the zone it was played from (CR 5.5.3).
+   * Null when it was not played there.
+   */
+  playedFrom: ZoneName | null;
+  /**
+   * While this object is on the field: the zone it was put onto the field from. A card played
+   * from hand or the EX area records that zone, not the resolution zone (CR 5.5.3). Null when
+   * the card was not newly put onto the field (CR 5.22 steal keeps its previous state).
+   */
+  enteredFrom: ZoneName | null;
 }
 
 export interface PlayerState {
@@ -84,6 +95,16 @@ export interface PlayerState {
   /** Last turn in which this player's leader lost defense (CR 13.5.2 Sanguine). */
   leaderDefenseLostTurn: number | null;
   /**
+   * "The next spell you play this turn costs N less" (BP03-038), summed. Cleared when a spell
+   * is played or at the end of the turn (CR 7.4.8).
+   */
+  nextSpellReduction: number;
+  /**
+   * How many "+1/+1" the next follower this player plays this turn receives (BP03-089).
+   * Cleared when that follower is played or at the end of the turn (CR 7.4.8).
+   */
+  nextFollowerBuff: number;
+  /**
    * What happened in turn `turn`, for card conditions such as "if you discarded a card this
    * turn" (BP02-062/063), "if any of your followers have been destroyed this turn" (BP02-033)
    * and "if your followers attacked at least 3 times this turn" (BP02-098).
@@ -100,6 +121,8 @@ export interface TurnCounts {
   followersDestroyed: number;
   /** Attacks by this player's followers (CR 8.4.5). */
   followerAttacks: number;
+  /** Cards that left this player's field for a hand (e.g. BP03-005 "returned to hand this turn"). */
+  returnedToHand: number;
 }
 
 /** A persistent effect (CR 10.2.1.2) applied to one card object. */
@@ -148,7 +171,22 @@ export type EffectChange =
    */
   | { kind: "preventDamage"; damage: "all" | "combat" }
   /** Gain a trait (e.g. BP02-T07 "the Armed trait", CR 2.4). */
-  | { kind: "trait"; trait: string };
+  | { kind: "trait"; trait: string }
+  /** "It can't attack enemies" (CR 8.4.3.2.1), e.g. BP03-013 for the controller's next turn. */
+  | { kind: "cannotAttack" }
+  /**
+   * "This card's activated abilities can't be activated" for the duration (BP03-039/040).
+   * `exceptEvolve` keeps evolve abilities playable (the unevolved Mystic King).
+   */
+  | { kind: "cantActivate"; exceptEvolve: boolean }
+  /**
+   * An ability given to this card by an effect (CR 10.9.1.2). The id is resolved by
+   * `engine/abilities/grants.ts`. Ends when the card changes zones (CR 10.9.2) unless `until` says sooner.
+   */
+  | { kind: "grantedAbility"; grant: GrantedAbilityId };
+
+/** Abilities an effect can give a card. Each one is defined in engine/abilities/grants.ts. */
+export type GrantedAbilityId = "destroyAtEnd" | "bottomAtEnd" | "strikeByAttack";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {

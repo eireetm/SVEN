@@ -40,7 +40,14 @@ describe("card pool (all supported sets)", () => {
 
   it("CR 5.16.1.1.1 — every evolved card has exactly one base follower with the same name", () => {
     for (const e of ALL_CARDS.filter((c) => c.evolved)) {
-      expect(db.named(e.name).filter((d) => !d.evolved && d.type === "follower"), e.id).toHaveLength(1);
+      const same = db.named(e.name).filter((d) => !d.evolved && d.type === "follower");
+      if (same.length === 1) continue;
+      // "Unless specified otherwise": evolved into from a card whose text names a string this
+      // card's name contains (BP03-056 evolves into BP03-058 "Lævateinn Dragon, Attack Form").
+      const hosts = ALL_CARDS.filter(
+        (d) => !d.evolved && d.type === "follower" && e.name.includes(d.name) && d.text.en.includes("in its name"),
+      );
+      expect(hosts, e.id).toHaveLength(1);
     }
   });
 

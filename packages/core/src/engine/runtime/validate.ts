@@ -37,6 +37,11 @@ export function validateAnswer(d: Decision, a: Answer): string | null {
       if (new Set(cards).size !== cards.length) return "cards must be distinct";
       if (cards.length < d.min || cards.length > d.max) return `select between ${d.min} and ${d.max} cards`;
       for (const c of cards) if (!d.candidates.includes(c)) return `${String(c)} is not a candidate`;
+      if (d.mandatory && d.mandatory.length > 0) {
+        const got = cards.filter((c) => d.mandatory!.includes(c)).length;
+        // CR 1.3.2.3 — include as many of the forced cards as this selection's size allows.
+        if (got !== Math.min(cards.length, d.mandatory.length)) return "selection must include the required cards";
+      }
       return null;
     }
     case "choose": {

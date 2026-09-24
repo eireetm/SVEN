@@ -7,7 +7,9 @@ import type { Proc } from "../runtime/proc";
 import { isOnField, leaderOf } from "../state/access";
 import { characteristics, hasKeyword, infoDefId, isFollowerOnField } from "../state/characteristics";
 import { makeReader } from "../query";
+import { effectPreventsAttack } from "../state/effects";
 import { thisTurn } from "../state/turn-counts";
+import { changeLeaderDefense } from "../actions/leader";
 import { quickWindow } from "./quick";
 
 /**
@@ -55,7 +57,7 @@ export function canAttackWith(g: G, player: PlayerId, attacker: CardId): boolean
   const c = g.state.cards[attacker];
   if (!c || c.controller !== player || !isFollowerOnField(g, attacker)) return false;
   if (c.engaged) return false; // 8.4.2 reserved followers only
-  if (g.scripts[infoDefId(g, attacker)]?.cannotAttack) return false; // 8.4.3.2.1
+  if (cannotAttackNow(g, attacker)) return false; // 8.4.3.2.1
   const eligible =
     onFieldSinceTurnStart(g, attacker) || // 8.4.2.1
     c.evolvedTurn === g.state.turn || // 8.4.2.1 "it evolved that turn"
@@ -70,6 +72,14 @@ export function canAttackWith(g: G, player: PlayerId, attacker: CardId): boolean
  * controller has a card with "your followers deal damage equal to their defense" on the field
  * (BP01-129/130; only attack damage, per their ruling).
  */
+/** CR 8.4.3.2.1 — printed "can't attack", a conditional form of it, or an effect that says so. */
+function cannotAttackNow(g: G, attacker: CardId): boolean {
+  const ban = g.scripts[infoDefId(g, attacker)]?.cannotAttack;
+  if (ban === true) return true;
+  if (typeof ban === "function" && ban(makeReader(g), attacker)) return true;
+  return effectPreventsAttack(g.state, attacker);
+}
+
 function combatDamageOf(g: G, follower: CardId): number {
   const ch = characteristics(g, follower);
   const controller = g.state.cards[follower]!.controller;
@@ -104,7 +114,15 @@ export function* performAttack(g: G, attacker: CardId, target: CardId): Proc<voi
       // 8.4.9.1 the attack target simultaneously deals damage to the attacker
       damage.push({ source: target, controller: g.state.cards[target]!.controller, target: attacker, amount: combatDamageOf(g, target), kind: "combat" });
     }
-    dealDamage(g, damage);
+    const dealt = dealDamage(g, damage);
+    // CR 12.13 — Drain: attack damage (8.4.9) heals the attacker's leader. Combat damage the
+    // defender deals back, and ability damage, do not (12.13.2.1, 12.13.2.2). One instance
+    // even if the card somehow had Drain twice (12.13.3).
+    const attackHit = dealt.find((d) => d.source === attacker && d.kind === "attack");
+    const attackerCard = g.state.cards[attacker];
+    if (attackHit && attackerCard && hasKeyword(g, attacker, "drain")) {
+      changeLeaderDefense(g, attackerCard.controller, attackHit.amount);
+    }
     // 8.4.9.2 still in combat -> they have fought
     if (inCombat && isOnField(g.state, attacker) && isOnField(g.state, target)) {
       g.state.fights.push({

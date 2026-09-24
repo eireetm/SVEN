@@ -60,8 +60,10 @@ export type SelectReason =
   | "exLimitKeep"
   /** CR 4.4.4.2 / 4.8.3.2 choose which cards are moved when the zone would overflow. */
   | "zoneEntry"
-  /** Any other selection made while an effect resolves. */
-  | "effect";
+  /** Any other selection made while an effect resolves ("select"). */
+  | "effect"
+  /** A choice that is not the ability "selecting" a card (costs, which evolve card, ordering). */
+  | "pick";
 
 export type ChooseReason =
   /** CR 5.18 choose among an ability's options. */
@@ -118,6 +120,11 @@ export type Decision =
       source: CardId | null;
       /** CR 5.11 cards the player is currently looking at (e.g. the top cards of a deck). */
       peek?: CardRef[];
+      /**
+       * Cards the selection must include as far as the count allows (CR 1.3.2.3, BP03-091
+       * "if they can select this card, they must"). Empty / absent when nothing forces a choice.
+       */
+      mandatory?: CardId[];
     })
   /** Choose between `min` and `max` of the listed options. */
   | (DecisionBase & {

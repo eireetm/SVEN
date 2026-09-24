@@ -45,10 +45,11 @@ export interface CardMove {
   to: ZoneRef;
   reason: MoveReason;
   /**
-   * Look-back information (CR 10.7.4.1): the definition that provided the card's abilities
-   * and its controller in the zone it left (e.g. the evolved card's definition on the field).
+   * Look-back information (CR 10.7.4.1): the definition that provided the card's abilities,
+   * its controller, and the counters it had in the zone it left (e.g. BP03-090 "if this card
+   * had a Fable counter" — counters are removed by the move itself, CR 15.1).
    */
-  before: { abilityDef: DefId; controller: PlayerId } | null;
+  before: { abilityDef: DefId; controller: PlayerId; counters: Record<string, number> } | null;
 }
 
 export type GameEvent =
@@ -96,6 +97,11 @@ export type GameEvent =
   | { type: "evolved"; card: CardId; evolveCard: CardId; superEvolved: boolean }
   /** CR 10.6.2.7 a card has been played (it is now in the resolution zone). */
   | { type: "cardPlayed"; player: PlayerId; card: CardId; def: DefId; from: ZoneName }
+  /**
+   * Cards in public zones chosen by a "select" (CR 10.6.2.3), not by a cost or a discard.
+   * BP03-071 triggers when it is among them. Hidden-zone selections are not emitted.
+   */
+  | { type: "cardsSelected"; player: PlayerId; cards: CardId[]; source: CardId | null }
   /** CR 10.6.2.7 an activated or automatic ability has been played. */
   | { type: "abilityPlayed"; player: PlayerId; source: CardId; sourceDef: DefId; ability: number }
   /** CR 10.7.2 an automatic ability became pending. */

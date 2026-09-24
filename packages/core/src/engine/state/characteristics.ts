@@ -21,7 +21,13 @@ export interface Characteristics {
   baseDef: CardDefinition;
   /** The definition that currently provides the information (evolved card while evolved). */
   def: CardDefinition;
+  /** Printed name, or the evolved card's name while evolved (CR 10.9.1.1). */
   name: string;
+  /**
+   * Every name the card has. While on the field this includes `alsoNames` (BP03-058/078);
+   * elsewhere only the printed name. Deck limits use the printed name (CR 6.1.1.4).
+   */
+  names: readonly string[];
   class: CardClass;
   type: CardType;
   traits: readonly string[];
@@ -105,11 +111,18 @@ export function characteristics(env: Env, id: CardId): Characteristics {
     });
   }
 
+  const names = [def.name];
+  // "This follower's name is also X" works only while the card is on the field (official ruling).
+  if (c.zone === "field") {
+    for (const extra of script?.alsoNames ?? []) if (!names.includes(extra)) names.push(extra);
+  }
+
   return {
     card: id,
     baseDef,
     def,
     name: def.name,
+    names,
     class: def.class,
     type: def.type,
     traits,

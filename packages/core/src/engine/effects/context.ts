@@ -1,7 +1,7 @@
 import type { DefId } from "../../model/card";
 import type { CardId, PlayerId } from "../../model/ids";
 import { IMPLEMENTED_KEYWORDS, type Keyword } from "../../model/keyword";
-import type { EffectChange, EffectDuration, TriggerData } from "../../model/state";
+import type { EffectChange, EffectDuration, GrantedAbilityId, TriggerData } from "../../model/state";
 import type { GameEvent } from "../../events/types";
 import {
   banishCards,
@@ -18,6 +18,8 @@ import {
   revealCards,
   setEngaged,
   shuffleDeck,
+  shuffleToBottom,
+  stealCard,
   transformCards,
 } from "../actions/cards";
 import { addCounters, removeCounters } from "../actions/counters";
@@ -25,6 +27,7 @@ import { dealDamage } from "../actions/damage";
 import { changeLeaderDefense, setLeaderDefense } from "../actions/leader";
 import { gainEvolutionPoints, payPlayPoints, recoverPlayPoints, setMaxPlayPoints } from "../actions/points";
 import { selectableBy } from "../abilities/targets";
+import { effectEvolve } from "../abilities/evolve";
 import { EngineError } from "../errors";
 import { playCard } from "../flow/play-card";
 import type { G } from "../runtime/context";
@@ -172,6 +175,29 @@ export interface EffectContext {
   playCard(card: CardId, opts?: { cost?: number }): Proc<void>;
   /** CR 10.7.5 register a delayed trigger: ability `index` of this ability's definition. */
   delay(index: number): Proc<void>;
+  /**
+   * A slot a cost's `pay` can fill for the effect that follows it. Shared by the pay and the
+   * resolve of one ability. Not stored in GameState — a replay re-runs the ability.
+   */
+  readonly memory: Record<string, string | number | boolean | null>;
+  /** CR 5.22 — move an opponent's field card onto your field. Null when the field is full. */
+  steal(card: CardId): Proc<CardId | null>;
+  /** CR 5.16.1.1 — evolve a follower by this effect. The controller may decline. */
+  evolve(card: CardId): Proc<boolean>;
+  /** "It can't attack enemies" (CR 8.4.3.2.1). */
+  cannotAttack(card: CardId, until: Until): Proc<void>;
+  /** "This card's activated abilities can't be activated" (BP03-039/040). */
+  cantActivate(card: CardId, exceptEvolve: boolean, until?: Until): Proc<void>;
+  /** Give a card an ability defined in engine/abilities/grants.ts (BP03-062, 083, 112). */
+  grant(card: CardId, id: GrantedAbilityId, until?: Until | null): Proc<void>;
+  /** "The next spell you play this turn costs N less" (BP03-038). */
+  nextSpellCostsLess(amount: number): Proc<void>;
+  /** "The next follower you play this turn gets +1/+1" (BP03-089). Each call stacks. */
+  buffNextPlayedFollower(): Proc<void>;
+  /** Deal `total` ability damage divided as chosen among the targets (BP03-007). */
+  dealDividedDamage(targets: readonly CardId[], total: number): Proc<void>;
+  /** Shuffle these cards onto the bottom of their owner's deck (CR 5.9). */
+  shuffleToBottom(cards: readonly CardId[]): Proc<void>;
 }
 
 export interface EffectInit {
@@ -183,10 +209,14 @@ export interface EffectInit {
   data?: TriggerData | null;
   mode?: string | null;
   earthRitePaid?: boolean;
+  /** See EffectContext.memory. Created on first use and then shared. */
+  memory?: Record<string, string | number | boolean | null>;
 }
 
 export function makeEffectContext(g: G, init: EffectInit): EffectContext {
   const ctrl = init.controller;
+  init.memory ??= {};
+  const memory = init.memory;
   const selfIfPresent = () => (g.state.cards[init.self] ? init.self : null);
   const token = (name: string): DefId => {
     const d = g.db.tokenNamed(name);
@@ -410,7 +440,8 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *chooseCards(candidates, min, max, player = ctrl) {
       const present = candidates.filter((id) => g.state.cards[id] !== undefined);
       const hi = Math.min(max, present.length);
-      return yield* selectCards(g, player, "effect", present, Math.min(min, hi), hi, selfIfPresent());
+      // "pick", not "effect": paying a cost is not the ability selecting a card (CR 12.15, BP03-091).
+      return yield* selectCards(g, player, "pick", present, Math.min(min, hi), hi, selfIfPresent());
     },
     *putOnDeckInAnyOrder(cards, position, player = ctrl) {
       const present = cards.filter((id) => g.state.cards[id] !== undefined);
@@ -437,6 +468,58 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
         ability: index,
         createdTurn: g.state.turn,
       });
+    },
+    memory,
+    *steal(card) {
+      return stealCard(g, card, ctrl);
+    },
+    *evolve(card) {
+      return yield* effectEvolve(g, card);
+    },
+    *cannotAttack(card, until) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "cannotAttack" });
+    },
+    *cantActivate(card, exceptEvolve, until = "endOfTurn") {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "cantActivate", exceptEvolve });
+    },
+    *grant(card, id, until = null) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "grantedAbility", grant: id });
+    },
+    *nextSpellCostsLess(amount) {
+      if (amount > 0) g.state.players[ctrl].nextSpellReduction += amount;
+    },
+    *buffNextPlayedFollower() {
+      g.state.players[ctrl].nextFollowerBuff += 1;
+    },
+    *dealDividedDamage(targets, total) {
+      const present = targets.filter((id) => {
+        const c = g.state.cards[id];
+        return c !== undefined && (c.zone === "field" || c.zone === "leader");
+      });
+      if (present.length === 0 || total <= 0) return;
+      const amounts: number[] = [];
+      let left = total;
+      for (let i = 0; i < present.length - 1; i++) {
+        const options = Array.from({ length: left + 1 }, (_, n) => ({ id: String(n), label: String(n) }));
+        const [pick] = yield* chooseOptions(g, ctrl, "effect", options, 1, 1, selfIfPresent());
+        const n = Number(pick ?? 0);
+        amounts.push(n);
+        left -= n;
+      }
+      amounts.push(left);
+      dealDamage(
+        g,
+        present.map((target, i) => ({
+          source: selfIfPresent(),
+          controller: ctrl,
+          target,
+          amount: amounts[i]!,
+          kind: "ability" as const,
+        })),
+      );
+    },
+    *shuffleToBottom(cards) {
+      shuffleToBottom(g, cards);
     },
   };
   return fx;
