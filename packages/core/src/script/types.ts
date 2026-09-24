@@ -84,7 +84,11 @@ export interface DamageInfo {
 
 /** Passive abilities of a card on the field. */
 export interface FieldPassives {
-  /** Change to the play cost of `card` played by `player`, e.g. "your Golem followers cost 1 less". */
+  /**
+   * Change to the play cost of `card` played by `player`, e.g. "your Golem followers cost 1 less"
+   * or "any spell an opponent plays costs 1 more" (BP05-070). Asked of the cards on both fields,
+   * so check `player`.
+   */
   playCostOf?(game: GameReader, self: CardId, card: CardId, player: PlayerId): number;
   /**
    * Keywords this card gives to `card`, e.g. "your Dragon tokens have Rush". Must only use
@@ -102,6 +106,17 @@ export interface FieldPassives {
    * damage from enemy abilities"); returns the change (-amount prevents it).
    */
   damageToFollower?(game: GameReader, self: CardId, damage: DamageInfo): number;
+  /**
+   * Replacement effect on damage any leader takes (e.g. BP05-108 "your leader doesn't take
+   * ability damage"); returns the change (-amount prevents it).
+   */
+  damageToLeader?(game: GameReader, self: CardId, damage: DamageInfo): number;
+  /**
+   * "You can't lose the game, and opponents can't win" (BP05-092): its controller does not lose
+   * while it is on the field — not by rules handling (CR 11.2) nor by an effect that makes an
+   * opponent win (5.23.1); a prohibition takes precedence (1.3.3). Conceding still works (1.2.3.1).
+   */
+  cantLose?: boolean;
   /**
    * BP02-035/036 "include both spells and Runecraft followers when counting your Spellchain"
    * (CR 13.3.1.1 counts spells in the cemetery).

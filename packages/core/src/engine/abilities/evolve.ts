@@ -11,7 +11,7 @@ import { characteristics } from "../state/characteristics";
 import { moveCards } from "../state/zones";
 import { makeReader } from "../query";
 import { makeEffectContext } from "../effects/context";
-import { activationBlocked } from "../state/effects";
+import { activationBlocked, effectInForce } from "../state/effects";
 import { confirm, selectCards } from "../runtime/decide";
 
 type EvolveAction = Extract<MainAction, { type: "evolve" }>;
@@ -53,8 +53,21 @@ export interface EvolvePayment {
 }
 
 /**
+ * "Change this card's Evolve cost to N" (BP05-048/052): the value of the latest such effect in
+ * force on the card, or null.
+ */
+function evolveCostSetTo(g: G, card: CardId): number | null {
+  let value: number | null = null;
+  for (const e of g.state.effects) {
+    if (e.target === card && e.change.kind === "evolveCostSet" && effectInForce(g.state, e)) value = e.change.value;
+  }
+  return value;
+}
+
+/**
  * CR 12.2.3 — 1 evolution point may be used in lieu of 1 play point (only if the cost
  * includes play points); CR 12.2.4 — optionally 1 super-evolution point more.
+ * An effect may have changed the play points of the card's evolve cost (BP05-048/052).
  * null when the player cannot pay.
  */
 export function evolvePayment(
@@ -66,7 +79,8 @@ export function evolvePayment(
   superEvolve: boolean,
 ): EvolvePayment | null {
   const ps = g.state.players[p];
-  const costPlayPoints = cost.playPoints ?? 0;
+  const setTo = cost.playPoints !== undefined ? evolveCostSetTo(g, card) : null;
+  const costPlayPoints = setTo ?? cost.playPoints ?? 0;
   if (cost.leaderDefense && !canPayLeaderDefense(g, p, cost.leaderDefense)) return null; // CR 10.4.5
   if (cost.custom && !cost.custom.canPay(makeReader(g), p, card)) return null; // e.g. BP02-089 "Discard 3 cards"
   let playPoints = costPlayPoints;

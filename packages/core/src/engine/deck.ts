@@ -6,6 +6,7 @@ import type { GameState, PlayerState } from "../model/state";
 import { seedRng } from "../rng/rng";
 import type { ScriptRegistry } from "../script/types";
 import { placeInitialCard } from "./state/zones";
+import { emptyTurnCounts } from "./state/turn-counts";
 
 /** A player's cards for one game (CR 6.1.1). Entries are printing card numbers. */
 export interface DeckList {
@@ -112,7 +113,8 @@ function emptyPlayer(id: PlayerId, leaderDefense: number): PlayerState {
     drewFromEmptyDeck: false,
     cardsPlayed: { turn: 0, count: 0 },
     leaderDefenseLostTurn: null,
-    thisTurn: { turn: 0, discarded: 0, followersDestroyed: 0, followerAttacks: 0, returnedToHand: 0, played: [] },
+    skipNextTurn: false,
+    thisTurn: emptyTurnCounts(0),
   };
 }
 
@@ -142,6 +144,7 @@ export function createInitialState(
     pending: [],
     delayed: [],
     nextPlay: [],
+    restrictions: [],
     extraTurns: [],
     revealed: [],
     attack: null,

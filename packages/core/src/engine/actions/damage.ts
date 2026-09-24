@@ -1,8 +1,9 @@
 import type { CardId, PlayerId } from "../../model/ids";
 import type { DamageInfo } from "../../script/types";
 import type { G } from "../runtime/context";
-import { characteristics, infoDefId } from "../state/characteristics";
+import { activeScript, characteristics } from "../state/characteristics";
 import { effectInForce } from "../state/effects";
+import { thisTurn } from "../state/turn-counts";
 import { makeReader } from "../query";
 
 export interface DamageInstance {
@@ -21,8 +22,11 @@ export interface DamageInstance {
  *  - 5.14.2 / 10.2.1.3.2: effects that change damage are replacement effects: "cannot deal
  *    damage" (the damage is not dealt, BP01-024 ruling), "doesn't take (combat) damage"
  *    (BP02-019/090), passives of the source on the field ("deals 4 more damage"), passives of
- *    the target ("reduce damage dealt to this by 1") and of other cards on the field ("your
- *    followers take 1 less damage from enemy abilities", BP02-004);
+ *    the target ("reduce damage dealt to this by 1") and of other cards on the field, to
+ *    followers ("your followers take 1 less damage from enemy abilities", BP02-004) or to
+ *    leaders ("your leader doesn't take ability damage", BP05-108);
+ *    "takes N instead of more" (BP05-101); "the next time it would take damage" (BP05-017), used
+ *    up only by damage that would really be dealt (its ruling);
  *  - 5.14.3.2: combat damage is the damage an attacking follower and the follower it attacks
  *    deal each other;
  *  - 1.3.2.2: 0 or negative damage is not dealt at all;
@@ -45,7 +49,7 @@ export function dealDamage(g: G, instances: readonly DamageInstance[]): DamageIn
     if (src && d.source !== null) {
       if (state.effects.some((e) => e.target === d.source && e.change.kind === "cannotDealDamage")) continue;
       if (src.zone === "field") {
-        amount += g.scripts[infoDefId(g, d.source)]?.field?.damageDealt?.(reader, d.source, info(amount)) ?? 0;
+        amount += activeScript(g, d.source)?.field?.damageDealt?.(reader, d.source, info(amount)) ?? 0;
       }
     }
     // CR 5.14.2 prevention: all damage, combat damage (BP02-019), or ability damage (BP04-103,
@@ -59,14 +63,28 @@ export function dealDamage(g: G, instances: readonly DamageInstance[]): DamageIn
     );
     if (prevented) continue;
     if (!toLeader) {
-      amount += g.scripts[infoDefId(g, d.target)]?.field?.damageTaken?.(reader, d.target, info(amount)) ?? 0;
+      amount += activeScript(g, d.target)?.field?.damageTaken?.(reader, d.target, info(amount)) ?? 0;
       for (const p of [0, 1] as const) {
         for (const f of state.players[p].zones.field) {
-          amount += g.scripts[infoDefId(g, f)]?.field?.damageToFollower?.(reader, f, info(amount)) ?? 0;
+          amount += activeScript(g, f)?.field?.damageToFollower?.(reader, f, info(amount)) ?? 0;
+        }
+      }
+    } else {
+      for (const p of [0, 1] as const) {
+        for (const f of state.players[p].zones.field) {
+          amount += activeScript(g, f)?.field?.damageToLeader?.(reader, f, info(amount)) ?? 0;
         }
       }
     }
+    for (const e of state.effects) {
+      if (e.target === d.target && e.change.kind === "damageCap" && effectInForce(state, e)) amount = Math.min(amount, e.change.max);
+    }
     if (amount <= 0) continue;
+    const once = state.effects.find((e) => e.target === d.target && e.change.kind === "preventNextDamage" && effectInForce(state, e));
+    if (once) {
+      state.effects = state.effects.filter((e) => e !== once);
+      continue;
+    }
     dealt.push({ ...d, amount, combat });
   }
   for (const d of dealt) {
@@ -75,6 +93,7 @@ export function dealDamage(g: G, instances: readonly DamageInstance[]): DamageIn
       const ps = state.players[c.controller];
       ps.leaderDefense -= d.amount;
       ps.leaderDefenseLostTurn = state.turn; // CR 13.5.2.2
+      thisTurn(state, c.controller).leaderDefenseLost += 1; // BP05-069/081
     } else {
       c.damage += d.amount;
     }

@@ -4,6 +4,7 @@ import { setMaxPlayPoints, setPlayPoints } from "../actions/points";
 import { confirmationTiming } from "../abilities/confirmation";
 import type { G } from "../runtime/context";
 import type { Proc } from "../runtime/proc";
+import { restricted } from "../state/restrictions";
 import { endPhase } from "./end-phase";
 import { mainPhaseLoop } from "./main-phase";
 
@@ -18,11 +19,13 @@ export function* startPhase(g: G): Proc<void> {
   g.emit({ type: "turnStarted", turn: state.turn, player });
   g.emit({ type: "phaseStarted", phase: "start", player });
 
-  setMaxPlayPoints(g, player, ps.maxPlayPoints + 1); // 7.2.1 (never above the cap, 3.2.4.1)
+  // 7.2.1 (never above the cap, 3.2.4.1), unless prohibited (BP05-006, CR 1.3.3)
+  if (!restricted(state, player, "noStartPhaseMaxPlayPoints")) setMaxPlayPoints(g, player, ps.maxPlayPoints + 1);
   setPlayPoints(g, player, ps.maxPlayPoints); // 7.2.2
   setEngaged(g, ps.zones.field, false); // 7.2.3 refresh all cards on the field
   const firstTurnOfFirstPlayer = player === state.firstPlayer && ps.turnsPassed === 1;
-  if (!firstTurnOfFirstPlayer) drawCards(g, player, 1); // 7.2.4 / 7.2.4.1
+  // 7.2.4 / 7.2.4.1, unless prohibited (BP05-006, CR 1.3.3)
+  if (!firstTurnOfFirstPlayer && !restricted(state, player, "noStartPhaseDraw")) drawCards(g, player, 1);
   yield* confirmationTiming(g); // 7.2.5
 }
 
@@ -38,10 +41,17 @@ export function* mainPhase(g: G): Proc<void> {
 /**
  * CR 7.4.9 — the turn concludes; the non-active player becomes the active player, unless a
  * player takes another turn first (CR 5.28: the most recent instruction first, 5.28.1.1).
+ * CR 5.26.2 — a player whose next turn is skipped does not begin it: the turn after it begins
+ * instead (BP05-086 ruling: the opponent takes another turn).
  */
 export function endTurn(g: G): void {
-  const extra = g.state.extraTurns.pop();
-  g.state.activePlayer = extra ?? opponentOf(g.state.activePlayer);
+  let next = g.state.extraTurns.pop() ?? opponentOf(g.state.activePlayer);
+  while (g.state.players[next].skipNextTurn) {
+    g.state.players[next].skipNextTurn = false;
+    g.emit({ type: "turnSkipped", player: next });
+    next = opponentOf(next);
+  }
+  g.state.activePlayer = next;
 }
 
 /**

@@ -1,5 +1,6 @@
 import type { PlayerId } from "../../model/ids";
 import type { G } from "../runtime/context";
+import { thisTurn } from "../state/turn-counts";
 
 /**
  * CR 5.27 — give a leader +X / -X defense (not damage). Leaders have no maximum defense
@@ -10,7 +11,10 @@ export function changeLeaderDefense(g: G, player: PlayerId, delta: number): void
   if (delta === 0) return; // CR 1.3.2.2
   const ps = g.state.players[player];
   ps.leaderDefense += delta;
-  if (delta < 0) ps.leaderDefenseLostTurn = g.state.turn;
+  if (delta < 0) {
+    ps.leaderDefenseLostTurn = g.state.turn;
+    thisTurn(g.state, player).leaderDefenseLost += 1; // BP05-069/081
+  }
   g.emit({ type: "leaderDefenseChanged", player, defense: ps.leaderDefense, delta });
 }
 

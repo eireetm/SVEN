@@ -5,7 +5,7 @@ import { confirmationTiming } from "../abilities/confirmation";
 import type { G } from "../runtime/context";
 import type { Proc } from "../runtime/proc";
 import { isOnField, leaderOf } from "../state/access";
-import { characteristics, hasKeyword, infoDefId, isFollowerOnField } from "../state/characteristics";
+import { activeScript, characteristics, hasKeyword, isFollowerOnField } from "../state/characteristics";
 import { makeReader } from "../query";
 import { effectPreventsAttack } from "../state/effects";
 import { thisTurn } from "../state/turn-counts";
@@ -44,10 +44,10 @@ export function attackTargets(g: G, attacker: CardId): CardId[] {
     (id) => isFollowerOnField(g, id) && (assail || g.state.cards[id]!.engaged) && !hasKeyword(g, id, "intimidate"),
   );
   const wards = followers.filter((id) => g.state.cards[id]!.engaged && hasKeyword(g, id, "ward"));
-  if (wards.length > 0 && !g.scripts[infoDefId(g, attacker)]?.ignoresWard) return wards;
+  if (wards.length > 0 && !activeScript(g, attacker)?.ignoresWard) return wards;
   const leaderAllowed =
     (onFieldSinceTurnStart(g, attacker) || hasKeyword(g, attacker, "storm")) &&
-    !g.scripts[infoDefId(g, attacker)]?.cannotAttackLeader?.(makeReader(g), attacker);
+    !activeScript(g, attacker)?.cannotAttackLeader?.(makeReader(g), attacker);
   return leaderAllowed ? [...followers, leaderOf(g.state, opp)] : followers;
 }
 
@@ -69,7 +69,7 @@ export function canAttackWith(g: G, player: PlayerId, attacker: CardId): boolean
 
 /** CR 8.4.3.2.1 — printed "can't attack", a conditional form of it, or an effect that says so. */
 function cannotAttackNow(g: G, attacker: CardId): boolean {
-  const ban = g.scripts[infoDefId(g, attacker)]?.cannotAttack;
+  const ban = activeScript(g, attacker)?.cannotAttack;
   if (ban === true) return true;
   if (typeof ban === "function" && ban(makeReader(g), attacker)) return true;
   return effectPreventsAttack(g.state, attacker);
@@ -84,7 +84,7 @@ function combatDamageOf(g: G, follower: CardId): number {
   const ch = characteristics(g, follower);
   const controller = g.state.cards[follower]!.controller;
   const fromDefense = g.state.players[controller].zones.field.some(
-    (id) => g.scripts[infoDefId(g, id)]?.field?.combatDamageFromDefense,
+    (id) => activeScript(g, id)?.field?.combatDamageFromDefense,
   );
   return (fromDefense ? ch.defense : ch.attack) ?? 0;
 }

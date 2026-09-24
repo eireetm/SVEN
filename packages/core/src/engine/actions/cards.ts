@@ -2,7 +2,7 @@ import type { DefId } from "../../model/card";
 import type { CardId, PlayerId } from "../../model/ids";
 import type { MoveReason } from "../../events/types";
 import { randomInt, shuffleInPlace } from "../../rng/rng";
-import { infoDefId } from "../state/characteristics";
+import { activeScript } from "../state/characteristics";
 import type { G } from "../runtime/context";
 import { chooseOptions, selectCards } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
@@ -77,7 +77,7 @@ export function destroyCards(g: G, cards: readonly CardId[]): CardId[] {
   // CR 1.3.3 — "This card can't be destroyed by abilities" prohibits destroying it here (this
   // is only called for effects; rules handling destroys through moveCards directly).
   const onField = cards.filter(
-    (id) => g.state.cards[id]?.zone === "field" && !g.scripts[infoDefId(g, id)]?.cannotBeDestroyedByAbilities,
+    (id) => g.state.cards[id]?.zone === "field" && !activeScript(g, id)?.cannotBeDestroyedByAbilities,
   );
   if (onField.length === 0) return [];
   return moveCards(g, onField.map((card) => ({ card, to: "cemetery" as const })), "destroy");
@@ -172,17 +172,19 @@ export function* putOntoField(
 }
 
 /**
- * CR 4.8.3.2 — move cards into their owners' EX areas; if they do not all fit, the
- * controller of the effect picks which. Returns the new ids of the moved cards.
+ * CR 4.8.3.2 — move cards into their owners' EX areas, or into `into`'s EX area (BP05-019 "put
+ * a card in an opponent's cemetery into your EX area": its owner stays the opponent, CR 3.1.1);
+ * if they do not all fit, the controller of the effect picks which. Returns the new ids of the
+ * moved cards.
  */
-export function* putIntoEx(g: G, cards: readonly CardId[], chooser: PlayerId): Proc<CardId[]> {
+export function* putIntoEx(g: G, cards: readonly CardId[], chooser: PlayerId, into?: PlayerId): Proc<CardId[]> {
   const moved: CardId[] = [];
-  for (const owner of [0, 1] as PlayerId[]) {
-    const mine = cards.filter((id) => g.state.cards[id]?.owner === owner);
+  for (const p of [0, 1] as PlayerId[]) {
+    const mine = cards.filter((id) => g.state.cards[id] !== undefined && (into ?? g.state.cards[id]!.owner) === p);
     if (mine.length === 0) continue;
-    const room = exAreaLimit(g, owner) - g.state.players[owner].zones.ex.length;
+    const room = exAreaLimit(g, p) - g.state.players[p].zones.ex.length;
     const chosen = mine.length <= room ? mine : room <= 0 ? [] : yield* selectCards(g, chooser, "zoneEntry", mine, room, room);
-    if (chosen.length > 0) moved.push(...moveCards(g, chosen.map((card) => ({ card, to: "ex" as const })), "effect"));
+    if (chosen.length > 0) moved.push(...moveCards(g, chosen.map((card) => ({ card, to: "ex" as const, player: p })), "effect"));
   }
   return moved;
 }

@@ -6,7 +6,7 @@ import type { Keyword } from "../model/keyword";
 import type { CardInstance, GameState, PlayerZone, ZoneName } from "../model/state";
 import type { Env } from "./state/access";
 import { leaderOf } from "./state/access";
-import { characteristics, isFollowerOnField, type Characteristics } from "./state/characteristics";
+import { activeScript, characteristics, isFollowerOnField, type Characteristics } from "./state/characteristics";
 import { playVariants } from "./flow/play-card";
 import { countsThisTurn } from "./state/turn-counts";
 
@@ -73,6 +73,14 @@ export interface GameReader {
   returnedToHandThisTurn(player: PlayerId): number;
   /** Definitions of the cards this player played this turn, in order (BP04-022). */
   cardsPlayedThisTurn(player: PlayerId): readonly DefId[];
+  /** Times this player's leader lost defense this turn (BP05-069/081; each damage and "-X defense"). */
+  leaderDefenseLostThisTurn(player: PlayerId): number;
+  /**
+   * The zone a card is being played from: its zone, or the zone it was played from once it is in
+   * the resolution zone (CR 5.5.3), e.g. for "costs 3 less to play from the EX area" (BP05-106),
+   * which applies while the cost is determined (CR 10.6.2.5).
+   */
+  playZone(id: CardId): ZoneName | null;
   /**
    * CR 12.15.2 — can `player`'s cards and abilities select this card? Aura protects a card only
    * on the field and only from its opponent (BP01-111 / BP01-156 rulings).
@@ -107,7 +115,7 @@ export function makeReader(env: Env): GameReader {
     combo: (p, x) => reader.playedThisTurn(p) >= x,
     spellsInCemetery: (p) => ps(p).zones.cemetery.filter((id) => env.db.get(state().cards[id]!.def).type === "spell").length,
     spellchainCount: (p) => {
-      const withFollowers = ps(p).zones.field.some((id) => env.scripts[characteristics(env, id).def.id]?.field?.spellchainCountsRunecraftFollowers);
+      const withFollowers = ps(p).zones.field.some((id) => activeScript(env, id)?.field?.spellchainCountsRunecraftFollowers);
       return ps(p).zones.cemetery.filter((id) => {
         const d = env.db.get(state().cards[id]!.def);
         return d.type === "spell" || (withFollowers && d.type === "follower" && d.class === "Runecraft");
@@ -131,6 +139,12 @@ export function makeReader(env: Env): GameReader {
     enteredFrom: (id) => state().cards[id]?.enteredFrom ?? null,
     returnedToHandThisTurn: (p) => countsThisTurn(state(), p).returnedToHand,
     cardsPlayedThisTurn: (p) => countsThisTurn(state(), p).played,
+    leaderDefenseLostThisTurn: (p) => countsThisTurn(state(), p).leaderDefenseLost,
+    playZone: (id) => {
+      const c = state().cards[id];
+      if (!c) return null;
+      return c.zone === "resolution" ? c.playedFrom : c.zone;
+    },
     canSelect: (id, p) => {
       const c = state().cards[id];
       return c !== undefined && !(c.zone === "field" && c.controller !== p && characteristics(env, id).keywords.includes("aura"));

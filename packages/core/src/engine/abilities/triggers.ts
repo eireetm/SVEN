@@ -6,7 +6,7 @@ import type { AutomaticAbility, TriggerSubject } from "../../script/types";
 import { cloneJson } from "../../util/json";
 import type { G } from "../runtime/context";
 import { nextSeq } from "../state/access";
-import { hasKeyword, infoDefId } from "../state/characteristics";
+import { abilitiesLostAt, activeScript, hasKeyword, infoDefId } from "../state/characteristics";
 import { makeReader, type GameReader } from "../query";
 import { abilityKey, getAbility } from "./play-ability";
 import { GRANT_ABILITIES, GRANT_PREFIX } from "./grants";
@@ -54,6 +54,8 @@ function addPending(g: G, controller: PlayerId, source: CardId, sourceDef: DefId
  *  - cards that just moved in this event, with the information they had in the zone they
  *    left (look-back, CR 10.7.4.1 / 10.7.4.2) — e.g. Last Words, "when this is discarded";
  *  - delayed triggers created by effects (CR 10.7.5), which trigger only once (10.7.5.1).
+ * A card that has lost all abilities (BP05-061) has no automatic abilities of its own, also for
+ * look-back: its Last Words don't trigger (ruling).
  */
 export function collectTriggers(g: G, event: GameEvent): void {
   if (g.state.phase === "over") return;
@@ -62,6 +64,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
 
   for (const p of [0, 1] as PlayerId[]) {
     for (const id of state.players[p].zones.field) {
+      if (abilitiesLostAt(state, id) !== null) continue;
       candidates.push({ subject: { card: id, controller: p, zone: "field", lookBack: false }, abilityDef: infoDefId(g, id), source: id });
     }
     for (const zone of OTHER_ZONES) {
@@ -74,7 +77,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
   }
   if (event.type === "cardsMoved") {
     for (const m of event.moves) {
-      if (m.from === null || m.card === null || m.before === null) continue;
+      if (m.from === null || m.card === null || m.before === null || m.before.abilitiesLost) continue;
       candidates.push({
         subject: { card: m.card, controller: m.before.controller, zone: m.from.zone, lookBack: true },
         abilityDef: m.before.abilityDef,
@@ -104,21 +107,32 @@ export function collectTriggers(g: G, event: GameEvent): void {
   // Given abilities of cards on the field, each gift its own instance (two copies both
   // trigger, BP03-083 ruling): those an effect gave (BP03-062, 083, 112) and those a card on
   // the field gives while it is there (BP03-011). The receiving card is the source.
+  // Abilities given before the card lost all abilities are lost too (BP05-061 ruling).
   const granted: { card: CardId; grant: GrantedAbilityId }[] = [];
+  const lostBefore = (card: CardId, seq: number) => {
+    const at = abilitiesLostAt(state, card);
+    return at !== null && seq <= at;
+  };
   for (const e of state.effects) {
     if (e.change.kind !== "grantedAbility" || !effectInForce(state, e)) continue;
-    if (state.cards[e.target]?.zone === "field") granted.push({ card: e.target, grant: e.change.grant });
+    if (state.cards[e.target]?.zone === "field" && !lostBefore(e.target, e.seq)) granted.push({ card: e.target, grant: e.change.grant });
   }
   const onField = [...state.players[0].zones.field, ...state.players[1].zones.field];
   for (const giver of onField) {
-    const grantsFor = scripts[infoDefId(g, giver)]?.field?.grantsFor;
+    const grantsFor = activeScript(g, giver)?.field?.grantsFor;
     if (!grantsFor) continue;
-    for (const card of onField) for (const grant of grantsFor(reader, giver, card)) granted.push({ card, grant });
+    const since = state.cards[giver]!.zoneSeq;
+    for (const card of onField) {
+      if (lostBefore(card, since)) continue;
+      for (const grant of grantsFor(reader, giver, card)) granted.push({ card, grant });
+    }
   }
   for (const { card, grant } of granted) {
+    const ability = GRANT_ABILITIES[grant];
+    if (ability.kind !== "automatic") continue;
     const controller = state.cards[card]!.controller;
     const subject: TriggerSubject = { card, controller, zone: "field", lookBack: false };
-    for (const data of matches(GRANT_ABILITIES[grant], event, subject, reader)) {
+    for (const data of matches(ability, event, subject, reader)) {
       addPending(g, controller, card, `${GRANT_PREFIX}${grant}`, 0, event, data);
     }
   }

@@ -49,8 +49,16 @@ export interface CardMove {
    * its controller, the counters it had (e.g. BP03-090 "if this card had a Fable counter"; the
    * moved card is a new card without them, CR 4.1.4) and every name it had in the zone it
    * left (e.g. BP03-075 "whenever a Ghost you control leaves the field", CR 10.7.4.1.2).
+   * `abilitiesLost` is set when it had lost all abilities there (BP05-061: its Last Words don't
+   * trigger).
    */
-  before: { abilityDef: DefId; controller: PlayerId; counters: Record<string, number>; names: string[] } | null;
+  before: {
+    abilityDef: DefId;
+    controller: PlayerId;
+    counters: Record<string, number>;
+    names: string[];
+    abilitiesLost?: true;
+  } | null;
 }
 
 export type GameEvent =
@@ -79,6 +87,8 @@ export type GameEvent =
   | { type: "cardsRevealed"; player: PlayerId; cards: { id: CardId; def: DefId }[] }
   /** CR 5.28 a player will take another turn. */
   | { type: "extraTurnGranted"; player: PlayerId }
+  /** CR 5.26 a player's turn was skipped (it did not begin). */
+  | { type: "turnSkipped"; player: PlayerId }
   /**
    * CR 5.14. `kind` follows CR 5.14.3 (attack / combat / ability damage); `combat` tells
    * whether it is combat damage (5.14.3.2: damage exchanged by an attacking follower and the

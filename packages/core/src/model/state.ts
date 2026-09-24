@@ -1,4 +1,4 @@
-import type { DefId, PrintingId } from "./card";
+import type { CardType, DefId, PrintingId } from "./card";
 import type { GameConfig } from "./config";
 import type { CardId, PlayerId } from "./ids";
 import type { Keyword } from "./keyword";
@@ -94,6 +94,8 @@ export interface PlayerState {
   cardsPlayed: { turn: number; count: number };
   /** Last turn in which this player's leader lost defense (CR 13.5.2 Sanguine). */
   leaderDefenseLostTurn: number | null;
+  /** CR 5.26.2 — this player's next turn will be skipped (BP05-086). Several instructions skip it once (5.26.2.1). */
+  skipNextTurn: boolean;
   /**
    * What happened in turn `turn`, for card conditions such as "if you discarded a card this
    * turn" (BP02-062/063), "if any of your followers have been destroyed this turn" (BP02-033)
@@ -115,6 +117,11 @@ export interface TurnCounts {
   returnedToHand: number;
   /** Definitions of the cards this player played (CR 10.6.2.7), in order (e.g. BP04-022 "the 1st Commander card"). */
   played: DefId[];
+  /**
+   * Times this player's leader lost defense: each damage and each "-X defense" (BP05-069/081
+   * "the number of times your leader has lost defense this turn", rulings; CR 5.27.1).
+   */
+  leaderDefenseLost: number;
 }
 
 /** A persistent effect (CR 10.2.1.2) applied to one card object. */
@@ -164,6 +171,27 @@ export type EffectChange =
   | { kind: "preventDamage"; damage: "all" | "combat" | "ability" }
   /** Gain a trait (e.g. BP02-T07 "the Armed trait", CR 2.4). */
   | { kind: "trait"; trait: string }
+  /**
+   * CR 5.25 "Change it into [card type]" (BP05-001): it loses its other card types. Information
+   * the new type doesn't have is not referenced (5.25.2.1: a non-follower has no attack or
+   * defense); its abilities stay (5.25.3).
+   */
+  | { kind: "changeType"; type: CardType }
+  /**
+   * "It loses all abilities" (BP05-061): the abilities it has when this effect is created,
+   * printed or given. Abilities given later still work (BP05-061 ruling; cf. CR 5.31.2.1).
+   */
+  | { kind: "loseAbilities" }
+  /** "Change this card's Evolve cost to N" (BP05-048/052): the play points of its evolve abilities. */
+  | { kind: "evolveCostSet"; value: number }
+  /**
+   * "The next time [it] would take damage this turn, it doesn't take damage" (BP05-017): prevents
+   * one instance of damage (CR 5.14.2), then the effect ends. Damage of 0 or less is not dealt,
+   * so it does not use it up (ruling).
+   */
+  | { kind: "preventNextDamage" }
+  /** "If [it] would take more than N damage, it takes N instead" (BP05-101): each instance (ruling). */
+  | { kind: "damageCap"; max: number }
   /** "Its Fanfare abilities can't be performed" (BP04-038/039): its pending Fanfares are not played. */
   | { kind: "noFanfare" }
   /** "It can't attack enemies" (CR 8.4.3.2.1), e.g. BP03-013 for the controller's next turn. */
@@ -181,7 +209,7 @@ export type EffectChange =
   | { kind: "grantedAbility"; grant: GrantedAbilityId };
 
 /** Abilities an effect can give a card. Each one is defined in engine/abilities/grants.ts. */
-export type GrantedAbilityId = "destroyAtEnd" | "bottomAtEnd" | "strikeByAttack" | "followerStrike2";
+export type GrantedAbilityId = "destroyAtEnd" | "bottomAtEnd" | "strikeByAttack" | "followerStrike2" | "activateBury2";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {
@@ -241,6 +269,24 @@ export interface NextPlayModifier {
   createdTurn: number;
 }
 
+/**
+ * A restriction on what a player may do in their next turn (BP05-006 Morton the Manipulator):
+ *  - "noStartPhaseDraw": they can't draw a card during their next start phase (CR 7.2.4);
+ *  - "noStartPhaseMaxPlayPoints": they can't increase their maximum play points by 1 during
+ *    their next start phase (CR 7.2.1);
+ *  - "cantPlayFollowers": they can't play followers during their next main phase, not even by
+ *    an effect that plays one (BP05-006 ruling). Putting followers onto the field is not playing.
+ * It applies in the player's first turn after the turn it was created in and ends with that turn.
+ * A prohibition takes precedence over an instruction (CR 1.3.3).
+ */
+export interface PlayerRestriction {
+  id: string;
+  seq: number;
+  player: PlayerId;
+  kind: "noStartPhaseDraw" | "noStartPhaseMaxPlayPoints" | "cantPlayFollowers";
+  createdTurn: number;
+}
+
 /** The attack in progress (CR 8.4). */
 export interface AttackState {
   attacker: CardId;
@@ -293,6 +339,8 @@ export interface GameState {
   delayed: DelayedTrigger[];
   /** "The next [matching] card you play this turn costs N less" effects in force. */
   nextPlay: NextPlayModifier[];
+  /** Restrictions on players' next turns (BP05-006). */
+  restrictions: PlayerRestriction[];
   /** CR 5.28 players who take another turn, most recent instruction last. */
   extraTurns: PlayerId[];
   /** CR 5.21 cards currently revealed to all players (cleared when the effect ends). */

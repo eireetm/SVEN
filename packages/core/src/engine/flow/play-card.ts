@@ -15,6 +15,7 @@ import { characteristics } from "../state/characteristics";
 import { fieldLimit } from "../state/limits";
 import { moveCards } from "../state/zones";
 import { thisTurn } from "../state/turn-counts";
+import { restricted } from "../state/restrictions";
 import { makeReader } from "../query";
 
 export interface PlayCardOptions {
@@ -68,6 +69,8 @@ export function playVariants(
   const ch = characteristics(g, card);
   if (ch.type === "leader" || ch.evolved || ch.cost === null) return [];
   if (timing === "quick" && !ch.keywords.includes("quick")) return [];
+  // BP05-006 — "can't play followers during their next main phase", by an effect too (ruling).
+  if (ch.type === "follower" && g.state.phase === "main" && restricted(g.state, player, "cantPlayFollowers")) return [];
   if (ch.type === "spell" && !spellPlayable(g, card, player)) return [];
   const reader = makeReader(g);
   const options: (PlayOption | null)[] = [null, ...(g.scripts[c.def]?.playOptions ?? [])];
@@ -123,8 +126,6 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
   const targets = spell && modes.length === 0 ? yield* chooseTargets(g, spell.targets, player, played) : [];
   const modeTargets = yield* chooseModeTargets(g, player, modes, played);
   if (targets === null || modeTargets === null) throw new EngineError("card played without legal targets");
-  // 10.6.2.2.1 whether to pay each chosen option's optional additional cost (BP03-117 ruling)
-  const modePaid = yield* chooseModeCosts(g, player, modes, played);
   const fx = (extra: Partial<EffectInit> = {}) =>
     makeEffectContext(g, {
       controller: player,
@@ -137,15 +138,19 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
       playOption: option?.id ?? null,
       ...extra,
     });
-  // 10.6.2.5 determine and pay the cost: the play option's process, the options' additional
-  // costs, Earth Rite, play points
+  // 10.6.2.5 determine and pay the cost: the play option's process, Earth Rite, play points,
+  // the options' additional costs
   if (option) yield* option.pay(fx());
-  for (const [i, m] of modes.entries()) if (modePaid[i]) yield* m.cost!.pay(fx({ mode: m.id }));
   if (earthRite) yield* payEarthRite(g, player, spell?.earthRite?.count ?? 1, played);
   const nextPlay = nextPlayModifiersFor(g, played, player);
   payPlayPoints(g, player, playCost(g, played, player, option, opts.setCost));
   // "The next card you play this turn costs N less" is used up by this play (BP03-038 ruling).
   if (nextPlay.length > 0) g.state.nextPlay = g.state.nextPlay.filter((m) => !nextPlay.includes(m));
+  // 10.6.2.2.1 whether to pay each chosen option's optional additional cost (BP03-117 ruling).
+  // Asked once the card's own play points are paid, so that an option costing play points
+  // (BP05-041 "(2) {[cost02]}: ...") is only offered when both can be paid.
+  const modePaid = yield* chooseModeCosts(g, player, modes, played);
+  for (const [i, m] of modes.entries()) if (modePaid[i]) yield* m.cost!.pay(fx({ mode: m.id }));
   // 10.6.2.6 field limit: verified by playVariants before anything moved.
   // 10.6.2.7 the card has been played (counts for Combo, 13.2.1.3)
   const ps = g.state.players[player];

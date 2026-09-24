@@ -6,7 +6,7 @@ import type { Proc } from "./runtime/proc";
 import { characteristics, hasKeyword } from "./state/characteristics";
 import { exAreaLimit, fieldLimit } from "./state/limits";
 import { moveCards, type MoveSpec } from "./state/zones";
-import { endGame } from "./flow/end-game";
+import { cannotLose, endGame } from "./flow/end-game";
 
 /**
  * CR 11 — rules handling. Each process inspects the same state and adds to a shared plan;
@@ -41,6 +41,12 @@ export const RULES_PROCESSES: readonly RulesProcess[] = [
     *collect(g, plan) {
       for (const p of BOTH) {
         const ps = g.state.players[p];
+        if (cannotLose(g, p)) {
+          // BP05-092 — the loss is prohibited (CR 1.3.3). A draw from an empty deck is over and
+          // done (ruling: the game goes on), so it does not make the player lose later.
+          ps.drewFromEmptyDeck = false;
+          continue;
+        }
         if (ps.leaderDefense <= 0) plan.losses.push({ player: p, reason: "leaderDefense" }); // 11.2.1
         if (ps.drewFromEmptyDeck) plan.losses.push({ player: p, reason: "deckOut" }); // 11.2.2
       }

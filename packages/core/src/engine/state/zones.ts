@@ -155,13 +155,15 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
   const olds = specs.map((s) => getCard(state, s.card));
   const befores = olds.map((c) => {
     const onField = c.zone === "field" ? characteristics(g, c.id) : null;
-    return {
+    const before: NonNullable<CardMove["before"]> = {
       abilityDef: onField ? onField.def.id : c.def,
       controller: c.controller,
       counters: { ...c.counters },
       // Every name it had there, e.g. "this follower's name is also Ghost" (CR 10.7.4.1.2).
       names: onField ? [...onField.names] : [g.db.get(c.def).name],
     };
+    if (onField && onField.abilitiesLostAt !== null) before.abilitiesLost = true; // BP05-061
+    return before;
   });
 
   const moves: CardMove[] = [];

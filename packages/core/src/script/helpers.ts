@@ -22,14 +22,21 @@ export function defineCard(script: CardScript): CardScript {
   return script;
 }
 
-/** CR 12.2 — "Evolve [cost]: Evolve this follower." (a number = play points) */
-export function evolveAbility(cost: number | CostSpec, opts: { nameIncludes?: string } = {}): ActivatedAbility {
+/**
+ * CR 12.2 — "Evolve [cost]: Evolve this follower." (a number = play points). `condition`:
+ * "This ability can be activated if ..." (BP05-018).
+ */
+export function evolveAbility(
+  cost: number | CostSpec,
+  opts: { nameIncludes?: string; condition?: ActivatedAbility["condition"] } = {},
+): ActivatedAbility {
   const ability: ActivatedAbility = {
     kind: "activated",
     evolve: true,
     cost: typeof cost === "number" ? { playPoints: cost } : cost,
   };
   if (opts.nameIncludes !== undefined) ability.evolveNameIncludes = opts.nameIncludes;
+  if (opts.condition !== undefined) ability.condition = opts.condition;
   return ability;
 }
 
@@ -102,6 +109,10 @@ export const atStartOfYourEndPhase = (spec: TimingSpec) =>
 /** "At the start of your main phase" (CR 7.3.1). */
 export const atStartOfYourMainPhase = (spec: TimingSpec) =>
   automatic("other", (e, me) => !me.lookBack && e.type === "phaseStarted" && e.phase === "main" && e.player === me.controller, spec);
+
+/** "At the start of each opponent's main phase" (CR 7.3.1). */
+export const atStartOfOpponentsMainPhase = (spec: TimingSpec) =>
+  automatic("other", (e, me) => !me.lookBack && e.type === "phaseStarted" && e.phase === "main" && e.player !== me.controller, spec);
 
 /** "At the start of each player's main phase" (CR 7.3.1). Trigger data: that player. */
 export const atStartOfEachMainPhase = (spec: TimingSpec) =>
@@ -188,10 +199,11 @@ export const whenThisLeavesField = (spec: TimingSpec) =>
   automatic("other", (e, me) => me.lookBack && moves(e).some((m) => m.card === me.card && m.from?.zone === "field" && m.to.zone !== "field"), spec);
 
 /**
- * "Whenever this follower takes damage" (CR 5.14). Damage of 0 or less is not dealt, so it does
- * not trigger (BP04-077 ruling); damage that destroys it does (BP04-087 ruling).
+ * "Whenever this follower takes [ability] damage" (CR 5.14). Damage of 0 or less is not dealt, so
+ * it does not trigger (BP04-077 ruling); damage that destroys it does (BP04-087, BP05-053
+ * rulings). Ability damage is any damage but attack and combat damage (BP05-052 ruling, CR 5.14.3).
  */
-export const whenThisTakesDamage = (spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}) =>
+export const whenThisTakesDamage = (spec: TimingSpec, opts: { onlyYourTurn?: boolean; ability?: boolean } = {}) =>
   automatic(
     "other",
     (e, me, game) =>
@@ -199,7 +211,98 @@ export const whenThisTakesDamage = (spec: TimingSpec, opts: { onlyYourTurn?: boo
       e.type === "damageDealt" &&
       e.target === me.card &&
       e.amount > 0 &&
+      (!opts.ability || e.kind === "ability") &&
       (!opts.onlyYourTurn || game.activePlayer === me.controller),
+    spec,
+  );
+
+/**
+ * "Whenever you draw a card [outside of your start phase]" — once per card drawn (BP05-094
+ * ruling). Adding a card to the hand otherwise is not drawing (its ruling). Data: the card.
+ */
+export function whenYouDraw(spec: TimingSpec, opts: { exceptYourStartPhase?: boolean } = {}): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game): readonly TriggerData[] => {
+      if (me.lookBack) return [];
+      if (opts.exceptYourStartPhase && game.state.phase === "start" && game.activePlayer === me.controller) return [];
+      return moves(e)
+        .filter((m) => m.reason === "draw" && m.to.zone === "hand" && m.to.player === me.controller && m.newCard !== null)
+        .map((m) => ({ card: m.newCard! }));
+    },
+    spec,
+  );
+}
+
+/** "Whenever an opponent discards a card" — once per card (BP05-082 ruling). Data: the card and that player. */
+export function whenOpponentDiscards(spec: TimingSpec): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me): readonly TriggerData[] =>
+      me.lookBack
+        ? []
+        : moves(e)
+            .filter((m) => m.reason === "discard" && m.from?.zone === "hand" && m.from.player !== me.controller)
+            .map((m) => ({ card: m.newCard ?? m.card!, player: m.from!.player })),
+    spec,
+  );
+}
+
+/**
+ * "[During your turn,] whenever a card is put from an opponent's deck into the cemetery" — once
+ * per card (BP05-029 ruling). Data: the card.
+ */
+export function whenOpponentDeckCardToCemetery(spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game): readonly TriggerData[] => {
+      if (me.lookBack || (opts.onlyYourTurn && game.activePlayer !== me.controller)) return [];
+      return moves(e)
+        .filter((m) => m.from?.zone === "deck" && m.from.player !== me.controller && m.to.zone === "cemetery")
+        .map((m) => ({ card: m.newCard ?? m.card! }));
+    },
+    spec,
+  );
+}
+
+/**
+ * "[During your turn,] whenever a follower is put from your field into the cemetery" — once per
+ * follower, tokens too, and a follower put there as a cost (BP05-076 rulings). Not this card
+ * itself (it is no longer on the field to be given anything). Data: the card.
+ */
+export function whenYourFollowerToCemetery(spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game): readonly TriggerData[] => {
+      if (me.lookBack || (opts.onlyYourTurn && game.activePlayer !== me.controller)) return [];
+      return moves(e)
+        .filter(
+          (m) =>
+            m.from?.zone === "field" &&
+            m.to.zone === "cemetery" &&
+            m.before !== null &&
+            m.before.controller === me.controller &&
+            game.db.get(m.before.abilityDef).type === "follower",
+        )
+        .map((m) => ({ card: m.newCard ?? m.card! }));
+    },
+    spec,
+  );
+}
+
+/**
+ * "When your leader's defense becomes 0 or less" (BP05-092): it goes from more than 0 to 0 or
+ * less, by damage or by "-X defense".
+ */
+export const whenYourLeaderDefenseDropsToZero = (spec: TimingSpec) =>
+  automatic(
+    "other",
+    (e, me) =>
+      !me.lookBack &&
+      e.type === "leaderDefenseChanged" &&
+      e.player === me.controller &&
+      e.defense <= 0 &&
+      e.defense - e.delta > 0,
     spec,
   );
 

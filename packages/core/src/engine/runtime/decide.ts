@@ -13,7 +13,7 @@ import type { Anchor } from "../../model/state";
 import { EngineError } from "../errors";
 import type { G } from "./context";
 import type { Proc } from "./proc";
-import { infoDefId } from "../state/characteristics";
+import { activeScript } from "../state/characteristics";
 
 /**
  * The only way engine code asks a player something. If the decision has exactly one legal
@@ -83,7 +83,7 @@ function mandatoryTargets(g: G, player: PlayerId, reason: SelectReason, candidat
   return candidates.filter((id) => {
     const c = g.state.cards[id];
     if (!c || c.zone !== "field" || c.controller === player) return false;
-    return g.scripts[infoDefId(g, id)]?.mustBeSelected === true;
+    return activeScript(g, id)?.mustBeSelected === true;
   });
 }
 

@@ -6,7 +6,7 @@ import type { G } from "./runtime/context";
 import { selectCards } from "./runtime/decide";
 import type { Proc } from "./runtime/proc";
 import { getCard, type Env } from "./state/access";
-import { characteristics, infoDefId } from "./state/characteristics";
+import { activeScript, characteristics } from "./state/characteristics";
 import { moveCards } from "./state/zones";
 import { makeReader } from "./query";
 
@@ -15,8 +15,9 @@ import { makeReader } from "./query";
  *  1. printed cost (2.5), or the value set by a play option / effect ("costs N", "for 0");
  *     set-to-value changes are applied first (10.10.2.4);
  *  2. increases / decreases: the card's own passive (e.g. Spellchain reductions), passives of
- *     cards on its player's field (e.g. "your Golem followers cost 1 less"), effects on the
- *     card (e.g. "It costs 2 less to play"), the chosen play option;
+ *     cards on either field (e.g. "your Golem followers cost 1 less", "any spell an opponent
+ *     plays costs 1 more" — BP05-070, which stacks), effects on the card (e.g. "It costs 2 less
+ *     to play"), the chosen play option;
  *  3. never below 0 (1.3.2.2.1).
  * The card's cost information itself does not change (10.4.4.1).
  */
@@ -29,8 +30,10 @@ export function playCost(g: Env, card: CardId, player: PlayerId, option: PlayOpt
   for (const e of g.state.effects) if (e.target === card && e.change.kind === "playCostSet") setByEffect = e.change.value;
   let cost = setTo ?? option?.setCost ?? setByEffect ?? base;
   cost += g.scripts[getCard(g.state, card).def]?.playCost?.(reader, card, player) ?? 0;
-  for (const f of g.state.players[player].zones.field) {
-    cost += g.scripts[infoDefId(g, f)]?.field?.playCostOf?.(reader, f, card, player) ?? 0;
+  for (const p of [0, 1] as const) {
+    for (const f of g.state.players[p].zones.field) {
+      cost += activeScript(g, f)?.field?.playCostOf?.(reader, f, card, player) ?? 0;
+    }
   }
   for (const e of g.state.effects) if (e.target === card && e.change.kind === "playCost") cost += e.change.amount;
   cost += option?.costDelta ?? 0;

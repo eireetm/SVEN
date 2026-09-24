@@ -1,7 +1,8 @@
 import type { DefId } from "../../model/card";
 import { opponentOf, type CardId, type PlayerId } from "../../model/ids";
 import { IMPLEMENTED_KEYWORDS, type Keyword } from "../../model/keyword";
-import type { EffectChange, EffectDuration, GrantedAbilityId, TriggerData } from "../../model/state";
+import type { CardType } from "../../model/card";
+import type { EffectChange, EffectDuration, GrantedAbilityId, PlayerRestriction, TriggerData } from "../../model/state";
 import type { GameEvent } from "../../events/types";
 import {
   banishCards,
@@ -29,7 +30,7 @@ import { gainEvolutionPoints, payPlayPoints, recoverPlayPoints, setMaxPlayPoints
 import { selectableBy } from "../abilities/targets";
 import { effectEvolve } from "../abilities/evolve";
 import { EngineError } from "../errors";
-import { endGame } from "../flow/end-game";
+import { cannotLose, endGame } from "../flow/end-game";
 import { playCard } from "../flow/play-card";
 import type { G } from "../runtime/context";
 import { cardRefs, chooseOptions, confirm, orderCards, selectCards } from "../runtime/decide";
@@ -80,8 +81,11 @@ export interface EffectContext {
   /** CR 5.7 */
   banish(cards: readonly CardId[]): Proc<CardId[]>;
   returnToHand(cards: readonly CardId[]): Proc<CardId[]>;
-  /** Put cards into their owners' EX areas (limit CR 4.8.3.2). */
-  putIntoEx(cards: readonly CardId[]): Proc<CardId[]>;
+  /**
+   * Put cards into their owners' EX areas, or into `player`'s (BP05-019 "into your EX area";
+   * the owner does not change). Limit CR 4.8.3.2.
+   */
+  putIntoEx(cards: readonly CardId[], player?: PlayerId): Proc<CardId[]>;
   /** CR 5.5 put cards onto a field (default: the controller's). */
   putOntoField(cards: readonly CardId[], player?: PlayerId): Proc<CardId[]>;
   /** CR 5.4 */
@@ -234,6 +238,23 @@ export interface EffectContext {
   dealDividedDamage(targets: readonly CardId[], total: number): Proc<void>;
   /** Shuffle these cards onto the bottom of their owner's deck (CR 5.9). */
   shuffleToBottom(cards: readonly CardId[]): Proc<void>;
+  /**
+   * CR 5.25 "Change it into [card type]" (BP05-001), for as long as it stays on the field
+   * (10.9.2; still after it evolves — its ruling).
+   */
+  changeType(card: CardId, type: CardType): Proc<void>;
+  /** "It loses all abilities" (BP05-061). */
+  loseAbilities(card: CardId, until: Until): Proc<void>;
+  /** "Change this card's Evolve cost to N" (BP05-048/052). */
+  setEvolveCost(card: CardId, value: number, until: Until): Proc<void>;
+  /** "The next time [it] would take damage, it doesn't take damage" (BP05-017; a leader card too). */
+  preventNextDamage(target: CardId, until: Until): Proc<void>;
+  /** "If [it] would take more than N damage, it takes N instead" (BP05-101; a leader card too). */
+  capDamage(target: CardId, max: number, until: Until): Proc<void>;
+  /** A restriction on `player`'s next turn (BP05-006, see PlayerRestriction). */
+  restrictPlayer(player: PlayerId, kind: PlayerRestriction["kind"]): Proc<void>;
+  /** CR 5.26.2 "Skip [player's] next turn" (BP05-086 as a cost). */
+  skipNextTurn(player?: PlayerId): Proc<void>;
 }
 
 /** Where a search puts the cards it finds. */
@@ -319,8 +340,8 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *returnToHand(cards) {
       return returnToHand(g, cards);
     },
-    *putIntoEx(cards) {
-      return yield* putIntoEx(g, cards, ctrl);
+    *putIntoEx(cards, player) {
+      return yield* putIntoEx(g, cards, ctrl, player);
     },
     *putOntoField(cards, player = ctrl) {
       return yield* putOntoField(g, cards, player, "effect", { chooser: ctrl });
@@ -458,6 +479,8 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       addEffect(card, null, { kind: "noFanfare" });
     },
     *winGame() {
+      // BP05-092 "opponents can't win" prohibits it (CR 1.3.3, its ruling).
+      if (cannotLose(g, opponentOf(ctrl))) return;
       endGame(g, [{ player: opponentOf(ctrl), reason: "effect" }]);
     },
     *giveTrait(target, trait, until = null) {
@@ -609,6 +632,28 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *shuffleToBottom(cards) {
       shuffleToBottom(g, cards);
+    },
+    *changeType(card, type) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, null, { kind: "changeType", type });
+    },
+    *loseAbilities(card, until) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "loseAbilities" });
+    },
+    *setEvolveCost(card, value, until) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "evolveCostSet", value });
+    },
+    *preventNextDamage(target, until) {
+      addEffect(target, until, { kind: "preventNextDamage" });
+    },
+    *capDamage(target, max, until) {
+      addEffect(target, until, { kind: "damageCap", max });
+    },
+    *restrictPlayer(player, kind) {
+      const seq = nextSeq(g.state);
+      g.state.restrictions.push({ id: `r${seq}`, seq, player, kind, createdTurn: g.state.turn });
+    },
+    *skipNextTurn(player = ctrl) {
+      g.state.players[player].skipNextTurn = true; // 5.26.2.1: more instructions still skip it once
     },
   };
   return fx;
