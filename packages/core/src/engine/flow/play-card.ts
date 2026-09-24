@@ -14,6 +14,7 @@ import { getCard, type Env } from "../state/access";
 import { characteristics } from "../state/characteristics";
 import { fieldLimit } from "../state/limits";
 import { moveCards } from "../state/zones";
+import { thisTurn } from "../state/turn-counts";
 import { makeReader } from "../query";
 
 export interface PlayCardOptions {
@@ -133,6 +134,7 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
       event: null,
       mode: null,
       earthRitePaid: earthRite,
+      playOption: option?.id ?? null,
       ...extra,
     });
   // 10.6.2.5 determine and pay the cost: the play option's process, the options' additional
@@ -148,6 +150,7 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
   // 10.6.2.7 the card has been played (counts for Combo, 13.2.1.3)
   const ps = g.state.players[player];
   ps.cardsPlayed = ps.cardsPlayed.turn === g.state.turn ? { turn: g.state.turn, count: ps.cardsPlayed.count + 1 } : { turn: g.state.turn, count: 1 };
+  thisTurn(g.state, player).played.push(def);
   g.emit({ type: "cardPlayed", player, card: played, def, from });
 
   // 10.6.2.8 resolve

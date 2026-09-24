@@ -56,6 +56,8 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
   const self = pending.source;
   const reader = makeReader(g);
   if (ability.condition && !ability.condition(reader, ctrl, self)) return;
+  // BP04-038 "Its Fanfare abilities can't be performed": the triggered Fanfare is not played.
+  if (ability.timing === "fanfare" && g.state.effects.some((e) => e.target === self && e.change.kind === "noFanfare")) return;
 
   // 10.6.2.2 choices: options (5.18), Earth Rite (13.3.3.2), whether to pay the cost (10.4.7.4)
   let modes: Mode[] = [];

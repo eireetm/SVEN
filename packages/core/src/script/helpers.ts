@@ -187,6 +187,22 @@ export const whenThisDealsCombatDamage = (spec: TimingSpec, opts: { onlyYourTurn
 export const whenThisLeavesField = (spec: TimingSpec) =>
   automatic("other", (e, me) => me.lookBack && moves(e).some((m) => m.card === me.card && m.from?.zone === "field" && m.to.zone !== "field"), spec);
 
+/**
+ * "Whenever this follower takes damage" (CR 5.14). Damage of 0 or less is not dealt, so it does
+ * not trigger (BP04-077 ruling); damage that destroys it does (BP04-087 ruling).
+ */
+export const whenThisTakesDamage = (spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}) =>
+  automatic(
+    "other",
+    (e, me, game) =>
+      !me.lookBack &&
+      e.type === "damageDealt" &&
+      e.target === me.card &&
+      e.amount > 0 &&
+      (!opts.onlyYourTurn || game.activePlayer === me.controller),
+    spec,
+  );
+
 /** "When this card is returned to hand from your field". */
 export const whenReturnedToHand = (spec: TimingSpec) =>
   automatic("other", (e, me) => me.lookBack && moves(e).some((m) => m.card === me.card && m.from?.zone === "field" && m.to.zone === "hand"), spec);
@@ -269,10 +285,11 @@ export function whenEnemyFollowerDestroyed(spec: TimingSpec): AutomaticAbility {
 
 /** "When another amulet you control leaves the field". */
 export function whenAnotherAmuletLeaves(spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}): AutomaticAbility {
+  // Also when this card leaves at the same time (CR 10.7.4.2); `me.controller` is then the
+  // controller it had on the field.
   return automatic(
     "other",
     (e, me, game) =>
-      !me.lookBack &&
       (!opts.onlyYourTurn || game.activePlayer === me.controller) &&
       moves(e).some(
         (m) =>

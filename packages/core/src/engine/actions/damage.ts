@@ -48,15 +48,17 @@ export function dealDamage(g: G, instances: readonly DamageInstance[]): DamageIn
         amount += g.scripts[infoDefId(g, d.source)]?.field?.damageDealt?.(reader, d.source, info(amount)) ?? 0;
       }
     }
+    // CR 5.14.2 prevention: all damage, combat damage (BP02-019), or ability damage (BP04-103,
+    // which a leader can have too: everything but attack and combat damage, its ruling).
+    const prevented = state.effects.some(
+      (e) =>
+        e.target === d.target &&
+        e.change.kind === "preventDamage" &&
+        (e.change.damage === "all" || (e.change.damage === "combat" && combat) || (e.change.damage === "ability" && d.kind === "ability")) &&
+        effectInForce(state, e),
+    );
+    if (prevented) continue;
     if (!toLeader) {
-      const prevented = state.effects.some(
-        (e) =>
-          e.target === d.target &&
-          e.change.kind === "preventDamage" &&
-          (e.change.damage === "all" || combat) &&
-          effectInForce(state, e),
-      );
-      if (prevented) continue;
       amount += g.scripts[infoDefId(g, d.target)]?.field?.damageTaken?.(reader, d.target, info(amount)) ?? 0;
       for (const p of [0, 1] as const) {
         for (const f of state.players[p].zones.field) {

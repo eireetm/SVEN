@@ -113,6 +113,8 @@ export interface TurnCounts {
   followerAttacks: number;
   /** Cards that left this player's field for a hand (e.g. BP03-005 "returned to hand this turn"). */
   returnedToHand: number;
+  /** Definitions of the cards this player played (CR 10.6.2.7), in order (e.g. BP04-022 "the 1st Commander card"). */
+  played: DefId[];
 }
 
 /** A persistent effect (CR 10.2.1.2) applied to one card object. */
@@ -159,9 +161,11 @@ export type EffectChange =
    * "It doesn't take damage" / "doesn't take combat damage" (BP02-019, BP02-090): the damage
    * is replaced by no damage (5.14.2, 1.3.2.2). "combat" follows CR 5.14.3.2.
    */
-  | { kind: "preventDamage"; damage: "all" | "combat" }
+  | { kind: "preventDamage"; damage: "all" | "combat" | "ability" }
   /** Gain a trait (e.g. BP02-T07 "the Armed trait", CR 2.4). */
   | { kind: "trait"; trait: string }
+  /** "Its Fanfare abilities can't be performed" (BP04-038/039): its pending Fanfares are not played. */
+  | { kind: "noFanfare" }
   /** "It can't attack enemies" (CR 8.4.3.2.1), e.g. BP03-013 for the controller's next turn. */
   | { kind: "cannotAttack" }
   /**

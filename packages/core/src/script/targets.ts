@@ -30,6 +30,9 @@ function spec(candidates: (g: GameReader, controller: PlayerId, self: CardId) =>
 
 const ofType = (g: GameReader, id: CardId, type: CardType) => g.info(id).type === type;
 
+/** `count` of "select any number of ..." (好きな枚数, e.g. BP04-001), always with `upTo: true`. */
+export const ANY = Number.POSITIVE_INFINITY;
+
 /** "an enemy follower on the field" */
 export const enemyFollower = (o: Opts = {}) => spec((g, c) => g.followers(g.opponent(c)), o);
 

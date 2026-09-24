@@ -96,6 +96,11 @@ export type GameEvent =
   | { type: "leaderDefenseChanged"; player: PlayerId; defense: number; delta: number }
   /** CR 5.16 / 12.2.4. */
   | { type: "evolved"; card: CardId; evolveCard: CardId; superEvolved: boolean }
+  /**
+   * CR 5.11 — `player` looked at these cards (nothing moved). Private to that player: a GUI or
+   * network layer must not show it to the opponent.
+   */
+  | { type: "cardsLookedAt"; player: PlayerId; cards: { id: CardId; def: DefId }[] }
   /** CR 10.6.2.7 a card has been played (it is now in the resolution zone). */
   | { type: "cardPlayed"; player: PlayerId; card: CardId; def: DefId; from: ZoneName }
   /**

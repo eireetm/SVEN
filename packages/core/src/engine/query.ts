@@ -71,6 +71,13 @@ export interface GameReader {
   enteredFrom(id: CardId): ZoneName | null;
   /** Cards returned from this player's field to a hand this turn (BP03-005). */
   returnedToHandThisTurn(player: PlayerId): number;
+  /** Definitions of the cards this player played this turn, in order (BP04-022). */
+  cardsPlayedThisTurn(player: PlayerId): readonly DefId[];
+  /**
+   * CR 12.15.2 — can `player`'s cards and abilities select this card? Aura protects a card only
+   * on the field and only from its opponent (BP01-111 / BP01-156 rulings).
+   */
+  canSelect(id: CardId, player: PlayerId): boolean;
   /** The card's script has an Earth Rite cost (CR 13.3.3), so a search for "a card with Earth Rite" finds it. */
   hasEarthRite(id: CardId): boolean;
 }
@@ -123,6 +130,11 @@ export function makeReader(env: Env): GameReader {
     faceUpEvolveDeck: (p) => ps(p).zones.evolveDeck.filter((id) => state().cards[id]!.faceUp),
     enteredFrom: (id) => state().cards[id]?.enteredFrom ?? null,
     returnedToHandThisTurn: (p) => countsThisTurn(state(), p).returnedToHand,
+    cardsPlayedThisTurn: (p) => countsThisTurn(state(), p).played,
+    canSelect: (id, p) => {
+      const c = state().cards[id];
+      return c !== undefined && !(c.zone === "field" && c.controller !== p && characteristics(env, id).keywords.includes("aura"));
+    },
     hasEarthRite: (id) => {
       const def = state().cards[id]?.def;
       if (def === undefined) return false;

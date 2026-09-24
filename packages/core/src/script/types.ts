@@ -57,6 +57,11 @@ export interface CardScript {
   /** "This card is put onto the field engaged." */
   entersEngaged?: boolean;
   /**
+   * "This follower ignores Ward" (BP04-006, これは【守護】を無視して攻撃できる): when it attacks,
+   * the Ward requirement (CR 12.8.2 iii) does not apply to its attack target.
+   */
+  ignoresWard?: boolean;
+  /**
    * Which cards a "the next [matching] card you play this turn costs N less" effect created by
    * this card applies to, by key (`fx.nextPlayCostsLess(key, n)`, BP03-038).
    */

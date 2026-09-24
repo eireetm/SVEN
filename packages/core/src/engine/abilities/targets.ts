@@ -5,7 +5,6 @@ import type { G } from "../runtime/context";
 import type { Env } from "../state/access";
 import { selectCards } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
-import { hasKeyword } from "../state/characteristics";
 import { makeReader } from "../query";
 
 /**
@@ -13,9 +12,7 @@ import { makeReader } from "../query";
  * only protects on the field (BP01-111 / BP01-156 rulings).
  */
 export function selectableBy(g: Env, card: CardId, player: PlayerId): boolean {
-  const c = g.state.cards[card];
-  if (!c) return false;
-  return !(c.zone === "field" && c.controller !== player && hasKeyword(g, card, "aura"));
+  return makeReader(g).canSelect(card, player);
 }
 
 function candidatesOf(g: Env, spec: TargetSpec, controller: PlayerId, self: CardId): CardId[] {

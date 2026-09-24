@@ -32,7 +32,8 @@ function onFieldSinceTurnStart(g: G, id: CardId): boolean {
  *    Assail attacker (confirmed, docs/open-questions.md Q4).
  * Storm: that it also lifts the leader restriction of 8.4.3.1 is confirmed by the project
  * owner and by the official play guide (docs/open-questions.md Q1).
- * A card's "can't attack enemy leaders" (e.g. BP02-107) removes the leader.
+ * A card's "can't attack enemy leaders" (e.g. BP02-107) removes the leader; "ignores Ward"
+ * (BP04-006) lifts the Ward requirement.
  */
 export function attackTargets(g: G, attacker: CardId): CardId[] {
   const c = g.state.cards[attacker];
@@ -43,7 +44,7 @@ export function attackTargets(g: G, attacker: CardId): CardId[] {
     (id) => isFollowerOnField(g, id) && (assail || g.state.cards[id]!.engaged) && !hasKeyword(g, id, "intimidate"),
   );
   const wards = followers.filter((id) => g.state.cards[id]!.engaged && hasKeyword(g, id, "ward"));
-  if (wards.length > 0) return wards;
+  if (wards.length > 0 && !g.scripts[infoDefId(g, attacker)]?.ignoresWard) return wards;
   const leaderAllowed =
     (onFieldSinceTurnStart(g, attacker) || hasKeyword(g, attacker, "storm")) &&
     !g.scripts[infoDefId(g, attacker)]?.cannotAttackLeader?.(makeReader(g), attacker);

@@ -1,5 +1,5 @@
 import type { DefId } from "../../model/card";
-import type { CardId, PlayerId } from "../../model/ids";
+import { opponentOf, type CardId, type PlayerId } from "../../model/ids";
 import { IMPLEMENTED_KEYWORDS, type Keyword } from "../../model/keyword";
 import type { EffectChange, EffectDuration, GrantedAbilityId, TriggerData } from "../../model/state";
 import type { GameEvent } from "../../events/types";
@@ -29,9 +29,10 @@ import { gainEvolutionPoints, payPlayPoints, recoverPlayPoints, setMaxPlayPoints
 import { selectableBy } from "../abilities/targets";
 import { effectEvolve } from "../abilities/evolve";
 import { EngineError } from "../errors";
+import { endGame } from "../flow/end-game";
 import { playCard } from "../flow/play-card";
 import type { G } from "../runtime/context";
-import { chooseOptions, confirm, orderCards, selectCards } from "../runtime/decide";
+import { cardRefs, chooseOptions, confirm, orderCards, selectCards } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { getCard, nextSeq } from "../state/access";
 import { exAreaLimit } from "../state/limits";
@@ -106,16 +107,25 @@ export interface EffectContext {
     filter: (card: CardId) => boolean,
     opts?: {
       max?: number;
-      to?: "hand" | "field" | "ex";
+      /** Where the found cards go: hand (default), field, EX area, or banished (BP04-059). */
+      to?: SearchDestination;
       /**
        * Decide the destination per found card after it is revealed, e.g. BP03-002 "add it to your
        * hand; if it costs 2 or less, you may put it onto your field instead". Overrides `to`.
        */
-      destination?: (card: CardId) => Proc<"hand" | "field" | "ex">;
+      destination?: (card: CardId) => Proc<SearchDestination>;
       player?: PlayerId;
       reveal?: boolean;
     },
   ): Proc<CardId[]>;
+  /**
+   * CR 5.8 "Search your deck for an A, a B and a C" (BP04-086): up to one card for each filter,
+   * in order (a card found for one filter is not offered again), revealed, moved together, and
+   * the deck shuffled once.
+   */
+  searchEach(filters: readonly ((card: CardId) => boolean)[], opts?: { to?: SearchDestination }): Proc<CardId[]>;
+  /** CR 5.11 — the player looks at these cards (e.g. BP04-056 "look at the top card"); nothing moves. */
+  lookAt(cards: readonly CardId[], player?: PlayerId): Proc<void>;
   /** CR 5.11 the top cards of a deck (the player looks at them). */
   topCards(count: number, player?: PlayerId): CardId[];
   /** Put cards on the bottom of their owner's deck in an order the player chooses. */
@@ -144,8 +154,15 @@ export interface EffectContext {
   changePlayCost(target: CardId, amount: number, until?: Until): Proc<void>;
   /** "It costs N to play" (CR 10.4.4.1, 10.10.2.4), e.g. BP02-091. */
   setPlayCost(target: CardId, value: number): Proc<void>;
-  /** "It doesn't take (combat) damage" (CR 5.14.2 replacement, 5.14.3.2). */
-  preventDamage(target: CardId, damage: "all" | "combat", until: Until): Proc<void>;
+  /**
+   * "It doesn't take (combat / ability) damage" (CR 5.14.2 replacement, 5.14.3.2). The target
+   * may be a leader card (BP04-103).
+   */
+  preventDamage(target: CardId, damage: "all" | "combat" | "ability", until: Until): Proc<void>;
+  /** "Its Fanfare abilities can't be performed" (BP04-038/039). */
+  blockFanfare(card: CardId): Proc<void>;
+  /** CR 5.23.1 — this ability's controller wins the game: the opponent loses (BP04-003). */
+  winGame(): Proc<void>;
   /** Give a trait (CR 2.4), e.g. BP02-T07 "the Armed trait". */
   giveTrait(target: CardId, trait: string, until?: Until): Proc<void>;
   /** CR 5.27 give a leader +X / -X defense. */
@@ -190,6 +207,11 @@ export interface EffectContext {
    * resolve of one ability. Not stored in GameState — a replay re-runs the ability.
    */
   readonly memory: Record<string, string | number | boolean | null>;
+  /**
+   * The "when playing this card" option (CR 10.4.7.3) it was played with, e.g. BP04-066 "for 5
+   * more play points"; null when played normally or for abilities.
+   */
+  readonly playOption: string | null;
   /** CR 5.22 — move an opponent's field card onto your field. Null when the field is full. */
   steal(card: CardId): Proc<CardId | null>;
   /** CR 5.16.1.1 — evolve a follower by this effect. The controller may decline. */
@@ -214,6 +236,9 @@ export interface EffectContext {
   shuffleToBottom(cards: readonly CardId[]): Proc<void>;
 }
 
+/** Where a search puts the cards it finds. */
+export type SearchDestination = "hand" | "field" | "ex" | "banish";
+
 export interface EffectInit {
   controller: PlayerId;
   self: CardId;
@@ -225,6 +250,8 @@ export interface EffectInit {
   earthRitePaid?: boolean;
   /** See EffectContext.memory. Created on first use and then shared. */
   memory?: Record<string, string | number | boolean | null>;
+  /** See EffectContext.playOption. */
+  playOption?: string | null;
 }
 
 export function makeEffectContext(g: G, init: EffectInit): EffectContext {
@@ -243,6 +270,16 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     const seq = nextSeq(g.state);
     g.state.effects.push({ id: `e${seq}`, seq, target, source: selfIfPresent(), controller: ctrl, until, createdTurn: g.state.turn, change });
   };
+
+  /** Move searched cards to their destinations (the field / EX area limits may ask which). */
+  function* moveFound(groups: Record<SearchDestination, CardId[]>, player: PlayerId): Proc<CardId[]> {
+    const moved: CardId[] = [];
+    if (groups.hand.length > 0) moved.push(...moveCards(g, groups.hand.map((card) => ({ card, to: "hand" as const, player })), "effect"));
+    if (groups.field.length > 0) moved.push(...(yield* putOntoField(g, groups.field, player, "effect", { chooser: ctrl })));
+    if (groups.ex.length > 0) moved.push(...(yield* putIntoEx(g, groups.ex, ctrl)));
+    if (groups.banish.length > 0) moved.push(...banishCards(g, groups.banish));
+    return moved;
+  }
 
   const fx: EffectContext = {
     game: makeReader(g),
@@ -320,14 +357,31 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       // A card in a non-public zone need not be found (CR 4.1.2.2), so the minimum is 0.
       const chosen = yield* selectCards(g, player, "search", matching, 0, max, selfIfPresent(), deck);
       if (opts.reveal ?? true) revealCards(g, player, chosen);
-      const groups: Record<"hand" | "field" | "ex", CardId[]> = { hand: [], field: [], ex: [] };
+      const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [] };
       for (const card of chosen) groups[opts.destination ? yield* opts.destination(card) : (opts.to ?? "hand")].push(card);
-      const moved: CardId[] = [];
-      if (groups.hand.length > 0) moved.push(...moveCards(g, groups.hand.map((card) => ({ card, to: "hand" as const, player })), "effect"));
-      if (groups.field.length > 0) moved.push(...(yield* putOntoField(g, groups.field, player, "effect", { chooser: ctrl })));
-      if (groups.ex.length > 0) moved.push(...(yield* putIntoEx(g, groups.ex, ctrl)));
+      const moved = yield* moveFound(groups, player);
       shuffleDeck(g, player); // CR 5.8.2
       return moved;
+    },
+    *searchEach(filters, opts = {}) {
+      const deck = [...g.state.players[ctrl].zones.deck];
+      const chosen: CardId[] = [];
+      for (const filter of filters) {
+        const matching = deck.filter((id) => !chosen.includes(id) && filter(id));
+        // CR 4.1.2.2 — a card in the deck need not be found (BP04-086 ruling).
+        const [card] = yield* selectCards(g, ctrl, "search", matching, 0, Math.min(1, matching.length), selfIfPresent(), deck);
+        if (card !== undefined) chosen.push(card);
+      }
+      revealCards(g, ctrl, chosen); // CR 5.8.1.2
+      const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [] };
+      groups[opts.to ?? "hand"].push(...chosen);
+      const moved = yield* moveFound(groups, ctrl);
+      shuffleDeck(g, ctrl); // CR 5.8.2
+      return moved;
+    },
+    *lookAt(cards, player = ctrl) {
+      const present = cards.filter((id) => g.state.cards[id] !== undefined);
+      if (present.length > 0) g.emit({ type: "cardsLookedAt", player, cards: cardRefs(g, present) });
     },
     topCards(count, player = ctrl) {
       return g.state.players[player].zones.deck.slice(0, Math.max(0, count));
@@ -399,6 +453,12 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *preventDamage(target, damage, until) {
       addEffect(target, until, { kind: "preventDamage", damage });
+    },
+    *blockFanfare(card) {
+      addEffect(card, null, { kind: "noFanfare" });
+    },
+    *winGame() {
+      endGame(g, [{ player: opponentOf(ctrl), reason: "effect" }]);
     },
     *giveTrait(target, trait, until = null) {
       addEffect(target, until, { kind: "trait", trait });
@@ -487,6 +547,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       });
     },
     memory,
+    playOption: init.playOption ?? null,
     *steal(card) {
       return stealCard(g, card, ctrl);
     },

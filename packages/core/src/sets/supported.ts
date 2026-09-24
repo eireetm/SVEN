@@ -3,6 +3,6 @@
  * was added. The earlier set wins a card's canonical printing, so append new sets at the end:
  * existing definition ids (and script file names) then never change.
  */
-export const SUPPORTED_SETS = ["BP01", "BP02", "BP03"] as const;
+export const SUPPORTED_SETS = ["BP01", "BP02", "BP03", "BP04"] as const;
 
 export type SupportedSet = (typeof SUPPORTED_SETS)[number];

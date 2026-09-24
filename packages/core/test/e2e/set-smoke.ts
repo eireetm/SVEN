@@ -1,7 +1,7 @@
 import { expect, it } from "vitest";
 import type { Answer, CardDefinition, DeckList, GameSession, PlayerId } from "../../src";
 import { randomInt, seedRng, shuffleInPlace } from "../../src/rng/rng";
-import { SETS, type SupportedSet } from "../../src/sets";
+import { ALL_CARDS, SETS, type SupportedSet } from "../../src/sets";
 import { checkInvariants, playOut, randomAgent, randomAnswer, scenario, type Agent, type ScenarioSide } from "../../src/testing";
 import { poolEngine } from "../helpers";
 
@@ -58,10 +58,11 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
     for (const card of defs) {
       if (card.type === "leader") continue;
       // An evolved card normally shares its base's name (CR 5.16.1.1.1); some are evolved into
-      // by an evolve ability that names part of their name instead (BP03-056 -> BP03-058).
+      // by an evolve ability that names part of their name instead (BP03-056 -> BP03-058, and
+      // from an earlier set: BP03-056 -> BP04-061).
       const base = card.evolved
-        ? (defs.find((d) => d.name === card.name && !d.evolved) ??
-          defs.find((d) =>
+        ? (ALL_CARDS.find((d) => d.name === card.name && !d.evolved) ??
+          ALL_CARDS.find((d) =>
             (engine.scripts[d.id]?.abilities ?? []).some(
               (a) => a.kind === "activated" && a.evolveNameIncludes !== undefined && card.name.includes(a.evolveNameIncludes),
             ),

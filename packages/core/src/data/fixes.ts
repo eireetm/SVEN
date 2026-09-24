@@ -22,6 +22,15 @@ export const DATA_FIXES: Readonly<Record<string, Partial<RawCardJson>>> = {
   // BP03-SL13 is the alternate art of BP03-058 (docs/data-notes.md).
   "BP03-058": { name_en: "Lævateinn Dragon, Attack Form (Evolved)" },
   "BP03-SL13": { name_en: "Lævateinn Dragon, Attack Form (Evolved)" },
+  // The same for the other two forms (レーヴァテインドラゴン・ディフェンスモード / ブラストモード);
+  // BP04-SL13 / SL14 are their alternate arts.
+  "BP04-061": { name_en: "Lævateinn Dragon, Defense Form (Evolved)" },
+  "BP04-SL13": { name_en: "Lævateinn Dragon, Defense Form (Evolved)" },
+  "BP04-062": { name_en: "Lævateinn Dragon, Blast Form (Evolved)" },
+  "BP04-SL14": { name_en: "Lævateinn Dragon, Blast Form (Evolved)" },
+  // "Dazzling Healer (Evolve)": a typo for " (Evolved)". Its Japanese name キラキラヒーラー and
+  // class are those of BP04-051 "Dazzling Healer", and its card type is Evolved.
+  "BP04-052": { name_en: "Dazzling Healer (Evolved)" },
   // "Akiha Ikebukuro (Evolved)" listed as a plain follower (no cost, "(Evolved)" in its name,
   // On Evolve text).
   "CSD02a-008": { card_type: ["Follower", "Evolved"] },
