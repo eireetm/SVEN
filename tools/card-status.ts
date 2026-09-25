@@ -25,7 +25,8 @@ function testedCards(set: string): Set<string> {
     if (file.startsWith(`${set}-`)) ids.add(file.replace(/\.test\.ts$/, ""));
     for (const [, title] of readFileSync(join(dir, file), "utf8").matchAll(/\bit\("([^"]*)"/g)) {
       const head = title!.split(" — ")[0]!;
-      for (const [, num] of head.matchAll(/(?:^|\/\s*)((?:T|LD)?\d{2,3})\b/g)) ids.add(`${set}-${num}`);
+      // A back face of a double-faced card is written "005_back" (CR 2.14).
+      for (const [, num] of head.matchAll(/(?:^|\/\s*)((?:T|LD)?\d{2,3}(?:_back)?)\b/g)) ids.add(`${set}-${num}`);
     }
   }
   return ids;
@@ -39,7 +40,7 @@ for (const set of SUPPORTED_SETS) {
   const tested = testedCards(set);
   const rows = cards.map((c) => {
     const status = engine.implementationStatus(c.id);
-    const kind = [c.type, c.evolved ? "evolved" : "", c.token ? "token" : ""].filter(Boolean).join(" ");
+    const kind = [c.type, c.evolved ? "evolved" : "", c.token ? "token" : "", c.frontFace ? "(back face)" : ""].filter(Boolean).join(" ");
     return { c, status, tested: tested.has(c.id), kind };
   });
   const count = (s: string) => rows.filter((r) => r.status === s).length;

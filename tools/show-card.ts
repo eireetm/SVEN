@@ -48,18 +48,21 @@ for (const ref of args) {
   const status = engine.implementationStatus(def.id);
   const setDir = def.id.split("-")[0]!;
   console.log(`\n### ${def.id} ${def.name} / ${def.names.ja ?? ""} / ${def.names.cn ?? ""}`);
-  console.log(`printings: ${def.printings.join(" ")}`);
+  // CR 2.14 — a back face has no printings of its own: it is the back of its front's printings.
+  const physical = def.frontFace ? db.get(def.frontFace) : def;
+  console.log(def.frontFace ? `back face of ${def.frontFace} (printings: ${physical.printings.join(" ")})` : `printings: ${def.printings.join(" ")}`);
   for (const [p, n] of Object.entries(def.alternateNames ?? {})) console.log(`alternate name (CR 2.13) on ${p}: ${n.en} / ${n.ja ?? ""}`);
   console.log(stats(def));
   console.log(`script: ${status}${status === "vanilla" ? "" : ` — packages/core/src/script/${setDir}/${def.id}.ts`}`);
   console.log(`\n[EN]\n${def.text.en || "(no text)"}\n\n[JA]\n${def.text.ja ?? ""}\n\n[CN]\n${def.text.cn ?? ""}`);
 
-  const related = db.named(def.name).filter((d) => d.id !== def.id);
+  const faces = [def.backFace, def.frontFace].filter((id): id is string => id !== undefined).map((id) => db.get(id));
+  const related = [...faces, ...db.named(def.name).filter((d) => d.id !== def.id)];
   const tokens = db.all().filter((d) => d.token && d.id !== def.id && def.text.en.includes(d.name));
   for (const r of [...related, ...tokens]) console.log(`\nrelated: ${r.id} ${r.name} — ${stats(r)}\n  ${r.text.en.replace(/\n/g, "\n  ")}`);
 
   const seen = new Set<string>();
-  const rulings = def.printings.flatMap((p) => (raw(p)?.rulings ?? []).filter((q) => !seen.has(q.q) && seen.add(q.q)));
+  const rulings = physical.printings.flatMap((p) => (raw(p)?.rulings ?? []).filter((q) => !seen.has(q.q) && seen.add(q.q)));
   console.log(`\nrulings (${rulings.length}):`);
   rulings.forEach((q, i) => console.log(`  Q${i + 1}. ${q.q}\n  A${i + 1}. ${q.a}`));
 }

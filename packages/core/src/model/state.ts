@@ -42,6 +42,12 @@ export interface CardInstance {
   engaged: boolean;
   /** CR 4.2.3 faceup / facedown. */
   faceUp: boolean;
+  /**
+   * CR 2.14.3 — a double-faced card placed with its back face visible (the evolve zone, e.g. an
+   * evolve ability that reveals the back face, 4.6.4). Always false for other cards and in the
+   * other zones, where a double-faced card has its front face's information (2.14.2.1).
+   */
+  backFace: boolean;
   /** Timestamp of entering the current zone (CR 10.9.1.6.1 ordering). */
   zoneSeq: number;
   /** Damage marked on the card; its defense is reduced by this amount (CR 2.8.2, 5.14.1). */

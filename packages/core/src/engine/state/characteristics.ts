@@ -71,15 +71,24 @@ export function activeScript(env: Env, id: CardId): CardScript | undefined {
 
 /**
  * The definition providing a card object's information, without applying effects: the linked
- * evolve-zone card's definition on the field (CR 10.9.1.1.1), otherwise the printed card.
+ * evolve-zone card's definition on the field (CR 10.9.1.1.1), otherwise the printed card. A
+ * double-faced card shows its visible face (CR 2.14.3.1).
  */
 export function infoDefId(env: Env, id: CardId): DefId {
   const c = getCard(env.state, id);
   if (c.zone === "field" && c.evolvedWith !== null) {
     const evo = env.state.cards[c.evolvedWith];
-    if (evo && evo.zone === "evolveZone") return evo.def;
+    if (evo && evo.zone === "evolveZone") return visibleFaceDefId(env, evo);
   }
-  return c.def;
+  return visibleFaceDefId(env, c);
+}
+
+/**
+ * CR 2.14 — the face of a double-faced card whose information applies: the back face while it
+ * is visible (on the field or in the evolve zone, 2.14.3.1), otherwise the front (2.14.2.1).
+ */
+function visibleFaceDefId(env: Env, c: { def: DefId; backFace: boolean }): DefId {
+  return c.backFace ? (env.db.get(c.def).backFace ?? c.def) : c.def;
 }
 
 /**
@@ -229,6 +238,31 @@ export function typeAndTraits(env: Env, id: CardId): { type: CardType; traits: r
     else if (e.change.kind === "trait" && !traits.includes(e.change.trait)) traits.push(e.change.trait);
   }
   return { type, traits };
+}
+
+/**
+ * A card's current attack and defense (CR 10.9.1.1, 10.9.1.4, 5.25.2.1, 2.8.2) without the rest of
+ * its information. Like `typeAndTraits`, safe inside `FieldPassives.keywordsFor` (e.g. BP09-003
+ * "While this follower's attack is at least 4, it has Ward").
+ */
+export function currentStats(env: Env, id: CardId): { attack: number | null; defense: number | null } {
+  const c = getCard(env.state, id);
+  const baseDef = env.db.get(c.def);
+  const def = env.db.get(infoDefId(env, id));
+  let type = def.type;
+  let attack = def.attack;
+  let defense = def.defense;
+  for (const e of env.state.effects) {
+    if (e.target !== id || !effectInForce(env.state, e)) continue;
+    if (e.change.kind === "changeType") type = e.change.type;
+    else if (e.change.kind === "stats") {
+      if (attack !== null) attack += e.change.attack;
+      if (defense !== null) defense += e.change.defense;
+    }
+  }
+  if (type !== "follower" && baseDef.type !== "leader") return { attack: null, defense: null };
+  if (baseDef.type === "leader") return { attack, defense: env.state.players[c.controller].leaderDefense };
+  return { attack, defense: defense === null ? null : defense - c.damage };
 }
 
 export function hasKeyword(env: Env, id: CardId, keyword: Keyword): boolean {

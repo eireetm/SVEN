@@ -1,8 +1,8 @@
-/**
+﻿/**
  * Sets whose cards are built into definitions (`npm run build:cards`), in the order support
  * was added. The earlier set wins a card's canonical printing, so append new sets at the end:
  * existing definition ids (and script file names) then never change.
  */
-export const SUPPORTED_SETS = ["BP01", "BP02", "BP03", "BP04", "BP05", "BP06", "BP07"] as const;
+export const SUPPORTED_SETS = ["BP01", "BP02", "BP03", "BP04", "BP05", "BP06", "BP07", "BP09"] as const;
 
 export type SupportedSet = (typeof SUPPORTED_SETS)[number];

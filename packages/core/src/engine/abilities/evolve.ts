@@ -28,22 +28,45 @@ export function canSuperEvolve(g: G, p: PlayerId): boolean {
   return ps.superEvolutionPoints >= 1 && ps.turnsPassed >= required;
 }
 
+/** An evolve-deck card that can be revealed for an evolution, and the face it is revealed with. */
+export interface EvolveOption {
+  card: CardId;
+  /** CR 4.6.4 — reveal the back face of a double-faced card. */
+  backFace: boolean;
+}
+
+/** Which evolved cards an evolution uses (CR 5.16.1.1.1 "unless specified otherwise"). */
+export interface EvolveSpec {
+  /** BP03-056: evolved followers with this string in their name. */
+  nameIncludes?: string | undefined;
+  /** BP09-004 "Evolve this follower into a Paula, Gentle Warmth or Paula, Passionate Warmth". */
+  into?: readonly string[] | undefined;
+}
+
 /**
  * CR 5.16.1.1.1 / 12.2.2 — cards in the evolve deck area that correspond to a field card:
- * evolved cards with the same card name. Faceup cards are not part of the evolve deck
- * (CR 4.6.3) and cannot be used.
+ * evolved cards with the same card name, unless the evolution specifies otherwise. Faceup cards
+ * are not part of the evolve deck (CR 4.6.3) and cannot be used. For a double-faced card each
+ * face that corresponds can be revealed (CR 4.6.4).
  */
-export function correspondingEvolveCards(g: G, fieldCard: CardId, nameIncludes?: string): CardId[] {
+export function correspondingEvolveCards(g: G, fieldCard: CardId, spec: EvolveSpec = {}): EvolveOption[] {
   const c = getCard(g.state, fieldCard);
   const name = characteristics(g, fieldCard).name;
-  return g.state.players[c.controller].zones.evolveDeck.filter((id) => {
+  const corresponds = (faceName: string) =>
+    spec.into !== undefined
+      ? spec.into.includes(faceName)
+      : spec.nameIncludes !== undefined
+        ? faceName.includes(spec.nameIncludes)
+        : faceName === name;
+  const out: EvolveOption[] = [];
+  for (const id of g.state.players[c.controller].zones.evolveDeck) {
     const e = getCard(g.state, id);
     const def = g.db.get(e.def);
-    if (e.faceUp || !def.evolved) return false;
-    // CR 5.16.1.1.1 — "unless specified otherwise", corresponding means the same name.
-    // BP03-056 specifies evolved followers with a string in the name instead.
-    return nameIncludes !== undefined ? def.name.includes(nameIncludes) : def.name === name;
-  });
+    if (e.faceUp || !def.evolved) continue;
+    if (corresponds(def.name)) out.push({ card: id, backFace: false });
+    if (def.backFace !== undefined && corresponds(g.db.get(def.backFace).name)) out.push({ card: id, backFace: true });
+  }
+  return out;
 }
 
 export interface EvolvePayment {
@@ -122,16 +145,19 @@ export function evolveActions(g: G, p: PlayerId): EvolveAction[] {
       if (ability.kind !== "activated" || !ability.evolve) return;
       if (ability.condition && !ability.condition(makeReader(g), p, card)) return;
       if (activationBlocked(g.state, card, true)) return; // BP03-039 "except Evolve" still allows this
-      // Identical evolve cards are interchangeable: offer one per definition.
+      // Identical evolve cards are interchangeable: offer one per definition and face.
       const seen = new Set<string>();
-      for (const evolveCard of correspondingEvolveCards(g, card, ability.evolveNameIncludes)) {
-        const def = getCard(g.state, evolveCard).def;
-        if (seen.has(def)) continue;
-        seen.add(def);
+      const spec = { nameIncludes: ability.evolveNameIncludes, into: ability.evolveInto };
+      for (const { card: evolveCard, backFace } of correspondingEvolveCards(g, card, spec)) {
+        const key = `${getCard(g.state, evolveCard).def}|${backFace}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
         for (const useEvolutionPoint of [false, true]) {
           for (const superEvolve of [false, true]) {
             if (evolvePayment(g, p, card, ability.cost, useEvolutionPoint, superEvolve)) {
-              out.push({ type: "evolve", card, ability: index, evolveCard, useEvolutionPoint, superEvolve });
+              const action: EvolveAction = { type: "evolve", card, ability: index, evolveCard, useEvolutionPoint, superEvolve };
+              if (backFace) action.backFace = true;
+              out.push(action);
             }
           }
         }
@@ -162,21 +188,22 @@ export function* playEvolveAbility(g: G, p: PlayerId, action: EvolveAction): Pro
   // 10.6.2.7 — played; counts as this turn's evolve ability (8.3.2.1)
   g.state.players[p].evolveAbilityTurn = g.state.turn;
   g.emit({ type: "abilityPlayed", player: p, source: action.card, sourceDef: ch.def.id, ability: action.ability });
-  // 10.6.2.8 — the revealed card is the specified card (5.16.1.1)
-  evolveCard(g, action.card, action.evolveCard, action.superEvolve);
+  // 10.6.2.8 — the revealed card (face, CR 4.6.4) is the specified card (5.16.1.1)
+  evolveCard(g, action.card, action.evolveCard, action.superEvolve, action.backFace === true);
 }
 
 /**
  * CR 5.16 — evolve `fieldCard` using `evolveDeckCard`:
  * put the card into the evolve zone and link it (5.16.1); the follower keeps its state and
- * damage (5.16.2); a super-evolution also gives +1/+1 (12.2.4.1, 12.2.4.2).
+ * damage (5.16.2); a super-evolution also gives +1/+1 (12.2.4.1, 12.2.4.2). A double-faced card
+ * is placed with the revealed face visible (CR 2.14.3, 4.6.4).
  * Returns the evolve-zone card, or null if nothing happened (5.16.4, 1.3.2).
  */
-export function evolveCard(g: G, fieldCard: CardId, evolveDeckCard: CardId, superEvolve: boolean): CardId | null {
+export function evolveCard(g: G, fieldCard: CardId, evolveDeckCard: CardId, superEvolve: boolean, backFace = false): CardId | null {
   const c = g.state.cards[fieldCard];
   if (!c || c.zone !== "field") return null;
   if (characteristics(g, fieldCard).evolved) return null; // 5.16.4
-  const [linked] = moveCards(g, [{ card: evolveDeckCard, to: "evolveZone", player: c.controller }], "evolve");
+  const [linked] = moveCards(g, [{ card: evolveDeckCard, to: "evolveZone", player: c.controller, backFace }], "evolve");
   if (linked === undefined) throw new EngineError("evolve card vanished");
   c.evolvedWith = linked;
   c.evolvedTurn = g.state.turn;
@@ -211,14 +238,19 @@ export function* effectEvolve(g: G, card: CardId, by?: PlayerId): Proc<boolean> 
   const c = g.state.cards[card];
   if (!c || c.zone !== "field" || characteristics(g, card).evolved) return false; // 5.16.4
   if (by !== undefined && by !== c.controller) return false;
+  // CR 5.16.1.1 — a card with the same name as the evolving card (a face of it, CR 4.6.4). The
+  // faces of a double-faced card have names of their own, so e.g. Paula, Icy Warmth (BP09-004)
+  // can't be evolved by an effect: only its evolve ability names its evolved cards.
   const options = correspondingEvolveCards(g, card);
   if (options.length === 0) return false;
   if (!(yield* confirm(g, c.controller, "effect", card))) return false;
   let chosen = options[0]!;
   if (options.length > 1) {
-    const picked = yield* selectCards(g, c.controller, "pick", options, 1, 1, card);
-    if (picked[0] === undefined) return false;
-    chosen = picked[0];
+    // Faces have different names, so each card corresponds with at most one face.
+    const picked = yield* selectCards(g, c.controller, "pick", options.map((o) => o.card), 1, 1, card);
+    const option = options.find((o) => o.card === picked[0]);
+    if (!option) return false;
+    chosen = option;
   }
-  return evolveCard(g, card, chosen, false) !== null;
+  return evolveCard(g, card, chosen.card, false, chosen.backFace) !== null;
 }

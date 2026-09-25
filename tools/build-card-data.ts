@@ -62,9 +62,11 @@ const { cards, setOf, textVariants, noEnglishText, officialMismatches, japaneseV
 new CardDatabase(cards); // index validation (duplicate printings, unique token names, ...)
 
 for (const c of cards) {
+  if (c.frontFace !== undefined) continue; // a back face (CR 2.14): checked with its front
   for (const p of c.printings) {
     const raw = raws.get(p)!;
     if (!existsSync(join(assetsDir, p, raw.image))) warnings.push(`${p}: image file ${raw.image} missing`);
+    if (raw.back && !existsSync(join(assetsDir, p, raw.back.image))) warnings.push(`${p}: image file ${raw.back.image} missing`);
   }
   // The definition shows the canonical printing's texts, so only its gaps matter.
   const raw = raws.get(c.id)!;
@@ -122,6 +124,12 @@ const report = [
   "## 别名印刷（CR 2.13）",
   "",
   ...cards.flatMap((c) => Object.entries(c.alternateNames ?? {}).map(([p, n]) => `- ${p}「${n.en}」是 ${c.id} ${c.name} 的别名印刷`)),
+  "",
+  "## 双面卡（CR 2.14）",
+  "",
+  "背面的日文种族和日文文本由 `data/fixes.ts` 按实卡背面补录（抓取数据里没有）。",
+  "",
+  ...cards.filter((c) => c.backFace).map((c) => `- ${c.id} ${c.name}；背面 ${c.backFace} ${cards.find((d) => d.id === c.backFace)!.name}`),
   "",
   "## 日文文本与规范印刷不同的印刷版本",
   "",

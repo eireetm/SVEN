@@ -70,4 +70,20 @@ export interface CardDefinition {
    * use the card name (2.13.2), and alternate names cannot be declared (5.33.1.1).
    */
   alternateNames?: Readonly<Record<PrintingId, LocalizedText>>;
+  /**
+   * CR 2.14 — this is the front face of a double-faced card; the back face's information is the
+   * definition with this id (`<id>_back`). The physical card is always the front definition: in
+   * decks and outside the field / evolve zone it has the front face's information (2.14.2.1).
+   */
+  backFace?: DefId;
+  /**
+   * The back face of a double-faced card (CR 2.14.2): information only, never a card by itself.
+   * It has no printings (its art is the front printing's "_back" image) and cannot be in a deck.
+   */
+  frontFace?: DefId;
+}
+
+/** Id of the back-face definition of a double-faced card (CR 2.14). */
+export function backFaceId(front: DefId): DefId {
+  return `${front}_back`;
 }

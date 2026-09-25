@@ -44,7 +44,7 @@ export function attackTargets(g: G, attacker: CardId): CardId[] {
     (id) => isFollowerOnField(g, id) && (assail || g.state.cards[id]!.engaged) && !hasKeyword(g, id, "intimidate"),
   );
   const wards = followers.filter((id) => g.state.cards[id]!.engaged && hasKeyword(g, id, "ward"));
-  if (wards.length > 0 && !activeScript(g, attacker)?.ignoresWard) return wards;
+  if (wards.length > 0 && !ignoresWard(g, attacker)) return wards;
   // BP06-113 — while it is on the field, a follower that can attack a follower can't attack leaders.
   const followersFirst =
     followers.length > 0 &&
@@ -54,6 +54,12 @@ export function attackTargets(g: G, attacker: CardId): CardId[] {
     !followersFirst &&
     !activeScript(g, attacker)?.cannotAttackLeader?.(makeReader(g), attacker);
   return leaderAllowed ? [...followers, leaderOf(g.state, opp)] : followers;
+}
+
+/** "This follower ignores Ward" (BP04-006), or its conditional form (BP09-003). */
+function ignoresWard(g: G, attacker: CardId): boolean {
+  const ignores = activeScript(g, attacker)?.ignoresWard;
+  return typeof ignores === "function" ? ignores(makeReader(g), attacker) : ignores === true;
 }
 
 /** CR 8.4.2 — can this follower be selected as the attacking follower? */
@@ -72,11 +78,18 @@ export function canAttackWith(g: G, player: PlayerId, attacker: CardId): boolean
   return eligible && attackTargets(g, attacker).length > 0;
 }
 
-/** CR 8.4.3.2.1 — printed "can't attack", a conditional form of it, or an effect that says so. */
+/**
+ * CR 8.4.3.2.1 — printed "can't attack", a conditional form of it, an effect that says so, or a
+ * card on either field that forbids it (BP09-040).
+ */
 function cannotAttackNow(g: G, attacker: CardId): boolean {
   const ban = activeScript(g, attacker)?.cannotAttack;
   if (ban === true) return true;
   if (typeof ban === "function" && ban(makeReader(g), attacker)) return true;
+  for (const id of [...g.state.players[0].zones.field, ...g.state.players[1].zones.field]) {
+    const prevents = activeScript(g, id)?.field?.preventsAttack;
+    if (prevents?.(makeReader(g), id, attacker)) return true;
+  }
   return effectPreventsAttack(g.state, attacker);
 }
 

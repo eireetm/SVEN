@@ -56,29 +56,8 @@ export function* droidOrRepairToEx(fx: EffectContext): Proc<void> {
   yield* fx.tokensToEx([pick === "droid" ? DROID : REPAIR]);
 }
 
-/**
- * Select cards among `candidates`, up to `max`, whose original costs (元のコスト, printed) total
- * at most `budget` (BP07-037, 071). Picked one at a time, each time only from those that still fit
- * (the BP06-024 pattern: only completable choices are offered).
- */
-export function* selectWithinTotalCost(
-  fx: EffectContext,
-  candidates: readonly CardId[],
-  budget: number,
-  max: number,
-  peek?: readonly CardId[],
-): Proc<CardId[]> {
-  const chosen: CardId[] = [];
-  let left = budget;
-  while (chosen.length < max) {
-    const fits = candidates.filter((id) => !chosen.includes(id) && costAtMost(left)(fx.game, id));
-    const [pick] = yield* fx.selectCards(fits, 0, 1, fx.controller, peek);
-    if (pick === undefined) break;
-    chosen.push(pick);
-    left -= fx.game.info(pick).cost ?? 0;
-  }
-  return chosen;
-}
+// Moved to script/helpers.ts (also used by BP09-037); re-exported for BP07's scripts.
+export { selectWithinTotalCost } from "../helpers";
 
 /**
  * "Select a [named / matching] spell in your cemetery and play it for 0 play points" (BP07-020, 053,

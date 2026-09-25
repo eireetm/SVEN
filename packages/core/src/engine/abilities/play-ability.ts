@@ -8,6 +8,7 @@ import { earthRiteSources, payEarthRite } from "../costs";
 import { makeEffectContext, type EffectInit } from "../effects/context";
 import { EngineError } from "../errors";
 import { chooseModes, chooseModeTargets, resolveModes } from "./modes";
+import { performableModes } from "../flow/play-card";
 import type { G } from "../runtime/context";
 import { confirm } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
@@ -138,6 +139,8 @@ export function canPlayActivated(g: G, player: PlayerId, card: CardId, index: nu
   if (cost.leaderDefense && !canPayLeaderDefense(g, player, cost.leaderDefense)) return false;
   if (cost.custom && !cost.custom.canPay(makeReader(g), player, card)) return false;
   if (ability.earthRite?.mode === "required" && !earthRitePayable(g, player, ability.earthRite)) return false;
+  // CR 5.18.3.1.2 — with options, at least one must be performable (each has its own targets).
+  if (ability.modes) return performableModes(g, ability.modes, player, card).length > 0;
   return targetsAvailable(g, ability.targets, player, card);
 }
 
@@ -166,9 +169,13 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
   if (ability.earthRite?.mode === "optional" && earthRitePayable(g, player, ability.earthRite)) {
     earthRite = yield* confirm(g, player, "earthRite", card);
   }
-  // 10.6.2.3 targets
-  const targets = yield* chooseTargets(g, ability.targets, player, card);
-  if (targets === null) throw new EngineError("activated ability played without legal targets");
+  // 10.6.2.2 options (5.18)
+  const modes = ability.modes ? yield* chooseModes(g, player, ability, card) : [];
+  if (modes === null) throw new EngineError("activated ability played without a performable option");
+  // 10.6.2.3 targets (of each chosen option, 5.18.4)
+  const targets = modes.length === 0 ? yield* chooseTargets(g, ability.targets, player, card) : [];
+  const modeTargets = yield* chooseModeTargets(g, player, modes, card);
+  if (targets === null || modeTargets === null) throw new EngineError("activated ability played without legal targets");
   const init: EffectInit = { controller: player, self: card, sourceDef: def, targets, event: null, earthRitePaid: earthRite };
   // 10.6.2.5 pay the cost in the listed order (10.4.2.1)
   const cost = ability.cost;
@@ -183,7 +190,11 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
   if (earthRite) yield* payEarthRite(g, player, ability.earthRite?.count ?? 1, card);
   // 10.6.2.7
   g.emit({ type: "abilityPlayed", player, source: card, sourceDef: def, ability: index });
-  // 10.6.2.8.2
-  if (ability.resolve) yield* ability.resolve(makeEffectContext(g, { ...init, self }));
+  // 10.6.2.8.2 — chosen options in listed order (5.18.1)
+  if (modes.length > 0) {
+    yield* resolveModes(modes, (m, i) => makeEffectContext(g, { ...init, self, targets: modeTargets[i]!, mode: m.id }));
+  } else if (ability.resolve) {
+    yield* ability.resolve(makeEffectContext(g, { ...init, self }));
+  }
   g.state.revealed = []; // CR 5.21.1.1
 }

@@ -42,7 +42,8 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
   const defs = SETS[set].cards;
   const playable = defs.filter((c) => !c.token && !c.evolved && c.type !== "leader");
   const spells = playable.filter((c) => c.type === "spell");
-  const evolvedCards = defs.filter((c) => c.evolved);
+  // Back faces of double-faced cards (CR 2.14) are not cards by themselves.
+  const evolvedCards = defs.filter((c) => c.evolved && c.frontFace === undefined);
 
   const assertOk = (g: GameSession) => {
     const errors = checkInvariants(g.state as never, engine.db, g.decision);
@@ -71,15 +72,20 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
       if (card.type === "leader" || extras.notInScenario?.[card.id] !== undefined) continue;
       // An evolved card normally shares its base's name (CR 5.16.1.1.1); some are evolved into
       // by an evolve ability that names part of their name instead (BP03-056 -> BP03-058, and
-      // from an earlier set: BP03-056 -> BP04-061).
+      // from an earlier set: BP03-056 -> BP04-061), or names them (a face of a double-faced card,
+      // BP09-004 -> BP09-005 and its back face BP09-005_back).
       const base = card.evolved
         ? (ALL_CARDS.find((d) => d.name === card.name && !d.evolved) ??
           ALL_CARDS.find((d) =>
             (engine.scripts[d.id]?.abilities ?? []).some(
-              (a) => a.kind === "activated" && a.evolveNameIncludes !== undefined && card.name.includes(a.evolveNameIncludes),
+              (a) =>
+                a.kind === "activated" &&
+                ((a.evolveNameIncludes !== undefined && card.name.includes(a.evolveNameIncludes)) || (a.evolveInto?.includes(card.name) ?? false)),
             ),
           ))
         : card;
+      // The physical card of a back face is its front (CR 2.14.2).
+      const physical = card.frontFace ?? card.id;
       if (!base) throw new Error(`${card.id} has no base card`);
       const inOpponentsTurn = extras.opponentsTurn?.includes(card.id) ?? false;
       const g = scenario(engine, {
@@ -97,7 +103,7 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
               { card: "BP01-173", engaged: true },
               ...(extras.field ?? []),
             ],
-            evolveDeck: card.evolved ? [card.id] : [],
+            evolveDeck: card.evolved ? [physical] : [],
             ex: ["BP01-T03", "BP01-T11", ...(card.token ? [card.id] : [])],
             // 10 spells for Spellchain, plus a few other cards for Necrocharge.
             cemetery: [...pick(`${card.id}:spells`, spells, 10), ...pick(`${card.id}:cem`, playable, 6), ...(extras.cemetery ?? [])],
@@ -139,8 +145,14 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
       }
       const d = g.decision;
       if (d?.type !== "mainPhase") throw new Error(`${card.id}: expected a main phase decision`);
+      // The evolve action that reveals this card (face).
+      const revealed = (a: (typeof d.actions)[number]) => {
+        if (a.type !== "evolve") return null;
+        const def = g.state.cards[a.evolveCard]!.def;
+        return a.backFace ? engine.db.get(def).backFace : def;
+      };
       const action =
-        d.actions.find((a) => a.type === "evolve" && mine(a.card)) ??
+        d.actions.find((a) => a.type === "evolve" && mine(a.card) && revealed(a) === card.id) ??
         d.actions.find((a) => a.type === "play" && mine(a.card)) ??
         d.actions.find((a) => a.type === "activate" && mine(a.card));
       if (!action) skipped.push(card.id);

@@ -119,15 +119,26 @@ export class Driver {
     return d?.type === "mainPhase" && d.actions.some((a) => a.type === "activate" && this.matches(a.card, ref));
   }
 
-  evolve(ref: string, opts: { ep?: boolean; sep?: boolean } = {}): this {
+  /**
+   * Evolve a follower. `into`: the evolved card to reveal, as a definition id — "<id>_back" for
+   * the back face of a double-faced card (CR 4.6.4); default: the first legal one.
+   */
+  evolve(ref: string, opts: { ep?: boolean; sep?: boolean; into?: string } = {}): this {
     return this.main(
       (a) =>
         a.type === "evolve" &&
         this.matches(a.card, ref) &&
         a.useEvolutionPoint === (opts.ep ?? false) &&
-        a.superEvolve === (opts.sep ?? false),
-      `evolve ${ref}`,
+        a.superEvolve === (opts.sep ?? false) &&
+        (opts.into === undefined || this.evolveFace(a) === opts.into),
+      `evolve ${ref}${opts.into ? ` into ${opts.into}` : ""}`,
     );
+  }
+
+  /** The definition of the face an evolve action reveals. */
+  private evolveFace(a: Extract<MainAction, { type: "evolve" }>): string {
+    const def = this.game.state.cards[a.evolveCard]!.def;
+    return a.backFace ? this.engine.db.get(def).backFace! : def;
   }
 
   canEvolve(ref: string): boolean {

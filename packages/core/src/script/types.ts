@@ -72,9 +72,15 @@ export interface CardScript {
   entersEngaged?: boolean;
   /**
    * "This follower ignores Ward" (BP04-006, これは【守護】を無視して攻撃できる): when it attacks,
-   * the Ward requirement (CR 12.8.2 iii) does not apply to its attack target.
+   * the Ward requirement (CR 12.8.2 iii) does not apply to its attack target. A function is the
+   * conditional form (BP09-003 "While this follower's attack is at least 10, it ignores Ward").
    */
-  ignoresWard?: boolean;
+  ignoresWard?: boolean | ((game: GameReader, self: CardId) => boolean);
+  /**
+   * CR 6.1.2 — a deck-construction passive replacing the copy limit of CR 6.1.1.4 for this card
+   * (BP09-049 "You can put up to 50 of this card into your deck").
+   */
+  deckLimit?: number;
   /**
    * Which cards a "the next [matching] card you play this turn costs N less" effect created by
    * this card applies to, by key (`fx.nextPlayCostsLess(key, n)`, BP03-038).
@@ -142,6 +148,11 @@ export interface FieldPassives {
    * it can't attack leaders" — every follower on either side.
    */
   followersBeforeLeaders?: boolean;
+  /**
+   * "While this card is on the field, [matching] followers on the field can't attack enemies"
+   * (BP09-040; both sides, CR 8.4.3.2.1): does it forbid `follower` to attack?
+   */
+  preventsAttack?(game: GameReader, self: CardId, follower: CardId): boolean;
   /**
    * BP02-035/036 "include both spells and Runecraft followers when counting your Spellchain"
    * (CR 13.3.1.1 counts spells in the cemetery).
@@ -262,6 +273,11 @@ export interface ActivatedAbility {
    * (CR 5.16.1.1.1 "unless specified otherwise"), instead of the same name.
    */
   evolveNameIncludes?: string;
+  /**
+   * "Evolve this follower into a X or Y" (BP09-004): the corresponding cards are evolved cards
+   * with one of these names — a face of a double-faced card, which is then revealed (CR 4.6.4).
+   */
+  evolveInto?: readonly string[];
   /** CR 12.3.3 — Quick activated ability. */
   quick?: boolean;
   cost: CostSpec;
@@ -270,6 +286,13 @@ export interface ActivatedAbility {
   /** "This ability can be activated if ..." (e.g. BP02-054 "if Overflow is active for you"). */
   condition?(game: GameReader, controller: PlayerId, self: CardId): boolean;
   earthRite?: EarthRiteSpec;
+  /**
+   * CR 5.18 — "Choose one of the following" (BP09-006, 071, 078): chosen while playing the ability
+   * (10.6.2.2), before its targets; it can be played only if an option can be performed.
+   */
+  modes?: readonly Mode[];
+  /** See SpellAbility.modeCount. */
+  modeCount?(game: GameReader, controller: PlayerId, self: CardId): number;
   targets?: readonly TargetSpec[];
   /** Not used for evolve abilities (the engine performs CR 5.16). */
   resolve?(fx: EffectContext): Proc<void>;

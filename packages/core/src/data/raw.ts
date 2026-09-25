@@ -33,4 +33,30 @@ export interface RawCardJson {
   illustrator: string | null;
   rulings: RawRuling[] | null;
   image: string;
+  /** CR 2.14 — the back face of a double-faced card. */
+  back?: RawCardBack;
+}
+
+/**
+ * The back face as scraped: English data only. The source has no Japanese traits or Chinese
+ * name for it, and its `effect_ja` repeats the front's text; data/fixes.ts adds / corrects these
+ * from the printed card.
+ */
+export interface RawCardBack {
+  name_en: string;
+  name_ja: string;
+  name_cn?: string | null;
+  class: string;
+  card_type: string[];
+  /** English trait translations — not used. */
+  traits: string[] | null;
+  /** Japanese traits (from data/fixes.ts). */
+  traits_ja?: string | null;
+  cost: number | null;
+  atk: number | null;
+  def: number | null;
+  effect_en: string | null;
+  effect_ja: string | null;
+  effect_cn?: string | null;
+  image: string;
 }

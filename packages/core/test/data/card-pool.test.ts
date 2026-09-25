@@ -43,12 +43,35 @@ describe("card pool (all supported sets)", () => {
       const same = db.named(e.name).filter((d) => !d.evolved && d.type === "follower");
       if (same.length === 1) continue;
       // "Unless specified otherwise": evolved into from a card whose text names a string this
-      // card's name contains (BP03-056 evolves into BP03-058 "Lævateinn Dragon, Attack Form").
+      // card's name contains (BP03-056 evolves into BP03-058 "Lævateinn Dragon, Attack Form"),
+      // or whose evolve ability names this card (the faces of a double-faced card, BP09-004).
       const hosts = ALL_CARDS.filter(
-        (d) => !d.evolved && d.type === "follower" && e.name.includes(d.name) && d.text.en.includes("in its name"),
+        (d) =>
+          !d.evolved &&
+          d.type === "follower" &&
+          ((e.name.includes(d.name) && d.text.en.includes("in its name")) ||
+            (ALL_SCRIPTS[d.id]?.abilities ?? []).some((a) => a.kind === "activated" && (a.evolveInto?.includes(e.name) ?? false))),
       );
       expect(hosts, e.id).toHaveLength(1);
     }
+  });
+
+  it("CR 2.14 — a double-faced card's back face is its own definition, linked to the front", () => {
+    const front = db.get("BP09-005");
+    const back = db.get("BP09-005_back");
+    expect([front.name, front.backFace, back.name, back.frontFace]).toEqual([
+      "Paula, Gentle Warmth",
+      "BP09-005_back",
+      "Paula, Passionate Warmth",
+      "BP09-005",
+    ]);
+    // The back face's Japanese traits and text are transcribed from the card (data/fixes.ts).
+    expect(back.traits).toEqual(["妖精"]);
+    expect(back.text.ja).toMatch(/コンボ_3/);
+    expect([back.evolved, back.attack, back.defense, back.printings]).toEqual([true, 3, 3, []]);
+    // Every printing of the card is the front (the physical card).
+    expect(db.ofPrinting("BP09-P02").id).toBe("BP09-005");
+    expect(db.get("BP09-019_back").traits).toEqual(["指揮官", "キラー"]);
   });
 
   it("every trait a script names exists on some card (catches untranslated trait names)", () => {

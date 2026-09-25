@@ -17,7 +17,10 @@ export interface FieldCardSpec {
   /** Put onto the field this turn (so it has not been there since the turn started, CR 8.4.2.1). */
   enteredThisTurn?: boolean;
   damage?: number;
-  /** Evolved card linked to it (CR 5.16.1). */
+  /**
+   * Evolved card linked to it (CR 5.16.1): a printing, or the back-face definition of a
+   * double-faced card (e.g. "BP09-005_back", CR 2.14) to show that face.
+   */
   evolvedInto?: PrintingId;
   evolvedThisTurn?: boolean;
   /** CR 15.1 counters; Stack cards default to { stack: 1 } as when put onto the field (13.3.2.2). */
@@ -102,7 +105,10 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
       const stack: Record<string, number> = engine.scripts[c.def]?.keywords?.includes("stack") ? { stack: 1 } : {};
       c.counters = { ...stack, ...f.counters };
       if (f.evolvedInto !== undefined) {
-        c.evolvedWith = placeInitialCard(state, engine.db, f.evolvedInto, p, "evolveZone");
+        const front = engine.db.has(f.evolvedInto) ? engine.db.get(f.evolvedInto).frontFace : undefined;
+        c.evolvedWith = front
+          ? placeInitialCard(state, engine.db, front, p, "evolveZone", { backFace: true })
+          : placeInitialCard(state, engine.db, f.evolvedInto, p, "evolveZone");
         c.evolvedTurn = f.evolvedThisTurn ? turn : turn - 1;
       }
     }

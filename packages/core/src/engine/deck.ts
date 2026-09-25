@@ -82,10 +82,14 @@ export function validateDeck(
       problems.push(`evolve deck has ${deck.evolve.length} cards, at most ${r.evolveMax} (6.1.1.3)`);
     }
     for (const [label, cards] of [["main deck", main], ["evolve deck", evolve]] as const) {
-      const counts = new Map<string, number>();
-      for (const d of cards) counts.set(d.name, (counts.get(d.name) ?? 0) + 1);
-      for (const [name, n] of counts) {
-        if (n > r.copiesPerName) problems.push(`${label}: ${n} copies of "${name}", at most ${r.copiesPerName} (6.1.1.4)`);
+      const counts = new Map<string, { n: number; limit: number }>();
+      for (const d of cards) {
+        // CR 6.1.2 — a card's own deck-construction passive replaces the limit (BP09-049 "up to 50").
+        const limit = scripts[d.id]?.deckLimit ?? r.copiesPerName;
+        counts.set(d.name, { n: (counts.get(d.name)?.n ?? 0) + 1, limit });
+      }
+      for (const [name, { n, limit }] of counts) {
+        if (n > limit) problems.push(`${label}: ${n} copies of "${name}", at most ${limit} (6.1.1.4)`);
       }
     }
     if (leader) {

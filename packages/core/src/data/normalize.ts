@@ -1,4 +1,4 @@
-import { CARD_CLASSES, type CardClass, type CardDefinition, type CardType, type LocalizedText } from "../model/card";
+import { backFaceId, CARD_CLASSES, type CardClass, type CardDefinition, type CardType, type LocalizedText } from "../model/card";
 import { englishText, japaneseKey, treatedAs, withoutReminders, withoutTreatedAs, wordDice, type TextSource } from "./english-text";
 import type { RawCardJson } from "./raw";
 
@@ -35,6 +35,14 @@ export interface NormalizedPrinting {
   alternateName: LocalizedText | null;
   /** Japanese text, normalized, to check that printings grouped together say the same thing. */
   jaKey: string;
+  /** CR 2.14 — the back face of a double-faced card. */
+  back: NormalizedBack | null;
+}
+
+/** The back face of a double-faced card after normalization (CR 2.14). */
+export interface NormalizedBack {
+  def: Omit<CardDefinition, "id" | "printings" | "traits">;
+  traits: string[] | null;
 }
 
 /** CR 2.3 — `card_type` array -> primary type + special types. */
@@ -146,8 +154,9 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   const cardNo = raw.card_no;
   const { type, evolved, token } = parseCardType(cardNo, raw.card_type);
   checkStats(cardNo, type, evolved, raw.cost, raw.atk, raw.def);
+  const doubleFaced = raw.back !== undefined && raw.back !== null;
 
-  const printedName = stripEvolvedSuffix(cardNo, raw.name_en.trim(), evolved);
+  const printedName = stripEvolvedSuffix(cardNo, raw.name_en.trim(), evolved, doubleFaced);
   const en = englishText(raw);
   // CR 2.13: "(This card is treated as X.)" — X is the card name, the printed name an alternate name.
   const alias = treatedAs(en.text);
@@ -178,13 +187,51 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
     officialMismatch: en.officialMismatch,
     alternateName: alias === null ? null : { en: printedName, cn: raw.name_cn, ja: raw.name_ja },
     jaKey: japaneseKey(raw),
+    back: doubleFaced ? normalizeBack(cardNo, raw) : null,
   };
 }
 
-/** CR 5.16.1.1.1: an evolved card has the *same* name as its base card; the data adds " (Evolved)". */
-function stripEvolvedSuffix(cardNo: string, name: string, evolved: boolean): string {
+const withoutSpaces = (s: string | null | undefined) => (s ?? "").replace(/[\s　]+/g, "");
+
+/** CR 2.14 — the back face of a double-faced card (English data plus data/fixes.ts). */
+function normalizeBack(cardNo: string, raw: RawCardJson): NormalizedBack {
+  const b = raw.back!;
+  const where = `${cardNo}: back face`;
+  const { type, evolved, token } = parseCardType(where, b.card_type);
+  checkStats(where, type, evolved, b.cost, b.atk, b.def);
+  const ja = b.effect_ja?.trim() ?? null;
+  // The scraped back face repeats the front's Japanese text (RawCardBack); it must be corrected.
+  if (ja !== null && withoutSpaces(ja) === withoutSpaces(raw.effect_ja)) {
+    throw new CardDataError(`${where}: its Japanese text is the front face's; transcribe the printed back face in data/fixes.ts`);
+  }
+  const name = stripEvolvedSuffix(where, b.name_en.trim(), evolved, true);
+  if (name === "") throw new CardDataError(`${where}: empty English name`);
+  return {
+    def: {
+      name,
+      names: { en: name, cn: b.name_cn ?? null, ja: b.name_ja },
+      class: parseClass(where, b.class),
+      type,
+      evolved,
+      token,
+      cost: b.cost,
+      attack: b.atk,
+      defense: b.def,
+      text: { en: b.effect_en?.trim() ?? "", cn: b.effect_cn?.trim() ?? null, ja },
+    },
+    traits: parseTraits(where, b.traits_ja ?? null),
+  };
+}
+
+/**
+ * CR 5.16.1.1.1: an evolved card has the *same* name as its base card; the data adds " (Evolved)".
+ * The faces of a double-faced evolved card have names of their own (CR 2.14, BP09-004 "Evolve
+ * this follower into a Paula, Gentle Warmth or Paula, Passionate Warmth"), without the suffix.
+ */
+function stripEvolvedSuffix(cardNo: string, name: string, evolved: boolean, doubleFaced = false): string {
   if (!evolved) return name;
   if (!name.endsWith(EVOLVED_SUFFIX)) {
+    if (doubleFaced) return name;
     throw new CardDataError(`${cardNo}: evolved card name "${name}" lacks the "${EVOLVED_SUFFIX}" suffix`);
   }
   return name.slice(0, -EVOLVED_SUFFIX.length);
@@ -317,7 +364,34 @@ export function groupPrintings(printings: readonly NormalizedPrinting[], support
     if (alternates.length > 0) def.alternateNames = Object.fromEntries(alternates.map((p) => [p.printing, p.alternateName!]));
     defs.push(def);
     setOf[canonical.printing] = canonical.set;
+    if (list.some((p) => p.back !== null)) {
+      const back = backFaceDefinition(canonical.printing, list);
+      def.backFace = back.id;
+      defs.push(back);
+      setOf[back.id] = canonical.set;
+    }
   }
   defs.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   return { cards: defs, setOf, textVariants, noEnglishText, officialMismatches, japaneseVariants };
+}
+
+/**
+ * CR 2.14 — the back-face definition of a double-faced card, from its printings (canonical one
+ * first). Every printing must carry the same back face; its traits come from the printings that
+ * have Japanese traits, like the front's.
+ */
+function backFaceDefinition(front: string, list: readonly NormalizedPrinting[]): CardDefinition {
+  const canonical = list[0]!.back;
+  if (!canonical) throw new CardDataError(`${front}: printing without a back face grouped with double-faced printings`);
+  for (const p of list) {
+    if (!p.back) throw new CardDataError(`${p.printing}: printing without a back face grouped with double-faced ${front}`);
+    const same = p.back.def.name === canonical.def.name && functionalSignature(p.back.def) === functionalSignature(canonical.def);
+    if (!same) throw new CardDataError(`${p.printing}: back face differs from the back face of ${front}`);
+  }
+  const withTraits = list.filter((p) => p.back!.traits !== null);
+  const traits = withTraits[0]?.back!.traits;
+  if (!traits) throw new CardDataError(`${front}: no printing's back face has Japanese traits (data/fixes.ts)`);
+  const conflict = withTraits.find((p) => JSON.stringify(p.back!.traits) !== JSON.stringify(traits));
+  if (conflict) throw new CardDataError(`${conflict.printing}: back face traits differ from ${withTraits[0]!.printing}`);
+  return { id: backFaceId(front), printings: [], ...canonical.def, traits: [...traits], frontFace: front };
 }

@@ -16,7 +16,8 @@ export type MainAction =
   /**
    * CR 8.3 / 12.2 play an evolve ability. `evolveCard` is the corresponding card revealed from
    * the evolve deck (12.2.2); `useEvolutionPoint` replaces 1 play point (12.2.3);
-   * `superEvolve` additionally pays 1 super-evolution point (12.2.4).
+   * `superEvolve` additionally pays 1 super-evolution point (12.2.4). `backFace` (present only
+   * when true): reveal the back face of a double-faced card (CR 4.6.4, 2.14).
    */
   | {
       type: "evolve";
@@ -25,6 +26,7 @@ export type MainAction =
       evolveCard: CardId;
       useEvolutionPoint: boolean;
       superEvolve: boolean;
+      backFace?: true;
     }
   /** CR 8.3 play another activated ability. */
   | { type: "activate"; card: CardId; ability: number }

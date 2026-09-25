@@ -19,6 +19,8 @@ export interface CardView {
   controller: PlayerId;
   engaged: boolean;
   faceUp: boolean;
+  /** CR 2.14.3 — a double-faced card showing its back face (its information is the back face's). */
+  backFace: boolean;
   cost: number | null;
   attack: number | null;
   defense: number | null;
@@ -87,6 +89,7 @@ function cardView(env: Env, id: CardId): CardView {
     controller: c.controller,
     engaged: c.engaged,
     faceUp: c.faceUp,
+    backFace: c.backFace,
     cost: ch.cost,
     attack: ch.attack,
     defense: ch.defense,

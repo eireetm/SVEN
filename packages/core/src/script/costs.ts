@@ -23,6 +23,39 @@ export function returnAnotherFromYourField(filter: Filter = () => true): CustomC
 /** "Return another card on your field to its owner's hand" (BP01-002 / 003). */
 export const returnAnotherCardOnYourField: CustomCost = returnAnotherFromYourField();
 
+/**
+ * "Bury another [matching] card" — on your field (CR 10.4.3: a cost's unspecified zone is its
+ * controller's), e.g. BP09-071 "Bury another follower", BP09-096 "Bury another amulet".
+ */
+export function buryAnotherFromYourField(filter: Filter = () => true): CustomCost {
+  return {
+    canPay: (g, c, self) => g.cards(c, "field").some((id) => id !== self && filter(g, id)),
+    *pay(fx) {
+      const cards = fx.game.cards(fx.controller, "field").filter((id) => id !== fx.self && filter(fx.game, id));
+      yield* fx.bury(yield* fx.chooseCards(cards, 1, 1));
+    },
+  };
+}
+
+/**
+ * CR 10.4.6 "{[engage]}" (this card) as the process of an automatic ability, "when [event],
+ * {[engage]}: [effect]" (10.4.7.4, BP09-092): engage this card if it is on the field reserved.
+ */
+export const engageThis: CustomCost = {
+  canPay: (g, _c, self) => g.card(self)?.zone === "field" && g.card(self)?.engaged === false,
+  *pay(fx) {
+    yield* fx.engage([fx.self]);
+  },
+};
+
+/** "Banish this card from your cemetery" — a cost of an ability valid in the cemetery (BP09-024 / 105, CR 10.3.5). */
+export const banishThisFromCemetery: CustomCost = {
+  canPay: (g, _c, self) => g.card(self)?.zone === "cemetery",
+  *pay(fx) {
+    yield* fx.banish([fx.self]);
+  },
+};
+
 /** "Discard a [matching] card" from your hand. */
 export function discardA(filter: Filter): CustomCost {
   return {

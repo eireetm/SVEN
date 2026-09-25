@@ -5,6 +5,7 @@ import type { CardMove, GameEvent } from "../events/types";
 import type { EffectContext } from "../engine/effects/context";
 import type { Proc } from "../engine/runtime/proc";
 import type { GameReader } from "../engine/query";
+import { costAtMost } from "./targets";
 import type {
   ActivatedAbility,
   AutomaticAbility,
@@ -24,11 +25,12 @@ export function defineCard(script: CardScript): CardScript {
 
 /**
  * CR 12.2 — "Evolve [cost]: Evolve this follower." (a number = play points). `condition`:
- * "This ability can be activated if ..." (BP05-018).
+ * "This ability can be activated if ..." (BP05-018). `into`: "Evolve this follower into a X or
+ * Y" — the evolved cards' names, e.g. the faces of a double-faced card (BP09-004, CR 4.6.4).
  */
 export function evolveAbility(
   cost: number | CostSpec,
-  opts: { nameIncludes?: string; condition?: ActivatedAbility["condition"] } = {},
+  opts: { nameIncludes?: string; into?: readonly string[]; condition?: ActivatedAbility["condition"] } = {},
 ): ActivatedAbility {
   const ability: ActivatedAbility = {
     kind: "activated",
@@ -36,6 +38,7 @@ export function evolveAbility(
     cost: typeof cost === "number" ? { playPoints: cost } : cost,
   };
   if (opts.nameIncludes !== undefined) ability.evolveNameIncludes = opts.nameIncludes;
+  if (opts.into !== undefined) ability.evolveInto = opts.into;
   if (opts.condition !== undefined) ability.condition = opts.condition;
   return ability;
 }
@@ -230,6 +233,64 @@ export function whenYouDraw(spec: TimingSpec, opts: { exceptYourStartPhase?: boo
       return moves(e)
         .filter((m) => m.reason === "draw" && m.to.zone === "hand" && m.to.player === me.controller && m.newCard !== null)
         .map((m) => ({ card: m.newCard! }));
+    },
+    spec,
+  );
+}
+
+/**
+ * "When you discard a [matching] card" (CR 5.12) — once per card, e.g. BP09-006 "when you discard
+ * a Forestcraft spell". The card is checked as it is now (in the cemetery). Data: the card.
+ */
+export function whenYouDiscard(spec: TimingSpec, filter: (game: GameReader, card: CardId) => boolean): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game): readonly TriggerData[] =>
+      me.lookBack
+        ? []
+        : moves(e)
+            .filter(
+              (m) =>
+                m.reason === "discard" &&
+                m.from?.zone === "hand" &&
+                m.from.player === me.controller &&
+                m.newCard !== null &&
+                game.card(m.newCard) !== undefined &&
+                filter(game, m.newCard),
+            )
+            .map((m) => ({ card: m.newCard! })),
+    spec,
+  );
+}
+
+/**
+ * "Whenever this card becomes engaged" (これがアクトしたとき, CR 5.4): by attacking (8.4.4), by Ward
+ * (12.8.2 i, 7.4.3), or by an effect or cost (BP09-108 / 109 rulings). A card put onto the field
+ * engaged does not become engaged.
+ */
+export const whenThisBecomesEngaged = (spec: TimingSpec) =>
+  automatic("other", (e, me) => !me.lookBack && e.type === "placementChanged" && e.engaged && e.cards.includes(me.card), spec);
+
+/**
+ * "[During your turn,] whenever an enemy follower is put from the field into the cemetery" (BP09-026)
+ * — once per follower, however it got there (destroyed, buried, as a cost), tokens too (its
+ * rulings). Also when this card leaves at the same time (look-back, CR 10.7.4.2). Data: the card.
+ */
+export function whenEnemyFollowerToCemetery(spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game) => {
+      if (me.zone !== "field" || (opts.onlyYourTurn && game.activePlayer !== me.controller)) return false;
+      return moves(e)
+        .filter(
+          (m) =>
+            m.from?.zone === "field" &&
+            m.to.zone === "cemetery" &&
+            m.before !== null &&
+            m.before.controller !== me.controller &&
+            game.db.get(m.before.abilityDef).type === "follower",
+        )
+        .map((m) => ({ card: m.newCard ?? m.card! }));
     },
     spec,
   );
@@ -499,6 +560,30 @@ export function* lookAtTopCards(
   if (opts.rest === "cemetery") yield* fx.bury(left);
   else yield* fx.bottomInAnyOrder(left);
   return moved;
+}
+
+/**
+ * Select cards among `candidates`, up to `max`, whose original costs (元のコスト, printed) total
+ * at most `budget` (BP07-037, 071, BP09-037). Picked one at a time, each time only from those that still fit
+ * (the BP06-024 pattern: only completable choices are offered).
+ */
+export function* selectWithinTotalCost(
+  fx: EffectContext,
+  candidates: readonly CardId[],
+  budget: number,
+  max: number,
+  peek?: readonly CardId[],
+): Proc<CardId[]> {
+  const chosen: CardId[] = [];
+  let left = budget;
+  while (chosen.length < max) {
+    const fits = candidates.filter((id) => !chosen.includes(id) && costAtMost(left)(fx.game, id));
+    const [pick] = yield* fx.selectCards(fits, 0, 1, fx.controller, peek);
+    if (pick === undefined) break;
+    chosen.push(pick);
+    left -= fx.game.info(pick).cost ?? 0;
+  }
+  return chosen;
 }
 
 /** An activated ability. */

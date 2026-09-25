@@ -26,6 +26,8 @@ export interface MoveSpec {
   position?: "top" | "bottom" | number;
   /** Default: faceup in public zones, facedown otherwise (CR 4.2.3.3). */
   faceUp?: boolean;
+  /** CR 2.14.3 — put a double-faced card into the evolve zone with its back face visible. */
+  backFace?: boolean;
   /** Default: reserved (CR 4.2.2.3). */
   engaged?: boolean;
   /**
@@ -99,7 +101,7 @@ function freshInstance(
   owner: PlayerId,
   controller: PlayerId,
   zone: ZoneName,
-  opts: { faceUp?: boolean | undefined; engaged?: boolean | undefined },
+  opts: { faceUp?: boolean | undefined; engaged?: boolean | undefined; backFace?: boolean | undefined },
 ): CardInstance {
   const seq = nextSeq(state);
   return {
@@ -111,6 +113,8 @@ function freshInstance(
     zone,
     engaged: opts.engaged ?? false,
     faceUp: opts.faceUp ?? DEFAULT_FACE_UP[zone],
+    // CR 2.14.2.1 / 2.14.3 — the back face is visible only where rules or effects put it so.
+    backFace: (opts.backFace ?? false) && (zone === "evolveZone" || zone === "field"),
     zoneSeq: seq,
     damage: 0,
     enteredFieldTurn: zone === "field" ? state.turn : null,
@@ -302,7 +306,7 @@ export function placeInitialCard(
   printing: PrintingId,
   owner: PlayerId,
   zone: PlayerZone,
-  opts: { engaged?: boolean; faceUp?: boolean } = {},
+  opts: { engaged?: boolean; faceUp?: boolean; backFace?: boolean } = {},
 ): CardId {
   const def = db.ofPrinting(printing);
   const card = freshInstance(state, printing, def.id, owner, owner, zone, opts);
