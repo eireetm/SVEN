@@ -54,6 +54,20 @@ export interface CardScript {
    * an ability's effect (CR 1.3.3). Rules handling still destroys it (defense 0, 11.3).
    */
   cannotBeDestroyedByAbilities?: boolean;
+  /** "This card can't be banished by abilities" while it is on the field (BP06-022, CR 1.3.3). */
+  cannotBeBanishedByAbilities?: boolean;
+  /**
+   * A condition the card itself puts on playing it, e.g. BP06-059 "This card can only be played
+   * from hand", BP06-105 "This card can't be played during your turn". Checked like every other
+   * requirement for playing it (CR 8.1.2), also when an effect plays it.
+   */
+  playableIf?(game: GameReader, self: CardId, player: PlayerId): boolean;
+  /**
+   * Change to the play points of this card's evolve abilities, e.g. BP06-019 "This card's Evolve
+   * costs 1 less for every other follower on your field" (negative = cheaper; never below 0 —
+   * its ruling).
+   */
+  evolveCostChange?(game: GameReader, self: CardId): number;
   /** "This card is put onto the field engaged." */
   entersEngaged?: boolean;
   /**
@@ -99,6 +113,12 @@ export interface FieldPassives {
   combatDamageFromDefense?: boolean;
   /** Replacement effect on damage this card deals; returns the change (CR 5.14.2, 10.2.1.3.2). */
   damageDealt?(game: GameReader, self: CardId, damage: DamageInfo): number;
+  /**
+   * Replacement effect on damage any card deals (e.g. BP06-074 "if a Yokai follower on your field
+   * would deal damage, it deals that much plus 1 instead"; CR 10.12.2.3: damage whose source is
+   * that card); returns the change.
+   */
+  damageBy?(game: GameReader, self: CardId, damage: DamageInfo): number;
   /** Replacement effect on damage this card takes; returns the change. */
   damageTaken?(game: GameReader, self: CardId, damage: DamageInfo): number;
   /**
@@ -117,6 +137,11 @@ export interface FieldPassives {
    * opponent win (5.23.1); a prohibition takes precedence (1.3.3). Conceding still works (1.2.3.1).
    */
   cantLose?: boolean;
+  /**
+   * BP06-113 "While this card is on the field, if a follower on the field can attack a follower,
+   * it can't attack leaders" — every follower on either side.
+   */
+  followersBeforeLeaders?: boolean;
   /**
    * BP02-035/036 "include both spells and Runecraft followers when counting your Spellchain"
    * (CR 13.3.1.1 counts spells in the cemetery).
@@ -196,8 +221,9 @@ export interface Mode {
   /** Choosing this option pays Earth Rite (the option cannot be performed without it). */
   earthRite?: boolean;
   /**
-   * "(1) [cost]: [effect]" — an optional additional cost of this option (BP03-117 ruling): the
-   * option can be chosen even if the cost is not paid (or cannot be), and then does nothing.
+   * "(1) [process]: [effect]" — the option's effect is applied only if its controller executes
+   * the process when the option resolves (CR 10.4.7.2, 10.4.7.5; BP03-117 ruling): the option can
+   * be chosen even if the process is not executed (or cannot be), and then does nothing.
    */
   cost?: CustomCost;
   /** Extra condition for the option to be performable (CR 5.18.3.1.2). */
@@ -222,6 +248,12 @@ export interface PlayOption {
 /** CR 10.1.1.1 */
 export interface ActivatedAbility {
   kind: "activated";
+  /**
+   * Zones where the ability can be activated (CR 10.3.5: the field unless the text says
+   * otherwise), e.g. BP06-059 "bury this card from your EX area", BP06-079 "discard this card".
+   * Evolve abilities are only activated on the field.
+   */
+  validIn?: readonly ZoneName[];
   /** CR 12.2 — an evolve ability ("Evolve [cost]: Evolve this follower"). */
   evolve?: boolean;
   /**

@@ -5,7 +5,7 @@ import { canPayPlayPoints, payPlayPoints } from "../actions/points";
 import { chooseTargets, targetsAvailable } from "../abilities/targets";
 import { earthRiteSources, nextPlayModifiersFor, payEarthRite, playCost } from "../costs";
 import { makeEffectContext, type EffectInit } from "../effects/context";
-import { chooseModeCosts, chooseModes, chooseModeTargets } from "../abilities/modes";
+import { chooseModes, chooseModeTargets, resolveModes } from "../abilities/modes";
 import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import { chooseOptions, confirm } from "../runtime/decide";
@@ -71,6 +71,9 @@ export function playVariants(
   if (timing === "quick" && !ch.keywords.includes("quick")) return [];
   // BP05-006 — "can't play followers during their next main phase", by an effect too (ruling).
   if (ch.type === "follower" && g.state.phase === "main" && restricted(g.state, player, "cantPlayFollowers")) return [];
+  // The card's own condition (BP06-059 "only from hand", BP06-105 "not during your turn").
+  const own = g.scripts[c.def]?.playableIf;
+  if (own && !own(makeReader(g), card, player)) return [];
   if (ch.type === "spell" && !spellPlayable(g, card, player)) return [];
   const reader = makeReader(g);
   const options: (PlayOption | null)[] = [null, ...(g.scripts[c.def]?.playOptions ?? [])];
@@ -146,11 +149,6 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
   payPlayPoints(g, player, playCost(g, played, player, option, opts.setCost));
   // "The next card you play this turn costs N less" is used up by this play (BP03-038 ruling).
   if (nextPlay.length > 0) g.state.nextPlay = g.state.nextPlay.filter((m) => !nextPlay.includes(m));
-  // 10.6.2.2.1 whether to pay each chosen option's optional additional cost (BP03-117 ruling).
-  // Asked once the card's own play points are paid, so that an option costing play points
-  // (BP05-041 "(2) {[cost02]}: ...") is only offered when both can be paid.
-  const modePaid = yield* chooseModeCosts(g, player, modes, played);
-  for (const [i, m] of modes.entries()) if (modePaid[i]) yield* m.cost!.pay(fx({ mode: m.id }));
   // 10.6.2.6 field limit: verified by playVariants before anything moved.
   // 10.6.2.7 the card has been played (counts for Combo, 13.2.1.3)
   const ps = g.state.players[player];
@@ -164,13 +162,10 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
     // zone carry over (10.6.2.8.1.1)
     yield* putOntoField(g, [played], player, "resolve", { keepEffects: true, keepCounters: true });
   } else if (spell) {
-    // 10.6.2.8.2 perform the spell's text in order (the chosen options in listed order, 5.18.1).
-    // An option whose optional additional cost was not paid does nothing (BP03-117 ruling).
+    // 10.6.2.8.2 perform the spell's text in order (the chosen options in listed order, 5.18.1;
+    // an option's "[process]:" is asked for when it resolves, 10.4.7.5)
     if (modes.length > 0) {
-      for (const [i, m] of modes.entries()) {
-        if (m.cost && !modePaid[i]) continue;
-        yield* m.resolve(fx({ targets: modeTargets[i]!, mode: m.id }));
-      }
+      yield* resolveModes(modes, (m, i) => fx({ targets: modeTargets[i]!, mode: m.id }));
     } else if (spell.resolve) {
       yield* spell.resolve(fx());
     }

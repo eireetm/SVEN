@@ -72,6 +72,7 @@ export const TEST_CARDS = [
   testSpell("KILL", 1, { text: "Destroy an enemy follower." }),
   testSpell("BUFF-SOME", 0, { text: "Select up to 2 of your followers; give them +1/+1 until end of turn." }),
   testSpell("BOTH-20", 0, { text: "Deal 20 damage to each leader." }),
+  testFollower("YOKAI0", 1, 0, 3, { traits: ["妖怪"] }),
   testAmulet("AMULET", 1),
   testToken("TOKEN", 1, 1, 1),
   // Has card text but no script: "not implemented".

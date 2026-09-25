@@ -22,7 +22,14 @@ export function* startPhase(g: G): Proc<void> {
   // 7.2.1 (never above the cap, 3.2.4.1), unless prohibited (BP05-006, CR 1.3.3)
   if (!restricted(state, player, "noStartPhaseMaxPlayPoints")) setMaxPlayPoints(g, player, ps.maxPlayPoints + 1);
   setPlayPoints(g, player, ps.maxPlayPoints); // 7.2.2
-  setEngaged(g, ps.zones.field, false); // 7.2.3 refresh all cards on the field
+  // 7.2.3 refresh all cards on the field, except those that "don't refresh during their
+  // controller's next start phase" (BP06-056): that effect is then over.
+  const stay = new Set(
+    state.effects.filter((e) => e.change.kind === "skipNextRefresh" && e.createdTurn < state.turn && ps.zones.field.includes(e.target)).map((e) => e.id),
+  );
+  const staying = state.effects.filter((e) => stay.has(e.id)).map((e) => e.target);
+  setEngaged(g, ps.zones.field.filter((id) => !staying.includes(id)), false);
+  if (stay.size > 0) state.effects = state.effects.filter((e) => !stay.has(e.id));
   const firstTurnOfFirstPlayer = player === state.firstPlayer && ps.turnsPassed === 1;
   // 7.2.4 / 7.2.4.1, unless prohibited (BP05-006, CR 1.3.3)
   if (!firstTurnOfFirstPlayer && !restricted(state, player, "noStartPhaseDraw")) drawCards(g, player, 1);

@@ -192,6 +192,12 @@ export type EffectChange =
   | { kind: "preventNextDamage" }
   /** "If [it] would take more than N damage, it takes N instead" (BP05-101): each instance (ruling). */
   | { kind: "damageCap"; max: number }
+  /**
+   * "It doesn't refresh during its controller's next start phase" (BP06-056): skipped in the
+   * next start phase of its controller after this turn (CR 7.2.3), then the effect ends. It
+   * applies even if the card is already engaged (ruling).
+   */
+  | { kind: "skipNextRefresh" }
   /** "Its Fanfare abilities can't be performed" (BP04-038/039): its pending Fanfares are not played. */
   | { kind: "noFanfare" }
   /** "It can't attack enemies" (CR 8.4.3.2.1), e.g. BP03-013 for the controller's next turn. */
@@ -209,7 +215,13 @@ export type EffectChange =
   | { kind: "grantedAbility"; grant: GrantedAbilityId };
 
 /** Abilities an effect can give a card. Each one is defined in engine/abilities/grants.ts. */
-export type GrantedAbilityId = "destroyAtEnd" | "bottomAtEnd" | "strikeByAttack" | "followerStrike2" | "activateBury2";
+export type GrantedAbilityId =
+  | "destroyAtEnd"
+  | "bottomAtEnd"
+  | "strikeByAttack"
+  | "followerStrike2"
+  | "activateBury2"
+  | "strikeRefreshOnce";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {

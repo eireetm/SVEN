@@ -89,9 +89,14 @@ export function buryCards(g: G, cards: readonly CardId[]): CardId[] {
   return present.length === 0 ? [] : moveCards(g, present.map((card) => ({ card, to: "cemetery" as const })), "effect");
 }
 
-/** CR 5.7 — banish cards: move them to their owners' banished zones. */
+/**
+ * CR 5.7 — banish cards: move them to their owners' banished zones. A card on the field that
+ * "can't be banished by abilities" (BP06-022) stays (CR 1.3.3; only effects banish cards).
+ */
 export function banishCards(g: G, cards: readonly CardId[]): CardId[] {
-  const present = cards.filter((id) => g.state.cards[id] !== undefined);
+  const present = cards.filter(
+    (id) => g.state.cards[id] !== undefined && !(g.state.cards[id]!.zone === "field" && activeScript(g, id)?.cannotBeBanishedByAbilities),
+  );
   return present.length === 0 ? [] : moveCards(g, present.map((card) => ({ card, to: "banished" as const })), "banish");
 }
 
@@ -147,7 +152,7 @@ export function* putOntoField(
   cards: readonly CardId[],
   player: PlayerId,
   reason: MoveReason,
-  opts: { chooser?: PlayerId; keepEffects?: boolean; keepCounters?: boolean } = {},
+  opts: { chooser?: PlayerId; keepEffects?: boolean; keepCounters?: boolean; engaged?: boolean } = {},
 ): Proc<CardId[]> {
   const room = fieldLimit(g, player) - g.state.players[player].zones.field.length;
   let chosen: readonly CardId[] = cards;
@@ -163,7 +168,7 @@ export function* putOntoField(
       player,
       keepEffects: opts.keepEffects ?? false,
       keepCounters: opts.keepCounters ?? false,
-      engaged: g.scripts[getCard(g.state, card).def]?.entersEngaged ?? false,
+      engaged: opts.engaged || (g.scripts[getCard(g.state, card).def]?.entersEngaged ?? false),
     })),
     reason,
   );

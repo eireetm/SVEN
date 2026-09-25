@@ -266,28 +266,84 @@ export function whenOpponentDeckCardToCemetery(spec: TimingSpec, opts: { onlyYou
 }
 
 /**
- * "[During your turn,] whenever a follower is put from your field into the cemetery" — once per
- * follower, tokens too, and a follower put there as a cost (BP05-076 rulings). Not this card
- * itself (it is no longer on the field to be given anything). Data: the card.
+ * "[During your turn,] whenever a [matching] follower you control leaves the field [into the
+ * cemetery]" — once per follower (BP06-074 ruling), tokens too, and a follower put there as a
+ * cost (BP05-076 rulings). Moving to the other field is not leaving it (CR 10.7.4.3).
+ * `includeSelf`: this card leaving counts too (look-back, CR 10.7.4.2; BP06-090 ruling); the
+ * information is what the card had on the field (`m.before`, 10.7.4.1.2). Data: the card.
  */
-export function whenYourFollowerToCemetery(spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}): AutomaticAbility {
+export function whenYourFollowerLeaves(
+  spec: TimingSpec,
+  opts: {
+    to?: "cemetery";
+    onlyYourTurn?: boolean;
+    includeSelf?: boolean;
+    filter?: (m: CardMove, game: GameReader) => boolean;
+  } = {},
+): AutomaticAbility {
   return automatic(
     "other",
     (e, me, game): readonly TriggerData[] => {
-      if (me.lookBack || (opts.onlyYourTurn && game.activePlayer !== me.controller)) return [];
+      if (me.zone !== "field" || (me.lookBack && !opts.includeSelf)) return [];
+      if (opts.onlyYourTurn && game.activePlayer !== me.controller) return [];
       return moves(e)
         .filter(
           (m) =>
             m.from?.zone === "field" &&
-            m.to.zone === "cemetery" &&
+            m.to.zone !== "field" &&
+            (opts.to === undefined || m.to.zone === opts.to) &&
             m.before !== null &&
             m.before.controller === me.controller &&
-            game.db.get(m.before.abilityDef).type === "follower",
+            game.db.get(m.before.abilityDef).type === "follower" &&
+            (opts.filter?.(m, game) ?? true),
         )
         .map((m) => ({ card: m.newCard ?? m.card! }));
     },
     spec,
   );
+}
+
+/**
+ * "[During your turn,] whenever a follower is put from your field into the cemetery" — once per
+ * follower, tokens too, and a follower put there as a cost (BP05-076 rulings). Not this card
+ * itself (it is no longer on the field to be given anything). Data: the card.
+ */
+export function whenYourFollowerToCemetery(spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}): AutomaticAbility {
+  return whenYourFollowerLeaves(spec, { ...opts, to: "cemetery" });
+}
+
+/** "When your leader loses defense" (damage or "-X defense", CR 5.27.1), e.g. BP06-089. */
+export const whenYourLeaderLosesDefense = (spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}) =>
+  automatic(
+    "other",
+    (e, me, game) =>
+      !me.lookBack &&
+      e.type === "leaderDefenseChanged" &&
+      e.player === me.controller &&
+      e.delta < 0 &&
+      (!opts.onlyYourTurn || game.activePlayer === me.controller),
+    spec,
+  );
+
+/** "Whenever an enemy follower on the field attacks" (CR 8.4.5). Data: the attacker and its player. */
+export function whenEnemyFollowerAttacks(spec: TimingSpec): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me) => (!me.lookBack && e.type === "attackDeclared" && e.player !== me.controller ? [{ card: e.attacker, player: e.player }] : false),
+    spec,
+  );
+}
+
+/**
+ * "If this card was put onto the field by an ability" (BP06-005 / 008), asked by its Fanfare:
+ * it entered the field other than as the resolution of playing it (CR 10.6.2.8.1). A card
+ * played by another card's effect was played, not put there by an ability (BP06-008 ruling).
+ */
+export function enteredByAbility(fx: EffectContext): boolean {
+  const e = fx.event;
+  if (e?.type !== "cardsMoved") return false;
+  const m = e.moves.find((x) => x.newCard === fx.self && x.to.zone === "field");
+  return m !== undefined && m.reason !== "resolve";
 }
 
 /**

@@ -20,8 +20,9 @@ export function mainPhaseActions(g: G, player: PlayerId): MainAction[] {
   }
   // 8.3 evolve abilities (12.2)
   actions.push(...evolveActions(g, player));
-  // 8.3 other activated abilities (`ability` = position in the card's ability list)
-  for (const card of ps.zones.field) {
+  // 8.3 other activated abilities (`ability` = position in the card's ability list), also those
+  // valid in the hand or the EX area (CR 10.3.5, e.g. BP06-059 / 079)
+  for (const card of [...ps.zones.field, ...ps.zones.hand, ...ps.zones.ex]) {
     characteristics(g, card).abilities.forEach(({ ability }, pos) => {
       if (ability.kind === "activated" && !ability.evolve && canPlayActivated(g, player, card, pos, "main")) {
         actions.push({ type: "activate", card, ability: pos });

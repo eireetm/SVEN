@@ -76,6 +76,11 @@ export type ChooseReason =
   | "deckPosition"
   /** How much of divided damage `subject` is dealt (at least 1 each, BP03-007). */
   | "divideDamage"
+  /**
+   * CR 10.10.2 — the order of the replacement effects on damage `subject` would take, chosen by
+   * its player as the resulting damage (only offered when the order changes it).
+   */
+  | "damageOrder"
   /** Any other choice made while an effect resolves. */
   | "effect";
 

@@ -7,7 +7,7 @@ import { canPayPlayPoints, payPlayPoints } from "../actions/points";
 import { earthRiteSources, payEarthRite } from "../costs";
 import { makeEffectContext, type EffectInit } from "../effects/context";
 import { EngineError } from "../errors";
-import { chooseModeCosts, chooseModes, chooseModeTargets } from "./modes";
+import { chooseModes, chooseModeTargets, resolveModes } from "./modes";
 import type { G } from "../runtime/context";
 import { confirm } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
@@ -80,8 +80,6 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
   const targets = modes.length === 0 ? yield* chooseTargets(g, ability.targets, ctrl, self) : [];
   const modeTargets = yield* chooseModeTargets(g, ctrl, modes, self);
   if (targets === null || modeTargets === null) return;
-  // 10.6.2.2.1 optional additional costs of the chosen options (BP03-117 ruling)
-  const modePaid = yield* chooseModeCosts(g, ctrl, modes, self);
   const init: EffectInit = {
     controller: ctrl,
     self,
@@ -94,17 +92,13 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
   };
   // 10.6.2.5 costs
   if (ability.cost) yield* ability.cost.pay(makeEffectContext(g, init));
-  for (const [i, m] of modes.entries()) if (modePaid[i]) yield* m.cost!.pay(makeEffectContext(g, { ...init, mode: m.id }));
   if (earthRite) yield* payEarthRite(g, ctrl, ability.earthRite?.count ?? 1, self);
   // 10.6.2.7
   g.emit({ type: "abilityPlayed", player: ctrl, source: self, sourceDef: pending.sourceDef, ability: pending.ability });
   // 10.6.2.8.2 — resolved even if the source has changed zones (10.6.2.8.2.1, 10.7.7); chosen
   // options in listed order (5.18.1)
   if (modes.length > 0) {
-    for (const [i, m] of modes.entries()) {
-      if (m.cost && !modePaid[i]) continue; // an unpaid option does nothing (BP03-117 ruling)
-      yield* m.resolve(makeEffectContext(g, { ...init, targets: modeTargets[i]!, mode: m.id }));
-    }
+    yield* resolveModes(modes, (m, i) => makeEffectContext(g, { ...init, targets: modeTargets[i]!, mode: m.id }));
   } else if (ability.resolve) {
     yield* ability.resolve(makeEffectContext(g, init));
   }
@@ -122,11 +116,12 @@ function activatedAbility(g: G, card: CardId, index: number): { ability: Activat
  */
 export function canPlayActivated(g: G, player: PlayerId, card: CardId, index: number, timing: "main" | "quick"): boolean {
   const c = g.state.cards[card];
-  // CR 10.3.5 — follower / amulet abilities are valid only on the field.
-  if (!c || c.zone !== "field" || c.controller !== player) return false;
+  if (!c || c.controller !== player) return false;
   const found = activatedAbility(g, card, index);
   if (!found || found.ability.evolve) return false;
   const { ability, def } = found;
+  // CR 10.3.5 — valid only on the field unless the text says otherwise (e.g. BP06-059, EX area).
+  if (!(ability.validIn ?? ["field"]).includes(c.zone)) return false;
   if (timing === "quick" && !ability.quick) return false; // CR 12.3.3
   if (ability.oncePerTurn && c.abilityUses[abilityKey(def, index)] === g.state.turn) return false;
   if (activationBlocked(g.state, card, false)) return false; // BP03-039/040

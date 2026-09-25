@@ -162,6 +162,7 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
       // Every name it had there, e.g. "this follower's name is also Ghost" (CR 10.7.4.1.2).
       names: onField ? [...onField.names] : [g.db.get(c.def).name],
     };
+    if (onField) before.keywords = [...onField.keywords]; // BP06-090
     if (onField && onField.abilitiesLostAt !== null) before.abilitiesLost = true; // BP05-061
     return before;
   });

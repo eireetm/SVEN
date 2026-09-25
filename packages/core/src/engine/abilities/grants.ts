@@ -50,6 +50,16 @@ export const GRANT_ABILITIES: Record<GrantedAbilityId, AbilityDef> = {
       yield* fx.bury([fx.self]);
     },
   },
+  // BP06-018 "Strike - Refresh this follower. Perform only once per turn." (CR 10.7.2.2)
+  strikeRefreshOnce: {
+    kind: "automatic",
+    timing: "strike",
+    oncePerTurn: true,
+    trigger: (e, me) => !me.lookBack && e.type === "attackDeclared" && e.attacker === me.card,
+    *resolve(fx) {
+      yield* fx.refresh([fx.self]);
+    },
+  },
   // BP03-083 "Strike: Select an enemy follower and deal it damage equal to this follower's attack."
   strikeByAttack: {
     kind: "automatic",

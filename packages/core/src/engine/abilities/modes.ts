@@ -1,8 +1,9 @@
 import type { CardId, PlayerId } from "../../model/ids";
 import type { Mode } from "../../script/types";
+import type { EffectContext } from "../effects/context";
 import { performableModes } from "../flow/play-card";
 import type { G } from "../runtime/context";
-import { chooseOptions, confirm } from "../runtime/decide";
+import { chooseOptions } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { makeReader, type GameReader } from "../query";
 import { chooseTargets } from "./targets";
@@ -45,16 +46,14 @@ export function* chooseModeTargets(g: G, player: PlayerId, modes: readonly Mode[
 }
 
 /**
- * An option written "[cost]: [effect]" has an optional additional cost (BP03-117 ruling: the
- * player may choose the option and not pay; the option then does nothing). The choice is made
- * while playing (10.6.2.2.1) and the cost is paid with the other costs (10.6.2.5).
- * Returns, per chosen option, whether its cost will be paid (false for options without one).
+ * CR 5.18.1 — resolve the chosen options in listed order. An option written "[process]:
+ * [effect]" (10.4.7.2) is only applied if its controller executes the process when it resolves
+ * (10.4.7.5; BP03-117 ruling: the option may be chosen and the process not executed).
  */
-export function* chooseModeCosts(g: G, player: PlayerId, modes: readonly Mode[], self: CardId): Proc<boolean[]> {
-  const reader = makeReader(g);
-  const paid: boolean[] = [];
-  for (const m of modes) {
-    paid.push(m.cost !== undefined && m.cost.canPay(reader, player, self) && (yield* confirm(g, player, "optionalCost", self)));
+export function* resolveModes(modes: readonly Mode[], fxFor: (mode: Mode, index: number) => EffectContext): Proc<void> {
+  for (const [i, m] of modes.entries()) {
+    const fx = fxFor(m, i);
+    if (m.cost && !(yield* fx.optionalCost(m.cost))) continue;
+    yield* m.resolve(fx);
   }
-  return paid;
 }

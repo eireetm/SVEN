@@ -7,7 +7,7 @@ import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import type { Proc } from "../runtime/proc";
 import { getCard, nextSeq } from "../state/access";
-import { characteristics } from "../state/characteristics";
+import { activeScript, characteristics } from "../state/characteristics";
 import { moveCards } from "../state/zones";
 import { makeReader } from "../query";
 import { makeEffectContext } from "../effects/context";
@@ -67,7 +67,8 @@ function evolveCostSetTo(g: G, card: CardId): number | null {
 /**
  * CR 12.2.3 — 1 evolution point may be used in lieu of 1 play point (only if the cost
  * includes play points); CR 12.2.4 — optionally 1 super-evolution point more.
- * An effect may have changed the play points of the card's evolve cost (BP05-048/052).
+ * An effect or the card's own passive may have changed the play points of its evolve cost
+ * (BP05-048/052, BP06-019).
  * null when the player cannot pay.
  */
 export function evolvePayment(
@@ -80,7 +81,9 @@ export function evolvePayment(
 ): EvolvePayment | null {
   const ps = g.state.players[p];
   const setTo = cost.playPoints !== undefined ? evolveCostSetTo(g, card) : null;
-  const costPlayPoints = setTo ?? cost.playPoints ?? 0;
+  // A passive change of this card's evolve cost (BP06-019), after a set value; never below 0.
+  const change = cost.playPoints !== undefined ? (activeScript(g, card)?.evolveCostChange?.(makeReader(g), card) ?? 0) : 0;
+  const costPlayPoints = Math.max(0, (setTo ?? cost.playPoints ?? 0) + change);
   if (cost.leaderDefense && !canPayLeaderDefense(g, p, cost.leaderDefense)) return null; // CR 10.4.5
   if (cost.custom && !cost.custom.canPay(makeReader(g), p, card)) return null; // e.g. BP02-089 "Discard 3 cards"
   let playPoints = costPlayPoints;

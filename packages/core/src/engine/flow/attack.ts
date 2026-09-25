@@ -45,8 +45,13 @@ export function attackTargets(g: G, attacker: CardId): CardId[] {
   );
   const wards = followers.filter((id) => g.state.cards[id]!.engaged && hasKeyword(g, id, "ward"));
   if (wards.length > 0 && !activeScript(g, attacker)?.ignoresWard) return wards;
+  // BP06-113 — while it is on the field, a follower that can attack a follower can't attack leaders.
+  const followersFirst =
+    followers.length > 0 &&
+    [...g.state.players[0].zones.field, ...g.state.players[1].zones.field].some((id) => activeScript(g, id)?.field?.followersBeforeLeaders);
   const leaderAllowed =
     (onFieldSinceTurnStart(g, attacker) || hasKeyword(g, attacker, "storm")) &&
+    !followersFirst &&
     !activeScript(g, attacker)?.cannotAttackLeader?.(makeReader(g), attacker);
   return leaderAllowed ? [...followers, leaderOf(g.state, opp)] : followers;
 }
@@ -114,7 +119,7 @@ export function* performAttack(g: G, attacker: CardId, target: CardId): Proc<voi
       // 8.4.9.1 the attack target simultaneously deals damage to the attacker
       damage.push({ source: target, controller: g.state.cards[target]!.controller, target: attacker, amount: combatDamageOf(g, target), kind: "combat" });
     }
-    dealDamage(g, damage); // Drain (CR 12.13) triggers on the attack damage: keyword-abilities.ts
+    yield* dealDamage(g, damage); // Drain (CR 12.13) triggers on the attack damage: keyword-abilities.ts
     // 8.4.9.2 still in combat -> they have fought
     if (inCombat && isOnField(g.state, attacker) && isOnField(g.state, target)) {
       g.state.fights.push({

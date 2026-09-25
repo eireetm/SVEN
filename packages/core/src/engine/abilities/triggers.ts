@@ -133,6 +133,11 @@ export function collectTriggers(g: G, event: GameEvent): void {
     const controller = state.cards[card]!.controller;
     const subject: TriggerSubject = { card, controller, zone: "field", lookBack: false };
     for (const data of matches(ability, event, subject, reader)) {
+      if (ability.oncePerTurn) {
+        const key = abilityKey(`${GRANT_PREFIX}${grant}`, 0);
+        if (state.cards[card]!.abilityUses[key] === state.turn) continue; // CR 10.7.2.2
+        state.cards[card]!.abilityUses[key] = state.turn;
+      }
       addPending(g, controller, card, `${GRANT_PREFIX}${grant}`, 0, event, data);
     }
   }

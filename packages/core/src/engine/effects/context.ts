@@ -4,6 +4,7 @@ import { IMPLEMENTED_KEYWORDS, type Keyword } from "../../model/keyword";
 import type { CardType } from "../../model/card";
 import type { EffectChange, EffectDuration, GrantedAbilityId, PlayerRestriction, TriggerData } from "../../model/state";
 import type { GameEvent } from "../../events/types";
+import type { CustomCost } from "../../script/types";
 import {
   banishCards,
   buryCards,
@@ -28,6 +29,7 @@ import { dealDamage } from "../actions/damage";
 import { changeLeaderDefense, setLeaderDefense } from "../actions/leader";
 import { gainEvolutionPoints, payPlayPoints, recoverPlayPoints, setMaxPlayPoints } from "../actions/points";
 import { selectableBy } from "../abilities/targets";
+import { randomInt } from "../../rng/rng";
 import { effectEvolve } from "../abilities/evolve";
 import { EngineError } from "../errors";
 import { cannotLose, endGame } from "../flow/end-game";
@@ -86,8 +88,8 @@ export interface EffectContext {
    * the owner does not change). Limit CR 4.8.3.2.
    */
   putIntoEx(cards: readonly CardId[], player?: PlayerId): Proc<CardId[]>;
-  /** CR 5.5 put cards onto a field (default: the controller's). */
-  putOntoField(cards: readonly CardId[], player?: PlayerId): Proc<CardId[]>;
+  /** CR 5.5 put cards onto a field (default: the controller's), reserved or engaged (BP06-058). */
+  putOntoField(cards: readonly CardId[], player?: PlayerId, opts?: { engaged?: boolean }): Proc<CardId[]>;
   /** CR 5.4 */
   engage(cards: readonly CardId[]): Proc<void>;
   /** CR 5.4 refresh: turn cards to the reserved state. */
@@ -113,6 +115,8 @@ export interface EffectContext {
       max?: number;
       /** Where the found cards go: hand (default), field, EX area, or banished (BP04-059). */
       to?: SearchDestination;
+      /** Cards put onto the field enter engaged (BP06-082). */
+      engaged?: boolean;
       /**
        * Decide the destination per found card after it is revealed, e.g. BP03-002 "add it to your
        * hand; if it costs 2 or less, you may put it onto your field instead". Overrides `to`.
@@ -175,12 +179,16 @@ export interface EffectContext {
   setLeaderDefense(player: PlayerId, value: number): Proc<void>;
   /** CR 3.2.5 gain evolution points (e.g. BP02-106). */
   gainEvolutionPoints(amount: number, player?: PlayerId): Proc<void>;
-  /** CR 10.4.4 pay play points (for costs of automatic abilities, e.g. "{[fanfare]} {[cost03]}"). */
-  payPlayPoints(amount: number): Proc<void>;
+  /**
+   * CR 10.4.4 pay play points (for costs of automatic abilities, e.g. "{[fanfare]} {[cost03]}"),
+   * or another player pays (BP06-121 "its controller may pay {[cost02]}").
+   */
+  payPlayPoints(amount: number, player?: PlayerId): Proc<void>;
   /** CR 4.2.3 / 4.6.3 turn cards facedown (e.g. BP02-111, faceup cards in the evolve deck). */
   turnFacedown(cards: readonly CardId[]): Proc<void>;
   /** CR 5.15 */
   recoverPlayPoints(amount: number, player?: PlayerId): Proc<void>;
+  /** Change maximum play points by `amount` (negative: BP06-058 "decrease your max play points by 1"). */
   increaseMaxPlayPoints(amount: number, player?: PlayerId): Proc<void>;
   /** CR 5.28 */
   extraTurn(player?: PlayerId): Proc<void>;
@@ -255,6 +263,16 @@ export interface EffectContext {
   restrictPlayer(player: PlayerId, kind: PlayerRestriction["kind"]): Proc<void>;
   /** CR 5.26.2 "Skip [player's] next turn" (BP05-086 as a cost). */
   skipNextTurn(player?: PlayerId): Proc<void>;
+  /**
+   * CR 10.4.7.5 "[process]: [effect]" in the text being resolved (e.g. BP06-017 "{[engage]} 2
+   * Hunter followers on your field: ..."): if the controller can execute the process, ask
+   * whether to; execute it and return true, or return false (the effect is then not applied).
+   */
+  optionalCost(cost: CustomCost): Proc<boolean>;
+  /** "It doesn't refresh during its controller's next start phase" (BP06-056). */
+  skipNextRefresh(card: CardId): Proc<void>;
+  /** CR 5.20 roll a six-sided die (the game's seeded random source); returns 1–6. */
+  rollDie(player?: PlayerId): Proc<number>;
 }
 
 /** Where a search puts the cards it finds. */
@@ -293,10 +311,10 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
   };
 
   /** Move searched cards to their destinations (the field / EX area limits may ask which). */
-  function* moveFound(groups: Record<SearchDestination, CardId[]>, player: PlayerId): Proc<CardId[]> {
+  function* moveFound(groups: Record<SearchDestination, CardId[]>, player: PlayerId, engaged = false): Proc<CardId[]> {
     const moved: CardId[] = [];
     if (groups.hand.length > 0) moved.push(...moveCards(g, groups.hand.map((card) => ({ card, to: "hand" as const, player })), "effect"));
-    if (groups.field.length > 0) moved.push(...(yield* putOntoField(g, groups.field, player, "effect", { chooser: ctrl })));
+    if (groups.field.length > 0) moved.push(...(yield* putOntoField(g, groups.field, player, "effect", { chooser: ctrl, engaged })));
     if (groups.ex.length > 0) moved.push(...(yield* putIntoEx(g, groups.ex, ctrl)));
     if (groups.banish.length > 0) moved.push(...banishCards(g, groups.banish));
     return moved;
@@ -317,13 +335,13 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       return drawCards(g, player, count);
     },
     *dealDamage(target, amount) {
-      dealDamage(g, [{ source: selfIfPresent(), controller: ctrl, target, amount, kind: "ability" }]);
+      yield* dealDamage(g, [{ source: selfIfPresent(), controller: ctrl, target, amount, kind: "ability" }]);
     },
     *dealDamageEach(targets, amount) {
-      dealDamage(g, targets.map((target) => ({ source: selfIfPresent(), controller: ctrl, target, amount, kind: "ability" as const })));
+      yield* dealDamage(g, targets.map((target) => ({ source: selfIfPresent(), controller: ctrl, target, amount, kind: "ability" as const })));
     },
     *dealDamages(instances) {
-      dealDamage(
+      yield* dealDamage(
         g,
         instances.map((i) => ({ source: selfIfPresent(), controller: ctrl, target: i.target, amount: i.amount, kind: "ability" as const })),
       );
@@ -343,8 +361,8 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *putIntoEx(cards, player) {
       return yield* putIntoEx(g, cards, ctrl, player);
     },
-    *putOntoField(cards, player = ctrl) {
-      return yield* putOntoField(g, cards, player, "effect", { chooser: ctrl });
+    *putOntoField(cards, player = ctrl, opts = {}) {
+      return yield* putOntoField(g, cards, player, "effect", { chooser: ctrl, engaged: opts.engaged ?? false });
     },
     *engage(cards) {
       setEngaged(g, cards, true);
@@ -380,7 +398,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       if (opts.reveal ?? true) revealCards(g, player, chosen);
       const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [] };
       for (const card of chosen) groups[opts.destination ? yield* opts.destination(card) : (opts.to ?? "hand")].push(card);
-      const moved = yield* moveFound(groups, player);
+      const moved = yield* moveFound(groups, player, opts.engaged ?? false);
       shuffleDeck(g, player); // CR 5.8.2
       return moved;
     },
@@ -495,8 +513,8 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *gainEvolutionPoints(amount, player = ctrl) {
       gainEvolutionPoints(g, player, amount);
     },
-    *payPlayPoints(amount) {
-      payPlayPoints(g, ctrl, amount);
+    *payPlayPoints(amount, player = ctrl) {
+      payPlayPoints(g, player, amount);
     },
     *turnFacedown(cards) {
       for (const id of cards) {
@@ -619,7 +637,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
         left -= n;
       }
       amounts.push(left);
-      dealDamage(
+      yield* dealDamage(
         g,
         present.map((target, i) => ({
           source: selfIfPresent(),
@@ -654,6 +672,20 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *skipNextTurn(player = ctrl) {
       g.state.players[player].skipNextTurn = true; // 5.26.2.1: more instructions still skip it once
+    },
+    *skipNextRefresh(card) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, null, { kind: "skipNextRefresh" });
+    },
+    *rollDie(player = ctrl) {
+      const result = randomInt(g.state.rng, 6) + 1;
+      g.emit({ type: "dieRolled", player, result });
+      return result;
+    },
+    *optionalCost(cost) {
+      if (!cost.canPay(fx.game, ctrl, init.self)) return false;
+      if (!(yield* confirm(g, ctrl, "optionalCost", selfIfPresent()))) return false;
+      yield* cost.pay(fx);
+      return true;
     },
   };
   return fx;

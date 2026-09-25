@@ -15,7 +15,7 @@ export function quickActions(g: G, player: PlayerId): QuickAction[] {
   for (const card of [...ps.zones.hand, ...ps.zones.ex]) {
     if (canPlayCard(g, player, card, "quick")) actions.push({ type: "play", card });
   }
-  for (const card of ps.zones.field) {
+  for (const card of [...ps.zones.field, ...ps.zones.hand, ...ps.zones.ex]) {
     characteristics(g, card).abilities.forEach((_ref, pos) => {
       if (canPlayActivated(g, player, card, pos, "quick")) actions.push({ type: "activate", card, ability: pos });
     });

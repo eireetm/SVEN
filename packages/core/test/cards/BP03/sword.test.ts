@@ -138,12 +138,17 @@ describe("BP03 Swordcraft", () => {
     const big = d({ me: { field: ["BP03-027"], hand: ["V2"], deck: ["V1"] }, opp: { field: ["BP03-001"] } });
     big.attack("BP03-027", "opp:BP03-001");
     expect([big.hand(), big.zone("me", "deck"), big.stats("opp:BP03-001")]).toEqual([["V2"], ["V1"], [5, 2]]);
-    // The defender destroyed by another Strike first (Wood of Brambles' 2 damage): it is no
-    // longer "the enemy follower", so nothing is drawn (docs/open-questions.md).
-    const gone = d({ me: { field: ["BP03-027", "BP03-011"], hand: ["V2"], deck: ["V1"] }, opp: { field: [{ card: "V1", engaged: true }] } });
-    gone.attack("BP03-027", "opp:V1");
-    const brambles = gone.game.state.pending.find((p) => p.sourceDef === "grant:followerStrike2")!.id;
-    gone.answer({ type: "selectPending", id: brambles }).flush();
+    // With Wood of Brambles, both Follower Strikes are pending and the player picks the order
+    // (CR 10.7.3.1; confirmed by a judge, docs/open-questions.md). Momo first: it draws and
+    // discards, then the 2 damage destroys the defender.
+    const brambles = { me: { field: ["BP03-027", "BP03-011"], hand: ["V2"], deck: ["V1"] }, opp: { field: [{ card: "V1", engaged: true }] } };
+    const first = d(brambles).attack("BP03-027", "opp:V1").pending("BP03-027").pick("V2").flush();
+    expect([first.field("opp"), first.hand(), first.cemetery()]).toEqual([[], ["V1"], ["V2"]]);
+    // Brambles first: the defender is destroyed, so it is no longer "the enemy follower" and
+    // Momo's condition is not met.
+    const gone = d(brambles).attack("BP03-027", "opp:V1");
+    const wood = gone.game.state.pending.find((p) => p.sourceDef === "grant:followerStrike2")!.id;
+    gone.answer({ type: "selectPending", id: wood }).flush();
     expect([gone.field("opp"), gone.hand(), gone.zone("me", "deck")]).toEqual([[], ["V2"], ["V1"]]);
   });
 

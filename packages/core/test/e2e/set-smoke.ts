@@ -15,6 +15,11 @@ export interface SmokeExtras {
   cemetery?: string[];
   /** Other scenario settings for the player (e.g. `returnedToHand` for BP03-005). */
   side?: Partial<ScenarioSide>;
+  /**
+   * Cards that can't be played during their player's own turn (BP06-105): they are played in the
+   * quick window of the opponent's end phase instead (CR 7.4.5).
+   */
+  opponentsTurn?: string[];
 }
 
 /**
@@ -69,8 +74,11 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
           ))
         : card;
       if (!base) throw new Error(`${card.id} has no base card`);
+      const inOpponentsTurn = extras.opponentsTurn?.includes(card.id) ?? false;
       const g = scenario(engine, {
         seed: card.id,
+        // Turn 6 belongs to the second player (the opponent here).
+        ...(inOpponentsTurn ? { turn: 6 } : {}),
         players: [
           {
             // Tokens cannot exist in a hand (CR 9.1.4.1 / 9.1.4.3), so they are played from the EX area.
@@ -103,9 +111,26 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
         ],
         config: { autoResolve: ["quick"] },
       });
+      const mine = (id: string) => g.state.cards[id]!.def === card.id || g.state.cards[id]!.def === base.id;
+      if (inOpponentsTurn) {
+        // The opponent ends their main phase; play the card in the end phase's quick window.
+        const rng = seedRng(`${card.id}:opp`);
+        let played = false;
+        for (let i = 0; i < 200 && g.decision && !played; i++) {
+          const q = g.decision;
+          if (q.type === "mainPhase" && q.player === 1) g.act({ type: "mainPhase", action: q.actions.find((a) => a.type === "endMainPhase")! });
+          else if (q.type === "quick" && q.player === 0 && q.actions.some((a) => a.type === "play" && mine(a.card))) {
+            g.act({ type: "quick", action: q.actions.find((a) => a.type === "play" && mine(a.card))! });
+            played = true;
+          } else g.act(randomAnswer(rng, q));
+          assertOk(g);
+        }
+        if (!played) skipped.push(card.id);
+        else settle(g, card.id);
+        continue;
+      }
       const d = g.decision;
       if (d?.type !== "mainPhase") throw new Error(`${card.id}: expected a main phase decision`);
-      const mine = (id: string) => g.state.cards[id]!.def === card.id || g.state.cards[id]!.def === base.id;
       const action =
         d.actions.find((a) => a.type === "evolve" && mine(a.card)) ??
         d.actions.find((a) => a.type === "play" && mine(a.card)) ??

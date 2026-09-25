@@ -33,6 +33,8 @@ export interface ScenarioSide {
   ex?: PrintingId[];
   cemetery?: PrintingId[];
   evolveDeck?: PrintingId[];
+  /** Faceup cards in the evolve deck area (CR 4.6.3), e.g. evolved followers that were used. */
+  faceUpEvolveDeck?: PrintingId[];
   leaderDefense?: number;
   playPoints?: number;
   maxPlayPoints?: number;
@@ -88,6 +90,7 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
     place("ex", side.ex);
     place("cemetery", side.cemetery);
     place("evolveDeck", side.evolveDeck);
+    for (const printing of side.faceUpEvolveDeck ?? []) placeInitialCard(state, engine.db, printing, p, "evolveDeck", { faceUp: true });
     for (const entry of side.field ?? []) {
       const f: FieldCardSpec = typeof entry === "string" ? { card: entry } : entry;
       const id = placeInitialCard(state, engine.db, f.card, p, "field", { engaged: f.engaged ?? false });
