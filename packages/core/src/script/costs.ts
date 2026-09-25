@@ -1,4 +1,4 @@
-import type { CardId } from "../model/ids";
+import type { CardId, PlayerId } from "../model/ids";
 import type { GameReader } from "../engine/query";
 import type { CustomCost } from "./types";
 
@@ -34,24 +34,63 @@ export function discardA(filter: Filter): CustomCost {
   };
 }
 
-/** "Put a [matching] card from your field into its owner's cemetery" (may be this card itself). */
-export function buryFromYourField(filter: Filter): CustomCost {
+/**
+ * "Put N [matching] cards from your field into their owner's cemetery" (may include this card
+ * itself, e.g. BP07-T01), all at once.
+ */
+export function buryFromYourField(filter: Filter, n = 1): CustomCost {
   return {
-    canPay: (g, c) => g.cards(c, "field").some((id) => filter(g, id)),
+    canPay: (g, c) => g.cards(c, "field").filter((id) => filter(g, id)).length >= n,
     *pay(fx) {
       const cards = fx.game.cards(fx.controller, "field").filter((id) => filter(fx.game, id));
-      yield* fx.bury(yield* fx.chooseCards(cards, 1, 1));
+      yield* fx.bury(yield* fx.chooseCards(cards, n, n));
     },
   };
 }
 
-/** "Banish a [matching] card in your EX area". */
-export function banishFromYourEx(filter: Filter): CustomCost {
+/** "Banish N [matching] cards in your EX area". */
+export function banishFromYourEx(filter: Filter, n = 1): CustomCost {
+  return banishFromYour(["ex"], filter, n);
+}
+
+/**
+ * "Banish N [matching] cards from your [field / EX area / cemetery]", e.g. BP07-013 "Banish a
+ * Naterran Great Tree from your field", BP07-104 "... from your field or EX area", BP07-069
+ * "Banish 2 Machina cards from your cemetery". All at once.
+ */
+export function banishFromYour(zones: readonly ("field" | "ex" | "cemetery")[], filter: Filter, n = 1): CustomCost {
+  const cards = (g: GameReader, c: PlayerId) => zones.flatMap((z) => g.cards(c, z)).filter((id) => filter(g, id));
   return {
-    canPay: (g, c) => g.cards(c, "ex").some((id) => filter(g, id)),
+    canPay: (g, c) => cards(g, c).length >= n,
     *pay(fx) {
-      const cards = fx.game.cards(fx.controller, "ex").filter((id) => filter(fx.game, id));
-      yield* fx.banish(yield* fx.chooseCards(cards, 1, 1));
+      yield* fx.banish(yield* fx.chooseCards(cards(fx.game, fx.controller), n, n));
+    },
+  };
+}
+
+/**
+ * "{[engage]} N [matching] cards on your field" (CR 10.4.6: reserved ones), e.g. BP07-020 "2
+ * cards named Naterran Great Tree", BP06-017 "2 Hunter followers".
+ */
+export function engageYourCards(filter: Filter, n = 1): CustomCost {
+  const reserved = (g: GameReader, c: PlayerId) => g.cards(c, "field").filter((id) => g.card(id)?.engaged === false && filter(g, id));
+  return {
+    canPay: (g, c) => reserved(g, c).length >= n,
+    *pay(fx) {
+      yield* fx.engage(yield* fx.chooseCards(reserved(fx.game, fx.controller), n, n));
+    },
+  };
+}
+
+/**
+ * Several costs paid together, in the listed order (CR 10.4.2.1), e.g. BP07-117 "{[cost01]}, banish a
+ * Naterran Great Tree from your field or EX area". Payable only if every part is (CR 10.4.2.2).
+ */
+export function allCosts(...costs: readonly CustomCost[]): CustomCost {
+  return {
+    canPay: (g, c, self) => costs.every((cost) => cost.canPay(g, c, self)),
+    *pay(fx) {
+      for (const cost of costs) yield* cost.pay(fx);
     },
   };
 }

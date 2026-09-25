@@ -303,6 +303,8 @@ export interface AutomaticAbility {
   condition?(game: GameReader, controller: PlayerId, self: CardId): boolean;
   /** CR 10.7.2.2 — becomes pending at most once per turn. */
   oncePerTurn?: boolean;
+  /** CR 10.7.2.2 "[N] times per turn" — becomes pending at most N times per turn (BP07-036). */
+  timesPerTurn?: number;
   /** Only used through delayed triggers created by effects (CR 10.7.5). */
   delayed?: boolean;
   /** CR 10.4.7.4 "when [event], [cost]: [effect]" — the controller may pay to play it. */

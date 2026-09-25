@@ -1,12 +1,12 @@
 import type { CardDatabase } from "../data/database";
-import type { DefId } from "../model/card";
+import type { CardType, DefId } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import { opponentOf } from "../model/ids";
 import type { Keyword } from "../model/keyword";
 import type { CardInstance, GameState, PlayerZone, ZoneName } from "../model/state";
 import type { Env } from "./state/access";
 import { leaderOf } from "./state/access";
-import { activeScript, characteristics, isFollowerOnField, type Characteristics } from "./state/characteristics";
+import { activeScript, characteristics, isFollowerOnField, typeAndTraits, type Characteristics } from "./state/characteristics";
 import { playVariants } from "./flow/play-card";
 import { countsThisTurn } from "./state/turn-counts";
 
@@ -61,6 +61,13 @@ export interface GameReader {
   discardedThisTurn(player: PlayerId): number;
   /** "If any of your followers have been destroyed this turn" (CR 5.6, 11.3). */
   followersDestroyedThisTurn(player: PlayerId): number;
+  /** "If a follower was put from your field into the cemetery this turn" (BP07-005; tokens too). */
+  followersToCemeteryThisTurn(player: PlayerId): number;
+  /**
+   * A card's current type and traits only. Unlike `info`, safe to use in
+   * `FieldPassives.keywordsFor` (e.g. BP07-080).
+   */
+  typeAndTraits(id: CardId): { type: CardType; traits: readonly string[] };
   /** "If your followers attacked at least N times this turn" (CR 8.4.5). */
   followerAttacksThisTurn(player: PlayerId): number;
   /** Was the card put onto the field it is on during this turn? (CR 8.4.2.1) */
@@ -133,6 +140,8 @@ export function makeReader(env: Env): GameReader {
     canPlay: (card, p, opts = {}) => playVariants(env, p, card, "effect", { setCost: opts.cost }).length > 0,
     discardedThisTurn: (p) => countsThisTurn(state(), p).discarded,
     followersDestroyedThisTurn: (p) => countsThisTurn(state(), p).followersDestroyed,
+    followersToCemeteryThisTurn: (p) => countsThisTurn(state(), p).followersToCemetery,
+    typeAndTraits: (id) => typeAndTraits(env, id),
     followerAttacksThisTurn: (p) => countsThisTurn(state(), p).followerAttacks,
     enteredFieldThisTurn: (id) => state().cards[id]?.zone === "field" && state().cards[id]!.enteredFieldTurn === state().turn,
     faceUpEvolveDeck: (p) => ps(p).zones.evolveDeck.filter((id) => state().cards[id]!.faceUp),

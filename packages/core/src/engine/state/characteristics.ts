@@ -1,7 +1,7 @@
 import type { CardClass, CardDefinition, CardType, DefId } from "../../model/card";
 import type { CardId } from "../../model/ids";
 import type { Keyword } from "../../model/keyword";
-import type { GameState } from "../../model/state";
+import type { GameState, GrantedAbilityId } from "../../model/state";
 import type { AbilityDef, CardScript } from "../../script/types";
 import { GRANT_ABILITIES, GRANT_PREFIX } from "../abilities/grants";
 import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX } from "../abilities/keyword-abilities";
@@ -186,6 +186,49 @@ export function characteristics(env: Env, id: CardId): Characteristics {
     abilities,
     abilitiesLostAt: lostAt,
   };
+}
+
+/**
+ * Abilities given to a card on the field (CR 10.9.1.2), one entry per gift: by effects in force
+ * (`fx.grant`) and by passive abilities of cards on the field (`FieldPassives.grantsFor`,
+ * BP03-011). Gifts from before it lost all abilities don't count (BP05-061 ruling). Used for the
+ * look-back information of a card leaving the field (CR 10.7.4.1, e.g. a given Last Words).
+ */
+export function grantedAbilitiesOf(env: Env, id: CardId): GrantedAbilityId[] {
+  const { state } = env;
+  const at = abilitiesLostAt(state, id);
+  const kept = (seq: number) => at === null || seq > at;
+  const out: GrantedAbilityId[] = [];
+  for (const e of state.effects) {
+    if (e.target === id && e.change.kind === "grantedAbility" && effectInForce(state, e) && kept(e.seq)) out.push(e.change.grant);
+  }
+  let reader: ReturnType<typeof makeReader> | null = null;
+  for (const p of [0, 1] as const) {
+    for (const giver of state.players[p].zones.field) {
+      const grantsFor = activeScript(env, giver)?.field?.grantsFor;
+      if (!grantsFor || !kept(getCard(state, giver).zoneSeq)) continue;
+      reader ??= makeReader(env);
+      out.push(...grantsFor(reader, giver, id));
+    }
+  }
+  return out;
+}
+
+/**
+ * A card's current card type and traits (CR 10.9.1.1, 10.9.1.3, 5.25) without the rest of its
+ * information. Safe inside `FieldPassives.keywordsFor`, which is part of computing information
+ * (e.g. BP07-080 "while there's another Machina follower on your field").
+ */
+export function typeAndTraits(env: Env, id: CardId): { type: CardType; traits: readonly string[] } {
+  const def = env.db.get(infoDefId(env, id));
+  let type = def.type;
+  const traits = [...def.traits];
+  for (const e of env.state.effects) {
+    if (e.target !== id || !effectInForce(env.state, e)) continue;
+    if (e.change.kind === "changeType") type = e.change.type;
+    else if (e.change.kind === "trait" && !traits.includes(e.change.trait)) traits.push(e.change.trait);
+  }
+  return { type, traits };
 }
 
 export function hasKeyword(env: Env, id: CardId, keyword: Keyword): boolean {

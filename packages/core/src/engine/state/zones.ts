@@ -6,7 +6,7 @@ import type { CardMove, MoveReason } from "../../events/types";
 import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import { getCard, nextSeq } from "./access";
-import { characteristics } from "./characteristics";
+import { characteristics, grantedAbilitiesOf } from "./characteristics";
 import { thisTurn } from "./turn-counts";
 
 /**
@@ -19,8 +19,11 @@ export interface MoveSpec {
   to: PlayerZone | "resolution";
   /** Player whose zone receives the card. Default: the card's owner (CR 4.1.6). */
   player?: PlayerId;
-  /** Required when moving into a deck (CR 4.5.2.1 top / bottom). */
-  position?: "top" | "bottom";
+  /**
+   * Required when moving into a deck (CR 4.5.2.1 top / bottom), or a position counted from the
+   * top (0 = top); with fewer cards it goes to the bottom (CR 4.1.3.1).
+   */
+  position?: "top" | "bottom" | number;
   /** Default: faceup in public zones, facedown otherwise (CR 4.2.3.3). */
   faceUp?: boolean;
   /** Default: reserved (CR 4.2.2.3). */
@@ -76,11 +79,12 @@ function detach(state: GameState, card: CardInstance): void {
   list.splice(i, 1);
 }
 
-function attach(state: GameState, card: CardInstance, position: "top" | "bottom" | undefined): void {
+function attach(state: GameState, card: CardInstance, position: MoveSpec["position"]): void {
   const list = zoneList(state, card.controller, card.zone);
   if (card.zone === "deck") {
     if (position === undefined) throw new EngineError("moving a card into a deck needs a position");
     if (position === "top") list.unshift(card.id);
+    else if (typeof position === "number") list.splice(Math.min(position, list.length), 0, card.id); // CR 4.1.3.1
     else list.push(card.id);
   } else {
     list.push(card.id);
@@ -153,6 +157,7 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
   if (specs.length === 0) return [];
   // Look-back information is captured before anything moves (CR 10.7.4.1).
   const olds = specs.map((s) => getCard(state, s.card));
+  const fieldTypes = olds.map((c) => (c.zone === "field" ? characteristics(g, c.id).type : null));
   const befores = olds.map((c) => {
     const onField = c.zone === "field" ? characteristics(g, c.id) : null;
     const before: NonNullable<CardMove["before"]> = {
@@ -163,6 +168,8 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
       names: onField ? [...onField.names] : [g.db.get(c.def).name],
     };
     if (onField) before.keywords = [...onField.keywords]; // BP06-090
+    const grants = onField ? grantedAbilitiesOf(g, c.id) : [];
+    if (grants.length > 0) before.grants = grants; // BP07-038 a given Last Words
     if (onField && onField.abilitiesLostAt !== null) before.abilitiesLost = true; // BP05-061
     return before;
   });
@@ -225,6 +232,10 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
     if (old.zone === "field" && spec.to === "hand") thisTurn(state, old.controller).returnedToHand += 1;
     if (why === "destroy" && old.zone === "field" && g.db.get(befores[i]!.abilityDef).type === "follower") {
       thisTurn(state, old.controller).followersDestroyed += 1; // CR 5.6
+    }
+    // A follower on the field (its current type, BP07-005 ruling) put into the cemetery.
+    if (old.zone === "field" && spec.to === "cemetery" && fieldTypes[i] === "follower") {
+      thisTurn(state, old.controller).followersToCemetery += 1;
     }
   });
 

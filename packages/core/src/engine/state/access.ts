@@ -46,6 +46,17 @@ export function isLeader(state: GameState, id: CardId): boolean {
   return c !== undefined && c.zone === "leader";
 }
 
+/** Times ability `key` ("<def>#<index>") of this card object was used this turn (CR 10.7.2.2). */
+export function usesThisTurn(state: GameState, card: CardInstance, key: string): number {
+  const u = card.abilityUses[key];
+  return u !== undefined && u.turn === state.turn ? u.count : 0;
+}
+
+/** Count one use of ability `key` of this card object in the current turn. */
+export function recordUse(state: GameState, card: CardInstance, key: string): void {
+  card.abilityUses[key] = { turn: state.turn, count: usesThisTurn(state, card, key) + 1 };
+}
+
 /** Next value of the monotonic counter used for ids and timestamps. */
 export function nextSeq(state: GameState): number {
   state.seq += 1;

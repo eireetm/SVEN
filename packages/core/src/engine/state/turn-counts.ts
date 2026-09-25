@@ -3,7 +3,16 @@ import type { GameState, TurnCounts } from "../../model/state";
 
 /** Counts of a turn in which nothing has happened yet. */
 export function emptyTurnCounts(turn: number): TurnCounts {
-  return { turn, discarded: 0, followersDestroyed: 0, followerAttacks: 0, returnedToHand: 0, played: [], leaderDefenseLost: 0 };
+  return {
+    turn,
+    discarded: 0,
+    followersDestroyed: 0,
+    followersToCemetery: 0,
+    followerAttacks: 0,
+    returnedToHand: 0,
+    played: [],
+    leaderDefenseLost: 0,
+  };
 }
 
 /**

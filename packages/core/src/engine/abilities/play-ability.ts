@@ -17,6 +17,7 @@ import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX } from "./keyword-abilities";
 import { GRANT_ABILITIES, GRANT_PREFIX } from "./grants";
 import { chooseTargets, targetsAvailable } from "./targets";
 import { activationBlocked } from "../state/effects";
+import { recordUse, usesThisTurn } from "../state/access";
 import type { GrantedAbilityId } from "../../model/state";
 
 /** The ability `index` of a definition (or of a keyword, for "kw:<keyword>" ids). */
@@ -59,6 +60,8 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
   // BP04-038 "Its Fanfare abilities can't be performed": the triggered Fanfare is not played.
   if (ability.timing === "fanfare" && g.state.effects.some((e) => e.target === self && e.change.kind === "noFanfare")) return;
 
+  // A required Earth Rite that can't be paid: nothing would happen (13.3.3.2), so nothing is asked.
+  if (ability.earthRite?.mode === "required" && !earthRitePayable(g, ctrl, ability.earthRite)) return;
   // 10.6.2.2 choices: options (5.18), Earth Rite (13.3.3.2), whether to pay the cost (10.4.7.4)
   let modes: Mode[] = [];
   if (ability.modes) {
@@ -68,7 +71,9 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
   }
   if (modes.length === 0 && !targetsAvailable(g, ability.targets, ctrl, self)) return; // 10.6.2.3.3 -> 10.7.3.2
   let earthRite = modes.some((m) => m.earthRite);
-  if (modes.length === 0 && ability.earthRite) {
+  // Earth Rite of the whole ability, also one with options (BP07-038 "{[fanfare]}, Earth Rite:
+  // Choose ..."): without it nothing would happen (13.3.3.2 "If you paid this additional cost").
+  if (ability.earthRite) {
     if (earthRitePayable(g, ctrl, ability.earthRite)) earthRite = yield* confirm(g, ctrl, "earthRite", self);
     if (!earthRite && ability.earthRite.mode === "required") return; // nothing would happen
   }
@@ -123,7 +128,7 @@ export function canPlayActivated(g: G, player: PlayerId, card: CardId, index: nu
   // CR 10.3.5 — valid only on the field unless the text says otherwise (e.g. BP06-059, EX area).
   if (!(ability.validIn ?? ["field"]).includes(c.zone)) return false;
   if (timing === "quick" && !ability.quick) return false; // CR 12.3.3
-  if (ability.oncePerTurn && c.abilityUses[abilityKey(def, index)] === g.state.turn) return false;
+  if (ability.oncePerTurn && usesThisTurn(g.state, c, abilityKey(def, index)) >= 1) return false;
   if (activationBlocked(g.state, card, false)) return false; // BP03-039/040
   if (ability.condition && !ability.condition(makeReader(g), player, card)) return false; // "can be activated if ..."
   // CR 10.6.2.1.2 — cannot be specified if the cost cannot be paid or targets are missing.
@@ -134,6 +139,21 @@ export function canPlayActivated(g: G, player: PlayerId, card: CardId, index: nu
   if (cost.custom && !cost.custom.canPay(makeReader(g), player, card)) return false;
   if (ability.earthRite?.mode === "required" && !earthRitePayable(g, player, ability.earthRite)) return false;
   return targetsAvailable(g, ability.targets, player, card);
+}
+
+/**
+ * Cards whose activated abilities may be playable now: the player's field, plus cards in their
+ * hand, EX area or cemetery that have an activated ability valid there (CR 10.3.5, e.g. BP06-079
+ * in the hand, BP06-059 in the EX area, BP07-038 in the cemetery).
+ */
+export function cardsWithActivatedAbilities(g: G, player: PlayerId): CardId[] {
+  const zones = g.state.players[player].zones;
+  const elsewhere = (["hand", "ex", "cemetery"] as const).flatMap((zone) =>
+    zones[zone].filter((id) =>
+      g.scripts[g.state.cards[id]!.def]?.abilities?.some((a) => a.kind === "activated" && a.validIn?.includes(zone)),
+    ),
+  );
+  return [...zones.field, ...elsewhere];
 }
 
 /** CR 10.6.2 — play and resolve an activated ability (not an evolve ability). */
@@ -157,7 +177,7 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
   if (cost.custom) yield* cost.custom.pay(makeEffectContext(g, init));
   if (cost.leaderDefense) changeLeaderDefense(g, player, -cost.leaderDefense);
   const c = g.state.cards[card];
-  if (ability.oncePerTurn && c) c.abilityUses[abilityKey(def, index)] = g.state.turn;
+  if (ability.oncePerTurn && c) recordUse(g.state, c, abilityKey(def, index));
   let self = card;
   if (cost.burySelf && g.state.cards[card]) self = buryCards(g, [card])[0] ?? card; // "this card" after it moved (4.1.4.1)
   if (earthRite) yield* payEarthRite(g, player, ability.earthRite?.count ?? 1, card);

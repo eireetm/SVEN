@@ -64,11 +64,20 @@ function evolveCostSetTo(g: G, card: CardId): number | null {
   return value;
 }
 
+/** "This card's Evolve costs N less this turn" (BP07-086): the sum of such effects in force on the card. */
+function evolveCostChangedBy(g: G, card: CardId): number {
+  let sum = 0;
+  for (const e of g.state.effects) {
+    if (e.target === card && e.change.kind === "evolveCost" && effectInForce(g.state, e)) sum += e.change.amount;
+  }
+  return sum;
+}
+
 /**
  * CR 12.2.3 — 1 evolution point may be used in lieu of 1 play point (only if the cost
  * includes play points); CR 12.2.4 — optionally 1 super-evolution point more.
  * An effect or the card's own passive may have changed the play points of its evolve cost
- * (BP05-048/052, BP06-019).
+ * (BP05-048/052, BP06-019, BP07-086).
  * null when the player cannot pay.
  */
 export function evolvePayment(
@@ -81,8 +90,12 @@ export function evolvePayment(
 ): EvolvePayment | null {
   const ps = g.state.players[p];
   const setTo = cost.playPoints !== undefined ? evolveCostSetTo(g, card) : null;
-  // A passive change of this card's evolve cost (BP06-019), after a set value; never below 0.
-  const change = cost.playPoints !== undefined ? (activeScript(g, card)?.evolveCostChange?.(makeReader(g), card) ?? 0) : 0;
+  // A passive change of this card's evolve cost (BP06-019) and changes by effects (BP07-086), after
+  // a set value; never below 0 (BP06-019, BP07-086 rulings).
+  const change =
+    cost.playPoints !== undefined
+      ? (activeScript(g, card)?.evolveCostChange?.(makeReader(g), card) ?? 0) + evolveCostChangedBy(g, card)
+      : 0;
   const costPlayPoints = Math.max(0, (setTo ?? cost.playPoints ?? 0) + change);
   if (cost.leaderDefense && !canPayLeaderDefense(g, p, cost.leaderDefense)) return null; // CR 10.4.5
   if (cost.custom && !cost.custom.canPay(makeReader(g), p, card)) return null; // e.g. BP02-089 "Discard 3 cards"
@@ -190,10 +203,14 @@ export function evolveCard(g: G, fieldCard: CardId, evolveDeckCard: CardId, supe
  * no evolve cost, and it does not count as this turn's evolve ability (CR 8.3.2.1). The
  * controller may decline even when a corresponding card exists (official ruling). Returns
  * whether the follower evolved.
+ * The player performing the effect (`by`) selects and reveals the corresponding card from the
+ * card controller's evolve deck; they can't look at another player's evolve deck (CR 4.6.2), so
+ * an effect of another player can't evolve it (BP07-104 ruling).
  */
-export function* effectEvolve(g: G, card: CardId): Proc<boolean> {
+export function* effectEvolve(g: G, card: CardId, by?: PlayerId): Proc<boolean> {
   const c = g.state.cards[card];
   if (!c || c.zone !== "field" || characteristics(g, card).evolved) return false; // 5.16.4
+  if (by !== undefined && by !== c.controller) return false;
   const options = correspondingEvolveCards(g, card);
   if (options.length === 0) return false;
   if (!(yield* confirm(g, c.controller, "effect", card))) return false;

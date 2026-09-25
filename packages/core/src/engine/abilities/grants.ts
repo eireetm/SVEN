@@ -60,6 +60,20 @@ export const GRANT_ABILITIES: Record<GrantedAbilityId, AbilityDef> = {
       yield* fx.refresh([fx.self]);
     },
   },
+  // BP07-038 "{[lastwords]} Banish this follower." (given with Storm when it is summoned from the
+  // cemetery). Triggers with the information it had on the field (CR 10.7.4.1); "this follower"
+  // is the card in the cemetery (CR 4.1.4.1).
+  lastWordsBanishSelf: {
+    kind: "automatic",
+    timing: "lastWords",
+    trigger: (e, me) =>
+      me.lookBack &&
+      e.type === "cardsMoved" &&
+      e.moves.some((m) => m.card === me.card && m.from?.zone === "field" && m.to.zone === "cemetery"),
+    *resolve(fx) {
+      if (fx.game.card(fx.self)?.zone === "cemetery") yield* fx.banish([fx.self]);
+    },
+  },
   // BP03-083 "Strike: Select an enemy follower and deal it damage equal to this follower's attack."
   strikeByAttack: {
     kind: "automatic",

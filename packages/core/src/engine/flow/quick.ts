@@ -1,6 +1,6 @@
 import type { QuickAction } from "../../model/decision";
 import { opponentOf, type PlayerId } from "../../model/ids";
-import { canPlayActivated, playActivatedAbility } from "../abilities/play-ability";
+import { canPlayActivated, cardsWithActivatedAbilities, playActivatedAbility } from "../abilities/play-ability";
 import { confirmationTiming } from "../abilities/confirmation";
 import type { G } from "../runtime/context";
 import { chooseQuickAction } from "../runtime/decide";
@@ -15,7 +15,7 @@ export function quickActions(g: G, player: PlayerId): QuickAction[] {
   for (const card of [...ps.zones.hand, ...ps.zones.ex]) {
     if (canPlayCard(g, player, card, "quick")) actions.push({ type: "play", card });
   }
-  for (const card of [...ps.zones.field, ...ps.zones.hand, ...ps.zones.ex]) {
+  for (const card of cardsWithActivatedAbilities(g, player)) {
     characteristics(g, card).abilities.forEach((_ref, pos) => {
       if (canPlayActivated(g, player, card, pos, "quick")) actions.push({ type: "activate", card, ability: pos });
     });

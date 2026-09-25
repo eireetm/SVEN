@@ -57,10 +57,11 @@ export interface CardInstance {
   /** CR 15.1 counters by name, e.g. { stack: 1 } (13.3.2), { spell: 2 }. Removed on zone change. */
   counters: Record<string, number>;
   /**
-   * Turn number in which an ability of this object was last used, keyed "<def>#<index>":
-   * "once per turn" activated abilities (e.g. BP01-013) and automatic abilities (10.7.2.2).
+   * How often an ability of this object was used in turn `turn`, keyed "<def>#<index>": "once per
+   * turn" activated abilities (e.g. BP01-013) and automatic abilities that become pending a
+   * limited number of times per turn (CR 10.7.2.2, e.g. BP07-036 "4 times per turn").
    */
-  abilityUses: Record<string, number>;
+  abilityUses: Record<string, { turn: number; count: number }>;
   /**
    * While this object is in the resolution zone: the zone it was played from (CR 5.5.3).
    * Null when it was not played there.
@@ -111,6 +112,11 @@ export interface TurnCounts {
   discarded: number;
   /** This player's followers destroyed (CR 5.6, including rules handling 11.3). */
   followersDestroyed: number;
+  /**
+   * Followers put from this player's field into the cemetery, however (destroyed, buried, as a
+   * cost), tokens too; not a follower changed into an amulet (BP07-005 rulings).
+   */
+  followersToCemetery: number;
   /** Attacks by this player's followers (CR 8.4.5). */
   followerAttacks: number;
   /** Cards that left this player's field for a hand (e.g. BP03-005 "returned to hand this turn"). */
@@ -185,6 +191,11 @@ export type EffectChange =
   /** "Change this card's Evolve cost to N" (BP05-048/052): the play points of its evolve abilities. */
   | { kind: "evolveCostSet"; value: number }
   /**
+   * "This card's Evolve costs 1 less this turn" (BP07-086): a change to the play points of its
+   * evolve abilities; several add up, and the cost never goes below 0 (its rulings).
+   */
+  | { kind: "evolveCost"; amount: number }
+  /**
    * "The next time [it] would take damage this turn, it doesn't take damage" (BP05-017): prevents
    * one instance of damage (CR 5.14.2), then the effect ends. Damage of 0 or less is not dealt,
    * so it does not use it up (ruling).
@@ -221,7 +232,8 @@ export type GrantedAbilityId =
   | "strikeByAttack"
   | "followerStrike2"
   | "activateBury2"
-  | "strikeRefreshOnce";
+  | "strikeRefreshOnce"
+  | "lastWordsBanishSelf";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {

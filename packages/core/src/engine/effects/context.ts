@@ -140,6 +140,11 @@ export interface EffectContext {
   bottomInAnyOrder(cards: readonly CardId[], player?: PlayerId): Proc<void>;
   /** Put cards on top of (or at the bottom of) their owner's deck in the given order. */
   putOnDeck(cards: readonly CardId[], position: "top" | "bottom"): Proc<void>;
+  /**
+   * "Put this card into your deck Nth from the top" (BP07-093); with fewer cards in the deck it
+   * goes to the bottom (CR 4.1.3.1).
+   */
+  putIntoDeckAt(card: CardId, nthFromTop: number): Proc<void>;
   /** Move the top card of the deck into the EX area `count` times (while it has room). */
   topToEx(count: number, player?: PlayerId): Proc<CardId[]>;
   /** CR 5.21 */
@@ -160,8 +165,8 @@ export interface EffectContext {
   cannotDealDamage(target: CardId, until?: Until): Proc<void>;
   /** "It costs N less to play" (CR 10.4.4.1): changes only the cost of playing it. */
   changePlayCost(target: CardId, amount: number, until?: Until): Proc<void>;
-  /** "It costs N to play" (CR 10.4.4.1, 10.10.2.4), e.g. BP02-091. */
-  setPlayCost(target: CardId, value: number): Proc<void>;
+  /** "It costs N to play [this turn]" (CR 10.4.4.1, 10.10.2.4), e.g. BP02-091, BP07-071. */
+  setPlayCost(target: CardId, value: number, until?: Until): Proc<void>;
   /**
    * "It doesn't take (combat / ability) damage" (CR 5.14.2 replacement, 5.14.3.2). The target
    * may be a leader card (BP04-103).
@@ -226,7 +231,10 @@ export interface EffectContext {
   readonly playOption: string | null;
   /** CR 5.22 — move an opponent's field card onto your field. Null when the field is full. */
   steal(card: CardId): Proc<CardId | null>;
-  /** CR 5.16.1.1 — evolve a follower by this effect. The controller may decline. */
+  /**
+   * CR 5.16.1.1 — evolve a follower by this effect. The controller may decline. A follower of
+   * another player can't be evolved (BP07-104 ruling, CR 4.6.2).
+   */
   evolve(card: CardId): Proc<boolean>;
   /** "It can't attack enemies" (CR 8.4.3.2.1). */
   cannotAttack(card: CardId, until: Until): Proc<void>;
@@ -255,6 +263,8 @@ export interface EffectContext {
   loseAbilities(card: CardId, until: Until): Proc<void>;
   /** "Change this card's Evolve cost to N" (BP05-048/052). */
   setEvolveCost(card: CardId, value: number, until: Until): Proc<void>;
+  /** "This card's Evolve costs N less this turn" (BP07-086; negative = cheaper, adds up, never below 0). */
+  changeEvolveCost(card: CardId, amount: number, until: Until): Proc<void>;
   /** "The next time [it] would take damage, it doesn't take damage" (BP05-017; a leader card too). */
   preventNextDamage(target: CardId, until: Until): Proc<void>;
   /** "If [it] would take more than N damage, it takes N instead" (BP05-101; a leader card too). */
@@ -440,6 +450,9 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       }));
       moveCards(g, specs, "effect");
     },
+    *putIntoDeckAt(card, nthFromTop) {
+      if (g.state.cards[card]) moveCards(g, [{ card, to: "deck", position: Math.max(0, nthFromTop - 1) }], "effect");
+    },
     *topToEx(count, player = ctrl) {
       const moved: CardId[] = [];
       for (let i = 0; i < count; i++) {
@@ -487,8 +500,8 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *changePlayCost(target, amount, until = null) {
       addEffect(target, until, { kind: "playCost", amount });
     },
-    *setPlayCost(target, value) {
-      addEffect(target, null, { kind: "playCostSet", value });
+    *setPlayCost(target, value, until = null) {
+      addEffect(target, until, { kind: "playCostSet", value });
     },
     *preventDamage(target, damage, until) {
       addEffect(target, until, { kind: "preventDamage", damage });
@@ -593,7 +606,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       return stealCard(g, card, ctrl);
     },
     *evolve(card) {
-      return yield* effectEvolve(g, card);
+      return yield* effectEvolve(g, card, ctrl);
     },
     *cannotAttack(card, until) {
       if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "cannotAttack" });
@@ -659,6 +672,9 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *setEvolveCost(card, value, until) {
       if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "evolveCostSet", value });
+    },
+    *changeEvolveCost(card, amount, until) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "evolveCost", amount });
     },
     *preventNextDamage(target, until) {
       addEffect(target, until, { kind: "preventNextDamage" });

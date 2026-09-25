@@ -76,6 +76,12 @@ export const inYourZone = (zone: PlayerZone, o: Opts = {}) =>
 /** Cards in one of the opponent's zones. */
 export const inOpponentZone = (zone: PlayerZone, o: Opts = {}) => spec((g, c) => g.cards(g.opponent(c), zone), o);
 
+/**
+ * "a [matching] card on your field or in your EX area" (e.g. BP07-011 "Pixie followers on your
+ * field or in your EX area"; a follower card in the EX area is a follower, CR 2.3).
+ */
+export const yourFieldOrEx = (o: Opts = {}) => spec((g, c) => [...g.cards(c, "field"), ...g.cards(c, "ex")], o);
+
 /** "a card in an EX area" (either player's, e.g. BP02-061). */
 export const inAnyExArea = (o: Opts = {}) => spec((g, c) => [...g.cards(c, "ex"), ...g.cards(g.opponent(c), "ex")], o);
 

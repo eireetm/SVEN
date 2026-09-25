@@ -1,7 +1,7 @@
 import type { DefId, PrintingId } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import type { Keyword } from "../model/keyword";
-import type { GameResult, ZoneName } from "../model/state";
+import type { GameResult, GrantedAbilityId, ZoneName } from "../model/state";
 
 /**
  * Events emitted by the engine. They are the public, append-only description of what
@@ -52,7 +52,8 @@ export interface CardMove {
    * left (e.g. BP03-075 "whenever a Ghost you control leaves the field", CR 10.7.4.1.2).
    * `abilitiesLost` is set when it had lost all abilities there (BP05-061: its Last Words don't
    * trigger). A card leaving the field records its keywords there (BP06-090 "a follower with
-   * Ward is put from your field into the cemetery", including a given Ward — ruling).
+   * Ward is put from your field into the cemetery", including a given Ward — ruling), and the
+   * abilities it had been given there (`grants`, e.g. BP07-038 "Last Words: Banish this follower").
    */
   before: {
     abilityDef: DefId;
@@ -60,6 +61,7 @@ export interface CardMove {
     counters: Record<string, number>;
     names: string[];
     keywords?: Keyword[];
+    grants?: GrantedAbilityId[];
     abilitiesLost?: true;
   } | null;
 }

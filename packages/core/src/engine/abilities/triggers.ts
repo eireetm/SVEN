@@ -5,7 +5,7 @@ import type { GameEvent } from "../../events/types";
 import type { AutomaticAbility, TriggerSubject } from "../../script/types";
 import { cloneJson } from "../../util/json";
 import type { G } from "../runtime/context";
-import { nextSeq } from "../state/access";
+import { nextSeq, recordUse, usesThisTurn } from "../state/access";
 import { abilitiesLostAt, activeScript, hasKeyword, infoDefId } from "../state/characteristics";
 import { makeReader, type GameReader } from "../query";
 import { abilityKey, getAbility } from "./play-ability";
@@ -29,6 +29,20 @@ function matches(ability: AutomaticAbility, event: GameEvent, subject: TriggerSu
   if (r === true) return [{}];
   if (r === false) return [];
   return [...r];
+}
+
+/**
+ * CR 10.7.2.2 — "[N] times per turn" ("once per turn": N = 1): the ability becomes pending at most
+ * N times per turn, counted per card object (BP01-013, BP07-036 rulings). Counts this trigger when
+ * it is allowed.
+ */
+function withinPerTurnLimit(g: G, ability: AutomaticAbility, source: CardId, key: string): boolean {
+  const limit = ability.timesPerTurn ?? (ability.oncePerTurn ? 1 : undefined);
+  const card = g.state.cards[source];
+  if (limit === undefined || !card) return true;
+  if (usesThisTurn(g.state, card, key) >= limit) return false;
+  recordUse(g.state, card, key);
+  return true;
 }
 
 function addPending(g: G, controller: PlayerId, source: CardId, sourceDef: DefId, ability: number, event: GameEvent, data: TriggerData): void {
@@ -93,12 +107,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
       if (!(ability.validIn ?? (["field"] as readonly ZoneName[])).includes(c.subject.zone)) return;
       for (const data of matches(ability, event, c.subject, reader)) {
         if (ability.condition && !ability.condition(reader, c.subject.controller, c.source)) continue;
-        if (ability.oncePerTurn) {
-          const card = state.cards[c.source];
-          const key = abilityKey(c.abilityDef, index);
-          if (card?.abilityUses[key] === state.turn) continue; // CR 10.7.2.2
-          if (card) card.abilityUses[key] = state.turn;
-        }
+        if (!withinPerTurnLimit(g, ability, c.source, abilityKey(c.abilityDef, index))) continue;
         addPending(g, c.subject.controller, c.source, c.abilityDef, index, event, data);
       }
     });
@@ -133,12 +142,24 @@ export function collectTriggers(g: G, event: GameEvent): void {
     const controller = state.cards[card]!.controller;
     const subject: TriggerSubject = { card, controller, zone: "field", lookBack: false };
     for (const data of matches(ability, event, subject, reader)) {
-      if (ability.oncePerTurn) {
-        const key = abilityKey(`${GRANT_PREFIX}${grant}`, 0);
-        if (state.cards[card]!.abilityUses[key] === state.turn) continue; // CR 10.7.2.2
-        state.cards[card]!.abilityUses[key] = state.turn;
-      }
+      if (!withinPerTurnLimit(g, ability, card, abilityKey(`${GRANT_PREFIX}${grant}`, 0))) continue;
       addPending(g, controller, card, `${GRANT_PREFIX}${grant}`, 0, event, data);
+    }
+  }
+
+  // Given automatic abilities of cards that just left the field, with the information they had
+  // there (look-back, CR 10.7.4.1), e.g. BP07-038 "Last Words: Banish this follower."
+  if (event.type === "cardsMoved") {
+    for (const m of event.moves) {
+      if (m.card === null || m.from === null || !m.before?.grants) continue;
+      const subject: TriggerSubject = { card: m.card, controller: m.before.controller, zone: m.from.zone, lookBack: true };
+      for (const grant of m.before.grants) {
+        const ability = GRANT_ABILITIES[grant];
+        if (ability.kind !== "automatic") continue;
+        for (const data of matches(ability, event, subject, reader)) {
+          addPending(g, m.before.controller, m.newCard ?? m.card, `${GRANT_PREFIX}${grant}`, 0, event, data);
+        }
+      }
     }
   }
 

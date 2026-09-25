@@ -49,6 +49,7 @@ export interface TimingSpec {
   modeCount?: AutomaticAbility["modeCount"];
   condition?: AutomaticAbility["condition"];
   oncePerTurn?: boolean;
+  timesPerTurn?: number;
   resolve?(fx: EffectContext): Proc<void>;
 }
 
@@ -468,24 +469,35 @@ export const delayedAtStartOfYourEndPhase = (spec: TimingSpec) =>
 
 /**
  * "Look at the top N cards of your deck. You may [reveal a matching card from among them and add
- * it to your hand / put a matching card from among them onto your field]. Put the remaining
- * cards on the bottom of your deck in any order." (CR 5.11, 5.21, 5.5). Returns the moved card.
+ * it to your hand / put a matching card from among them onto your field / into your EX area].
+ * Put the remaining cards on the bottom of your deck in any order." (CR 5.11, 5.21, 5.5).
+ * `max`: "up to 2 ..." (default 1). `rest: "cemetery"`: "Bury the rest" (BP07-052). Returns the
+ * moved cards.
  */
 export function* lookAtTopCards(
   fx: EffectContext,
   count: number,
-  opts: { filter: (game: GameReader, card: CardId) => boolean; to: "hand" | "field" },
+  opts: {
+    filter: (game: GameReader, card: CardId) => boolean;
+    to: "hand" | "field" | "ex";
+    max?: number;
+    rest?: "bottom" | "cemetery";
+  },
 ): Proc<CardId[]> {
   const top = fx.topCards(count);
-  const chosen = yield* fx.selectCards(top.filter((id) => opts.filter(fx.game, id)), 0, 1, fx.controller, top);
+  const chosen = yield* fx.selectCards(top.filter((id) => opts.filter(fx.game, id)), 0, opts.max ?? 1, fx.controller, top);
   let moved: CardId[];
   if (opts.to === "hand") {
     yield* fx.reveal(chosen);
     moved = yield* fx.returnToHand(chosen);
+  } else if (opts.to === "ex") {
+    moved = yield* fx.putIntoEx(chosen);
   } else {
     moved = yield* fx.putOntoField(chosen);
   }
-  yield* fx.bottomInAnyOrder(top.filter((id) => fx.game.card(id)?.zone === "deck"));
+  const left = top.filter((id) => fx.game.card(id)?.zone === "deck");
+  if (opts.rest === "cemetery") yield* fx.bury(left);
+  else yield* fx.bottomInAnyOrder(left);
   return moved;
 }
 

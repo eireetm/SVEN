@@ -20,6 +20,13 @@ export interface SmokeExtras {
    * quick window of the opponent's end phase instead (CR 7.4.5).
    */
   opponentsTurn?: string[];
+  /** Scenario settings for one card only, e.g. a field of 5 Machina followers for BP07-070. */
+  perCard?: Record<string, Partial<ScenarioSide>>;
+  /**
+   * Cards the busy scenario can't use, with the reason (e.g. BP07-105: evolved only by BP07-104's
+   * Last Words). Their card tests and the random games cover them.
+   */
+  notInScenario?: Record<string, string>;
 }
 
 /**
@@ -61,7 +68,7 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
   it(`${set}: every card can be played, evolved or activated in a busy scenario`, () => {
     const skipped: string[] = [];
     for (const card of defs) {
-      if (card.type === "leader") continue;
+      if (card.type === "leader" || extras.notInScenario?.[card.id] !== undefined) continue;
       // An evolved card normally shares its base's name (CR 5.16.1.1.1); some are evolved into
       // by an evolve ability that names part of their name instead (BP03-056 -> BP03-058, and
       // from an earlier set: BP03-056 -> BP04-061).
@@ -100,6 +107,7 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
             evolutionPoints: 2,
             leaderDefense: 12,
             ...extras.side,
+            ...extras.perCard?.[card.id],
           },
           {
             hand: ["BP01-179", "BP01-042"],

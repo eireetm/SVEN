@@ -43,6 +43,8 @@ export interface ScenarioSide {
   turnsPassed?: number;
   /** Cards already returned from this player's field to a hand this turn (BP03-005). */
   returnedToHand?: number;
+  /** Cards this player has already played this turn (CR 13.2.1, e.g. BP07-001 "at least 5"). */
+  playedThisTurn?: number;
 }
 
 export interface ScenarioSpec {
@@ -115,6 +117,7 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
     ps.evolutionPoints = side.evolutionPoints ?? config.rules.evolutionPoints[p === first ? 0 : 1];
     ps.superEvolutionPoints = side.superEvolutionPoints ?? config.rules.superEvolutionPoints;
     if (side.returnedToHand) ps.thisTurn = { ...ps.thisTurn, turn, returnedToHand: side.returnedToHand };
+    if (side.playedThisTurn) ps.cardsPlayed = { turn, count: side.playedThisTurn };
   });
 
   return engine.restore({ format: 1, checkpoint: state, inputs: [] }, options);

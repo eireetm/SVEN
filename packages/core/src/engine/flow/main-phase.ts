@@ -2,7 +2,7 @@ import type { MainAction } from "../../model/decision";
 import type { PlayerId } from "../../model/ids";
 import { confirmationTiming } from "../abilities/confirmation";
 import { evolveActions, playEvolveAbility } from "../abilities/evolve";
-import { canPlayActivated, playActivatedAbility } from "../abilities/play-ability";
+import { canPlayActivated, cardsWithActivatedAbilities, playActivatedAbility } from "../abilities/play-ability";
 import type { G } from "../runtime/context";
 import { anchor, chooseMainAction } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
@@ -21,8 +21,8 @@ export function mainPhaseActions(g: G, player: PlayerId): MainAction[] {
   // 8.3 evolve abilities (12.2)
   actions.push(...evolveActions(g, player));
   // 8.3 other activated abilities (`ability` = position in the card's ability list), also those
-  // valid in the hand or the EX area (CR 10.3.5, e.g. BP06-059 / 079)
-  for (const card of [...ps.zones.field, ...ps.zones.hand, ...ps.zones.ex]) {
+  // valid in the hand, the EX area or the cemetery (CR 10.3.5, e.g. BP06-059 / 079, BP07-038)
+  for (const card of cardsWithActivatedAbilities(g, player)) {
     characteristics(g, card).abilities.forEach(({ ability }, pos) => {
       if (ability.kind === "activated" && !ability.evolve && canPlayActivated(g, player, card, pos, "main")) {
         actions.push({ type: "activate", card, ability: pos });

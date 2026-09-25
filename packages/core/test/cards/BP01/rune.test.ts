@@ -31,6 +31,9 @@ describe("BP01 Runecraft", () => {
     expect(t.stats("opp:V3")).toEqual([3, 2]);
     expect(t.pp()).toBe(0);
     expect(t.cemetery()).toEqual(["BP01-064", "BP01-071"]);
+    // A spell that can't be played (Wind Blast without a target) is still selected: nothing happens.
+    const none = d({ me: { field: ["BP01-052"], evolveDeck: ["BP01-053"], cemetery: ["BP01-071"], playPoints: 2 } }).evolve("BP01-052");
+    expect([none.cemetery(), none.decision?.type]).toEqual([["BP01-071"], "mainPhase"]);
   });
 
   it("054 / 055 Ancient Alchemist — Earth Rite: 2 Guardform Golems to EX; evolved: Golems cost 1 less and deal 3 on entering", () => {
