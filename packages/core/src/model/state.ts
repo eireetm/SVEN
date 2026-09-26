@@ -239,7 +239,8 @@ export type GrantedAbilityId =
   | "followerStrike2"
   | "activateBury2"
   | "strikeRefreshOnce"
-  | "lastWordsBanishSelf";
+  | "lastWordsBanishSelf"
+  | "returnToHandAtEnd";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {

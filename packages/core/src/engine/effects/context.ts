@@ -124,6 +124,11 @@ export interface EffectContext {
       destination?: (card: CardId) => Proc<SearchDestination>;
       player?: PlayerId;
       reveal?: boolean;
+      /**
+       * CR 5.8.1.1 — the text specifies only a number of cards ("search your deck for a card"):
+       * that many must be found, as far as the deck has them (BP08-108 ruling). Not for "up to".
+       */
+      required?: boolean;
     },
   ): Proc<CardId[]>;
   /**
@@ -191,6 +196,8 @@ export interface EffectContext {
   payPlayPoints(amount: number, player?: PlayerId): Proc<void>;
   /** CR 4.2.3 / 4.6.3 turn cards facedown (e.g. BP02-111, faceup cards in the evolve deck). */
   turnFacedown(cards: readonly CardId[]): Proc<void>;
+  /** CR 4.2.2 / 4.6.3 turn cards faceup (e.g. BP08-053). */
+  turnFaceup(cards: readonly CardId[]): Proc<void>;
   /** CR 5.15 */
   recoverPlayPoints(amount: number, player?: PlayerId): Proc<void>;
   /** Change maximum play points by `amount` (negative: BP06-058 "decrease your max play points by 1"). */
@@ -403,8 +410,10 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       const deck = [...g.state.players[player].zones.deck];
       const matching = deck.filter(filter);
       const max = Math.min(opts.max ?? 1, matching.length);
-      // A card in a non-public zone need not be found (CR 4.1.2.2), so the minimum is 0.
-      const chosen = yield* selectCards(g, player, "search", matching, 0, max, selfIfPresent(), deck);
+      // A card in a non-public zone need not be found (CR 4.1.2.2), so the minimum is 0 — unless
+      // only a number of cards is specified (5.8.1.1).
+      const min = opts.required ? max : 0;
+      const chosen = yield* selectCards(g, player, "search", matching, min, max, selfIfPresent(), deck);
       if (opts.reveal ?? true) revealCards(g, player, chosen);
       const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [] };
       for (const card of chosen) groups[opts.destination ? yield* opts.destination(card) : (opts.to ?? "hand")].push(card);
@@ -533,6 +542,12 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       for (const id of cards) {
         const c = g.state.cards[id];
         if (c) c.faceUp = false;
+      }
+    },
+    *turnFaceup(cards) {
+      for (const id of cards) {
+        const c = g.state.cards[id];
+        if (c) c.faceUp = true;
       }
     },
     *recoverPlayPoints(amount, player = ctrl) {

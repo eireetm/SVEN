@@ -172,18 +172,12 @@ export function characteristics(env: Env, id: CardId): Characteristics {
   }
   abilities.push(...grantedAbilities);
 
-  const names = [def.name];
-  // "This follower's name is also X" works only while the card is on the field (official ruling).
-  if (c.zone === "field" && lostAt === null) {
-    for (const extra of script?.alsoNames ?? []) if (!names.includes(extra)) names.push(extra);
-  }
-
   return {
     card: id,
     baseDef,
     def,
     name: def.name,
-    names,
+    names: namesOf(env, id),
     class: def.class,
     type,
     traits,
@@ -221,6 +215,22 @@ export function grantedAbilitiesOf(env: Env, id: CardId): GrantedAbilityId[] {
     }
   }
   return out;
+}
+
+/**
+ * Every name a card has (CR 2.1): its (evolved card's) name, and while it is on the field the
+ * names its passive "this card's name is also X" gives (BP03-058/078, BP08-T01; official rulings:
+ * only on the field, and not after it lost all abilities). Safe inside `FieldPassives.keywordsFor`
+ * (BP08-003_back "each Puppet on your field has Assail").
+ */
+export function namesOf(env: Env, id: CardId): string[] {
+  const c = getCard(env.state, id);
+  const def = env.db.get(infoDefId(env, id));
+  const names = [def.name];
+  if (c.zone === "field" && abilitiesLostAt(env.state, id) === null) {
+    for (const extra of env.scripts[def.id]?.alsoNames ?? []) if (!names.includes(extra)) names.push(extra);
+  }
+  return names;
 }
 
 /**

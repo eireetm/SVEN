@@ -129,7 +129,8 @@ export function canPlayActivated(g: G, player: PlayerId, card: CardId, index: nu
   // CR 10.3.5 — valid only on the field unless the text says otherwise (e.g. BP06-059, EX area).
   if (!(ability.validIn ?? ["field"]).includes(c.zone)) return false;
   if (timing === "quick" && !ability.quick) return false; // CR 12.3.3
-  if (ability.oncePerTurn && usesThisTurn(g.state, c, abilityKey(def, index)) >= 1) return false;
+  const perTurn = activationsPerTurn(ability);
+  if (perTurn !== null && usesThisTurn(g.state, c, abilityKey(def, index)) >= perTurn) return false;
   if (activationBlocked(g.state, card, false)) return false; // BP03-039/040
   if (ability.condition && !ability.condition(makeReader(g), player, card)) return false; // "can be activated if ..."
   // CR 10.6.2.1.2 — cannot be specified if the cost cannot be paid or targets are missing.
@@ -142,6 +143,11 @@ export function canPlayActivated(g: G, player: PlayerId, card: CardId, index: nu
   // CR 5.18.3.1.2 — with options, at least one must be performable (each has its own targets).
   if (ability.modes) return performableModes(g, ability.modes, player, card).length > 0;
   return targetsAvailable(g, ability.targets, player, card);
+}
+
+/** How many times per turn an activated ability can be played ("once per turn", BP08-084 "twice"), or null. */
+function activationsPerTurn(ability: ActivatedAbility): number | null {
+  return ability.timesPerTurn ?? (ability.oncePerTurn ? 1 : null);
 }
 
 /**
@@ -184,7 +190,7 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
   if (cost.custom) yield* cost.custom.pay(makeEffectContext(g, init));
   if (cost.leaderDefense) changeLeaderDefense(g, player, -cost.leaderDefense);
   const c = g.state.cards[card];
-  if (ability.oncePerTurn && c) recordUse(g.state, c, abilityKey(def, index));
+  if (activationsPerTurn(ability) !== null && c) recordUse(g.state, c, abilityKey(def, index));
   let self = card;
   if (cost.burySelf && g.state.cards[card]) self = buryCards(g, [card])[0] ?? card; // "this card" after it moved (4.1.4.1)
   if (earthRite) yield* payEarthRite(g, player, ability.earthRite?.count ?? 1, card);

@@ -6,7 +6,8 @@ import type { Keyword } from "../model/keyword";
 import type { CardInstance, GameState, PlayerZone, ZoneName } from "../model/state";
 import type { Env } from "./state/access";
 import { leaderOf } from "./state/access";
-import { activeScript, characteristics, currentStats, isFollowerOnField, typeAndTraits, type Characteristics } from "./state/characteristics";
+import { activeScript, characteristics, currentStats, isFollowerOnField, namesOf, typeAndTraits, type Characteristics } from "./state/characteristics";
+import { exAreaLimit } from "./state/limits";
 import { playVariants } from "./flow/play-card";
 import { countsThisTurn } from "./state/turn-counts";
 
@@ -73,12 +74,21 @@ export interface GameReader {
    * `FieldPassives.keywordsFor` (e.g. BP09-003 "While this follower's attack is at least 4").
    */
   statsOf(id: CardId): { attack: number | null; defense: number | null };
+  /**
+   * Every name the card has (with "its name is also X" on the field). Like `typeAndTraits`, safe to
+   * use in `FieldPassives.keywordsFor` (BP08-003_back).
+   */
+  namesOf(id: CardId): readonly string[];
+  /** CR 4.8.3 — the current limit of the player's EX area (e.g. BP08-072's cost needs room). */
+  exAreaLimit(player: PlayerId): number;
   /** "If your followers attacked at least N times this turn" (CR 8.4.5). */
   followerAttacksThisTurn(player: PlayerId): number;
   /** Was the card put onto the field it is on during this turn? (CR 8.4.2.1) */
   enteredFieldThisTurn(id: CardId): boolean;
   /** CR 4.6.3 — faceup cards in the player's evolve deck area. */
   faceUpEvolveDeck(player: PlayerId): CardId[];
+  /** CR 4.6.3 - facedown cards in the player's evolve deck area. */
+  faceDownEvolveDeck(player: PlayerId): CardId[];
   /** Zone a field card was put onto the field from (CR 5.5.3). Null when it was not newly put there. */
   enteredFrom(id: CardId): ZoneName | null;
   /** Cards returned from this player's field to a hand this turn (BP03-005). */
@@ -148,9 +158,12 @@ export function makeReader(env: Env): GameReader {
     followersToCemeteryThisTurn: (p) => countsThisTurn(state(), p).followersToCemetery,
     typeAndTraits: (id) => typeAndTraits(env, id),
     statsOf: (id) => currentStats(env, id),
+    namesOf: (id) => namesOf(env, id),
+    exAreaLimit: (p) => exAreaLimit(env, p),
     followerAttacksThisTurn: (p) => countsThisTurn(state(), p).followerAttacks,
     enteredFieldThisTurn: (id) => state().cards[id]?.zone === "field" && state().cards[id]!.enteredFieldTurn === state().turn,
     faceUpEvolveDeck: (p) => ps(p).zones.evolveDeck.filter((id) => state().cards[id]!.faceUp),
+    faceDownEvolveDeck: (p) => ps(p).zones.evolveDeck.filter((id) => !state().cards[id]!.faceUp),
     enteredFrom: (id) => state().cards[id]?.enteredFrom ?? null,
     returnedToHandThisTurn: (p) => countsThisTurn(state(), p).returnedToHand,
     cardsPlayedThisTurn: (p) => countsThisTurn(state(), p).played,

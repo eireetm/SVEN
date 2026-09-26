@@ -48,6 +48,18 @@ const BP09_090_BACK: Partial<RawCardBack> = {
   effect_ja: "【必殺】\n【進化時】場のアミュレット1つを墓場に置く：相手のリーダー1人か相手の場のフォロワー1体を選ぶ。それに4ダメージ。",
 };
 
+// BP08-003 Orchis, Vengeful Puppet. The scraped back repeats the front's Japanese text and lacks
+// Japanese traits / Chinese name. Transcribed from assets/BP08-003/BP08-003_back.webp; the same
+// printed back is used by BP08-SL03. The Chinese name is used by the front/base Chinese text.
+const BP08_003_BACK: Partial<RawCardBack> = {
+  traits_ja: "人形・キラー",
+  name_cn: "复仇的人偶·奥契丝",
+  effect_ja:
+    "これがいる限り、自分の場の『操り人形』すべては【指定攻撃】を持つ。\n" +
+    "自分の『操り人形』が場を離れたとき、相手のリーダー1人か相手の場のフォロワー1体を選ぶ。それに2ダメージ。\n" +
+    "【進化時】『操り人形』4体を出す。",
+};
+
 /**
  * Corrections of the scraped card data, applied by the build tool before normalization.
  *
@@ -86,6 +98,9 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   // Chinese traits (自然·指挥官·野兽) in the Japanese field; the alternate printing BP07-SL04
   // has the Japanese traits.
   "BP07-018": { traits_ja: "自然・指揮官・獣" },
+  // Back face of BP08-003 (see BP08_003_BACK above).
+  "BP08-003": { back: BP08_003_BACK },
+  "BP08-SL03": { back: BP08_003_BACK },
   // An evolved card without the " (Evolved)" suffix; its Japanese name 骸の代弁者 is that of the
   // base card BP09-080 "Orator of the Bones", and its card type is Evolved.
   "BP09-081": { name_en: "Orator of the Bones (Evolved)" },

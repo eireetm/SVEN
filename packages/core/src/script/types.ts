@@ -283,6 +283,8 @@ export interface ActivatedAbility {
   cost: CostSpec;
   /** "This ability can be activated once per turn." */
   oncePerTurn?: boolean;
+  /** "Activate only [N] times per turn" (BP08-084: twice). */
+  timesPerTurn?: number;
   /** "This ability can be activated if ..." (e.g. BP02-054 "if Overflow is active for you"). */
   condition?(game: GameReader, controller: PlayerId, self: CardId): boolean;
   earthRite?: EarthRiteSpec;

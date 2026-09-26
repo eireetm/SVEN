@@ -2,7 +2,7 @@
 // Ward.
 // {[fanfare]} Draw a card. If there are 5 cards in your EX area, instead search your deck for any
 // card, add it to your hand, then shuffle your deck. (Not revealed: its only condition is the number
-// — ruling, CR 5.8.1.2.)
+// — ruling, CR 5.8.1.2; for the same reason a card must be found, 5.8.1.1.)
 import { defineCard, fanfare } from "../helpers";
 
 export default defineCard({
@@ -10,7 +10,7 @@ export default defineCard({
   abilities: [
     fanfare({
       *resolve(fx) {
-        if (fx.game.cards(fx.controller, "ex").length === 5) yield* fx.search(() => true, { reveal: false });
+        if (fx.game.cards(fx.controller, "ex").length === 5) yield* fx.search(() => true, { reveal: false, required: true });
         else yield* fx.draw(1);
       },
     }),

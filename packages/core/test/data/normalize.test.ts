@@ -48,6 +48,13 @@ describe("normalizePrinting", () => {
     expect(() => normalizePrinting(raw({ card_type: ["Follower", "Evolved"], cost: null }))).toThrow(/suffix/);
   });
 
+  it("CR 5.16.1.2.1 — accepts evolved amulets (BP08-090) without cost or stats, but no other evolved non-followers", () => {
+    const amulet = normalizePrinting(raw({ name_en: "Test (Evolved)", card_type: ["Amulet", "Evolved"], cost: null, atk: null, def: null }));
+    expect([amulet.def.type, amulet.def.evolved, amulet.def.cost, amulet.def.attack]).toEqual(["amulet", true, null, null]);
+    expect(() => normalizePrinting(raw({ name_en: "Test (Evolved)", card_type: ["Amulet", "Evolved"], cost: 2, atk: null, def: null }))).toThrow(CardDataError);
+    expect(() => parseCardType("x", ["Spell", "Evolved"])).toThrow(CardDataError);
+  });
+
   it("rejects impossible stats instead of guessing", () => {
     expect(() => normalizePrinting(raw({ atk: null }))).toThrow(CardDataError);
     expect(() => normalizePrinting(raw({ card_type: ["Leader"] }))).toThrow(CardDataError);

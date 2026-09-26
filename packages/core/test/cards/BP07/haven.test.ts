@@ -77,7 +77,10 @@ describe("BP07 Havencraft", () => {
 
   it("096 Marcotte — Ward; draw, or with 5 cards in the EX area any card from the deck (not revealed)", () => {
     expect(d({ me: { hand: ["BP07-096"], deck: ["V1", "V5"] } }).play("BP07-096").none().hand()).toEqual(["V1"]);
-    const t = d({ me: { hand: ["BP07-096"], ex: ["V1", "V1", "V1", "V1", "V1"], deck: ["V1", "V5"] } }).play("BP07-096").none().pick("V5");
+    const t = d({ me: { hand: ["BP07-096"], ex: ["V1", "V1", "V1", "V1", "V1"], deck: ["V1", "V5"] } }).play("BP07-096").none();
+    // One must be found (CR 5.8.1.1).
+    expect(t.decision).toMatchObject({ type: "selectCards", reason: "search", min: 1, max: 1 });
+    t.pick("V5");
     expect([t.hand(), t.events.some((e) => e.type === "cardsRevealed")]).toEqual([["V5"], false]);
   });
 

@@ -44,7 +44,10 @@ describe("BP06 Neutral", () => {
     const rolled = probe.events.flatMap((e) => (e.type === "dieRolled" ? [e.result] : []))[0]!;
     miss.choose(String(rolled === 6 ? 1 : rolled + 1));
     expect([miss.leader(), miss.ex(), miss.pp()]).toEqual([20, [], 2]);
-    const hit = d(spec).evolve("BP06-110").choose(String(rolled)).pick("V5");
+    const hit = d(spec).evolve("BP06-110").choose(String(rolled));
+    // Only a number of cards is specified, so one must be found (CR 5.8.1.1).
+    expect(hit.decision).toMatchObject({ type: "selectCards", reason: "search", min: 1, max: 1 });
+    hit.pick("V5");
     expect([hit.leader(), hit.ex(), hit.pp()]).toEqual([25, ["V5"], 3]);
   });
 

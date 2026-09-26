@@ -56,6 +56,14 @@ export const banishThisFromCemetery: CustomCost = {
   },
 };
 
+/** "Discard this card" — a cost of an ability valid in the hand (BP08-037, 105; CR 10.3.5, 5.12). */
+export const discardThis: CustomCost = {
+  canPay: (g, _c, self) => g.card(self)?.zone === "hand",
+  *pay(fx) {
+    yield* fx.discardCards([fx.self]);
+  },
+};
+
 /** "Discard a [matching] card" from your hand. */
 export function discardA(filter: Filter): CustomCost {
   return {

@@ -13,8 +13,8 @@ export default defineCard({
         const [declared] = yield* fx.choose(FACES);
         if ((yield* fx.rollDie()) !== Number(declared)) return;
         yield* fx.giveLeaderDefense(fx.controller, 5);
-        // "any card": no condition, so it is not revealed (CR 5.8.1.2).
-        yield* fx.search(() => true, { to: "ex", reveal: false });
+        // "any card": no condition, so it is not revealed (CR 5.8.1.2), but one must be found (5.8.1.1).
+        yield* fx.search(() => true, { to: "ex", reveal: false, required: true });
         yield* fx.recoverPlayPoints(fx.game.state.players[fx.controller].maxPlayPoints);
       },
     }),

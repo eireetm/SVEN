@@ -82,8 +82,8 @@ export function parseCardType(cardNo: string, raw: readonly string[]): {
   if (type === undefined || rest.length > 0) {
     throw new CardDataError(`${cardNo}: expected exactly one primary card type, got ${JSON.stringify(raw)}`);
   }
-  if (evolved && type !== "follower") {
-    throw new CardDataError(`${cardNo}: evolved card must be a follower in the supported sets`);
+  if (evolved && type !== "follower" && type !== "amulet") {
+    throw new CardDataError(`${cardNo}: evolved card must be a follower or amulet in the supported sets`);
   }
   return { type, evolved, token };
 }
@@ -145,6 +145,11 @@ function checkStats(
   if (type === "follower") {
     if (atk === null || def === null) fail("follower needs attack and defense");
     if (evolved ? cost !== null : cost === null) fail(evolved ? "evolved card must not have a cost" : "follower needs a cost");
+    return;
+  }
+  if (evolved) {
+    if (type !== "amulet") fail("only followers and amulets can currently be evolved cards");
+    if (cost !== null || atk !== null || def !== null) fail("evolved amulet must not have cost/atk/def");
     return;
   }
   if (cost === null) fail(`${type} needs a cost`);
