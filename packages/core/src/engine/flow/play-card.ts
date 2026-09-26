@@ -130,6 +130,9 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
   const targets = spell && modes.length === 0 ? yield* chooseTargets(g, spell.targets, player, played) : [];
   const modeTargets = yield* chooseModeTargets(g, player, modes, played);
   if (targets === null || modeTargets === null) throw new EngineError("card played without legal targets");
+  // One memory for the play option's process and the effect (BP15-PR12 "the number of Idolatry cards
+  // you engaged as the additional cost").
+  const memory: NonNullable<EffectInit["memory"]> = {};
   const fx = (extra: Partial<EffectInit> = {}) =>
     makeEffectContext(g, {
       controller: player,
@@ -140,6 +143,7 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
       mode: null,
       earthRitePaid: earthRite,
       playOption: option?.id ?? null,
+      memory,
       ...extra,
     });
   // 10.6.2.5 determine and pay the cost: the play option's process, Earth Rite, play points,
@@ -150,6 +154,12 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
   payPlayPoints(g, player, playCost(g, played, player, option, opts.setCost));
   // "The next card you play this turn costs N less" is used up by this play (BP03-038 ruling).
   if (nextPlay.length > 0) g.state.nextPlay = g.state.nextPlay.filter((m) => !nextPlay.includes(m));
+  // "The next card you play that was put into your EX area this way costs 0" (BP14-046): the other
+  // cards of the group lose it.
+  const groups = g.state.effects.flatMap((e) => (e.target === played && e.change.kind === "playCostSet" && e.change.group ? [e.change.group] : []));
+  if (groups.length > 0) {
+    g.state.effects = g.state.effects.filter((e) => !(e.change.kind === "playCostSet" && e.change.group !== undefined && groups.includes(e.change.group)));
+  }
   // 10.6.2.6 field limit: verified by playVariants before anything moved.
   // 10.6.2.7 the card has been played (counts for Combo, 13.2.1.3)
   const ps = g.state.players[player];

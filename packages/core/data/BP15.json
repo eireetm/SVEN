@@ -1,0 +1,4204 @@
+{
+ "format": 1,
+ "set": "BP15",
+ "printings": 269,
+ "cards": [
+  {
+   "id": "BP15-001",
+   "printings": [
+    "BP15-001",
+    "BP15-SL01",
+    "BP15-U01"
+   ],
+   "name": "Izudia, Unkilling Annihilation",
+   "names": {
+    "en": "Izudia, Unkilling Annihilation",
+    "cn": "绝命不弑·艾兹迪亚",
+    "ja": "絶命の不殺・エズディア"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Banish an Izudia, Omen of Unkilling from your cemetery: Select an enemy follower on the field and change its defense to 1.\nActivate {[engage]} this: Select an enemy follower on the field and deal it 1 damage. When it's put from the field into the cemetery this turn, put an Annihilating Onslaught token into your EX area.",
+    "cn": "《入场曲》将墓场中的1张『不弑绝杰·艾兹迪亚』卡消失：选择敌方场上的1个从者。将其的生命值变为1。\n《起动》将这张卡《横置》：选择敌方场上的1个从者。给予其1点伤害。这个回合，当其从场上置于墓场时，将1张『绝命的痛击』卡置于EX区域。",
+    "ja": "ファンファーレ墓場の『不殺の絶傑・エズディア』1枚を消滅：相手の場のフォロワー1体を選ぶ。それの体力を1にする。\n起動これをアクト：相手の場のフォロワー1体を選ぶ。それに1ダメージ。このターン、それが場から墓場に置かれたとき、『絶命の痛撃』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "絶傑",
+    "狩人"
+   ]
+  },
+  {
+   "id": "BP15-002",
+   "printings": [
+    "BP15-002",
+    "BP15-SL02",
+    "EBD01-003"
+   ],
+   "name": "Amataz, Reverse Blader",
+   "names": {
+    "en": "Amataz, Reverse Blader",
+    "cn": "逆时剑师·阿玛兹",
+    "ja": "リバースブレイダー・アマツ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWard.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】",
+    "ja": "進化コスト1：これは進化する。\n【守護】"
+   },
+   "traits": [
+    "エルフ族",
+    "精霊"
+   ]
+  },
+  {
+   "id": "BP15-003",
+   "printings": [
+    "BP15-003",
+    "BP15-SL03",
+    "EBD01-004"
+   ],
+   "name": "Amataz, Reverse Blader",
+   "names": {
+    "en": "Amataz, Reverse Blader",
+    "cn": "逆时剑师·阿玛兹",
+    "ja": "リバースブレイダー・アマツ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Ward.\nOn Evolve - Select an enemy follower on the field and, if there are at least 3 cards in your EX area, destroy it. If there are at least 3 Pixie cards, deal 2 damage to its leader.",
+    "cn": "【守护】\n【进化时】选择敌方场上的1个从者。如果自己EX区域的卡片为3张及以上的话，将其破坏。如果自己EX区域的妖精类型·卡片为3张及以上的话，给予其主战者2点伤害。",
+    "ja": "【守護】\n【進化時】相手の場のフォロワー1体を選ぶ。自分のEXエリアのカードが3枚以上なら、それを破壊する。自分のEXエリアの妖精・カードが3枚以上なら、それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "エルフ族",
+    "精霊"
+   ]
+  },
+  {
+   "id": "BP15-004",
+   "printings": [
+    "BP15-004",
+    "BP15-SL04",
+    "PR-394"
+   ],
+   "name": "Piercye, Queen of Frost",
+   "names": {
+    "en": "Piercye, Queen of Frost",
+    "cn": "冻土女王·皮雅希",
+    "ja": "凍土の女王・ピアシィ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} If there are at least 3 faceup evolved followers in your evolve deck, evolve this.\nWhenever a follower on your field evolves, deal 1 damage to each enemy leader and 2 damage to each enemy follower on the field, and give your leader {[defense]}+1.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n当自己场上的从者进化时，给予敌方的全体主战者各1点伤害。给予敌方场上的全体从者各2点伤害。使自己的主战者《生命值》+1。\n《入场曲》如果自己的进化牌组中的正面放置的进化后从者卡为3张及以上的话，使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。\n自分の場のフォロワーが進化したとき、相手のリーダーすべてに1ダメージ。相手の場のフォロワーすべてに2ダメージ。自分のリーダーは体力+1する。\nファンファーレ自分のエボルヴデッキの表向きのエボルヴフォロワーが3枚以上なら、これは進化する。"
+   },
+   "traits": [
+    "エルフ族"
+   ]
+  },
+  {
+   "id": "BP15-005",
+   "printings": [
+    "BP15-005",
+    "BP15-SL05",
+    "PR-395"
+   ],
+   "name": "Piercye, Queen of Frost",
+   "names": {
+    "en": "Piercye, Queen of Frost",
+    "cn": "冻土女王·皮雅希",
+    "ja": "凍土の女王・ピアシィ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Search your deck for a follower that costs 2 or less, reveal it, add it to your hand, then shuffle.\nWhenever a follower on your field evolves, deal 1 damage to each enemy leader and 2 damage to each enemy follower on the field, and give your leader {[defense]}+1.",
+    "cn": "当自己场上的从者进化时，给予敌方的全体主战者各1点伤害。给予敌方场上的全体从者各2点伤害。使自己的主战者《生命值》+1。\n【进化时】从自己的牌堆之中搜寻原始消费为2及以下的1张从者卡，并加入手牌。",
+    "ja": "自分の場のフォロワーが進化したとき、相手のリーダーすべてに1ダメージ。相手の場のフォロワーすべてに2ダメージ。自分のリーダーは体力+1する。\n【進化時】自分のデッキから元のコスト2以下のフォロワー1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "エルフ族"
+   ]
+  },
+  {
+   "id": "BP15-006",
+   "printings": [
+    "BP15-006"
+   ],
+   "name": "Inauspicious Puppeteer",
+   "names": {
+    "en": "Inauspicious Puppeteer",
+    "cn": "不祥的人偶师",
+    "ja": "不吉の人形師"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Put a Puppet token into your EX area.\nDuring your turn, whenever a token follower is put from your field into the cemetery, select an enemy follower on the field and give it {[attack]}-1/{[defense]}-1.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n自己的回合中，当自己的衍生物·从者从场上置于墓场时，选择敌方场上的1个从者。使其《攻击力》-1/《生命值》-1。\n《入场曲》将1张『悬丝傀儡』卡置于EX区域。\n―――――――――――――――\n『悬丝傀儡』《中立职业》人偶类型·从者《消费1》《攻击力》1/《生命值》1【突进】",
+    "ja": "進化コスト1：これは進化する。\n自分のターン中、自分のトークン・フォロワーが場から墓場に置かれたとき、相手の場のフォロワー1体を選ぶ。それは攻撃力-1/体力-1する。\nファンファーレ『操り人形』1枚をEXエリアに置く。\n―――――――――――――――\n『操り人形』ニュートラル人形・フォロワーコスト1攻撃力1/体力1【突進】"
+   },
+   "traits": [
+    "人形"
+   ]
+  },
+  {
+   "id": "BP15-007",
+   "printings": [
+    "BP15-007"
+   ],
+   "name": "Inauspicious Puppeteer",
+   "names": {
+    "en": "Inauspicious Puppeteer",
+    "cn": "不祥的人偶师",
+    "ja": "不吉の人形師"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Summon a Puppet token. Put a Puppet token into your EX area.\nDuring your turn, whenever a token follower is put from your field into the cemetery, select an enemy follower on the field and give it {[attack]}-1/{[defense]}-1.",
+    "cn": "自己的回合中，当自己的衍生物·从者从场上置于墓场时，选择敌方场上的1个从者。使其《攻击力》-1/《生命值》-1。\n【进化时】将1个『悬丝傀儡』召唤到场上。将1张『悬丝傀儡』卡置于EX区域。",
+    "ja": "自分のターン中、自分のトークン・フォロワーが場から墓場に置かれたとき、相手の場のフォロワー1体を選ぶ。それは攻撃力-1/体力-1する。\n【進化時】『操り人形』1体を場に出す。『操り人形』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "人形"
+   ]
+  },
+  {
+   "id": "BP15-008",
+   "printings": [
+    "BP15-008",
+    "BP15-P01"
+   ],
+   "name": "Erosive Annihilation",
+   "names": {
+    "en": "Erosive Annihilation",
+    "cn": "绝命的腐蚀",
+    "ja": "腐食の絶命"
+   },
+   "class": "Forestcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nThis costs 1 less to play if there's a follower on your field with \"Izudia\" in its name.\n----------\nSelect an enemy follower on the field and deal it 1 damage. When it's put from the field into the cemetery this turn, draw a card.",
+    "cn": "《快速》\n将这张卡使用之际，如果自己的场上有「卡片名包含『艾兹迪亚』的从者」的话，将消费-1。\n选择敌方场上的1个从者。给予其1点伤害。这个回合，当其从场上置于墓场时，抽取1张卡。",
+    "ja": "クイック\nこれをプレイする際、自分の場に「カード名に『エズディア』を含むフォロワー」がいるなら、コストを-1する。\n相手の場のフォロワー1体を選ぶ。それに1ダメージ。このターン、それが場から墓場に置かれたとき、1枚引く。"
+   },
+   "traits": [
+    "絶傑",
+    "狩人"
+   ]
+  },
+  {
+   "id": "BP15-009",
+   "printings": [
+    "BP15-009",
+    "PR-407"
+   ],
+   "name": "Rejuvenating Resurrection",
+   "names": {
+    "en": "Rejuvenating Resurrection",
+    "cn": "轮回重生",
+    "ja": "輪廻する回生"
+   },
+   "class": "Forestcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select a follower in your cemetery with \"Amataz\" in its name and summon it.",
+    "cn": "选择自己的墓场中的1张「卡片名包含『阿玛兹』的从者卡」。将其召唤到场上。",
+    "ja": "自分の墓場の「カード名に『アマツ』を含むフォロワー」1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "エルフ族",
+    "精霊"
+   ]
+  },
+  {
+   "id": "BP15-010",
+   "printings": [
+    "BP15-010"
+   ],
+   "name": "Cryptid Keeper",
+   "names": {
+    "en": "Cryptid Keeper",
+    "cn": "幻兽保卫者",
+    "ja": "幻獣の遣い"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 4,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "狩人",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP15-011",
+   "printings": [
+    "BP15-011"
+   ],
+   "name": "Cryptid Keeper",
+   "names": {
+    "en": "Cryptid Keeper",
+    "cn": "幻兽保卫者",
+    "ja": "幻獣の遣い"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 1,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field. Deal it 4 damage, return this to its owner's hand, and recover 3 play points.",
+    "cn": "【进化时】选择敌方场上的1个从者。给予其4点伤害。将这张卡放回手牌。将自己的PP回复3点。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それに4ダメージ。これを手札に戻す。自分のPPを3回復する。"
+   },
+   "traits": [
+    "狩人",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP15-012",
+   "printings": [
+    "BP15-012",
+    "BP15-P02"
+   ],
+   "name": "Adherent of Annihilation",
+   "names": {
+    "en": "Adherent of Annihilation",
+    "cn": "绝命的崇拜者",
+    "ja": "絶命の崇拝者"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Select an enemy follower on the field and, if there are at least 3 Hunter cards in your cemetery, deal it 2 damage. When it's put from the field into the cemetery this turn, give your leader {[defense]}+2.",
+    "cn": "《入场曲》选择敌方场上的1个从者。如果自己的墓场中的猎人类型·卡片为3张及以上的话，给予其2点伤害。这个回合，当其从场上置于墓场时，使自己的主战者《生命值》+2。",
+    "ja": "ファンファーレ相手の場のフォロワー1体を選ぶ。自分の墓場の狩人・カードが3枚以上なら、それに2ダメージ。このターン、それが場から墓場に置かれたとき、自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "絶傑",
+    "狩人"
+   ]
+  },
+  {
+   "id": "BP15-013",
+   "printings": [
+    "BP15-013",
+    "PR-388"
+   ],
+   "name": "Fairy Healer",
+   "names": {
+    "en": "Fairy Healer",
+    "cn": "治愈妖精",
+    "ja": "ヒーリングフェアリー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Put a token follower from your field into its owner's EX area: Give your leader {[defense]}+2.",
+    "cn": "《入场曲》将场上的1个衍生物·从者置于EX区域：使自己的主战者《生命值》+2。",
+    "ja": "ファンファーレ場のトークン・フォロワー1体をEXエリアに置く：自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "妖精"
+   ]
+  },
+  {
+   "id": "BP15-014",
+   "printings": [
+    "BP15-014",
+    "BP15-P03"
+   ],
+   "name": "Hermit of Unkilling",
+   "names": {
+    "en": "Hermit of Unkilling",
+    "cn": "不弑的隐者",
+    "ja": "不殺の隠者"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Select an enemy follower on the field and, if there are at least 3 Hunter cards in your cemetery, change its defense to 1.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》选择敌方场上的1个从者。如果自己的墓场中的猎人类型·卡片为3张及以上的话，将其的生命值变为1。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ相手の場のフォロワー1体を選ぶ。自分の墓場の狩人・カードが3枚以上なら、それの体力を1にする。"
+   },
+   "traits": [
+    "絶傑",
+    "狩人"
+   ]
+  },
+  {
+   "id": "BP15-015",
+   "printings": [
+    "BP15-015",
+    "BP15-P04"
+   ],
+   "name": "Hermit of Unkilling",
+   "names": {
+    "en": "Hermit of Unkilling",
+    "cn": "不弑的隐者",
+    "ja": "不殺の隠者"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Search your deck for a follower with \"Izudia\" in its name, reveal it, add it to your hand, then shuffle.",
+    "cn": "【进化时】从自己的牌堆之中搜寻1张「卡片名包含『艾兹迪亚』的从者卡」，并加入手牌。",
+    "ja": "【進化時】自分のデッキから「カード名に『エズディア』を含むフォロワー」1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "絶傑",
+    "狩人"
+   ]
+  },
+  {
+   "id": "BP15-016",
+   "printings": [
+    "BP15-016"
+   ],
+   "name": "Horned Beastie",
+   "names": {
+    "en": "Horned Beastie",
+    "cn": "辉角兽",
+    "ja": "ホーンビースト"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "Ward.\n{[lastwords]} Select a spell in your cemetery that costs 1 or less and add it to your hand.",
+    "cn": "【守护】\n《谢幕曲》选择自己的墓场中的原始消费为1及以下的1张法术卡。将其加入手牌。",
+    "ja": "【守護】\nラストワード自分の墓場の元のコスト1以下のスペル1枚を選ぶ。それを手札に加える。"
+   },
+   "traits": [
+    "精霊",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP15-017",
+   "printings": [
+    "BP15-017"
+   ],
+   "name": "Bouquet Fairy",
+   "names": {
+    "en": "Bouquet Fairy",
+    "cn": "花束妖精",
+    "ja": "花束の妖精"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Put a Fairy Wisp token into your EX area.\nActivate {[engage]} this, banish a card from your EX area: Select an enemy follower on the field and return it to its owner's hand.",
+    "cn": "《入场曲》将1张『妖精萤火』卡置于EX区域。\n《起动》将这张卡《横置》将EX区域的1张卡片消失：选择敌方场上的1个从者。将其放回手牌。（放回到手牌的衍生物会从游戏中移出）\n―――――――――――――――\n『妖精萤火』《精灵职业》妖精类型·从者《消费0》《攻击力》1/《生命值》1",
+    "ja": "ファンファーレ『フェアリーウィスプ』1枚をEXエリアに置く。\n起動これをアクトEXエリアのカード1枚を消滅：相手の場のフォロワー1体を選ぶ。それを手札に戻す。（手札に戻ったトークンはゲームから取り除く）\n―――――――――――――――\n『フェアリーウィスプ』エルフ妖精・フォロワーコスト0攻撃力1/体力1"
+   },
+   "traits": [
+    "妖精"
+   ]
+  },
+  {
+   "id": "BP15-018",
+   "printings": [
+    "BP15-018"
+   ],
+   "name": "Emerald Wildfox",
+   "names": {
+    "en": "Emerald Wildfox",
+    "cn": "翠玉野狐",
+    "ja": "翠玉の野狐"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} Draw a card.",
+    "cn": "《入场曲》抽取1张卡。",
+    "ja": "ファンファーレ1枚引く。"
+   },
+   "traits": [
+    "精霊",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP15-019",
+   "printings": [
+    "BP15-019"
+   ],
+   "name": "Wind Fairy",
+   "names": {
+    "en": "Wind Fairy",
+    "cn": "迅风妖精",
+    "ja": "ウィンドフェアリー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Storm.\n{[fanfare]} Put 2 Fairy Wisp tokens into your EX area.\n{[act]} {[cost01]}, discard this: Select a card on your field. Return it to its owner's hand and put a Fairy Wisp token into your EX area.",
+    "cn": "【疾驰】\n《入场曲》将2张『妖精萤火』卡置于EX区域。\n《起动》《消费1》将手牌中的这张卡舍弃：选择自己场上的1张卡片。将其放回手牌。将1张『妖精萤火』卡置于EX区域。（放回到手牌的衍生物会从游戏中移出）\n―――――――――――――――\n『妖精萤火』《精灵职业》妖精类型·从者《消费0》《攻击力》1/《生命值》1",
+    "ja": "【疾走】\nファンファーレ『フェアリーウィスプ』2枚をEXエリアに置く。\n起動コスト1手札のこれを捨てる：自分の場のカード1枚を選ぶ。それを手札に戻す。『フェアリーウィスプ』1枚をEXエリアに置く。（手札に戻ったトークンはゲームから取り除く）\n―――――――――――――――\n『フェアリーウィスプ』エルフ妖精・フォロワーコスト0攻撃力1/体力1"
+   },
+   "traits": [
+    "妖精"
+   ]
+  },
+  {
+   "id": "BP15-020",
+   "printings": [
+    "BP15-020",
+    "BP15-SL06",
+    "SCS01-003"
+   ],
+   "name": "Octrice, Hollow Usurpation",
+   "names": {
+    "en": "Octrice, Hollow Usurpation",
+    "cn": "空绝篡夺·欧克托莉斯",
+    "ja": "空絶の簒奪・オクトリス"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Put a Remnant of Hollowness token into your EX area.\n{[act]} {[cost00]}: The next Loot card you play this turn costs 2 less. Activate only twice per turn.\nActivate Banish an Octrice, Omen of Usurpation from your cemetery: Put a Gilded Blade, Gilded Goblet, or Gilded Boots token into your EX area.",
+    "cn": "《入场曲》将1张『空绝的残光』卡置于EX区域。\n《起动》《消费0》：这个回合，下次自己将财宝类型·卡片使用之际，将其消费-2。这个能力在1回合可以使用2次。\n《起动》将墓场中的1张『篡夺绝杰·欧克托莉斯』卡消失：将1张『黄金短剑』卡或1张『黄金之杯』卡或1张『黄金之靴』卡置于EX区域。",
+    "ja": "ファンファーレ『空絶の残光』1枚をEXエリアに置く。\n起動コスト0：このターン、次に自分が財宝・カードをプレイする際、コストを-2する。この能力は1ターンに2回使える。\n起動墓場の『簒奪の絶傑・オクトリス』1枚を消滅：『黄金の小剣』1枚か『黄金の杯』1枚か『黄金の靴』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "絶傑",
+    "盗賊"
+   ]
+  },
+  {
+   "id": "BP15-021",
+   "printings": [
+    "BP15-021",
+    "BP15-SL07"
+   ],
+   "name": "Kagemitsu, Lost Samurai",
+   "names": {
+    "en": "Kagemitsu, Lost Samurai",
+    "cn": "失落武士·景光",
+    "ja": "ロストサムライ・カゲミツ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "This can't be played from the EX area.\n----------\n{[evolve]} {[cost02]}: Evolve this.\nRush.\nWhenever a follower on your field evolves, place a fighting spirit counter on this in your EX area. Then, if this has at least 2 fighting spirit counters, you may summon it. If you do, evolve it.\n{[lastwords]} Put this into its owner's EX area.",
+    "cn": "这张卡从EX区域不能使用。\n《进化》《消费2》：使这张卡进化。\n【突进】\n当自己场上的从者进化时，将1个战意指示物置于到自己EX区域的这张卡。如果这张卡的战意指示物为2个及以上的话，可以将这张卡召唤到场上。若如此做，使场上的这张卡进化。\n《谢幕曲》将这张卡置于EX区域。",
+    "ja": "これはEXエリアからプレイできない。\n進化コスト2：これは進化する。\n【突進】\n自分の場のフォロワーが進化したとき、自分のEXエリアのこれに戦意カウンター1個を置く。これの戦意カウンターが2個以上なら、これを場に出してよい。そうしたなら、場のこれは進化する。\nラストワードこれをEXエリアに置く。"
+   },
+   "traits": [
+    "挑戦者",
+    "兵士"
+   ]
+  },
+  {
+   "id": "BP15-022",
+   "printings": [
+    "BP15-022",
+    "BP15-SL08"
+   ],
+   "name": "Kagemitsu, Lost Samurai",
+   "names": {
+    "en": "Kagemitsu, Lost Samurai",
+    "cn": "失落武士·景光",
+    "ja": "ロストサムライ・カゲミツ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Activate Remove a fighting spirit counter from this: Select an enemy follower on the field and deal it 1 damage.\nActivate Remove 5 fighting spirit counters from this: Deal 5 damage to each enemy leader and enemy follower on the field. Give this Storm.",
+    "cn": "《起动》将这张卡的1个战意指示物取除：选择敌方场上的1个从者。给予其1点伤害。\n《起动》将这张卡的5个战意指示物取除：给予敌方的全体主战者与敌方场上的全体从者各5点伤害。使这张卡获得【疾驰】能力。",
+    "ja": "起動これの戦意カウンター1個を取る：相手の場のフォロワー1体を選ぶ。それに1ダメージ。\n起動これの戦意カウンター5個を取る：相手のリーダーすべてと相手の場のフォロワーすべてに5ダメージ。これは【疾走】を持つ。"
+   },
+   "traits": [
+    "挑戦者",
+    "兵士"
+   ]
+  },
+  {
+   "id": "BP15-023",
+   "printings": [
+    "BP15-023",
+    "BP15-SL09"
+   ],
+   "name": "Ralmia, Astrowing",
+   "names": {
+    "en": "Ralmia, Astrowing",
+    "cn": "宇宙之翼·洛菈米亚",
+    "ja": "アストロウィング・ララミア"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "Storm.\nStrike - If there are 5 followers on your field, deal 2 damage to each enemy follower on the field.",
+    "cn": "【疾驰】\n【攻击时】如果自己场上的从者为5个的话，给予敌方场上的全体从者各2点伤害。",
+    "ja": "【疾走】\n【攻撃時】自分の場のフォロワーが5体なら、相手の場のフォロワーすべてに2ダメージ。"
+   },
+   "traits": [
+    "兵士",
+    "超克"
+   ]
+  },
+  {
+   "id": "BP15-024",
+   "printings": [
+    "BP15-024",
+    "PR-530"
+   ],
+   "name": "Arsène Lupin",
+   "names": {
+    "en": "Arsène Lupin",
+    "cn": "亚森·罗苹",
+    "ja": "アルセーヌ・ルパン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Each opponent buries the top card of their deck. If a follower was buried this way, put a Gilded Blade token into your EX area. If a spell or amulet was buried this way, put a Gilded Goblet token into your EX area.",
+    "cn": "《进化》《消费1》：使这个从者进化。\n《入场曲》敌方的全体玩家，各将自身的牌堆顶1张卡置于墓场。如果置于到墓场的卡片之中有从者卡的话，自己将1张『黄金短剑』卡置于EX区域。如果置于到墓场的卡片之中有法术卡或护符卡的话，自己将1张『黄金之杯』卡置于EX区域。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ相手プレイヤーすべては、自身のデッキの上1枚を墓場に置く。墓場に置いたカードの中にフォロワーがあるなら、自分は『黄金の小剣』1枚をEXエリアに置く。墓場に置いたカードの中にスペルやアミュレットがあるなら、自分は『黄金の杯』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "兵士",
+    "盗賊"
+   ]
+  },
+  {
+   "id": "BP15-025",
+   "printings": [
+    "BP15-025",
+    "PR-531"
+   ],
+   "name": "Arsène Lupin",
+   "names": {
+    "en": "Arsène Lupin",
+    "cn": "亚森·罗苹",
+    "ja": "アルセーヌ・ルパン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve - Look at the top 4 cards of your deck. You may reveal a Thief card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "【进化时】查看自己的牌堆顶4张卡。从那之中，可以将1张盗贼类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "【進化時】自分のデッキの上4枚を見る。その中から、盗賊・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "兵士",
+    "盗賊"
+   ]
+  },
+  {
+   "id": "BP15-026",
+   "printings": [
+    "BP15-026",
+    "BP15-P05",
+    "PR-564"
+   ],
+   "name": "Ultimate Hollow",
+   "names": {
+    "en": "Ultimate Hollow",
+    "cn": "精炼的空绝",
+    "ja": "極意たる空絶"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field. Deal it 2 damage and put a Gilded Goblet token into your EX area.",
+    "cn": "《快速》\n选择敌方场上的1个从者。给予其2点伤害。将1张『黄金之杯』卡置于EX区域。\n―――――――――――――――\n『黄金之杯』《皇家护卫职业》财宝类型·法术《消费2》使自己的主战者《生命值》+1。如果敌方的墓场为10张及以上的话，转变为《生命值》+2。",
+    "ja": "クイック\n相手の場のフォロワー1体を選ぶ。それに2ダメージ。『黄金の杯』1枚をEXエリアに置く。\n―――――――――――――――\n『黄金の杯』ロイヤル財宝・スペルコスト2自分のリーダーは体力+1する。相手の墓場が10枚以上なら、代わりに体力+2する。"
+   },
+   "traits": [
+    "絶傑",
+    "盗賊",
+    "財宝"
+   ]
+  },
+  {
+   "id": "BP15-027",
+   "printings": [
+    "BP15-027",
+    "BP15-U02"
+   ],
+   "name": "Supersonic Breakthrough",
+   "names": {
+    "en": "Supersonic Breakthrough",
+    "cn": "突破音速",
+    "ja": "音速の突破"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Choose 1. (1) Search your deck for a follower with \"Ralmia\" in its name, reveal it, add it to your hand, then shuffle. (2) {[cost04]}: Search your deck for up to 2 differently named followers with \"Ralmia\" in their names, summon them, then shuffle.",
+    "cn": "从下述之中抉择1项。\n【1】从自己的牌堆之中搜寻1张「卡片名包含『洛菈米亚』的从者卡」，并加入手牌。\n【2】《消费4》：从自己的牌堆之中搜寻卡片名各不相同的「卡片名包含『洛菈米亚』的从者卡」最多2张，并召唤到场上。",
+    "ja": "下記から1つチョイスする。【1】自分のデッキから「カード名に『ララミア』を含むフォロワー」1枚を探し、手札に加える。【2】コスト4：自分のデッキから「カード名に『ララミア』を含むフォロワー」をカード名が異なるように2枚まで探し、場に出す。"
+   },
+   "traits": [
+    "兵士",
+    "超克"
+   ]
+  },
+  {
+   "id": "BP15-028",
+   "printings": [
+    "BP15-028",
+    "BP15-P06"
+   ],
+   "name": "Adherent of Hollowness",
+   "names": {
+    "en": "Adherent of Hollowness",
+    "cn": "空绝的崇拜者",
+    "ja": "空絶の崇拝者"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} If there are at least 10 cards in opponents' cemeteries, evolve this",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》如果敌方的墓场为10张及以上的话，使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ相手の墓場が10枚以上なら、これは進化する。"
+   },
+   "traits": [
+    "絶傑",
+    "盗賊"
+   ]
+  },
+  {
+   "id": "BP15-029",
+   "printings": [
+    "BP15-029",
+    "BP15-P07"
+   ],
+   "name": "Adherent of Hollowness",
+   "names": {
+    "en": "Adherent of Hollowness",
+    "cn": "空绝的崇拜者",
+    "ja": "空絶の崇拝者"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Put a Gilded Blade token into your EX area.\nOnce per turn, when you play a Loot card, put a Gilded Boots token into your EX area.",
+    "cn": "每个回合1次，当自己将财宝类型·卡片使用时，将1张『黄金之靴』卡置于EX区域。\n【进化时】将1张『黄金短剑』卡置于EX区域。\n―――――――――――――――\n『黄金短剑』《皇家护卫职业》财宝类型·法术《消费2》选择敌方场上的1个从者。给予其2点伤害。如果敌方的墓场为10张及以上的话，给予其主战者2点伤害。\n『黄金之靴』《皇家护卫职业》财宝类型·法术《消费2》选择自己场上的1个盗贼类型·从者。使其获得【突进】能力。如果敌方的墓场为10张及以上的话，转变为获得【疾驰】能力。",
+    "ja": "ターンごとに1回、自分が財宝・カードをプレイしたとき、『黄金の靴』1枚をEXエリアに置く。\n【進化時】『黄金の小剣』1枚をEXエリアに置く。\n―――――――――――――――\n『黄金の小剣』ロイヤル財宝・スペルコスト2相手の場のフォロワー1体を選ぶ。それに2ダメージ。相手の墓場が10枚以上なら、それのリーダーに2ダメージ。\n『黄金の靴』ロイヤル財宝・スペルコスト2自分の場の盗賊・フォロワー1体を選ぶ。それは【突進】を持つ。相手の墓場が10枚以上なら、代わりに【疾走】を持つ。"
+   },
+   "traits": [
+    "絶傑",
+    "盗賊"
+   ]
+  },
+  {
+   "id": "BP15-030",
+   "printings": [
+    "BP15-030"
+   ],
+   "name": "Sword General",
+   "names": {
+    "en": "Sword General",
+    "cn": "驭剑战将",
+    "ja": "ソードジェネラル"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Draw a card. You may summon up to 2 Officer followers that cost 2 or less from your hand.",
+    "cn": "【守护】\n《入场曲》抽取1张卡。可以将自己的手牌中的原始消费为2及以下的士兵类型·从者卡最多2张召唤到场上。",
+    "ja": "【守護】\nファンファーレ1枚引く。自分の手札の元のコスト2以下の兵士・フォロワー2枚まで場に出してよい。"
+   },
+   "traits": [
+    "指揮官"
+   ]
+  },
+  {
+   "id": "BP15-031",
+   "printings": [
+    "BP15-031",
+    "PR-389"
+   ],
+   "name": "Serration Wave",
+   "names": {
+    "en": "Serration Wave",
+    "cn": "斩刀战技",
+    "ja": "戦技斬刀"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Choose up to 2. (1) Select an enemy follower on the field and deal it 2 damage. (2) Select a Kagemitsu, Lost Samurai on your field or in your EX area and place a fighting spirit counter on it.",
+    "cn": "从下述之中抉择最多2项。\n【1】选择敌方场上的1个从者。给予其2点伤害。\n【2】选择自己场上或自己EX区域的1张『失落武士·景光』卡。将1个战意指示物置于到其上。",
+    "ja": "下記から2つまでチョイスする。【1】相手の場のフォロワー1体を選ぶ。それに2ダメージ。【2】自分の場か自分のEXエリアの『ロストサムライ・カゲミツ』1枚を選ぶ。それに戦意カウンター1個を置く。"
+   },
+   "traits": [
+    "挑戦者",
+    "兵士"
+   ]
+  },
+  {
+   "id": "BP15-032",
+   "printings": [
+    "BP15-032"
+   ],
+   "name": "Penguin Guardian",
+   "names": {
+    "en": "Penguin Guardian",
+    "cn": "企鹅卫兵",
+    "ja": "ペンギンガーディアン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost03]}: Evolve this.\nWard.\n{[fanfare]} {[cost03]} Give this {[attack]}+2/{[defense]}+2.",
+    "cn": "《进化》《消费3》：使这张卡进化。\n【守护】\n《入场曲》《消费3》：使这张卡《攻击力》+2/《生命值》+2。",
+    "ja": "進化コスト3：これは進化する。\n【守護】\nファンファーレコスト3：これは攻撃力+2/体力+2する。"
+   },
+   "traits": [
+    "兵士",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP15-033",
+   "printings": [
+    "BP15-033"
+   ],
+   "name": "Penguin Guardian",
+   "names": {
+    "en": "Penguin Guardian",
+    "cn": "企鹅卫兵",
+    "ja": "ペンギンガーディアン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 5,
+   "text": {
+    "en": "Ward.",
+    "cn": "【守护】",
+    "ja": "【守護】"
+   },
+   "traits": [
+    "兵士",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP15-034",
+   "printings": [
+    "BP15-034",
+    "BP15-P08"
+   ],
+   "name": "Hermit of Usurpation",
+   "names": {
+    "en": "Hermit of Usurpation",
+    "cn": "篡夺的隐者",
+    "ja": "簒奪の隠者"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Put a Gilded Goblet and Gilded Boots token into your EX area. Each opponent buries the top card of their deck.\nOnce per turn, when you play a Loot card, give this {[attack]}+1/{[defense]}+1.",
+    "cn": "每个回合1次，当自己将财宝类型·卡片使用时，使这张卡《攻击力》+1/《生命值》+1。\n《入场曲》将1张『黄金之杯』卡与1张『黄金之靴』卡置于EX区域。敌方的全体玩家，各将自身的牌堆顶1张卡置于墓场。",
+    "ja": "ターンごとに1回、自分が財宝・カードをプレイしたとき、これは攻撃力+1/体力+1する。\nファンファーレ『黄金の杯』1枚と『黄金の靴』1枚をEXエリアに置く。相手プレイヤーすべては、自身のデッキの上1枚を墓場に置く。"
+   },
+   "traits": [
+    "絶傑",
+    "盗賊"
+   ]
+  },
+  {
+   "id": "BP15-035",
+   "printings": [
+    "BP15-035"
+   ],
+   "name": "Chivalrous Bandit",
+   "names": {
+    "en": "Chivalrous Bandit",
+    "cn": "强袭盗贼",
+    "ja": "アサルトバンデッド"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 3,
+   "defense": 1,
+   "text": {
+    "en": "Rush.\nWhile there are at least 10 cards in opponents' cemeteries, this has Assail.\n{[fanfare]} Put a Gilded Blade token into your EX area. Each opponent buries the top card of their deck.",
+    "cn": "【突进】\n只要敌方的墓场有10张及以上存在，使这张卡获得【指定攻击】能力。\n《入场曲》将1张『黄金短剑』卡置于EX区域。敌方的全体玩家，各将自身的牌堆顶1张卡置于墓场。\n―――――――――――――――\n『黄金短剑』《皇家护卫职业》财宝类型·法术《消费2》选择敌方场上的1个从者。给予其2点伤害。如果敌方的墓场为10张及以上的话，给予其主战者2点伤害。",
+    "ja": "【突進】\n相手の墓場が10枚以上ある限り、これは【指定攻撃】を持つ。\nファンファーレ『黄金の小剣』1枚をEXエリアに置く。相手プレイヤーすべては、自身のデッキの上1枚を墓場に置く。\n―――――――――――――――\n『黄金の小剣』ロイヤル財宝・スペルコスト2相手の場のフォロワー1体を選ぶ。それに2ダメージ。相手の墓場が10枚以上なら、それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "兵士",
+    "盗賊"
+   ]
+  },
+  {
+   "id": "BP15-036",
+   "printings": [
+    "BP15-036"
+   ],
+   "name": "Flying Messenger Squirrel",
+   "names": {
+    "en": "Flying Messenger Squirrel",
+    "cn": "鼯鼠传令兵",
+    "ja": "ムササビの伝令兵"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} If there's a Commander card on your field, draw a card.",
+    "cn": "《入场曲》如果自己的场上有指挥官类型·卡片的话，抽取1张卡。",
+    "ja": "ファンファーレ自分の場に指揮官・カードがあるなら、1枚引く。"
+   },
+   "traits": [
+    "兵士",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP15-037",
+   "printings": [
+    "BP15-037"
+   ],
+   "name": "Brave Buccaneer",
+   "names": {
+    "en": "Brave Buccaneer",
+    "cn": "骇浪海盗",
+    "ja": "荒波のパイレーツ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Rush.\n{[fanfare]} Select up to 2 enemy followers on the field and engage them.",
+    "cn": "【突进】\n《入场曲》选择敌方场上的从者最多2个。将其横置。",
+    "ja": "【突進】\nファンファーレ相手の場のフォロワー2体まで選ぶ。それをアクトする。"
+   },
+   "traits": [
+    "兵士",
+    "盗賊"
+   ]
+  },
+  {
+   "id": "BP15-038",
+   "printings": [
+    "BP15-038",
+    "BP15-SL10"
+   ],
+   "name": "Raio, Truthful Elimination",
+   "names": {
+    "en": "Raio, Truthful Elimination",
+    "cn": "绝尽真实·莱欧",
+    "ja": "絶尽の真実・ライオ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 9,
+   "attack": 6,
+   "defense": 6,
+   "text": {
+    "en": "When playing this, bury 3 Mage followers that cost 2 or more: This costs 9 less to play.\n----------\n{[fanfare]} Look at the top 3 cards of your deck. You may put one of them into your EX area. Put the rest on the bottom of your deck in any order.\nActivate Discard a Raio, Omen of Truth: Select an enemy follower on the field. Deal it 9 damage and put an Ersatz Elimination token into your EX area.",
+    "cn": "将这张卡使用之际，将原始消费为2及以上的场上的3个魔法使类型·从者置于墓场：将消费-9。\n《入场曲》查看自己的牌堆顶3张卡。从那之中，可以将1张卡置于EX区域。将剩余的卡以任意顺序置于牌堆底。\n《起动》将手牌中的1张『真实绝杰·莱欧』卡舍弃：选择敌方场上的1个从者。给予其9点伤害。将1张『绝尽的伪证』卡置于EX区域。",
+    "ja": "これをプレイする際、元のコスト2以上の場の魔法使い・フォロワー3体を墓場に置く：コストを-9する。\nファンファーレ自分のデッキの上3枚を見る。その中から、1枚をEXエリアに置いてよい。残りを好きな順にデッキの下に置く。\n起動手札の『真実の絶傑・ライオ』1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに9ダメージ。『絶尽の偽証』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "絶傑",
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP15-039",
+   "printings": [
+    "BP15-039",
+    "BP15-SL11",
+    "PR-418"
+   ],
+   "name": "Lishenna, Melodious Destruction",
+   "names": {
+    "en": "Lishenna, Melodious Destruction",
+    "cn": "奏绝破坏·里榭娜",
+    "ja": "奏絶の破壊・リーシェナ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} If there are at least 3 Idolatry cards on your field, put a Melodious Monody token into your EX area.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》如果自己场上的爱豆类型·卡片为3张及以上的话，将1张『奏绝的独唱』卡置于EX区域。\n―――――――――――――――\n『奏绝的独唱』《巫师职业》绝杰·爱豆类型·法术《消费0》将这张卡使用之际，可以作为额外消费、将场上的爱豆类型·卡片任意张数横置。选择敌方场上的1个从者。给予其与「作为这张卡的额外消费横置的爱豆类型·卡片的张数」的2倍等量的伤害。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分の場のアイドル・カードが3枚以上なら、『奏絶の独唱』1枚をEXエリアに置く。\n―――――――――――――――\n『奏絶の独唱』ウィッチ絶傑・アイドル・スペルコスト0これをプレイする際、追加コストとして場のアイドル・カードを好きな枚数アクトしてよい。相手の場のフォロワー1体を選ぶ。それに「これの追加コストとしてアクトしたアイドル・カードの枚数」の2倍のダメージ。"
+   },
+   "traits": [
+    "絶傑",
+    "アイドル"
+   ]
+  },
+  {
+   "id": "BP15-040",
+   "printings": [
+    "BP15-040",
+    "BP15-SL12"
+   ],
+   "name": "Lishenna, Melodious Destruction",
+   "names": {
+    "en": "Lishenna, Melodious Destruction",
+    "cn": "奏绝破坏·里榭娜",
+    "ja": "奏絶の破壊・リーシェナ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Look at the top 4 cards of your deck. You may put up to 2 Idolatry cards from among them into your EX area. Put the rest on the bottom of your deck in any order.",
+    "cn": "【进化时】查看自己的牌堆顶4张卡。从那之中，可以将爱豆类型·卡片最多2张置于EX区域。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "【進化時】自分のデッキの上4枚を見る。その中から、アイドル・カード2枚までEXエリアに置いてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "絶傑",
+    "アイドル"
+   ]
+  },
+  {
+   "id": "BP15-041",
+   "printings": [
+    "BP15-041",
+    "BP15-SL13"
+   ],
+   "name": "Kuon, Wuxing Master",
+   "names": {
+    "en": "Kuon, Wuxing Master",
+    "cn": "五行宗师·久苑",
+    "ja": "ウーシンマスター・クオン"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "When playing this, reveal 2 Onmyoji cards from your hand: This costs 1 less to play.\n----------\n{[adv]} {[cost04]}: You may summon a Noble Shikigami from your evolve deck. Activate only if there are at least 7 spells and/or Onmyoji cards in your cemetery.\n{[fanfare]} Draw a card. Discard a card.\nActivate {[engage]} this: Select an Onmyoji follower in your cemetery that costs 4 or less and summon it.",
+    "cn": "将这张卡使用之际，将手牌中的2张阴阳师类型·卡片公开：将消费-1。\n《高等起动》《消费4》：可以将自己的进化牌组中的1张『贵人』卡召唤到场上。这个能力在自己的墓场中的「阴阳师类型·卡片或法术卡」合计为7张及以上的话才可使用。\n《入场曲》抽取1张卡。将自己的1张手牌舍弃。\n《起动》将这张卡《横置》：选择自己的墓场中的原始消费为4及以下的1张阴阳师类型·从者卡。将其召唤到场上。",
+    "ja": "これをプレイする際、手札の陰陽師・カード2枚を公開：コストを-1する。\nアドバンス起動コスト4：自分のエボルヴデッキの『貴人』1枚を場に出してよい。この能力は自分の墓場の陰陽師・カードやスペルが7枚以上なら使える。\nファンファーレ1枚引く。自分の手札1枚を捨てる。\n起動これをアクト：自分の墓場の元のコスト4以下の陰陽師・フォロワー1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "挑戦者",
+    "陰陽師"
+   ]
+  },
+  {
+   "id": "BP15-042",
+   "printings": [
+    "BP15-042",
+    "BP15-SL14"
+   ],
+   "name": "Noble Shikigami",
+   "names": {
+    "en": "Noble Shikigami",
+    "cn": "贵人",
+    "ja": "貴人"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "advanced": true,
+   "cost": 10,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Ward.\nThis doesn't take ability damage.\n{[fanfare]} Deal 5 damage to each enemy leader and enemy follower on the field.",
+    "cn": "【守护】\n这张卡不会受到能力伤害。\n《入场曲》给予敌方的全体主战者与敌方场上的全体从者各5点伤害。",
+    "ja": "【守護】\nこれは能力ダメージを受けない。\nファンファーレ相手のリーダーすべてと相手の場のフォロワーすべてに5ダメージ。"
+   },
+   "traits": [
+    "式神"
+   ]
+  },
+  {
+   "id": "BP15-043",
+   "printings": [
+    "BP15-043",
+    "PR-396"
+   ],
+   "name": "Acid Golem",
+   "names": {
+    "en": "Acid Golem",
+    "cn": "酸蚀巨像",
+    "ja": "アシッドゴーレム"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} - Earth Rite: Select an enemy leader or enemy follower on the field and deal it 2 damage.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》【土之秘术】选择敌方的1位主战者或敌方场上的1个从者。给予其2点伤害。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ【土の秘術】相手のリーダー1人か相手の場のフォロワー1体を選ぶ。それに2ダメージ。"
+   },
+   "traits": [
+    "ゴーレム",
+    "魔法生物",
+    "禁忌"
+   ]
+  },
+  {
+   "id": "BP15-044",
+   "printings": [
+    "BP15-044",
+    "PR-397"
+   ],
+   "name": "Acid Golem",
+   "names": {
+    "en": "Acid Golem",
+    "cn": "酸蚀巨像",
+    "ja": "アシッドゴーレム"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field and deal it 2 damage.",
+    "cn": "【进化时】选择敌方场上的1个从者。给予其2点伤害。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それに2ダメージ。"
+   },
+   "traits": [
+    "ゴーレム",
+    "魔法生物",
+    "禁忌"
+   ]
+  },
+  {
+   "id": "BP15-045",
+   "printings": [
+    "BP15-045",
+    "BP15-P09"
+   ],
+   "name": "Melody's Return",
+   "names": {
+    "en": "Melody's Return",
+    "cn": "重返的奏绝",
+    "ja": "舞い戻る奏絶"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "As an additional cost to play this, banish a follower with \"Lishenna\" in its name from your cemetery.\n----------\nIf there are at least 2 Idolatry cards on your field, search your deck for a follower with \"Lishenna\" in its name, summon it, then shuffle.",
+    "cn": "将这张卡使用之际，作为额外消费、将墓场中的1张「卡片名包含『里榭娜』的从者卡」消失。（不能支付额外消费将不能使用）\n如果自己场上的爱豆类型·卡片为2张及以上的话，从自己的牌堆之中搜寻1张「卡片名包含『里榭娜』的从者卡」，并召唤到场上。",
+    "ja": "これをプレイする際、追加コストとして墓場の「カード名に『リーシェナ』を含むフォロワー」1枚を消滅させる。（追加コストを支払わなければプレイできない）\n自分の場のアイドル・カードが2枚以上なら、自分のデッキから「カード名に『リーシェナ』を含むフォロワー」1枚を探し、場に出す。"
+   },
+   "traits": [
+    "絶傑",
+    "アイドル"
+   ]
+  },
+  {
+   "id": "BP15-046",
+   "printings": [
+    "BP15-046",
+    "BP15-U03"
+   ],
+   "name": "Secrets of Onmyodo",
+   "names": {
+    "en": "Secrets of Onmyodo",
+    "cn": "阴阳秘法",
+    "ja": "陰陽の秘法"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 0,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "As an additional cost to play this, reveal 2 Onmyoji cards from your hand.\n----------\n{[costX]}: Search your deck for an Onmyoji follower that costs X or less, summon it, then shuffle. If there are at least 7 spells and/or Onmyoji cards in your cemetery, put a Paper Shikigami token into your EX area and give it \"This costs 1 less to play.\" X equals a number of your choice.",
+    "cn": "将这张卡使用之际，作为额外消费、将手牌中的2张阴阳师类型·卡片公开。（不能支付额外消费将不能使用）\n《消费X》：从自己的牌堆之中搜寻原始消费为X及以下的1张阴阳师类型·从者卡，并召唤到场上。如果自己的墓场中的「阴阳师类型·卡片或法术卡」合计为7张及以上的话，将1张『小纸人』卡置于EX区域。使其获得「将这张卡使用之际，将消费-1」能力。",
+    "ja": "これをプレイする際、追加コストとして手札の陰陽師・カード2枚を公開する。（追加コストを支払わなければプレイできない）\nコストX：自分のデッキから元のコストX以下の陰陽師・フォロワー1枚を探し、場に出す。自分の墓場の陰陽師・カードやスペルが7枚以上なら、『形代』1枚をEXエリアに置く。それは「これをプレイする際、コストを-1する」を持つ。"
+   },
+   "traits": [
+    "挑戦者",
+    "陰陽師"
+   ]
+  },
+  {
+   "id": "BP15-047",
+   "printings": [
+    "BP15-047",
+    "BP15-P10"
+   ],
+   "name": "Adherent of Elimination",
+   "names": {
+    "en": "Adherent of Elimination",
+    "cn": "绝尽的崇拜者",
+    "ja": "絶尽の崇拝者"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} If this wasn't put onto the field from hand, evolve it.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》如果这张卡从手牌以外召唤到场上的话，使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレこれが手札以外から場に出ていたなら、これは進化する。"
+   },
+   "traits": [
+    "絶傑",
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP15-048",
+   "printings": [
+    "BP15-048",
+    "BP15-P11"
+   ],
+   "name": "Adherent of Elimination",
+   "names": {
+    "en": "Adherent of Elimination",
+    "cn": "绝尽的崇拜者",
+    "ja": "絶尽の崇拝者"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Choose 1. (1) Select an enemy follower on the field and deal it 2 damage. (2) Search your deck for a follower with \"Raio\" in its name, reveal it, add it to your hand, then shuffle.",
+    "cn": "【进化时】从下述之中抉择1项。\n【1】选择敌方场上的1个从者。给予其2点伤害。\n【2】从自己的牌堆之中搜寻1张「卡片名包含『莱欧』的从者卡」，并加入手牌。",
+    "ja": "【進化時】下記から1つチョイスする。【1】相手の場のフォロワー1体を選ぶ。それに2ダメージ。【2】自分のデッキから「カード名に『ライオ』を含むフォロワー」1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "絶傑",
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP15-049",
+   "printings": [
+    "BP15-049"
+   ],
+   "name": "Adherent of Melody",
+   "names": {
+    "en": "Adherent of Melody",
+    "cn": "奏绝的崇拜者",
+    "ja": "奏絶の崇拝者"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Look at the top 3 cards of your deck. You may reveal an Idolatry card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "《入场曲》查看自己的牌堆顶3张卡。从那之中，可以将1张爱豆类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "ファンファーレ自分のデッキの上3枚を見る。その中から、アイドル・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "絶傑",
+    "アイドル"
+   ]
+  },
+  {
+   "id": "BP15-050",
+   "printings": [
+    "BP15-050",
+    "BP15-P12"
+   ],
+   "name": "Elimination Unleashed",
+   "names": {
+    "en": "Elimination Unleashed",
+    "cn": "解放的绝尽",
+    "ja": "解放の絶尽"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select up to 3 followers in your cemetery with both the Omen and Mage traits that cost a total of 9 or less. Summon them and give them \"At the start of your end phase, destroy this.\"",
+    "cn": "直到原始消费的合计变为9及以下、选择自己的墓场中的绝杰·魔法使类型·从者卡最多3张。将其召唤到场上。使其获得「当自己的结束阶段到来时，将这张卡破坏」能力。",
+    "ja": "自分の墓場の絶傑・魔法使い・フォロワーを元のコストの合計が9以下になるように3枚まで選ぶ。それを場に出す。それは「自分のエンドフェイズが来たとき、これを破壊する」を持つ。"
+   },
+   "traits": [
+    "絶傑",
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP15-051",
+   "printings": [
+    "BP15-051"
+   ],
+   "name": "Scroll Wizard",
+   "names": {
+    "en": "Scroll Wizard",
+    "cn": "卷轴魔法师",
+    "ja": "スクロールウィザード"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP15-052",
+   "printings": [
+    "BP15-052"
+   ],
+   "name": "Scroll Wizard",
+   "names": {
+    "en": "Scroll Wizard",
+    "cn": "卷轴魔法师",
+    "ja": "スクロールウィザード"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Discard a spell: Deal 4 damage to each enemy follower on the field.",
+    "cn": "【进化时】将手牌中的1张法术卡舍弃：给予敌方场上的全体从者各4点伤害。",
+    "ja": "【進化時】手札のスペル1枚を捨てる：相手の場のフォロワーすべてに4ダメージ。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP15-053",
+   "printings": [
+    "BP15-053",
+    "PR-390"
+   ],
+   "name": "Hermit of Truth",
+   "names": {
+    "en": "Hermit of Truth",
+    "cn": "真实的隐者",
+    "ja": "真実の隠者"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Select a follower in your cemetery with both the Omen and Mage traits not named Hermit of Truth and put it into your EX area. If this wasn't put onto the field from hand, the selected follower costs 3 less to play this turn.",
+    "cn": "《入场曲》选择自己的墓场中的1张「与这张卡不同名的绝杰·魔法使类型·从者卡」。将其置于EX区域。如果这张卡从手牌以外召唤到场上的话，这个回合，将其使用之际，将其消费-3。",
+    "ja": "ファンファーレ自分の墓場の「これと同名を除く絶傑・魔法使い・フォロワー」1枚を選ぶ。それをEXエリアに置く。これが手札以外から場に出ていたなら、このターン、それをプレイする際、コストを-3する。"
+   },
+   "traits": [
+    "絶傑",
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP15-054",
+   "printings": [
+    "BP15-054"
+   ],
+   "name": "Hermit of Destruction",
+   "names": {
+    "en": "Hermit of Destruction",
+    "cn": "破坏的隐者",
+    "ja": "破壊の隠者"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Select an enemy follower on the field and, if there are at least 3 Idolatry cards on your field, deal it 3 damage.",
+    "cn": "《入场曲》选择敌方场上的1个从者。如果自己场上的爱豆类型·卡片为3张及以上的话，给予其3点伤害。",
+    "ja": "ファンファーレ相手の場のフォロワー1体を選ぶ。自分の場のアイドル・カードが3枚以上なら、それに3ダメージ。"
+   },
+   "traits": [
+    "絶傑",
+    "アイドル"
+   ]
+  },
+  {
+   "id": "BP15-055",
+   "printings": [
+    "BP15-055"
+   ],
+   "name": "Crystal Witch",
+   "names": {
+    "en": "Crystal Witch",
+    "cn": "石英魔女",
+    "ja": "石英の魔女"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "This costs 2 less to play if there are at least 2 Mage followers on your field.\n----------\n{[fanfare]} Draw a card. Discard a card.",
+    "cn": "将这张卡使用之际，如果自己场上的魔法使类型·从者为2个及以上的话，将消费-2。\n《入场曲》抽取1张卡。将自己的1张手牌舍弃。",
+    "ja": "これをプレイする際、自分の場の魔法使い・フォロワーが2体以上なら、コストを-2する。\nファンファーレ1枚引く。自分の手札1枚を捨てる。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP15-056",
+   "printings": [
+    "BP15-056"
+   ],
+   "name": "Twinblade Mage",
+   "names": {
+    "en": "Twinblade Mage",
+    "cn": "双刃魔剑士",
+    "ja": "双刃の魔剣士"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 8,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "This costs 6 less to play if there are at least 6 cards in your cemetery with different base costs.\n----------\nStorm.\n{[fanfare]} Select up to 2 enemy followers on the field and deal them 3 damage.",
+    "cn": "将这张卡使用之际，如果自己的墓场中的卡片的原始消费的种类数量为6种类及以上的话，将消费-6。\n【疾驰】\n《入场曲》选择敌方场上的从者最多2个。给予其各3点伤害。",
+    "ja": "これをプレイする際、自分の墓場にあるカードの元のコストの種類数が6種類以上なら、コストを-6する。\n【疾走】\nファンファーレ相手の場のフォロワー2体まで選ぶ。それに3ダメージ。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP15-057",
+   "printings": [
+    "BP15-057",
+    "BP15-SL15",
+    "BP15-U04"
+   ],
+   "name": "Galmieux, Ardent Disdain",
+   "names": {
+    "en": "Galmieux, Ardent Disdain",
+    "cn": "烈绝侮蔑·嘉鲁蜜儿",
+    "ja": "烈絶の侮蔑・ガルミーユ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} Put a Fangs of Ardent Destruction token into your EX area.\nDuring your turn, whenever this takes ability damage, look at the top 2 cards of your deck. You may put one of them into your EX area. If it's an Omen card, it costs 3 less to play this turn. Bury the rest.",
+    "cn": "自己的回合中，当这张卡受到能力伤害时，查看自己的牌堆顶2张卡。从那之中，可以将1张卡置于EX区域。将剩余的卡置于墓场。如果置于到EX区域的卡片为绝杰类型·卡片的话，这个回合，将其使用之际，将其消费-3。\n《入场曲》将1张『烈绝的灭牙』卡置于EX区域。",
+    "ja": "自分のターン中、これが能力ダメージを受けたとき、自分のデッキの上2枚を見る。その中から、1枚をEXエリアに置いてよい。残りを墓場に置く。EXエリアに置いたカードが絶傑・カードなら、このターン、それをプレイする際、コストを-3する。\nファンファーレ『烈絶の滅牙』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "絶傑",
+    "竜族"
+   ]
+  },
+  {
+   "id": "BP15-058",
+   "printings": [
+    "BP15-058",
+    "BP15-SL16"
+   ],
+   "name": "Filene, Blizzardous Heart",
+   "names": {
+    "en": "Filene, Blizzardous Heart",
+    "cn": "冻雪冰心·菲琳",
+    "ja": "ブリザードハート・フィルレイン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nBane.\n{[fanfare]} If Overflow is active for you, during each opponent's next turn, any card they play costs 1 more.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【必杀】\n《入场曲》如果处于【觉醒】状态的话，下个敌方的回合中，敌方将卡片使用之际，将其消费+1。",
+    "ja": "進化コスト1：これは進化する。\n【必殺】\nファンファーレ【覚醒】状態なら、次の相手のターン中、相手がカードをプレイする際、コストを+1する。"
+   },
+   "traits": [
+    "ドラゴニュート"
+   ]
+  },
+  {
+   "id": "BP15-059",
+   "printings": [
+    "BP15-059",
+    "BP15-SL17"
+   ],
+   "name": "Filene, Blizzardous Heart",
+   "names": {
+    "en": "Filene, Blizzardous Heart",
+    "cn": "冻雪冰心·菲琳",
+    "ja": "ブリザードハート・フィルレイン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Bane.\nOn Evolve - Search your deck for a card with \"Whitefrost\" in its name, reveal it, add it to your hand, then shuffle.",
+    "cn": "【必杀】\n【进化时】从自己的牌堆之中搜寻1张「卡片名包含『银冰』的卡片」，并加入手牌。",
+    "ja": "【必殺】\n【進化時】自分のデッキから「カード名に『銀氷』を含むカード」1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "ドラゴニュート"
+   ]
+  },
+  {
+   "id": "BP15-060",
+   "printings": [
+    "BP15-060",
+    "BP15-SL18"
+   ],
+   "name": "Celestial Dragoon",
+   "names": {
+    "en": "Celestial Dragoon",
+    "cn": "天威的龙巫女",
+    "ja": "天威のドラグーン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWhenever you discard a card, engage this: Draw a card.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n当自己将1张手牌舍弃时，将这张卡《横置》：抽取1张卡。",
+    "ja": "進化コスト1：これは進化する。\n自分が手札1枚を捨てたとき、これをアクト：1枚引く。"
+   },
+   "traits": [
+    "竜使い"
+   ]
+  },
+  {
+   "id": "BP15-061",
+   "printings": [
+    "BP15-061",
+    "BP15-SL19"
+   ],
+   "name": "Celestial Dragoon",
+   "names": {
+    "en": "Celestial Dragoon",
+    "cn": "天威的龙巫女",
+    "ja": "天威のドラグーン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve - Look at the top 5 cards of your deck. You may reveal a {[dragoncraft]} card that costs 7 or more from among them and add it to your hand. Put the rest on the bottom of your deck in any order.\nWhenever you discard a card, engage this: Draw a card.",
+    "cn": "当自己将1张手牌舍弃时，将这张卡《横置》：抽取1张卡。\n【进化时】查看自己的牌堆顶5张卡。从那之中，可以将原始消费为7及以上的1张《龙族职业》卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "自分が手札1枚を捨てたとき、これをアクト：1枚引く。\n【進化時】自分のデッキの上5枚を見る。その中から、元のコスト7以上のドラゴンカード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "竜使い"
+   ]
+  },
+  {
+   "id": "BP15-062",
+   "printings": [
+    "BP15-062"
+   ],
+   "name": "Mermaid of Punishment",
+   "names": {
+    "en": "Mermaid of Punishment",
+    "cn": "惩治的人鱼",
+    "ja": "パニッシュマーメイド"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWhenever another Marine follower is put onto your field, deal 1 damage to each enemy leader.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n当其他的海洋类型·从者召唤到自己的场上时，给予敌方的全体主战者各1点伤害。",
+    "ja": "進化コスト1：これは進化する。\n自分の場に他の海洋・フォロワーが出たとき、相手のリーダーすべてに1ダメージ。"
+   },
+   "traits": [
+    "海洋"
+   ]
+  },
+  {
+   "id": "BP15-063",
+   "printings": [
+    "BP15-063"
+   ],
+   "name": "Mermaid of Punishment",
+   "names": {
+    "en": "Mermaid of Punishment",
+    "cn": "惩治的人鱼",
+    "ja": "パニッシュマーメイド"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Look at the top 5 cards of your deck. You may put up to 2 Marine cards from among them into your EX area. They cost 2 less to play this turn. Put the rest on the bottom of your deck in any order.\nWhenever another Marine follower is put onto your field, deal 1 damage to each enemy leader.",
+    "cn": "当其他的海洋类型·从者召唤到自己的场上时，给予敌方的全体主战者各1点伤害。\n【进化时】查看自己的牌堆顶5张卡。从那之中，可以将海洋类型·卡片最多2张置于EX区域。将剩余的卡以任意顺序置于牌堆底。这个回合，将其使用之际，将其消费-2。",
+    "ja": "自分の場に他の海洋・フォロワーが出たとき、相手のリーダーすべてに1ダメージ。\n【進化時】自分のデッキの上5枚を見る。その中から、海洋・カード2枚までEXエリアに置いてよい。残りを好きな順にデッキの下に置く。このターン、それをプレイする際、コストを-2する。"
+   },
+   "traits": [
+    "海洋"
+   ]
+  },
+  {
+   "id": "BP15-064",
+   "printings": [
+    "BP15-064",
+    "BP15-P13",
+    "PR-387"
+   ],
+   "name": "Ardent Torch",
+   "names": {
+    "en": "Ardent Torch",
+    "cn": "炽火的烈绝",
+    "ja": "灯火の烈絶"
+   },
+   "class": "Dragoncraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select a follower on your field. Deal 1 damage to it and each enemy leader, and draw a card.",
+    "cn": "选择自己场上的1个从者。给予其1点伤害。给予敌方的全体主战者各1点伤害。抽取1张卡。",
+    "ja": "自分の場のフォロワー1体を選ぶ。それに1ダメージ。相手のリーダーすべてに1ダメージ。1枚引く。"
+   },
+   "traits": [
+    "絶傑",
+    "竜族"
+   ]
+  },
+  {
+   "id": "BP15-065",
+   "printings": [
+    "BP15-065",
+    "PR-412"
+   ],
+   "name": "Whitefrost Blizzard",
+   "names": {
+    "en": "Whitefrost Blizzard",
+    "cn": "银冰飞雪",
+    "ja": "銀氷の吹雪"
+   },
+   "class": "Dragoncraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "This costs 2 less to play if there's a follower on your field with \"Filene\" in its name.\n----------\nSelect any number of enemy followers on the field and deal X damage divided between them. X equals your max play points.",
+    "cn": "将这张卡使用之际，如果自己的场上有「卡片名包含『菲琳』的从者」的话，将消费-2。\n选择敌方场上的从者任意张数。给予其合计X点伤害、任意分配。X为「自己的PP最大值」。",
+    "ja": "これをプレイする際、自分の場に「カード名に『フィルレイン』を含むフォロワー」がいるなら、コストを-2する。\n相手の場のフォロワーを好きな枚数選ぶ。それにXダメージを割りふる。Xは「自分のPP最大値」である。"
+   },
+   "traits": [
+    "ドラゴニュート"
+   ]
+  },
+  {
+   "id": "BP15-066",
+   "printings": [
+    "BP15-066",
+    "BP15-P14"
+   ],
+   "name": "Adherent of Ardor",
+   "names": {
+    "en": "Adherent of Ardor",
+    "cn": "烈绝的崇拜者",
+    "ja": "烈絶の崇拝者"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Select up to 2 followers on your field and, if Overflow is active for you, deal them 1 damage.\nDuring your turn, whenever this takes ability damage, select an enemy follower on the field and deal it 3 damage.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n自己的回合中，当这张卡受到能力伤害时，选择敌方场上的1个从者。给予其3点伤害。\n《入场曲》选择自己场上的从者最多2个。如果处于【觉醒】状态的话，给予其各1点伤害。",
+    "ja": "進化コスト1：これは進化する。\n自分のターン中、これが能力ダメージを受けたとき、相手の場のフォロワー1体を選ぶ。それに3ダメージ。\nファンファーレ自分の場のフォロワー2体まで選ぶ。【覚醒】状態なら、それに1ダメージ。"
+   },
+   "traits": [
+    "絶傑",
+    "竜族"
+   ]
+  },
+  {
+   "id": "BP15-067",
+   "printings": [
+    "BP15-067",
+    "BP15-P15"
+   ],
+   "name": "Adherent of Ardor",
+   "names": {
+    "en": "Adherent of Ardor",
+    "cn": "烈绝的崇拜者",
+    "ja": "烈絶の崇拝者"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Select up to 2 followers on your field and deal them 1 damage.\nDuring your turn, whenever this takes ability damage, select an enemy follower on the field and deal it 3 damage.",
+    "cn": "自己的回合中，当这张卡受到能力伤害时，选择敌方场上的1个从者。给予其3点伤害。\n【进化时】选择自己场上的从者最多2个。给予其各1点伤害。",
+    "ja": "自分のターン中、これが能力ダメージを受けたとき、相手の場のフォロワー1体を選ぶ。それに3ダメージ。\n【進化時】自分の場のフォロワー2体まで選ぶ。それに1ダメージ。"
+   },
+   "traits": [
+    "絶傑",
+    "竜族"
+   ]
+  },
+  {
+   "id": "BP15-068",
+   "printings": [
+    "BP15-068"
+   ],
+   "name": "Windswept Dragonewt",
+   "names": {
+    "en": "Windswept Dragonewt",
+    "cn": "风之龙人",
+    "ja": "ウィンディドラゴニュート"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 3,
+   "defense": 1,
+   "text": {
+    "en": "Rush.\n{[fanfare]} If Overflow is active for you, give this {[attack]}+1/{[defense]}+1.\nStrike - Give your leader {[defense]}+X, where X equals this follower 's defense.",
+    "cn": "【突进】\n【攻击时】使自己的主战者《生命值》+X。X为「这张卡的生命值」。\n《入场曲》如果处于【觉醒】状态的话，使这张卡《攻击力》+1/《生命值》+1。",
+    "ja": "【突進】\n【攻撃時】自分のリーダーは体力+Xする。Xは「これの体力」である。\nファンファーレ【覚醒】状態なら、これは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "ドラゴニュート",
+    "武闘竜人"
+   ]
+  },
+  {
+   "id": "BP15-069",
+   "printings": [
+    "BP15-069",
+    "PR-391"
+   ],
+   "name": "Tropical Mermaid",
+   "names": {
+    "en": "Tropical Mermaid",
+    "cn": "热带美人鱼",
+    "ja": "トロピカルマーメイド"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Select another Marine follower on your field and give it {[attack]}+1/{[defense]}+1. If this was played from the EX area, give {[attack]}+2/{[defense]}+2, Rush, and Assail instead.",
+    "cn": "《入场曲》选择自己场上的其他的1个海洋类型·从者。使其《攻击力》+1/《生命值》+1。如果这张卡从EX区域使用的话，转变为《攻击力》+2/《生命值》+2，并获得【突进】【指定攻击】能力。",
+    "ja": "ファンファーレ自分の場の他の海洋・フォロワー1体を選ぶ。それは攻撃力+1/体力+1する。これがEXエリアからプレイされていたなら、代わりに攻撃力+2/体力+2して、【突進】【指定攻撃】を持つ。"
+   },
+   "traits": [
+    "海洋"
+   ]
+  },
+  {
+   "id": "BP15-070",
+   "printings": [
+    "BP15-070"
+   ],
+   "name": "Tiniest Dragon",
+   "names": {
+    "en": "Tiniest Dragon",
+    "cn": "迷你龙",
+    "ja": "ミニマムドラゴン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost03]}: Evolve this.",
+    "cn": "《进化》《消费3》：使这张卡进化。",
+    "ja": "進化コスト3：これは進化する。"
+   },
+   "traits": [
+    "竜族"
+   ]
+  },
+  {
+   "id": "BP15-071",
+   "printings": [
+    "BP15-071"
+   ],
+   "name": "Tiniest Dragon",
+   "names": {
+    "en": "Tiniest Dragon",
+    "cn": "迷你龙",
+    "ja": "ミニマムドラゴン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Deal 5 damage to each follower on the field.",
+    "cn": "【进化时】给予场上的全体从者各5点伤害。",
+    "ja": "【進化時】場のフォロワーすべてに5ダメージ。"
+   },
+   "traits": [
+    "竜族"
+   ]
+  },
+  {
+   "id": "BP15-072",
+   "printings": [
+    "BP15-072",
+    "BP15-P16"
+   ],
+   "name": "Hermit of Disdain",
+   "names": {
+    "en": "Hermit of Disdain",
+    "cn": "侮蔑的隐者",
+    "ja": "侮蔑の隠者"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 0,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Select a follower on your field and, if Overflow is active for you, deal it 1 damage.\nDuring your turn, whenever this takes ability damage, look at the top card of your deck. If it's an Omen card, you may reveal it and add it to your hand.",
+    "cn": "自己的回合中，当这张卡受到能力伤害时，查看自己的牌堆顶1张卡。从那之中，可以将1张绝杰类型·卡片公开并加入手牌。\n《入场曲》选择自己场上的1个从者。如果处于【觉醒】状态的话，给予其1点伤害。",
+    "ja": "自分のターン中、これが能力ダメージを受けたとき、自分のデッキの上1枚を見る。その中から、絶傑・カード1枚を公開して手札に加えてよい。\nファンファーレ自分の場のフォロワー1体を選ぶ。【覚醒】状態なら、それに1ダメージ。"
+   },
+   "traits": [
+    "絶傑",
+    "竜族"
+   ]
+  },
+  {
+   "id": "BP15-073",
+   "printings": [
+    "BP15-073"
+   ],
+   "name": "Beginner Dragoon",
+   "names": {
+    "en": "Beginner Dragoon",
+    "cn": "新手龙骑士",
+    "ja": "ビギナードラグーン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Put a Dragon token into your EX area. If Overflow is active for you, it costs 2 less to play this turn.",
+    "cn": "《入场曲》将1张『飞龙』卡置于EX区域。如果处于【觉醒】状态的话，这个回合，将其使用之际，将其消费-2。\n―――――――――――――――\n『飞龙』《龙族职业》龙裔类型·从者《消费4》《攻击力》5/《生命值》5",
+    "ja": "ファンファーレ『ドラゴン』1枚をEXエリアに置く。【覚醒】状態なら、このターン、それをプレイする際、コストを-2する。\n―――――――――――――――\n『ドラゴン』ドラゴン竜族・フォロワーコスト4攻撃力5/体力5"
+   },
+   "traits": [
+    "竜使い"
+   ]
+  },
+  {
+   "id": "BP15-074",
+   "printings": [
+    "BP15-074",
+    "SD08-017"
+   ],
+   "name": "Orbed Cancer",
+   "names": {
+    "en": "Orbed Cancer",
+    "cn": "魔石巨蟹",
+    "ja": "オーブキャンサー"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 7,
+   "attack": 6,
+   "defense": 7,
+   "text": {
+    "en": "{[fanfare]} Draw 3 cards.\n{[act]} {[cost01]}, discard this and a {[dragoncraft]} card that costs 7 or more: Draw 2 cards.",
+    "cn": "《入场曲》抽取3张卡。\n《起动》《消费1》将手牌中的这张卡与原始消费为7及以上的1张《龙族职业》卡片舍弃：抽取2张卡。",
+    "ja": "ファンファーレ3枚引く。\n起動コスト1手札のこれと元のコスト7以上のドラゴンカード1枚を捨てる：2枚引く。"
+   },
+   "traits": [
+    "海洋"
+   ]
+  },
+  {
+   "id": "BP15-075",
+   "printings": [
+    "BP15-075"
+   ],
+   "name": "Whimsical Mermaid",
+   "names": {
+    "en": "Whimsical Mermaid",
+    "cn": "幻梦人鱼",
+    "ja": "メルヘンマーメイド"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Ward.\n{[lastwords]} Select a Marine follower in your cemetery not named Whimsical Mermaid and put it into your EX area.",
+    "cn": "【守护】\n《谢幕曲》选择自己的墓场中的1张「与这张卡不同名的海洋类型·从者卡」。将其置于EX区域。",
+    "ja": "【守護】\nラストワード自分の墓場の「これと同名を除く海洋・フォロワー」1枚を選ぶ。それをEXエリアに置く。"
+   },
+   "traits": [
+    "海洋"
+   ]
+  },
+  {
+   "id": "BP15-076",
+   "printings": [
+    "BP15-076",
+    "BP15-SL20"
+   ],
+   "name": "Valnareik, Lustful Desire",
+   "names": {
+    "en": "Valnareik, Lustful Desire",
+    "cn": "爱绝欲望·瓦娜蕾格",
+    "ja": "愛絶の欲望・ヴァーナレク"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWhile Sanguine is active for you, this has Storm.\n{[fanfare]} If your leader's defense is 7, give this {[attack]}+2/{[defense]}+2.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n只要处于【真红】状态，使这张卡获得【疾驰】能力。\n《入场曲》如果自己的主战者的生命值为7的话，使这张卡《攻击力》+2/《生命值》+2。",
+    "ja": "進化コスト1：これは進化する。\n【真紅】状態である限り、これは【疾走】を持つ。\nファンファーレ自分のリーダーの体力が7なら、これは攻撃力+2/体力+2する。"
+   },
+   "traits": [
+    "絶傑",
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-077",
+   "printings": [
+    "BP15-077",
+    "BP15-SL21"
+   ],
+   "name": "Valnareik, Lustful Desire",
+   "names": {
+    "en": "Valnareik, Lustful Desire",
+    "cn": "爱绝欲望·瓦娜蕾格",
+    "ja": "愛絶の欲望・ヴァーナレク"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "While Sanguine is active for you, this has Storm.\nOn Evolve - Choose 1. (1) Put a Wings of Desire token into your EX area. (2) Draw a card.",
+    "cn": "只要处于【真红】状态，使这张卡获得【疾驰】能力。\n【进化时】从下述之中抉择1项。\n【1】将1张『爱绝的飞翔』卡置于EX区域。\n【2】抽取1张卡。\n―――――――――――――――\n『爱绝的飞翔』《梦魇职业》绝杰·魔界类型·法术《消费1》选择自己场上的1个从者。使其获得「【攻击时】给予敌方场上的全体从者各与「这个回合中自己的主战者的生命值减少的次数」等量的伤害」能力。给予自己的主战者1点伤害。",
+    "ja": "【真紅】状態である限り、これは【疾走】を持つ。\n【進化時】下記から1つチョイスする。【1】『愛絶の飛翔』1枚をEXエリアに置く。【2】1枚引く。\n―――――――――――――――\n『愛絶の飛翔』ナイトメア絶傑・魔界・スペルコスト1自分の場のフォロワー1体を選ぶ。それは「【攻撃時】相手の場のフォロワーすべてに「このターン中に自分のリーダーの体力が減少した回数」と同じダメージ」を持つ。自分のリーダーに1ダメージ。"
+   },
+   "traits": [
+    "絶傑",
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-078",
+   "printings": [
+    "BP15-078",
+    "BP15-SL22",
+    "EBD03-003"
+   ],
+   "name": "Rulenye, Screaming Silence",
+   "names": {
+    "en": "Rulenye, Screaming Silence",
+    "cn": "绝叫沉默·鲁鲁纳伊",
+    "ja": "絶叫の沈黙・ルルナイ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "Rush. Assail.\n{[fanfare]} Select an enemy follower on the field. If there are at least 3 cards on your field named Rulenye, Echoing Scream, destroy it and deal 3 damage to its leader.\n{[lastwords]} Put a Scream Diffusion token into your EX area. Bury the top card of your deck.",
+    "cn": "【突进】【指定攻击】\n《入场曲》选择敌方场上的1个从者。如果自己场上的『绝叫残响·鲁鲁纳伊』为3个及以上的话，将其破坏。给予其主战者3点伤害。\n《谢幕曲》将1张『绝叫的扩散』卡置于EX区域。将自己的牌堆顶1张卡置于墓场。",
+    "ja": "【突進】【指定攻撃】\nファンファーレ相手の場のフォロワー1体を選ぶ。自分の場の『絶叫の残響・ルルナイ』が3体以上なら、それを破壊する。それのリーダーに3ダメージ。\nラストワード『絶叫の拡散』1枚をEXエリアに置く。自分のデッキの上1枚を墓場に置く。"
+   },
+   "traits": [
+    "絶傑",
+    "死霊術師"
+   ]
+  },
+  {
+   "id": "BP15-079",
+   "printings": [
+    "BP15-079",
+    "BP15-SL23"
+   ],
+   "name": "Ginsetsu, Terror Banquet",
+   "names": {
+    "en": "Ginsetsu, Terror Banquet",
+    "cn": "惊骇盛宴·吟雪",
+    "ja": "テラーバンケット・ギンセツ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 3,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} Summon 2 One-Tailed Fox tokens.\n{[fanfare]} {[cost02]} Summon a One-Tailed Fox token. Give each other Yokai follower on your field {[attack]}+1.\nWhenever another Yokai follower you control leaves the field, select an enemy follower on the field. Deal 1 damage to it and its leader.",
+    "cn": "当自己的其他的妖怪类型·从者离开场上时，选择敌方场上的1个从者。给予其与其主战者各1点伤害。\n《入场曲》将2个『一尾狐』召唤到场上。\n《入场曲》《消费2》：将1个『一尾狐』召唤到场上。使自己场上的其他的全体妖怪类型·从者各《攻击力》+1。\n―――――――――――――――\n『一尾狐』《梦魇职业》妖怪类型·从者《消费2》《攻击力》1/《生命值》3【突进】【守护】",
+    "ja": "自分の他の妖怪・フォロワーが場を離れたとき、相手の場のフォロワー1体を選ぶ。それとそれのリーダーに1ダメージ。\nファンファーレ『一ツ尾狐』2体を場に出す。\nファンファーレコスト2：『一ツ尾狐』1体を場に出す。自分の場の他の妖怪・フォロワーすべては攻撃力+1する。\n―――――――――――――――\n『一ツ尾狐』ナイトメア妖怪・フォロワーコスト2攻撃力1/体力3【突進】【守護】"
+   },
+   "traits": [
+    "挑戦者",
+    "妖怪"
+   ]
+  },
+  {
+   "id": "BP15-080",
+   "printings": [
+    "BP15-080",
+    "BP15-P17"
+   ],
+   "name": "Yuzuki, Bloodlord",
+   "names": {
+    "en": "Yuzuki, Bloodlord",
+    "cn": "血艳领主·夕月",
+    "ja": "ブラッドロード・ユヅキ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Select an enemy follower on the field and, if there are at least ten 2-cost cards in your cemetery, destroy it.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》选择敌方场上的1个从者。如果自己的墓场中的原始消费为2的卡片为10张及以上的话，将其破坏。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ相手の場のフォロワー1体を選ぶ。自分の墓場の元のコスト2のカードが10枚以上なら、それを破壊する。"
+   },
+   "traits": [
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-081",
+   "printings": [
+    "BP15-081",
+    "BP15-P18"
+   ],
+   "name": "Yuzuki, Bloodlord",
+   "names": {
+    "en": "Yuzuki, Bloodlord",
+    "cn": "血艳领主·夕月",
+    "ja": "ブラッドロード・ユヅキ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Look at the top 2 cards of your deck. You may put a 2-cost card from among them into your EX area. It costs 2 less to play this turn. Put the rest on the bottom of your deck in any order.",
+    "cn": "【进化时】查看自己的牌堆顶2张卡。从那之中，可以将原始消费为2的1张卡片置于EX区域。将剩余的卡以任意顺序置于牌堆底。这个回合，将其使用之际，将其消费-2。",
+    "ja": "【進化時】自分のデッキの上2枚を見る。その中から、元のコスト2のカード1枚をEXエリアに置いてよい。残りを好きな順にデッキの下に置く。このターン、それをプレイする際、コストを-2する。"
+   },
+   "traits": [
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-082",
+   "printings": [
+    "BP15-082",
+    "BP15-U05"
+   ],
+   "name": "Spiteful Screams",
+   "names": {
+    "en": "Spiteful Screams",
+    "cn": "怨仇的绝叫",
+    "ja": "怨讐の絶叫"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Necrocharge (10) - This costs 1 less to play.\n----------\nSelect an {[abysscraft]} follower in your cemetery with {[lastwords]} that costs 2 or less and summon it.",
+    "cn": "将这张卡使用之际，【死灵充能_10】将消费-1。\n选择自己的墓场中的原始消费为2及以下的持有《谢幕曲》能力的1张《梦魇职业》从者卡。将其召唤到场上。",
+    "ja": "これをプレイする際、【ネクロチャージ_10】コストを-1する。\n自分の墓場の元のコスト2以下のラストワードを持つナイトメアフォロワー1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "絶傑",
+    "死霊術師"
+   ]
+  },
+  {
+   "id": "BP15-083",
+   "printings": [
+    "BP15-083",
+    "PR-392"
+   ],
+   "name": "A Hellish Banquet",
+   "names": {
+    "en": "A Hellish Banquet",
+    "cn": "殄灭宴",
+    "ja": "潰し宴"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 0,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "As an additional cost to play this, bury 2 cards named One-Tailed Fox.\nActivate Banish this from your cemetery: Give each One-Tailed Fox on your field Storm.\n----------\nSelect an enemy follower on the field. Destroy it and draw a card.",
+    "cn": "《起动》将墓场中的这张卡消失：使自己场上的全体『一尾狐』各获得【疾驰】能力。\n----------\n将这张卡使用之际，作为额外消费、将场上的2个『一尾狐』置于墓场。（不能支付额外消费将不能使用）\n选择敌方场上的1个从者。将其破坏。抽取1张卡。",
+    "ja": "起動墓場のこれを消滅：自分の場の『一ツ尾狐』すべては【疾走】を持つ。\n----------\nこれをプレイする際、追加コストとして場の『一ツ尾狐』2体を墓場に置く。（追加コストを支払わなければプレイできない）\n相手の場のフォロワー1体を選ぶ。それを破壊する。1枚引く。"
+   },
+   "traits": [
+    "挑戦者",
+    "妖怪"
+   ]
+  },
+  {
+   "id": "BP15-084",
+   "printings": [
+    "BP15-084"
+   ],
+   "name": "Adherent of Desire",
+   "names": {
+    "en": "Adherent of Desire",
+    "cn": "爱绝的崇拜者",
+    "ja": "愛絶の崇拝者"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Deal 1 damage to your leader. If there's a follower on your field with \"Valnareik\" in its name, evolve this.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》给予自己的主战者1点伤害。如果自己的场上有「卡片名包含『瓦娜蕾格』的从者」的话，使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分のリーダーに1ダメージ。自分の場に「カード名に『ヴァーナレク』を含むフォロワー」がいるなら、これは進化する。"
+   },
+   "traits": [
+    "絶傑",
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-085",
+   "printings": [
+    "BP15-085"
+   ],
+   "name": "Adherent of Desire",
+   "names": {
+    "en": "Adherent of Desire",
+    "cn": "爱绝的崇拜者",
+    "ja": "愛絶の崇拝者"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve - Select a follower on your field with both the Omen and Demon traits and give it Drain.",
+    "cn": "【进化时】选择自己场上的1个绝杰·魔界类型·从者。使其获得【吸血】能力。",
+    "ja": "【進化時】自分の場の絶傑・魔界・フォロワー1体を選ぶ。それは【ドレイン】を持つ。"
+   },
+   "traits": [
+    "絶傑",
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-086",
+   "printings": [
+    "BP15-086",
+    "BP15-P19"
+   ],
+   "name": "Loathing Desire",
+   "names": {
+    "en": "Loathing Desire",
+    "cn": "憎恶的爱绝",
+    "ja": "憎悪する愛絶"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Deal 1 damage to your leader. Look at the top 4 cards of your deck. You may reveal a card with both the Omen and Demon traits from among them and add it to your hand. Put the rest on the bottom of your deck in any order. If you revealed a follower with \"Valnareik\" in its name, give your leader {[defense]}+2.",
+    "cn": "给予自己的主战者1点伤害。查看自己的牌堆顶4张卡。从那之中，可以将1张绝杰·魔界类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。如果将「卡片名包含『瓦娜蕾格』的从者卡」公开的话，使自己的主战者《生命值》+2。",
+    "ja": "自分のリーダーに1ダメージ。自分のデッキの上4枚を見る。その中から、絶傑・魔界・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。「カード名に『ヴァーナレク』を含むフォロワー」を公開したなら、自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "絶傑",
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-087",
+   "printings": [
+    "BP15-087",
+    "PR-413"
+   ],
+   "name": "Crimson Virtue",
+   "names": {
+    "en": "Crimson Virtue",
+    "cn": "赤红仁义",
+    "ja": "紅の仁義"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "This costs 1 less to play if there's a follower on your field with \"Yuzuki\" in its name.\nWhen playing this, engage two 2-cost followers on your field: This costs 1 less to play.\n----------\nSelect an enemy follower on the field and deal it 4 damage.",
+    "cn": "将这张卡使用之际，将原始消费为2的场上的2个从者《横置》：将消费-1。\n将这张卡使用之际，如果自己的场上有「卡片名包含『夕月』的从者」的话，将消费-1。\n选择敌方场上的1个从者。给予其4点伤害。",
+    "ja": "これをプレイする際、元のコスト2の場のフォロワー2体をアクト：コストを-1する。\nこれをプレイする際、自分の場に「カード名に『ユヅキ』を含むフォロワー」がいるなら、コストを-1する。\n相手の場のフォロワー1体を選ぶ。それに4ダメージ。"
+   },
+   "traits": [
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-088",
+   "printings": [
+    "BP15-088",
+    "EBD03-019"
+   ],
+   "name": "Adherent of Screams",
+   "names": {
+    "en": "Adherent of Screams",
+    "cn": "绝叫的崇拜者",
+    "ja": "絶叫の崇拝者"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[lastwords]} Bury the top card of your deck.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《谢幕曲》将自己的牌堆顶1张卡置于墓场。",
+    "ja": "進化コスト1：これは進化する。\nラストワード自分のデッキの上1枚を墓場に置く。"
+   },
+   "traits": [
+    "絶傑",
+    "死霊術師"
+   ]
+  },
+  {
+   "id": "BP15-089",
+   "printings": [
+    "BP15-089",
+    "EBD03-020"
+   ],
+   "name": "Adherent of Screams",
+   "names": {
+    "en": "Adherent of Screams",
+    "cn": "绝叫的崇拜者",
+    "ja": "絶叫の崇拝者"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Choose 1. (1) Select a follower in your cemetery with \"Rulenye\" in its name and summon it. (2) Select an enemy follower on the field and deal it 2 damage.\n{[lastwords]} Bury the top card of your deck.",
+    "cn": "【进化时】从下述之中抉择1项。\n【1】选择自己的墓场中的1张「卡片名包含『鲁鲁纳伊』的从者卡」。将其召唤到场上。\n【2】选择敌方场上的1个从者。给予其2点伤害。\n《谢幕曲》将自己的牌堆顶1张卡置于墓场。",
+    "ja": "【進化時】下記から1つチョイスする。【1】自分の墓場の「カード名に『ルルナイ』を含むフォロワー」1枚を選ぶ。それを場に出す。【2】相手の場のフォロワー1体を選ぶ。それに2ダメージ。\nラストワード自分のデッキの上1枚を墓場に置く。"
+   },
+   "traits": [
+    "絶傑",
+    "死霊術師"
+   ]
+  },
+  {
+   "id": "BP15-090",
+   "printings": [
+    "BP15-090",
+    "BP15-P20"
+   ],
+   "name": "Hermit of Lust",
+   "names": {
+    "en": "Hermit of Lust",
+    "cn": "欲望的隐者",
+    "ja": "欲望の隠者"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Give your leader {[defense]}-1: Give this Intimidate.\nActivate Give your leader {[defense]}-1: Give this {[attack]}+1. Activate only once per turn.",
+    "cn": "《入场曲》主战者的《生命值》-1：使这张卡获得【威压】能力。\n《起动》主战者的《生命值》-1：使这张卡《攻击力》+1。这个能力在1回合可以使用1次。",
+    "ja": "ファンファーレリーダーの体力-1：これは【威圧】を持つ。\n起動リーダーの体力-1：これは攻撃力+1する。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "絶傑",
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-091",
+   "printings": [
+    "BP15-091"
+   ],
+   "name": "Hermit of Silence",
+   "names": {
+    "en": "Hermit of Silence",
+    "cn": "沉默的隐者",
+    "ja": "沈黙の隠者"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} Select an enemy follower on the field and destroy it. Its controller discards a random card.",
+    "cn": "《入场曲》选择敌方场上的1个从者。将其破坏。其玩家，随机将自身的1张手牌舍弃。",
+    "ja": "ファンファーレ相手の場のフォロワー1体を選ぶ。それを破壊する。それのプレイヤーは、自身の手札をランダムに1枚捨てる。"
+   },
+   "traits": [
+    "絶傑",
+    "死霊術師"
+   ]
+  },
+  {
+   "id": "BP15-092",
+   "printings": [
+    "BP15-092"
+   ],
+   "name": "Krampus",
+   "names": {
+    "en": "Krampus",
+    "cn": "坎卜斯",
+    "ja": "クランプス"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Bury another follower: Select an enemy follower on the field. Destroy it, give your leader {[defense]}+1, bury the top 2 cards of your deck, and draw a card.",
+    "cn": "《入场曲》将场上的其他的1个从者置于墓场：选择敌方场上的1个从者。将其破坏。使自己的主战者《生命值》+1。将自己的牌堆顶2张卡置于墓场。抽取1张卡。",
+    "ja": "ファンファーレ場の他のフォロワー1体を墓場に置く：相手の場のフォロワー1体を選ぶ。それを破壊する。自分のリーダーは体力+1する。自分のデッキの上2枚を墓場に置く。1枚引く。"
+   },
+   "traits": [
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-093",
+   "printings": [
+    "BP15-093"
+   ],
+   "name": "Astral Projection",
+   "names": {
+    "en": "Astral Projection",
+    "cn": "灵魂出窍",
+    "ja": "幽体の剥離"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field. Destroy it and bury the top 2 cards of your deck.",
+    "cn": "《快速》\n选择敌方场上的1个从者。将其破坏。将自己的牌堆顶2张卡置于墓场。",
+    "ja": "クイック\n相手の場のフォロワー1体を選ぶ。それを破壊する。自分のデッキの上2枚を墓場に置く。"
+   },
+   "traits": [
+    "死者",
+    "死霊術師"
+   ]
+  },
+  {
+   "id": "BP15-094",
+   "printings": [
+    "BP15-094",
+    "BP15-SL24",
+    "EBD04-004"
+   ],
+   "name": "Marwynn, Repose of Despair",
+   "names": {
+    "en": "Marwynn, Repose of Despair",
+    "cn": "绝望安息·玛文",
+    "ja": "絶望の安息・マーウィン"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost03]}: Evolve this.\nWard.\n{[fanfare]} If there are at least 3 followers on an opponent's field, put a Torrent of Despair token into your EX area.\nAt the start of each opponent's main phase, give your leader {[defense]}+2.",
+    "cn": "《进化》《消费3》：使这张卡进化。\n【守护】\n当敌方的主要阶段到来时，使自己的主战者《生命值》+2。\n《入场曲》如果敌方1位玩家的场上的从者为3个及以上的话，将1张『绝望的奔流』卡置于EX区域。",
+    "ja": "進化コスト3：これは進化する。\n【守護】\n相手のメインフェイズが来たとき、自分のリーダーは体力+2する。\nファンファーレ相手プレイヤー1人の場のフォロワーが3体以上なら、『絶望の奔流』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "絶傑",
+    "狂信"
+   ]
+  },
+  {
+   "id": "BP15-095",
+   "printings": [
+    "BP15-095",
+    "BP15-SL25",
+    "EBD04-005"
+   ],
+   "name": "Marwynn, Repose of Despair",
+   "names": {
+    "en": "Marwynn, Repose of Despair",
+    "cn": "绝望安息·玛文",
+    "ja": "絶望の安息・マーウィン"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Ward.\nOn Evolve - Destroy each other follower on the field.\nAt the start of each opponent's main phase, give your leader {[defense]}+2.",
+    "cn": "【守护】\n当敌方的主要阶段到来时，使自己的主战者《生命值》+2。\n【进化时】将场上的其他的全体从者各破坏。",
+    "ja": "【守護】\n相手のメインフェイズが来たとき、自分のリーダーは体力+2する。\n【進化時】場の他のフォロワーすべてを破壊する。"
+   },
+   "traits": [
+    "絶傑",
+    "狂信"
+   ]
+  },
+  {
+   "id": "BP15-096",
+   "printings": [
+    "BP15-096",
+    "BP15-SL26",
+    "BP15-U06",
+    "SCS01-008"
+   ],
+   "name": "Wilbert, Luminous Paladin",
+   "names": {
+    "en": "Wilbert, Luminous Paladin",
+    "cn": "光灿圣骑士·维尔伯特",
+    "ja": "ブライトパラディン・ウィルバート"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Look at the top 5 cards of your deck. You may summon a follower with Ward that costs 2 or less from among them. Put the rest on the bottom of your deck in any order.\nActivate {[engage]} this: Select an enemy follower on the field and destroy it. Activate only if there are at least 3 followers on your field with Ward.",
+    "cn": "【守护】\n《入场曲》查看自己的牌堆顶5张卡。从那之中，可以将原始消费为2及以下的持有【守护】能力的1张从者卡召唤到场上。将剩余的卡以任意顺序置于牌堆底。\n《起动》将这张卡《横置》：选择敌方场上的1个从者。将其破坏。这个能力在自己场上的持有【守护】能力的从者为3个及以上的话才可使用。",
+    "ja": "【守護】\nファンファーレ自分のデッキの上5枚を見る。その中から、元のコスト2以下の【守護】を持つフォロワー1枚を場に出してよい。残りを好きな順にデッキの下に置く。\n起動これをアクト：相手の場のフォロワー1体を選ぶ。それを破壊する。この能力は自分の場の【守護】を持つフォロワーが3体以上なら使える。"
+   },
+   "traits": [
+    "挑戦者",
+    "先導"
+   ]
+  },
+  {
+   "id": "BP15-097",
+   "printings": [
+    "BP15-097",
+    "BP15-SL27"
+   ],
+   "name": "Sarissa, Luxflash Spear",
+   "names": {
+    "en": "Sarissa, Luxflash Spear",
+    "cn": "破暗煌辉·萨莉沙",
+    "ja": "闇穿つ煌き・サリッサ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "Ward.\nWhile there are at least 3 cards on your field, this has Storm.\n{[fanfare]} Select an enemy follower on the field and give it {[attack]}-1/{[defense]}-1.",
+    "cn": "【守护】\n只要自己场上的卡片有3张及以上存在，使这张卡获得【疾驰】能力。\n《入场曲》选择敌方场上的1个从者。使其《攻击力》-1/《生命值》-1。",
+    "ja": "【守護】\n自分の場にカードが3枚以上ある限り、これは【疾走】を持つ。\nファンファーレ相手の場のフォロワー1体を選ぶ。それは攻撃力-1/体力-1する。"
+   },
+   "traits": [
+    "先導",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP15-098",
+   "printings": [
+    "BP15-098"
+   ],
+   "name": "Shiro, Cursed Wings",
+   "names": {
+    "en": "Shiro, Cursed Wings",
+    "cn": "受诅咒的双翼·希萝",
+    "ja": "呪われた翼・シロ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWard.\n{[fanfare]} Select a follower in your cemetery with Ward that costs 2 or less and summon it.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】\n《入场曲》选择自己的墓场中的原始消费为2及以下的持有【守护】能力的1张从者卡。将其召唤到场上。",
+    "ja": "進化コスト1：これは進化する。\n【守護】\nファンファーレ自分の墓場の元のコスト2以下の【守護】を持つフォロワー1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "先導",
+    "狂信",
+    "鳥族"
+   ]
+  },
+  {
+   "id": "BP15-099",
+   "printings": [
+    "BP15-099"
+   ],
+   "name": "Shiro, Cursed Wings",
+   "names": {
+    "en": "Shiro, Cursed Wings",
+    "cn": "受诅咒的双翼·希萝",
+    "ja": "呪われた翼・シロ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\nOn Evolve - Deal each enemy follower on the field damage equal to the number of other followers on your field with Ward.",
+    "cn": "【守护】\n【进化时】给予敌方场上的全体从者各与「自己场上的其他的持有【守护】能力的从者的数量」等量的伤害。",
+    "ja": "【守護】\n【進化時】相手の場のフォロワーすべてに「自分の場の他の【守護】を持つフォロワーの数」と同じダメージ。"
+   },
+   "traits": [
+    "先導",
+    "狂信",
+    "鳥族"
+   ]
+  },
+  {
+   "id": "BP15-100",
+   "printings": [
+    "BP15-100"
+   ],
+   "name": "Cyclical Fate",
+   "names": {
+    "en": "Cyclical Fate",
+    "cn": "转动的命运",
+    "ja": "廻り出す運命"
+   },
+   "class": "Havencraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Search your deck for a Deus Ex Machina, summon it, then shuffle. Summon an Ancient Artifact or Mystic Artifact token.",
+    "cn": "从自己的牌堆之中搜寻1张『机械降神』卡，并召唤到场上。将1个『古老的创造物』或1个『神秘的创造物』召唤到场上。\n―――――――――――――――\n『古老的创造物』《中立职业》超克类型·从者《消费1》《攻击力》3/《生命值》1【突进】\n『神秘的创造物』《中立职业》超克类型·从者《消费3》《攻击力》2/《生命值》3【守护】《入场曲》抽取1张卡。",
+    "ja": "自分のデッキから『デウスエクスマキナ』1枚を探し、場に出す。『エンシェントアーティファクト』1体か『ミスティックアーティファクト』1体を場に出す。\n―――――――――――――――\n『エンシェントアーティファクト』ニュートラル超克・フォロワーコスト1攻撃力3/体力1【突進】\n『ミスティックアーティファクト』ニュートラル超克・フォロワーコスト3攻撃力2/体力3【守護】ファンファーレ1枚引く。"
+   },
+   "traits": [
+    "先導",
+    "超克"
+   ]
+  },
+  {
+   "id": "BP15-101",
+   "printings": [
+    "BP15-101",
+    "BP15-P21",
+    "EBD04-012"
+   ],
+   "name": "Perpetual Despair",
+   "names": {
+    "en": "Perpetual Despair",
+    "cn": "悠久的绝望",
+    "ja": "悠久の絶望"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Whenever a follower with \"Marwynn\" in its name is put onto your field, you may put this from your cemetery into your EX area. If you do, give your leader {[defense]}+1.\n----------\nActivate {[engage]} this, bury this: Draw a card.",
+    "cn": "当「卡片名包含『玛文』的从者」召唤到自己的场上时，可以将自己的墓场中的这张卡置于EX区域。若如此做，使自己的主战者《生命值》+1。\n《起动》将这张卡《横置》置于墓场：抽取1张卡。",
+    "ja": "自分の場に「カード名に『マーウィン』を含むフォロワー」が出たとき、自分の墓場のこれをEXエリアに置いてよい。そうしたなら、自分のリーダーは体力+1する。\n起動これをアクト墓場に置く：1枚引く。"
+   },
+   "traits": [
+    "絶傑",
+    "狂信"
+   ]
+  },
+  {
+   "id": "BP15-102",
+   "printings": [
+    "BP15-102",
+    "BP15-P22"
+   ],
+   "name": "Adherent of Despair",
+   "names": {
+    "en": "Adherent of Despair",
+    "cn": "绝望的崇拜者",
+    "ja": "絶望の崇拝者"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nAt the start of each opponent's main phase, select an enemy follower on the field. If this is reserved, the selected follower can't attack enemies this turn.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n当敌方的主要阶段到来时，选择敌方场上的1个从者。如果这张卡为竖置状态的话，这个回合，使其不能对敌方进行攻击。",
+    "ja": "進化コスト1：これは進化する。\n相手のメインフェイズが来たとき、相手の場のフォロワー1体を選ぶ。これがスタンド状態なら、このターン、それは相手を攻撃できない。"
+   },
+   "traits": [
+    "絶傑",
+    "狂信"
+   ]
+  },
+  {
+   "id": "BP15-103",
+   "printings": [
+    "BP15-103",
+    "BP15-P23"
+   ],
+   "name": "Adherent of Despair",
+   "names": {
+    "en": "Adherent of Despair",
+    "cn": "绝望的崇拜者",
+    "ja": "絶望の崇拝者"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field and, if there's a follower on your field or in your cemetery with \"Marwynn\" in its name, destroy it.\nAt the start of each opponent's main phase, select an enemy follower on the field. If this is reserved, the selected follower can't attack enemies this turn.",
+    "cn": "当敌方的主要阶段到来时，选择敌方场上的1个从者。如果这张卡为竖置状态的话，这个回合，使其不能对敌方进行攻击。\n【进化时】选择敌方场上的1个从者。如果自己的场上或自己的墓场中有「卡片名包含『玛文』的从者卡」的话，将其破坏。",
+    "ja": "相手のメインフェイズが来たとき、相手の場のフォロワー1体を選ぶ。これがスタンド状態なら、このターン、それは相手を攻撃できない。\n【進化時】相手の場のフォロワー1体を選ぶ。自分の場か自分の墓場に「カード名に『マーウィン』を含むフォロワー」があるなら、それを破壊する。"
+   },
+   "traits": [
+    "絶傑",
+    "狂信"
+   ]
+  },
+  {
+   "id": "BP15-104",
+   "printings": [
+    "BP15-104",
+    "PR-393"
+   ],
+   "name": "Zeno, Paradoxical Shield",
+   "names": {
+    "en": "Zeno, Paradoxical Shield",
+    "cn": "背理盾·倢诺",
+    "ja": "背理盾・ゼノン"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Look at the top 3 cards of your deck. You may reveal a follower with Ward from among them and add it to your hand. Put the rest on the bottom of your deck in any order.\nActivate {[engage]} this, bury this: Select a follower on your field with Ward and give it {[defense]}+1. Activate only if there are at least 3 followers on your field with Ward.",
+    "cn": "《入场曲》查看自己的牌堆顶3张卡。从那之中，可以将持有【守护】能力的1张从者卡公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。\n《起动》将这张卡《横置》置于墓场：选择自己场上的持有【守护】能力的1个从者。使其《生命值》+1。这个能力在自己场上的持有【守护】能力的从者为3个及以上的话才可使用。",
+    "ja": "ファンファーレ自分のデッキの上3枚を見る。その中から、【守護】を持つフォロワー1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。\n起動これをアクト墓場に置く：自分の場の【守護】を持つフォロワー1体を選ぶ。それは体力+1する。この能力は自分の場の【守護】を持つフォロワーが3体以上なら使える。"
+   },
+   "traits": [
+    "挑戦者",
+    "先導"
+   ]
+  },
+  {
+   "id": "BP15-105",
+   "printings": [
+    "BP15-105"
+   ],
+   "name": "Crusader's Rallying Cry",
+   "names": {
+    "en": "Crusader's Rallying Cry",
+    "cn": "神圣的高唤",
+    "ja": "神聖なる雄叫び"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Summon a Holy Tiger token.\nActivate {[engage]} this, bury this: Select an enemy follower on the field and deal it 2 damage. Activate only if there are at least 3 amulets in your cemetery.",
+    "cn": "《入场曲》将1个『神圣猛虎』召唤到场上。\n《起动》将这张卡《横置》置于墓场：选择敌方场上的1个从者。给予其2点伤害。这个能力在「自己的墓场中的护符卡为3张及以上的话」才可使用。\n―――――――――――――――\n『神圣猛虎』《主教职业》野兽·从者《消费4》《攻击力》4/《生命值》4【突进】",
+    "ja": "ファンファーレ『ホーリータイガー』1体を場に出す。\n起動これをアクト墓場に置く：相手の場のフォロワー1体を選ぶ。それに2ダメージ。この能力は自分の墓場のアミュレットが3枚以上なら使える。\n―――――――――――――――\n『ホーリータイガー』ビショップ獣・フォロワーコスト4攻撃力4/体力4【突進】"
+   },
+   "traits": [
+    "信仰",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP15-106",
+   "printings": [
+    "BP15-106"
+   ],
+   "name": "Temple Healer",
+   "names": {
+    "en": "Temple Healer",
+    "cn": "神殿的治愈师",
+    "ja": "神殿の癒し手"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWard.\n{[fanfare]} Discard a follower with Ward: Draw a card.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】\n《入场曲》将手牌中的持有【守护】能力的1张从者卡舍弃：抽取1张卡。",
+    "ja": "進化コスト1：これは進化する。\n【守護】\nファンファーレ手札の【守護】を持つフォロワー1枚を捨てる：1枚引く。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "BP15-107",
+   "printings": [
+    "BP15-107"
+   ],
+   "name": "Temple Healer",
+   "names": {
+    "en": "Temple Healer",
+    "cn": "神殿的治愈师",
+    "ja": "神殿の癒し手"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\nOn Evolve - Draw a card.",
+    "cn": "【守护】\n【进化时】抽取1张卡。",
+    "ja": "【守護】\n【進化時】1枚引く。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "BP15-108",
+   "printings": [
+    "BP15-108",
+    "BP15-P24"
+   ],
+   "name": "Hermit of Repose",
+   "names": {
+    "en": "Hermit of Repose",
+    "cn": "安息的隐者",
+    "ja": "安息の隠者"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 1,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} {[cost02]} Give this {[attack]}+2.\nAt the start of each opponent's main phase, deal each enemy follower on the field damage equal to this follower's attack.",
+    "cn": "当敌方的主要阶段到来时，给予敌方场上的全体从者各与「这张卡的攻击力」等量的伤害。\n《入场曲》《消费2》：使这张卡《攻击力》+2。",
+    "ja": "相手のメインフェイズが来たとき、相手の場のフォロワーすべてに「これの攻撃力」と同じダメージ。\nファンファーレコスト2：これは攻撃力+2する。"
+   },
+   "traits": [
+    "絶傑",
+    "狂信"
+   ]
+  },
+  {
+   "id": "BP15-109",
+   "printings": [
+    "BP15-109"
+   ],
+   "name": "Hardplume Warrior",
+   "names": {
+    "en": "Hardplume Warrior",
+    "cn": "熟练的翼战士",
+    "ja": "熟達の翼戦士"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Select another {[havencraft]} follower on your field with Ward and, if there are at least 3 followers on your field with Ward, give it Storm.",
+    "cn": "【守护】\n《入场曲》选择自己场上的其他的持有【守护】能力的1个《主教职业》从者。如果自己场上的持有【守护】能力的从者为3个及以上的话，使其获得【疾驰】能力。",
+    "ja": "【守護】\nファンファーレ自分の場の他の【守護】を持つビショップフォロワー1体を選ぶ。自分の場の【守護】を持つフォロワーが3体以上なら、それは【疾走】を持つ。"
+   },
+   "traits": [
+    "信仰",
+    "鳥族"
+   ]
+  },
+  {
+   "id": "BP15-110",
+   "printings": [
+    "BP15-110"
+   ],
+   "name": "Caladrius",
+   "names": {
+    "en": "Caladrius",
+    "cn": "医官鸟",
+    "ja": "カラドリウス"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 6,
+   "defense": 6,
+   "text": {
+    "en": "Rush.\n{[fanfare]} Bury an amulet: Give this follower Storm.",
+    "cn": "【突进】\n《入场曲》将场上的1个护符置于墓场：使这张卡获得【疾驰】能力。",
+    "ja": "【突進】\nファンファーレ場のアミュレット1つを墓場に置く：これは【疾走】を持つ。"
+   },
+   "traits": [
+    "信仰",
+    "鳥族"
+   ]
+  },
+  {
+   "id": "BP15-111",
+   "printings": [
+    "BP15-111",
+    "EBD04-020"
+   ],
+   "name": "Sacred Gavel",
+   "names": {
+    "en": "Sacred Gavel",
+    "cn": "神圣的法槌",
+    "ja": "聖なるジャッジガベル"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Select an enemy follower on the field and deal it 3 damage.\n{[lastwords]} Give your leader {[defense]}+1.",
+    "cn": "《入场曲》选择敌方场上的1个从者。给予其3点伤害。\n《谢幕曲》使自己的主战者《生命值》+1。",
+    "ja": "ファンファーレ相手の場のフォロワー1体を選ぶ。それに3ダメージ。\nラストワード自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "BP15-112",
+   "printings": [
+    "BP15-112",
+    "BP15-SL28",
+    "BP15-SP01"
+   ],
+   "name": "Mjerrabaine, Great One",
+   "names": {
+    "en": "Mjerrabaine, Great One",
+    "cn": "绝大唯我·马塞班恩",
+    "ja": "絶大の唯我・マゼルベイン"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Discard 3 cards: Put a Great Testimony token into your EX area.\nActivate Banish a Mjerrabaine, Omen of One from your cemetery: Deal 2 damage to each enemy leader. Draw 2 cards. Activate only once per turn.",
+    "cn": "《入场曲》将3张手牌舍弃：将1张『绝大的证明』卡置于EX区域。\n《起动》将墓场中的1张『唯我绝杰·马塞班恩』卡消失：给予敌方的全体主战者各2点伤害。抽取2张卡。这个能力在1回合可以使用1次。\n―――――――――――――――\n『绝大的证明』《中立职业》绝杰类型·法术《消费0》选择敌方场上的1个从者。将其破坏。如果自己的场上有『绝大唯我·马塞班恩』的话，给予其主战者2点伤害。",
+    "ja": "ファンファーレ手札3枚を捨てる：『絶大の証明』1枚をEXエリアに置く。\n起動墓場の『唯我の絶傑・マゼルベイン』1枚を消滅：相手のリーダーすべてに2ダメージ。2枚引く。この能力は1ターンに1回使える。\n―――――――――――――――\n『絶大の証明』ニュートラル絶傑・スペルコスト0相手の場のフォロワー1体を選ぶ。それを破壊する。自分の場に『絶大の唯我・マゼルベイン』がいるなら、それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "絶傑"
+   ]
+  },
+  {
+   "id": "BP15-113",
+   "printings": [
+    "BP15-113",
+    "BP15-SL29",
+    "BP15-SP02"
+   ],
+   "name": "Gilnelise, Ravenous Craving",
+   "names": {
+    "en": "Gilnelise, Ravenous Craving",
+    "cn": "涸绝饥饿·吉鲁涅莉婕",
+    "ja": "干絶の飢餓・ギルネリーゼ"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWhile your leader's defense is 10 or less, this has Drain.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n只要自己的主战者的生命值为10及以下，使这张卡获得【吸血】能力。",
+    "ja": "進化コスト1：これは進化する。\n自分のリーダーの体力が10以下である限り、これは【ドレイン】を持つ。"
+   },
+   "traits": [
+    "絶傑"
+   ]
+  },
+  {
+   "id": "BP15-114",
+   "printings": [
+    "BP15-114",
+    "BP15-SL30",
+    "BP15-U07",
+    "SCS01-009"
+   ],
+   "name": "Gilnelise, Ravenous Craving",
+   "names": {
+    "en": "Gilnelise, Ravenous Craving",
+    "cn": "涸绝饥饿·吉鲁涅莉婕",
+    "ja": "干絶の飢餓・ギルネリーゼ"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "While your leader's defense is 10 or less, this has Drain.\nOn Evolve - Choose 1. (1) Select another follower on the field and give it {[attack]}-2/{[defense]}-2. (2) Put a Ravenous Sweetness token into your EX area.",
+    "cn": "只要自己的主战者的生命值为10及以下，使这张卡获得【吸血】能力。\n【进化时】从下述之中抉择1项。\n【1】选择场上的其他的1个从者。使其《攻击力》+2/《生命值》-2。\n【2】将1张『涸绝的甘露』卡置于EX区域。",
+    "ja": "自分のリーダーの体力が10以下である限り、これは【ドレイン】を持つ。\n【進化時】下記から1つチョイスする。【1】場の他のフォロワー1体を選ぶ。それは攻撃力+2/体力-2する。【2】『干絶の甘露』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "絶傑"
+   ]
+  },
+  {
+   "id": "BP15-115",
+   "printings": [
+    "BP15-115",
+    "BP15-P25"
+   ],
+   "name": "Arael",
+   "names": {
+    "en": "Arael",
+    "cn": "亚拉珥",
+    "ja": "アラエル"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 0,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWard.\n{[fanfare]} Select a follower on your field and give {[attack]}+1/{[defense]}+1.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】\n《入场曲》选择自己场上的1个从者。使其《攻击力》+1/《生命值》+1。",
+    "ja": "進化コスト1：これは進化する。\n【守護】\nファンファーレ自分の場のフォロワー1体を選ぶ。それは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "天使"
+   ]
+  },
+  {
+   "id": "BP15-116",
+   "printings": [
+    "BP15-116",
+    "BP15-P26"
+   ],
+   "name": "Arael",
+   "names": {
+    "en": "Arael",
+    "cn": "亚拉珥",
+    "ja": "アラエル"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "Ward.\nOn Evolve - Select a follower on your field and give {[attack]}+1/{[defense]}+1.",
+    "cn": "【守护】\n【进化时】选择自己场上的1个从者。使其《攻击力》+1/《生命值》+1。",
+    "ja": "【守護】\n【進化時】自分の場のフォロワー1体を選ぶ。それは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "天使"
+   ]
+  },
+  {
+   "id": "BP15-117",
+   "printings": [
+    "BP15-117"
+   ],
+   "name": "Thunder God of the Tempest",
+   "names": {
+    "en": "Thunder God of the Tempest",
+    "cn": "荒天雷神",
+    "ja": "荒天の雷神"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 7,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} Choose up to 2. (1) Select an enemy amulet on the field and destroy it. (2) Deal 3 damage to each enemy follower on the field. (3) Give this Storm. (4) Draw 2 cards.",
+    "cn": "《入场曲》从下述之中抉择最多2项。\n【1】选择敌方场上的1个护符。将其破坏。\n【2】给予敌方场上的全体从者各3点伤害。\n【3】使这张卡获得【疾驰】能力。\n【4】抽取2张卡。",
+    "ja": "ファンファーレ下記から2つまでチョイスする。【1】相手の場のアミュレット1つを選ぶ。それを破壊する。【2】相手の場のフォロワーすべてに3ダメージ。【3】これは【疾走】を持つ。【4】2枚引く。"
+   },
+   "traits": [
+    "大神"
+   ]
+  },
+  {
+   "id": "BP15-118",
+   "printings": [
+    "BP15-118",
+    "PR-433"
+   ],
+   "name": "Resolve of the Fallen",
+   "names": {
+    "en": "Resolve of the Fallen",
+    "cn": "堕落的决意",
+    "ja": "堕落の決意"
+   },
+   "class": "Neutral",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select an enemy follower on the field and deal it 2 damage. If there are at least 3 faceup evolved followers in your evolve deck, deal 4 damage instead. If there are at least 5, draw a card and recover 1 play point.",
+    "cn": "选择敌方场上的1个从者。给予其2点伤害。如果自己的进化牌组中的正面放置的进化后从者卡为3张及以上的话，转变为4点伤害。如果自己的进化牌组中的正面放置的进化后从者卡为5张及以上的话，抽取1张卡。将自己的PP回复1点。",
+    "ja": "相手の場のフォロワー1体を選ぶ。それに2ダメージ。自分のエボルヴデッキの表向きのエボルヴフォロワーが3枚以上なら、代わりに4ダメージ。自分のエボルヴデッキの表向きのエボルヴフォロワーが5枚以上なら、1枚引く。自分のPPを1回復する。"
+   },
+   "traits": [
+    "堕天使"
+   ]
+  },
+  {
+   "id": "BP15-119",
+   "printings": [
+    "BP15-119"
+   ],
+   "name": "Mechanical Analyzer",
+   "names": {
+    "en": "Mechanical Analyzer",
+    "cn": "机械分析器",
+    "ja": "メカニカルアナライザー"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "超克"
+   ]
+  },
+  {
+   "id": "BP15-120",
+   "printings": [
+    "BP15-120"
+   ],
+   "name": "Mechanical Analyzer",
+   "names": {
+    "en": "Mechanical Analyzer",
+    "cn": "机械分析器",
+    "ja": "メカニカルアナライザー"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Draw 2 cards.",
+    "cn": "【进化时】抽取2张卡。",
+    "ja": "【進化時】2枚引く。"
+   },
+   "traits": [
+    "超克"
+   ]
+  },
+  {
+   "id": "BP15-121",
+   "printings": [
+    "BP15-121"
+   ],
+   "name": "Messenger of the Skies",
+   "names": {
+    "en": "Messenger of the Skies",
+    "cn": "天空使者",
+    "ja": "天空の遣い"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Select an enemy follower on the field. Destroy it and look at the top 4 cards of your deck. You may reveal an Angel or Fallen Angel card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "《入场曲》选择敌方场上的1个从者。将其破坏。查看自己的牌堆顶4张卡。从那之中，可以将1张「天使类型·卡片或堕天使类型·卡片」公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "ファンファーレ相手の場のフォロワー1体を選ぶ。それを破壊する。自分のデッキの上4枚を見る。その中から、天使・カードか堕天使・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "天使"
+   ]
+  },
+  {
+   "id": "BP15-122",
+   "printings": [
+    "BP15-122",
+    "BP15-P27"
+   ],
+   "name": "Merciless Voiding",
+   "names": {
+    "en": "Merciless Voiding",
+    "cn": "无情的侵蚀",
+    "ja": "無情の侵食"
+   },
+   "class": "Neutral",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Summon X Ancient Artifact tokens. X equals the number of enemy followers on the field.",
+    "cn": "将X个『古老的创造物』召唤到场上。X为「敌方场上的从者的数量」。\n―――――――――――――――\n『古老的创造物』《中立职业》超克类型·从者《消费1》《攻击力》3/《生命值》1【突进】",
+    "ja": "『エンシェントアーティファクト』X体を場に出す。Xは「相手の場のフォロワーの数」である。\n―――――――――――――――\n『エンシェントアーティファクト』ニュートラル超克・フォロワーコスト1攻撃力3/体力1【突進】"
+   },
+   "traits": [
+    "超克"
+   ]
+  },
+  {
+   "id": "BP15-123",
+   "printings": [
+    "BP15-123"
+   ],
+   "name": "Nomadic Conductor",
+   "names": {
+    "en": "Nomadic Conductor",
+    "cn": "流浪指挥家",
+    "ja": "流浪の指揮者"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "傭兵",
+    "シンガー"
+   ]
+  },
+  {
+   "id": "BP15-124",
+   "printings": [
+    "BP15-124"
+   ],
+   "name": "Nomadic Conductor",
+   "names": {
+    "en": "Nomadic Conductor",
+    "cn": "流浪指挥家",
+    "ja": "流浪の指揮者"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve - Draw a card. Put a card from your hand on the bottom of your deck.",
+    "cn": "【进化时】抽取1张卡。将自己的1张手牌置于牌堆底。",
+    "ja": "【進化時】1枚引く。自分の手札1枚をデッキの下に置く。"
+   },
+   "traits": [
+    "傭兵",
+    "シンガー"
+   ]
+  },
+  {
+   "id": "BP15-125",
+   "printings": [
+    "BP15-125"
+   ],
+   "name": "Mountain Gigas",
+   "names": {
+    "en": "Mountain Gigas",
+    "cn": "山之巨人",
+    "ja": "マウンテンギガース"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 7,
+   "attack": 7,
+   "defense": 7,
+   "text": {
+    "en": "Rush. Ward.\n{[fanfare]} Select an enemy follower on the field and deal it 7 damage.",
+    "cn": "【突进】【守护】\n《入场曲》选择敌方场上的1个从者。给予其7点伤害。",
+    "ja": "【突進】【守護】\nファンファーレ相手の場のフォロワー1体を選ぶ。それに7ダメージ。"
+   },
+   "traits": [
+    "巨人"
+   ]
+  },
+  {
+   "id": "BP15-126",
+   "printings": [
+    "BP15-126",
+    "BP15-P28"
+   ],
+   "name": "Fluffy Angel",
+   "names": {
+    "en": "Fluffy Angel",
+    "cn": "飘柔天使",
+    "ja": "フラッフィーエンジェル"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]}/{[lastwords]} Give your leader {[defense]}+1.",
+    "cn": "《入场曲》《谢幕曲》使自己的主战者《生命值》+1。",
+    "ja": "ファンファーレラストワード自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "天使"
+   ]
+  },
+  {
+   "id": "BP15-PR01",
+   "printings": [
+    "BP15-PR01"
+   ],
+   "name": "Wolfraud, Hanged Trickster",
+   "names": {
+    "en": "Wolfraud, Hanged Trickster",
+    "cn": "倒吊的欺骗·罗弗拉德",
+    "ja": "吊られたイカサマ・ローフラッド"
+   },
+   "class": "Forestcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "BP15-PR02",
+   "printings": [
+    "BP15-PR02"
+   ],
+   "name": "Oluon, War's Advance",
+   "names": {
+    "en": "Oluon, War's Advance",
+    "cn": "战之辙·奥辂昂",
+    "ja": "戦の轍・オルオーン"
+   },
+   "class": "Swordcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "BP15-PR03",
+   "printings": [
+    "BP15-PR03"
+   ],
+   "name": "Lhynkal, Foolish Sage",
+   "names": {
+    "en": "Lhynkal, Foolish Sage",
+    "cn": "愚昧的贤者·琳库露",
+    "ja": "愚かなる賢者・リンクル"
+   },
+   "class": "Runecraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "BP15-PR04",
+   "printings": [
+    "BP15-PR04"
+   ],
+   "name": "Erntz, Impartial Scale",
+   "names": {
+    "en": "Erntz, Impartial Scale",
+    "cn": "公正的天秤·伊兰翠",
+    "ja": "正しき秤・イランツァ"
+   },
+   "class": "Dragoncraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "BP15-PR05",
+   "printings": [
+    "BP15-PR05"
+   ],
+   "name": "Milteo, Inseparable Love",
+   "names": {
+    "en": "Milteo, Inseparable Love",
+    "cn": "密不可分的爱·米路缇欧",
+    "ja": "分かたれぬ恋・ミルティオ"
+   },
+   "class": "Abysscraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "BP15-PR06",
+   "printings": [
+    "BP15-PR06"
+   ],
+   "name": "Luzen, Bridled Desire",
+   "names": {
+    "en": "Luzen, Bridled Desire",
+    "cn": "控制欲望·卢泽",
+    "ja": "制する欲望・ルーゼン"
+   },
+   "class": "Abysscraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "BP15-PR07",
+   "printings": [
+    "BP15-PR07"
+   ],
+   "name": "Sofina, Boundless Strength",
+   "names": {
+    "en": "Sofina, Boundless Strength",
+    "cn": "无尽力量·索菲娜",
+    "ja": "尽きぬ力・ソフィーナ"
+   },
+   "class": "Havencraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "BP15-PR08",
+   "printings": [
+    "BP15-PR08"
+   ],
+   "name": "Slaus, Fickle Wheel",
+   "names": {
+    "en": "Slaus, Fickle Wheel",
+    "cn": "祸福轮回·斯洛士",
+    "ja": "禍福巡る輪・スロース"
+   },
+   "class": "Havencraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "BP15-PR09",
+   "printings": [
+    "BP15-PR09",
+    "BP15-PR19",
+    "BP20-T12"
+   ],
+   "name": "Annihilating Onslaught",
+   "names": {
+    "en": "Annihilating Onslaught",
+    "cn": "绝命的痛击",
+    "ja": "絶命の痛撃"
+   },
+   "class": "Forestcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "If there are at least 6 Hunter cards in your cemetery, deal 6 damage to each enemy leader.",
+    "cn": "如果自己的墓场中的猎人类型·卡片为6张及以上的话，给予敌方的全体主战者各6点伤害。",
+    "ja": "自分の墓場の狩人・カードが6枚以上なら、相手のリーダーすべてに6ダメージ。"
+   },
+   "traits": [
+    "絶傑",
+    "狩人"
+   ]
+  },
+  {
+   "id": "BP15-PR10",
+   "printings": [
+    "BP15-PR10",
+    "BP15-PR20"
+   ],
+   "name": "Remnant of Hollowness",
+   "names": {
+    "en": "Remnant of Hollowness",
+    "cn": "空绝的残光",
+    "ja": "空絶の残光"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Choose 1. If there are at least 10 cards in opponents' cemeteries, choose up to 2 instead. (1) Select an enemy follower on the field and deal it 3 damage. If there are at least 10 cards in opponents' cemeteries, deal 8 damage instead. (2) Look at the top 3 cards of your deck. You may reveal a Thief card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "从下述之中抉择1项。如果敌方的墓场为10张及以上的话，转变为最多2项。\n【1】选择敌方场上的1个从者。给予其3点伤害。如果敌方的墓场为10张及以上的话，转变为8点伤害。\n【2】查看自己的牌堆顶3张卡。从那之中，可以将1张盗贼类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "下記から1つチョイスする。相手の墓場が10枚以上なら、代わりに2つまで。\n【1】相手の場のフォロワー1体を選ぶ。それに3ダメージ。相手の墓場が10枚以上なら、代わりに8ダメージ。【2】自分のデッキの上3枚を見る。その中から、盗賊・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "絶傑",
+    "盗賊",
+    "財宝"
+   ]
+  },
+  {
+   "id": "BP15-PR11",
+   "printings": [
+    "BP15-PR11",
+    "BP15-PR21",
+    "BP20-T14"
+   ],
+   "name": "Ersatz Elimination",
+   "names": {
+    "en": "Ersatz Elimination",
+    "cn": "绝尽的伪证",
+    "ja": "絶尽の偽証"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select a follower in your cemetery with both the Omen and Mage traits that costs 3 or less and summon it.",
+    "cn": "选择自己的墓场中的原始消费为3及以下的1张绝杰·魔法使类型·从者卡。将其召唤到场上。",
+    "ja": "自分の墓場の元のコスト3以下の絶傑・魔法使い・フォロワー1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "絶傑",
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP15-PR12",
+   "printings": [
+    "BP15-PR12",
+    "BP15-PR22",
+    "BP20-T13"
+   ],
+   "name": "Melodious Monody",
+   "names": {
+    "en": "Melodious Monody",
+    "cn": "奏绝的独唱",
+    "ja": "奏絶の独唱"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 0,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "As an additional cost to play this, you may engage any number of Idolatry cards on your field.\n----------\nSelect an enemy follower on the field and deal it damage equal to 2 times the number of Idolatry cards you engaged as the additional cost to play this.",
+    "cn": "将这张卡使用之际，可以作为额外消费、将场上的爱豆类型·卡片任意张数横置。\n选择敌方场上的1个从者。给予其与「作为这张卡的额外消费横置的爱豆类型·卡片的张数」的2倍等量的伤害。",
+    "ja": "これをプレイする際、追加コストとして場のアイドル・カードを好きな枚数アクトしてよい。\n相手の場のフォロワー1体を選ぶ。それに「これの追加コストとしてアクトしたアイドル・カードの枚数」の2倍のダメージ。"
+   },
+   "traits": [
+    "絶傑",
+    "アイドル"
+   ]
+  },
+  {
+   "id": "BP15-PR13",
+   "printings": [
+    "BP15-PR13",
+    "BP15-PR23"
+   ],
+   "name": "Fangs of Ardent Destruction",
+   "names": {
+    "en": "Fangs of Ardent Destruction",
+    "cn": "烈绝的灭牙",
+    "ja": "烈絶の滅牙"
+   },
+   "class": "Dragoncraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Deal 1 damage to each follower on the field. If Overflow is active for you, give each Galmieux, Ardent Disdain on your field Storm.",
+    "cn": "给予场上的全体从者各1点伤害。如果处于【觉醒】状态的话，使自己场上的全体『烈绝侮蔑·嘉鲁蜜儿』各获得【疾驰】能力。",
+    "ja": "場のフォロワーすべてに1ダメージ。【覚醒】状態なら、自分の場の『烈絶の侮蔑・ガルミーユ』すべては【疾走】を持つ。"
+   },
+   "traits": [
+    "絶傑",
+    "竜族"
+   ]
+  },
+  {
+   "id": "BP15-PR14",
+   "printings": [
+    "BP15-PR14",
+    "BP15-PR24"
+   ],
+   "name": "Wings of Desire",
+   "names": {
+    "en": "Wings of Desire",
+    "cn": "爱绝的飞翔",
+    "ja": "愛絶の飛翔"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select a follower on your field. Give it \"Strike - Deal each enemy follower on the field damage equal to the number of times your leader has lost defense this turn\" and deal 1 damage to your leader.",
+    "cn": "选择自己场上的1个从者。使其获得「【攻击时】给予敌方场上的全体从者各与「这个回合中自己的主战者的生命值减少的次数」等量的伤害」能力。给予自己的主战者1点伤害。",
+    "ja": "自分の場のフォロワー1体を選ぶ。それは「【攻撃時】相手の場のフォロワーすべてに「このターン中に自分のリーダーの体力が減少した回数」と同じダメージ」を持つ。自分のリーダーに1ダメージ。"
+   },
+   "traits": [
+    "絶傑",
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP15-PR15",
+   "printings": [
+    "BP15-PR15",
+    "BP15-PR25",
+    "EBD03-T04"
+   ],
+   "name": "Scream Diffusion",
+   "names": {
+    "en": "Scream Diffusion",
+    "cn": "绝叫的扩散",
+    "ja": "絶叫の拡散"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Summon a Rulenye, Echoing Scream token for every 5 cards in your cemetery.",
+    "cn": "自己的墓场中的卡片每有5张，将1个『绝叫残响·鲁鲁纳伊』召唤到场上。\n―――――――――――――――\n『绝叫残响·鲁鲁纳伊』《梦魇职业》绝杰·死灵术师类型·从者《消费2》《攻击力》2/《生命值》1【突进】【指定攻击】",
+    "ja": "自分の墓場のカード5枚につき、『絶叫の残響・ルルナイ』1体を場に出す。\n―――――――――――――――\n『絶叫の残響・ルルナイ』ナイトメア絶傑・死霊術師・フォロワーコスト2攻撃力2/体力1【突進】【指定攻撃】"
+   },
+   "traits": [
+    "絶傑",
+    "死霊術師"
+   ]
+  },
+  {
+   "id": "BP15-PR16",
+   "printings": [
+    "BP15-PR16",
+    "BP15-PR26",
+    "EBD04-T01"
+   ],
+   "name": "Torrent of Despair",
+   "names": {
+    "en": "Torrent of Despair",
+    "cn": "绝望的奔流",
+    "ja": "絶望の奔流"
+   },
+   "class": "Havencraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 0,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select an enemy follower on the field and banish it.",
+    "cn": "选择敌方场上的1个从者。将其消失。",
+    "ja": "相手の場のフォロワー1体を選ぶ。それを消滅させる。"
+   },
+   "traits": [
+    "絶傑",
+    "狂信"
+   ]
+  },
+  {
+   "id": "BP15-PR17",
+   "printings": [
+    "BP15-PR17",
+    "BP15-PR27"
+   ],
+   "name": "Great Testimony",
+   "names": {
+    "en": "Great Testimony",
+    "cn": "绝大的证明",
+    "ja": "絶大の証明"
+   },
+   "class": "Neutral",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 0,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select an enemy follower on the field. Destroy it and, if there's a Mjerrabaine, Great One on your field, deal 2 damage to its leader.",
+    "cn": "选择敌方场上的1个从者。将其破坏。如果自己的场上有『绝大唯我·马塞班恩』的话，给予其主战者2点伤害。",
+    "ja": "相手の場のフォロワー1体を選ぶ。それを破壊する。自分の場に『絶大の唯我・マゼルベイン』がいるなら、それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "絶傑"
+   ]
+  },
+  {
+   "id": "BP15-PR18",
+   "printings": [
+    "BP15-PR18",
+    "BP15-PR28",
+    "BP20-T18"
+   ],
+   "name": "Ravenous Sweetness",
+   "names": {
+    "en": "Ravenous Sweetness",
+    "cn": "涸绝的甘露",
+    "ja": "干絶の甘露"
+   },
+   "class": "Neutral",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 5,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Deal 2 damage to each enemy leader. Give your leader {[defense]}+2. Draw 2 cards. Each opponent discards 2 random cards.",
+    "cn": "给予敌方的全体主战者各2点伤害。使自己的主战者《生命值》+2。抽取2张卡。敌方的全体玩家，各随机将自身的2张手牌舍弃。",
+    "ja": "相手のリーダーすべてに2ダメージ。自分のリーダーは体力+2する。2枚引く。相手プレイヤーすべては、自身の手札をランダムに2枚捨てる。"
+   },
+   "traits": [
+    "絶傑"
+   ]
+  },
+  {
+   "id": "BP15-T01",
+   "printings": [
+    "BP15-T01",
+    "BP15-P29"
+   ],
+   "name": "Gilded Blade",
+   "names": {
+    "en": "Gilded Blade",
+    "cn": "黄金短剑",
+    "ja": "黄金の小剣"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select an enemy follower on the field. Deal it 2 damage and, if there are at least 10 cards in opponents' cemeteries, deal 2 damage to its leader.",
+    "cn": "选择敌方场上的1个从者。给予其2点伤害。如果敌方的墓场为10张及以上的话，给予其主战者2点伤害。",
+    "ja": "相手の場のフォロワー1体を選ぶ。それに2ダメージ。相手の墓場が10枚以上なら、それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "財宝"
+   ]
+  },
+  {
+   "id": "BP15-T02",
+   "printings": [
+    "BP15-T02",
+    "BP15-P30"
+   ],
+   "name": "Gilded Goblet",
+   "names": {
+    "en": "Gilded Goblet",
+    "cn": "黄金之杯",
+    "ja": "黄金の杯"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Give your leader{[defense]}+1. If there are at least 10 cards in opponents' cemeteries, give{[defense]}+2 instead.",
+    "cn": "使自己的主战者《生命值》+1。如果敌方的墓场为10张及以上的话，转变为《生命值》+2。",
+    "ja": "自分のリーダーは体力+1する。相手の墓場が10枚以上なら、代わりに体力+2する。"
+   },
+   "traits": [
+    "財宝"
+   ]
+  },
+  {
+   "id": "BP15-T03",
+   "printings": [
+    "BP15-T03",
+    "BP15-P31"
+   ],
+   "name": "Gilded Boots",
+   "names": {
+    "en": "Gilded Boots",
+    "cn": "黄金之靴",
+    "ja": "黄金の靴"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select a Thief follower on your field and give it Rush. If there are at least 10 cards in opponents' cemeteries, give Storm instead.",
+    "cn": "选择自己场上的1个盗贼类型·从者。使其获得【突进】能力。如果敌方的墓场为10张及以上的话，转变为获得【疾驰】能力。",
+    "ja": "自分の場の盗賊・フォロワー1体を選ぶ。それは【突進】を持つ。相手の墓場が10枚以上なら、代わりに【疾走】を持つ。"
+   },
+   "traits": [
+    "財宝"
+   ]
+  },
+  {
+   "id": "BP15-T04",
+   "printings": [
+    "BP15-T04",
+    "BP15-P32",
+    "BP20-T17",
+    "EBD03-T03"
+   ],
+   "name": "Rulenye, Echoing Scream",
+   "names": {
+    "en": "Rulenye, Echoing Scream",
+    "cn": "绝叫残响·鲁鲁纳伊",
+    "ja": "絶叫の残響・ルルナイ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": true,
+   "cost": 2,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "Rush. Assail.",
+    "cn": "【突进】【指定攻击】",
+    "ja": "【突進】【指定攻撃】"
+   },
+   "traits": [
+    "絶傑",
+    "死霊術師"
+   ]
+  }
+ ]
+}

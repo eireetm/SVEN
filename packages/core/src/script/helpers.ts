@@ -119,6 +119,10 @@ export const atStartOfYourMainPhase = (spec: TimingSpec) =>
 export const atStartOfOpponentsMainPhase = (spec: TimingSpec) =>
   automatic("other", (e, me) => !me.lookBack && e.type === "phaseStarted" && e.phase === "main" && e.player !== me.controller, spec);
 
+/** "At the start of each opponent's end phase" (CR 7.4.1), e.g. BP14-091 in the EX area. */
+export const atStartOfOpponentsEndPhase = (spec: TimingSpec) =>
+  automatic("other", (e, me) => !me.lookBack && e.type === "phaseStarted" && e.phase === "end" && e.player !== me.controller, spec);
+
 /** "At the start of each player's main phase" (CR 7.3.1). Trigger data: that player. */
 export const atStartOfEachMainPhase = (spec: TimingSpec) =>
   automatic(
@@ -527,6 +531,40 @@ export const whenDiscarded = (spec: TimingSpec) =>
   );
 
 /**
+ * "When this is discarded or banished from your hand" (BP14-074, 081): valid in the hand, it
+ * triggers as the card leaves it (look-back, CR 10.7.4). `fx.self` is then the card in the
+ * cemetery or the banished zone. A discard to the hand limit counts too (BP14-074 ruling).
+ */
+export const whenDiscardedOrBanishedFromHand = (spec: TimingSpec) =>
+  automatic(
+    "other",
+    (e, me) =>
+      me.lookBack &&
+      moves(e).some((m) => m.card === me.card && m.from?.zone === "hand" && (m.reason === "discard" || m.to.zone === "banished")),
+    spec,
+    { validIn: ["hand"] },
+  );
+
+/**
+ * A delayed trigger (CR 10.7.5) "When it's put from the field into the cemetery this turn, [effect]"
+ * (BP15-001, 008, 012). The ability goes in `abilities`; the effect that selects the card registers it
+ * with `fx.delay(index, "endOfTurn", { card })`. It triggers even if the card that created it has left
+ * the field, and each registration triggers on its own (rulings).
+ */
+export function delayedWhenPutIntoCemetery(resolve: (fx: EffectContext) => Proc<void>): AutomaticAbility {
+  return {
+    kind: "automatic",
+    timing: "other",
+    delayed: true,
+    trigger: (e, me) => {
+      const watched = me.delayedData?.card;
+      return watched !== undefined && moves(e).some((m) => m.card === watched && m.from?.zone === "field" && m.to.zone === "cemetery");
+    },
+    resolve,
+  };
+}
+
+/**
  * "Once on each of your turns, when this follower is selected for an ability" (BP03-071).
  * Only a "select" of a card in a public zone counts — not damage that was not targeted,
  * and not a cost. The ability resolves after the effect that selected it.
@@ -649,6 +687,19 @@ export function* lookAtTopCards(
   if (opts.rest === "cemetery") yield* fx.bury(left);
   else yield* fx.bottomInAnyOrder(left);
   return moved;
+}
+
+/**
+ * "Change its attack / defense to N" (BP14-041, 076, BP15-001, 014). Damage reduces defense (CR
+ * 5.14.1), so the card gains or loses the difference from its current values; after it evolves the
+ * same amount is still gained or lost (CR 5.16.2.1, BP15-014 and BP14-076 rulings).
+ */
+export function* changeStatsTo(fx: EffectContext, card: CardId, to: { attack?: number; defense?: number }): Proc<void> {
+  if (fx.game.card(card)?.zone !== "field") return;
+  const now = fx.game.info(card);
+  const attack = to.attack === undefined || now.attack === null ? 0 : to.attack - now.attack;
+  const defense = to.defense === undefined || now.defense === null ? 0 : to.defense - now.defense;
+  if (attack !== 0 || defense !== 0) yield* fx.giveStats(card, attack, defense);
 }
 
 /**

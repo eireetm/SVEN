@@ -50,6 +50,8 @@ export interface ScenarioSide {
   returnedToHand?: number;
   /** Cards this player has already played this turn (CR 13.2.1, e.g. BP07-001 "at least 5"). */
   playedThisTurn?: number;
+  /** Stack counters this player removed by Earth Rite this turn (CR 13.3.3.2, e.g. BP14-037). */
+  stackRemovedByEarthRite?: number;
 }
 
 export interface ScenarioSpec {
@@ -127,6 +129,7 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
     ps.superEvolutionPoints = side.superEvolutionPoints ?? config.rules.superEvolutionPoints;
     if (side.returnedToHand) ps.thisTurn = { ...ps.thisTurn, turn, returnedToHand: side.returnedToHand };
     if (side.playedThisTurn) ps.cardsPlayed = { turn, count: side.playedThisTurn };
+    if (side.stackRemovedByEarthRite) ps.thisTurn = { ...ps.thisTurn, turn, stackRemovedByEarthRite: side.stackRemovedByEarthRite };
   });
 
   return engine.restore({ format: 1, checkpoint: state, inputs: [] }, options);

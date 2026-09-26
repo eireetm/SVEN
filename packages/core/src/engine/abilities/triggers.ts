@@ -187,6 +187,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
     const ability = getAbility(g, d.sourceDef, d.ability);
     if (ability.kind !== "automatic") continue;
     const subject: TriggerSubject = { card: d.source ?? "", controller: d.controller, zone: "field", lookBack: false };
+    if (d.data) subject.delayedData = d.data; // what it watches (BP15-001)
     const hits = matches(ability, event, subject, reader);
     if (hits.length === 0) continue;
     state.delayed = state.delayed.filter((x) => x.id !== d.id); // CR 10.7.5.1

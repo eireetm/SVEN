@@ -106,6 +106,27 @@ export const GRANT_ABILITIES: Record<GrantedAbilityId, AbilityDef> = {
       if (fx.game.card(fx.self)?.zone === "field") yield* fx.giveStats(fx.self, 2, 2);
     },
   },
+  // BP14-T03 Flame General's Regalia (given to a Commander follower): "Strike - Deal 2 damage to
+  // each enemy leader."
+  strikeDamageLeaders2: {
+    kind: "automatic",
+    timing: "strike",
+    trigger: (e, me) => !me.lookBack && e.type === "attackDeclared" && e.attacker === me.card,
+    *resolve(fx) {
+      yield* fx.dealDamage(fx.game.leader(fx.game.opponent(fx.controller)), 2);
+    },
+  },
+  // BP15-PR14 Wings of Desire: "Strike - Deal each enemy follower on the field damage equal to the
+  // number of times your leader has lost defense this turn" (counted when it resolves — ruling).
+  strikeLeaderLossDamage: {
+    kind: "automatic",
+    timing: "strike",
+    trigger: (e, me) => !me.lookBack && e.type === "attackDeclared" && e.attacker === me.card,
+    *resolve(fx) {
+      const x = fx.game.leaderDefenseLostThisTurn(fx.controller);
+      yield* fx.dealDamageEach(fx.game.followers(fx.game.opponent(fx.controller)), x);
+    },
+  },
   // BP13-119 (for the rest of the turn): "{[lastwords]} Give your leader {[defense]}+2. Draw a
   // card." Each gift is its own ability, so two of them trigger twice (ruling).
   lastWordsLeaderDraw: {

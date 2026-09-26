@@ -104,11 +104,16 @@ export class Driver {
     return this.main((a) => a.type === "play" && this.matches(a.card, ref), `play ${ref}`);
   }
 
-  /** Activate the `n`-th currently legal non-evolve activated ability of the card. */
-  activate(ref: string, n = 0): this {
+  /**
+   * Activate the `n`-th currently legal non-evolve activated ability of the card. `ep`: pay 1
+   * evolution point in lieu of 1 play point (an advanced activated ability, CR 12.16.3).
+   */
+  activate(ref: string, n = 0, opts: { ep?: boolean } = {}): this {
     const d = this.game.decision;
     if (d?.type !== "mainPhase") throw new Error(`expected a main phase decision, got ${d?.type ?? "none"}`);
-    const options = d.actions.filter((a) => a.type === "activate" && this.matches(a.card, ref));
+    const options = d.actions.filter(
+      (a) => a.type === "activate" && this.matches(a.card, ref) && (a.useEvolutionPoint === true) === (opts.ep === true),
+    );
     const action = options[n];
     if (!action) throw new Error(`activate #${n} of ${ref} is not legal now`);
     return this.answer({ type: "mainPhase", action });

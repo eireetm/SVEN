@@ -104,6 +104,8 @@ export interface GameReader {
   cardsPlayedThisTurn(player: PlayerId): readonly DefId[];
   /** Times this player's leader lost defense this turn (BP05-069/081; each damage and "-X defense"). */
   leaderDefenseLostThisTurn(player: PlayerId): number;
+  /** Stack counters the player removed by Earth Rite this turn (CR 13.3.3.2; BP14-037). */
+  stackRemovedByEarthRiteThisTurn(player: PlayerId): number;
   /**
    * The zone a card is being played from: its zone, or the zone it was played from once it is in
    * the resolution zone (CR 5.5.3), e.g. for "costs 3 less to play from the EX area" (BP05-106),
@@ -192,6 +194,7 @@ export function makeReader(env: Env): GameReader {
     cardsReturnedToHandThisTurn: (p) => countsThisTurn(state(), p).returnedCards,
     cardsPlayedThisTurn: (p) => countsThisTurn(state(), p).played,
     leaderDefenseLostThisTurn: (p) => countsThisTurn(state(), p).leaderDefenseLost,
+    stackRemovedByEarthRiteThisTurn: (p) => countsThisTurn(state(), p).stackRemovedByEarthRite,
     playZone: (id) => {
       const c = state().cards[id];
       if (!c) return null;

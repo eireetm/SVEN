@@ -24,8 +24,11 @@ export function mainPhaseActions(g: G, player: PlayerId): MainAction[] {
   // valid in the hand, the EX area or the cemetery (CR 10.3.5, e.g. BP06-059 / 079, BP07-038)
   for (const card of cardsWithActivatedAbilities(g, player)) {
     characteristics(g, card).abilities.forEach(({ ability }, pos) => {
-      if (ability.kind === "activated" && !ability.evolve && canPlayActivated(g, player, card, pos, "main")) {
-        actions.push({ type: "activate", card, ability: pos });
+      if (ability.kind !== "activated" || ability.evolve) return;
+      if (canPlayActivated(g, player, card, pos, "main")) actions.push({ type: "activate", card, ability: pos });
+      // CR 12.16.3 — an advanced activated ability may use 1 evolution point in lieu of 1 play point.
+      if (ability.advanced && canPlayActivated(g, player, card, pos, "main", true)) {
+        actions.push({ type: "activate", card, ability: pos, useEvolutionPoint: true });
       }
     });
   }
@@ -46,7 +49,7 @@ function* performMainAction(g: G, player: PlayerId, action: Exclude<MainAction, 
     case "evolve":
       return yield* playEvolveAbility(g, player, action);
     case "activate":
-      return yield* playActivatedAbility(g, player, action.card, action.ability);
+      return yield* playActivatedAbility(g, player, action.card, action.ability, action.useEvolutionPoint === true);
     case "attack":
       return yield* performAttack(g, action.attacker, action.target);
   }

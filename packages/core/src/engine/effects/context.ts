@@ -188,8 +188,17 @@ export interface EffectContext {
   cannotDealDamage(target: CardId, until?: Until): Proc<void>;
   /** "It costs N less to play" (CR 10.4.4.1): changes only the cost of playing it. */
   changePlayCost(target: CardId, amount: number, until?: Until): Proc<void>;
-  /** "It costs N to play [this turn]" (CR 10.4.4.1, 10.10.2.4), e.g. BP02-091, BP07-071. */
-  setPlayCost(target: CardId, value: number, until?: Until): Proc<void>;
+  /**
+   * "It costs N to play [this turn]" (CR 10.4.4.1, 10.10.2.4), e.g. BP02-091, BP07-071. Cards given
+   * the same `group` share one use: playing one of them ends it for the others (BP14-046 "the next
+   * card you play that was put into your EX area this way costs 0").
+   */
+  setPlayCost(target: CardId, value: number, until?: Until, group?: string): Proc<void>;
+  /**
+   * "If [it] would take damage, it takes that much minus N instead" (CR 5.14.2), e.g. BP14-T07 on
+   * your leader for the rest of the turn.
+   */
+  reduceDamage(target: CardId, amount: number, until: Until): Proc<void>;
   /**
    * "It doesn't take (combat / ability) damage" (CR 5.14.2 replacement, 5.14.3.2). The target
    * may be a leader card (BP04-103).
@@ -242,8 +251,12 @@ export interface EffectContext {
   confirm(player?: PlayerId, subject?: CardId): Proc<boolean>;
   /** Play a card from anywhere as part of this effect, optionally for a set cost (e.g. "for 0"). */
   playCard(card: CardId, opts?: { cost?: number }): Proc<void>;
-  /** CR 10.7.5 register a delayed trigger: ability `index` of this ability's definition. */
-  delay(index: number, until?: "endOfTurn"): Proc<void>;
+  /**
+   * CR 10.7.5 register a delayed trigger: ability `index` of this ability's definition. `data` is
+   * what it watches, given to its trigger as `me.delayedData` (BP15-001 "When it's put from the
+   * field into the cemetery this turn").
+   */
+  delay(index: number, until?: "endOfTurn", data?: TriggerData): Proc<void>;
   /**
    * A slot a cost's `pay` can fill for the effect that follows it. Shared by the pay and the
    * resolve of one ability. Not stored in GameState — a replay re-runs the ability.
@@ -586,8 +599,11 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *changePlayCost(target, amount, until = null) {
       addEffect(target, until, { kind: "playCost", amount });
     },
-    *setPlayCost(target, value, until = null) {
-      addEffect(target, until, { kind: "playCostSet", value });
+    *setPlayCost(target, value, until = null, group) {
+      addEffect(target, until, group === undefined ? { kind: "playCostSet", value } : { kind: "playCostSet", value, group });
+    },
+    *reduceDamage(target, amount, until) {
+      addEffect(target, until, { kind: "damageReduction", amount });
     },
     *preventDamage(target, damage, until) {
       addEffect(target, until, { kind: "preventDamage", damage });
@@ -679,7 +695,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *playCard(card, opts = {}) {
       yield* playCard(g, ctrl, card, { setCost: opts.cost, byEffect: true });
     },
-    *delay(index, until) {
+    *delay(index, until, data) {
       const seq = nextSeq(g.state);
       g.state.delayed.push({
         id: `d${seq}`,
@@ -690,6 +706,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
         ability: index,
         createdTurn: g.state.turn,
         until: until ?? null,
+        ...(data ? { data } : {}),
       });
     },
     memory,

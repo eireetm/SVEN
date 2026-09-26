@@ -28,8 +28,11 @@ export type MainAction =
       superEvolve: boolean;
       backFace?: true;
     }
-  /** CR 8.3 play another activated ability. */
-  | { type: "activate"; card: CardId; ability: number }
+  /**
+   * CR 8.3 play another activated ability. `useEvolutionPoint` (present only when true): for an
+   * advanced activated ability, 1 evolution point replaces 1 play point of its cost (CR 12.16.3).
+   */
+  | { type: "activate"; card: CardId; ability: number; useEvolutionPoint?: true }
   /** CR 8.4 attack. `target` is an enemy follower or the enemy leader card. */
   | { type: "attack"; attacker: CardId; target: CardId }
   /** CR 7.3.3 end the main phase. */

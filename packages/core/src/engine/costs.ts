@@ -8,6 +8,8 @@ import type { Proc } from "./runtime/proc";
 import { getCard, type Env } from "./state/access";
 import { activeScript, characteristics } from "./state/characteristics";
 import { moveCards } from "./state/zones";
+import { restrictionCount } from "./state/restrictions";
+import { thisTurn } from "./state/turn-counts";
 import { makeReader } from "./query";
 
 /**
@@ -40,6 +42,8 @@ export function playCost(g: Env, card: CardId, player: PlayerId, option: PlayOpt
   // "The next [matching] card you play this turn costs N less" (BP03-038), after set-to-value
   // changes (its Transcendence ruling: a cost set to 7 is then reduced by 4).
   for (const m of nextPlayModifiersFor(g, card, player)) cost += m.costDelta;
+  // BP15-058 "during each opponent's next turn, any card they play costs 1 more" (each one adds 1).
+  cost += restrictionCount(g.state, player, "playCostPlus1");
   return Math.max(0, cost);
 }
 
@@ -74,6 +78,7 @@ export function* payEarthRite(g: G, player: PlayerId, count: number, source: Car
   const c = getCard(g.state, amulet!);
   const left = (c.counters.stack ?? 0) - count;
   c.counters.stack = left;
+  thisTurn(g.state, player).stackRemovedByEarthRite += count; // BP14-037
   g.emit({ type: "countersChanged", card: c.id, counter: "stack", count: left });
   if (left <= 0) moveCards(g, [{ card: c.id, to: "cemetery", reason: "effect" }], "effect");
 }

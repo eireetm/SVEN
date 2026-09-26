@@ -3,11 +3,12 @@ import type { CardId, PlayerId } from "../../model/ids";
 import type { AbilityDef, ActivatedAbility, EarthRiteSpec, Mode } from "../../script/types";
 import { buryCards, setEngaged } from "../actions/cards";
 import { canPayLeaderDefense, changeLeaderDefense } from "../actions/leader";
-import { canPayPlayPoints, payPlayPoints } from "../actions/points";
+import { canPayPlayPoints, payPlayPoints, spendPoints } from "../actions/points";
 import { earthRiteSources, payEarthRite } from "../costs";
 import { makeEffectContext, type EffectInit } from "../effects/context";
 import { EngineError } from "../errors";
 import { chooseModes, chooseModeTargets, resolveModes } from "./modes";
+import { evolveAbilityUsedThisTurn } from "./evolve";
 import { performableModes } from "../flow/play-card";
 import type { G } from "../runtime/context";
 import { confirm } from "../runtime/decide";
@@ -124,10 +125,29 @@ function activatedAbility(g: G, card: CardId, index: number): { ability: Activat
 }
 
 /**
- * CR 8.3 / 10.6.2 — can `player` play activated ability `index` of `card` now?
+ * CR 12.16.3 — the play points and evolution points an activated ability costs: an advanced
+ * activated ability may use 1 evolution point in lieu of 1 play point. Null when that is not possible.
+ */
+function activationPoints(g: G, player: PlayerId, ability: ActivatedAbility, useEvolutionPoint: boolean): { playPoints: number; evolutionPoints: number } | null {
+  const playPoints = ability.cost.playPoints ?? 0;
+  if (!useEvolutionPoint) return { playPoints, evolutionPoints: 0 };
+  if (!ability.advanced || playPoints < 1 || g.state.players[player].evolutionPoints < 1) return null;
+  return { playPoints: playPoints - 1, evolutionPoints: 1 };
+}
+
+/**
+ * CR 8.3 / 10.6.2 — can `player` play activated ability `index` of `card` now (paying 1 evolution
+ * point in lieu of 1 play point when `useEvolutionPoint`, CR 12.16.3)?
  * Evolve abilities are handled by engine/abilities/evolve.ts.
  */
-export function canPlayActivated(g: G, player: PlayerId, card: CardId, index: number, timing: "main" | "quick"): boolean {
+export function canPlayActivated(
+  g: G,
+  player: PlayerId,
+  card: CardId,
+  index: number,
+  timing: "main" | "quick",
+  useEvolutionPoint = false,
+): boolean {
   const c = g.state.cards[card];
   if (!c || c.controller !== player) return false;
   const found = activatedAbility(g, card, index);
@@ -140,9 +160,13 @@ export function canPlayActivated(g: G, player: PlayerId, card: CardId, index: nu
   if (perTurn !== null && usesThisTurn(g.state, c, abilityKey(def, index)) >= perTurn) return false;
   if (activationBlocked(g.state, card, false)) return false; // BP03-039/040
   if (ability.condition && !ability.condition(makeReader(g), player, card)) return false; // "can be activated if ..."
+  // CR 12.16.3 / 8.3.2.1 — an advanced activated ability is equivalent to an evolve ability: one of
+  // them per turn (BP14-018 ruling).
+  if (ability.advanced && evolveAbilityUsedThisTurn(g, player)) return false;
   // CR 10.6.2.1.2 — cannot be specified if the cost cannot be paid or targets are missing.
   const cost = ability.cost;
-  if (!canPayPlayPoints(g, player, cost.playPoints ?? 0)) return false;
+  const points = activationPoints(g, player, ability, useEvolutionPoint);
+  if (!points || !canPayPlayPoints(g, player, points.playPoints)) return false;
   if (cost.engageSelf && c.engaged) return false; // CR 10.4.6 needs a reserved card
   if (cost.leaderDefense && !canPayLeaderDefense(g, player, cost.leaderDefense)) return false;
   if (cost.custom && !cost.custom.canPay(makeReader(g), player, card)) return false;
@@ -172,8 +196,11 @@ export function cardsWithActivatedAbilities(g: G, player: PlayerId): CardId[] {
   return [...zones.field, ...elsewhere];
 }
 
-/** CR 10.6.2 — play and resolve an activated ability (not an evolve ability). */
-export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, index: number): Proc<void> {
+/**
+ * CR 10.6.2 — play and resolve an activated ability (not an evolve ability). `useEvolutionPoint`:
+ * an advanced activated ability's 1 evolution point in lieu of 1 play point (CR 12.16.3).
+ */
+export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, index: number, useEvolutionPoint = false): Proc<void> {
   const found = activatedAbility(g, card, index);
   if (!found || found.ability.evolve) throw new EngineError(`${card}#${index} is not a playable activated ability`);
   const { ability, def } = found;
@@ -196,7 +223,10 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
   const init: EffectInit = { controller: player, self: card, sourceDef: def, targets, event: null, earthRitePaid: earthRite };
   // 10.6.2.5 pay the cost in the listed order (10.4.2.1)
   const cost = ability.cost;
-  payPlayPoints(g, player, cost.playPoints ?? 0);
+  const points = activationPoints(g, player, ability, useEvolutionPoint);
+  if (!points) throw new EngineError("evolution point cannot be used for this ability");
+  payPlayPoints(g, player, points.playPoints);
+  spendPoints(g, player, points.evolutionPoints, 0);
   if (cost.engageSelf) setEngaged(g, [card], true);
   if (cost.custom) yield* cost.custom.pay(makeEffectContext(g, init));
   if (cost.leaderDefense) changeLeaderDefense(g, player, -cost.leaderDefense);
@@ -205,7 +235,8 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
   let self = card;
   if (cost.burySelf && g.state.cards[card]) self = buryCards(g, [card])[0] ?? card; // "this card" after it moved (4.1.4.1)
   if (earthRite) yield* payEarthRite(g, player, ability.earthRite?.count ?? 1, card);
-  // 10.6.2.7
+  // 10.6.2.7 — an advanced activated ability counts as this turn's evolve ability (12.16.3, 8.3.2.1)
+  if (ability.advanced) g.state.players[player].evolveAbilityTurn = g.state.turn;
   g.emit({ type: "abilityPlayed", player, source: card, sourceDef: def, ability: index });
   // 10.6.2.8.2 — chosen options in listed order (5.18.1)
   if (modes.length > 0) {

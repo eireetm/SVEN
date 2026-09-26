@@ -26,8 +26,9 @@ function testedCards(set: string): Set<string> {
     for (const [, title] of readFileSync(join(dir, file), "utf8").matchAll(/\bit\("([^"]*)"/g)) {
       const head = title!.split(" — ")[0]!;
       // A back face of a double-faced card is written "005_back" (CR 2.14); tokens "T01", leaders
-      // "LD01", and cards numbered in the U series (BP08-U07) "U07".
-      for (const [, num] of head.matchAll(/(?:^|\/\s*)((?:T|LD|U)?\d{2,3}(?:_back)?)\b/g)) ids.add(`${set}-${num}`);
+      // "LD01", cards numbered in the U series (BP08-U07) "U07", and in the PR series (BP15-PR09, a
+      // token) "PR09".
+      for (const [, num] of head.matchAll(/(?:^|\/\s*)((?:T|LD|U|PR)?\d{2,3}(?:_back)?)\b/g)) ids.add(`${set}-${num}`);
     }
   }
   return ids;

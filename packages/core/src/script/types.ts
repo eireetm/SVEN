@@ -309,6 +309,12 @@ export interface ActivatedAbility {
   evolveInto?: readonly string[];
   /** CR 12.3.3 — Quick activated ability. */
   quick?: boolean;
+  /**
+   * CR 12.16 — an advanced activated ability ({[adv]}): 1 evolution point may be used in lieu of 1
+   * play point of its cost (12.16.3), and it is equivalent to an evolve ability (8.3.2.1: one
+   * evolve or equivalent ability per turn; BP14-018 ruling).
+   */
+  advanced?: boolean;
   cost: CostSpec;
   /** "This ability can be activated once per turn." */
   oncePerTurn?: boolean;
@@ -339,6 +345,8 @@ export interface TriggerSubject {
   controller: PlayerId;
   zone: ZoneName;
   lookBack: boolean;
+  /** For a delayed trigger (CR 10.7.5): what it was registered to watch (`fx.delay`'s data). */
+  delayedData?: TriggerData;
 }
 
 /** CR 10.1.1.2 */

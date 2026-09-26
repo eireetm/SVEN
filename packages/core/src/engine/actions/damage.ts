@@ -144,6 +144,10 @@ export function* dealDamage(g: G, instances: readonly DamageInstance[]): Proc<Da
         const max = e.change.max;
         replacements.push({ apply: (a) => Math.min(a, max) });
       }
+      if (e.change.kind === "damageReduction") {
+        const amount = e.change.amount;
+        replacements.push({ apply: (a) => a - amount }); // BP14-T07
+      }
     }
     const once = state.effects.find(
       (e) => e.target === d.target && e.change.kind === "preventNextDamage" && effectInForce(state, e) && !usedUp.has(e.id),

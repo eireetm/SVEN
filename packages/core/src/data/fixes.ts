@@ -108,6 +108,14 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   // translation: both have the Japanese name ポーションウィザード and the Chinese name 魔药巫师, and
   // BP10-048's evolve ability evolves this follower (same name, CR 5.16.1.1.1).
   "BP10-049": { name_en: "Piquant Potioneer (Evolved)" },
+  // Evolved cards without the " (Evolved)" suffix: their Japanese names 氷蝕のドラゴン / 機構の撃ち手
+  // are those of the base cards BP14-056 "Frostbite Dragon" / BP14-112 "Gunslinger Automaton", and
+  // their card type is Evolved.
+  "BP14-057": { name_en: "Frostbite Dragon (Evolved)" },
+  "BP14-113": { name_en: "Gunslinger Automaton (Evolved)" },
+  // "Mechanical Analyzer  (Evolved)" has two spaces, so the name did not match its base card
+  // BP15-119 "Mechanical Analyzer" (same Japanese name メカニカルアナライザー, CR 5.16.1.1.1).
+  "BP15-120": { name_en: "Mechanical Analyzer (Evolved)" },
   // Back faces of double-faced cards (see above).
   "BP09-005": { back: BP09_005_BACK },
   "BP09-P02": { back: BP09_005_BACK },

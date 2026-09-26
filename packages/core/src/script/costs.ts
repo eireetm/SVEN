@@ -86,6 +86,14 @@ export const buryThis: CustomCost = {
   },
 };
 
+/** "Banish this" — this card on the field (BP14-018, 070: an advanced activated ability's cost). */
+export const banishThis: CustomCost = {
+  canPay: (g, _c, self) => g.card(self)?.zone === "field",
+  *pay(fx) {
+    yield* fx.banish([fx.self]);
+  },
+};
+
 /** "Discard this card" — a cost of an ability valid in the hand (BP08-037, 105; CR 10.3.5, 5.12). */
 export const discardThis: CustomCost = {
   canPay: (g, _c, self) => g.card(self)?.zone === "hand",
@@ -94,12 +102,15 @@ export const discardThis: CustomCost = {
   },
 };
 
-/** "Discard a [matching] card" from your hand. */
+/**
+ * "Discard a [matching] card" from your hand — another card than this one: a card being played is in the
+ * resolution zone when its costs are paid (CR 10.6.2.1, e.g. BP14-119, itself a Goblinoid card).
+ */
 export function discardA(filter: Filter): CustomCost {
   return {
-    canPay: (g, c) => g.cards(c, "hand").some((id) => filter(g, id)),
+    canPay: (g, c, self) => g.cards(c, "hand").some((id) => id !== self && filter(g, id)),
     *pay(fx) {
-      const cards = fx.game.cards(fx.controller, "hand").filter((id) => filter(fx.game, id));
+      const cards = fx.game.cards(fx.controller, "hand").filter((id) => id !== fx.self && filter(fx.game, id));
       yield* fx.discardCards(yield* fx.chooseCards(cards, 1, 1));
     },
   };
@@ -182,6 +193,21 @@ export function discardCardsCost(n: number): CustomCost {
     canPay: (g, c) => g.cards(c, "hand").length >= n,
     *pay(fx) {
       yield* fx.discardCards(yield* fx.chooseCards(fx.game.cards(fx.controller, "hand"), n, n));
+    },
+  };
+}
+
+/**
+ * "Reveal N [matching] cards from your hand" (CR 5.21), e.g. BP15-041 "When playing this, reveal 2 Onmyoji
+ * cards from your hand". Other cards than this one: a card being played is in the resolution zone when
+ * its costs are paid (CR 10.6.2.1; BP15-041 is itself an Onmyoji card).
+ */
+export function revealFromHand(filter: Filter, n: number): CustomCost {
+  const cards = (g: GameReader, c: PlayerId, self: CardId) => g.cards(c, "hand").filter((id) => id !== self && filter(g, id));
+  return {
+    canPay: (g, c, self) => cards(g, c, self).length >= n,
+    *pay(fx) {
+      yield* fx.reveal(yield* fx.chooseCards(cards(fx.game, fx.controller, fx.self), n, n));
     },
   };
 }

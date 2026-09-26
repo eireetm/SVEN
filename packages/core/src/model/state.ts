@@ -147,6 +147,12 @@ export interface TurnCounts {
    */
   leaderDefenseLost: number;
   /**
+   * Stack counters this player removed from cards on their field with Stack by Earth Rite (CR
+   * 13.3.3.2), e.g. BP14-037 "if you've used Earth Rite to remove at least 2 Stack counters this
+   * turn" (two Earth Rites of 1, or one of 2, both count — rulings).
+   */
+  stackRemovedByEarthRite: number;
+  /**
    * This player's cards that gained attack or defense this turn (an effect giving +X, or the +1/+1
    * of a super-evolution, CR 12.2.4.1), e.g. BP11-035 "if this follower has gained attack or
    * defense this turn" (ruling: also after it took damage).
@@ -191,7 +197,15 @@ export type EffectChange =
    * "It costs N to play" (CR 10.4.4.1, 10.10.2.4: set-to-value changes apply first), e.g.
    * BP02-091 "Those cards cost 0 play points to play".
    */
-  | { kind: "playCostSet"; value: number }
+  | {
+      kind: "playCostSet";
+      value: number;
+      /**
+       * Cards given the same group share one use: when one of them is played, the others lose it
+       * (BP14-046 "the next card you play that was put into your EX area this way costs 0").
+       */
+      group?: string;
+    }
   /** "It cannot deal damage" (e.g. BP01-024) — its damage is replaced by no damage (5.14.2). */
   | { kind: "cannotDealDamage" }
   /**
@@ -227,6 +241,11 @@ export type EffectChange =
   | { kind: "preventNextDamage" }
   /** "If [it] would take more than N damage, it takes N instead" (BP05-101): each instance (ruling). */
   | { kind: "damageCap"; max: number }
+  /**
+   * "If [it] would take damage, it takes that much minus N instead" (BP14-T07, on a leader): a
+   * replacement of each instance (CR 5.14.2); several add up (ruling).
+   */
+  | { kind: "damageReduction"; amount: number }
   /**
    * "It doesn't refresh during its controller's next start phase" (BP06-056): skipped in the
    * next start phase of its controller after this turn (CR 7.2.3), then the effect ends. It
@@ -273,7 +292,9 @@ export type GrantedAbilityId =
   | "returnToHandAtEnd"
   | "strikePlus2"
   | "activateEngageDamage3"
-  | "lastWordsLeaderDraw";
+  | "lastWordsLeaderDraw"
+  | "strikeDamageLeaders2"
+  | "strikeLeaderLossDamage";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {
@@ -313,6 +334,11 @@ export interface DelayedTrigger {
    * the end of the turn if it has not triggered (CR 7.4.8). Null = until it triggers.
    */
   until: "endOfTurn" | null;
+  /**
+   * What it watches, given to its trigger as `TriggerSubject.delayedData`, e.g. BP15-001 "When it's
+   * put from the field into the cemetery this turn" (the selected follower).
+   */
+  data?: TriggerData;
 }
 
 /**
@@ -339,7 +365,9 @@ export interface NextPlayModifier {
  *  - "noStartPhaseMaxPlayPoints": they can't increase their maximum play points by 1 during
  *    their next start phase (CR 7.2.1);
  *  - "cantPlayFollowers": they can't play followers during their next main phase, not even by
- *    an effect that plays one (BP05-006 ruling). Putting followers onto the field is not playing.
+ *    an effect that plays one (BP05-006 ruling). Putting followers onto the field is not playing;
+ *  - "playCostPlus1": any card they play during their next turn costs 1 more, also one played by
+ *    an effect; several add up (BP15-058 rulings).
  * It applies in the player's first turn after the turn it was created in and ends with that turn.
  * A prohibition takes precedence over an instruction (CR 1.3.3).
  */
@@ -347,7 +375,7 @@ export interface PlayerRestriction {
   id: string;
   seq: number;
   player: PlayerId;
-  kind: "noStartPhaseDraw" | "noStartPhaseMaxPlayPoints" | "cantPlayFollowers";
+  kind: "noStartPhaseDraw" | "noStartPhaseMaxPlayPoints" | "cantPlayFollowers" | "playCostPlus1";
   createdTurn: number;
 }
 
