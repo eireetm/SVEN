@@ -1,0 +1,3685 @@
+{
+ "format": 1,
+ "set": "BP21",
+ "printings": 253,
+ "cards": [
+  {
+   "id": "BP21-001",
+   "printings": [
+    "BP21-001",
+    "BP21-SL01"
+   ],
+   "name": "Castelle, Budding Mage",
+   "names": {
+    "en": "Castelle, Budding Mage",
+    "cn": "嫩绿的新生·卡诗黛儿",
+    "ja": "新緑の新入生・カステル"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "Each Academic and Beast follower on your field not named Castelle, Budding Mage doesn't take ability damage.\n{[fanfare]} If there are at least 3 Academic and/or Beast followers on your field, put a Verdant Prayer token into your EX area.",
+    "cn": "只要有这张卡在场上存在，使自己场上的全体「与这张卡不同名的学院类型·从者」与野兽类型·从者各不会受到能力伤害。\n《入场曲》如果自己场上的「学院类型·从者或野兽类型·从者」合计为3个或以上的话，将1张『新绿的显现』卡置于EX区域。",
+    "ja": "これが場にいる限り、自分の場の「これと同名を除く学院・フォロワー」と獣・フォロワーすべては能力ダメージを受けない。\nファンファーレ自分の場の学院・フォロワーや獣・フォロワーが3体以上なら、『緑の顕現』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "エルフ族",
+    "学院",
+    "超克"
+   ]
+  },
+  {
+   "id": "BP21-002",
+   "printings": [
+    "BP21-002",
+    "BP21-SL02"
+   ],
+   "name": "Lyelth, Immaculate Idol",
+   "names": {
+    "en": "Lyelth, Immaculate Idol",
+    "cn": "无谬偶像·雷琉",
+    "ja": "無謬の偶像・ライル"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Discard a Puppetry card: Draw 2 cards.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》将手牌中的1张人偶类型·卡片舍弃：抽取2张卡。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ手札の人形・カード1枚を捨てる：2枚引く。"
+   },
+   "traits": [
+    "人形",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-003",
+   "printings": [
+    "BP21-003",
+    "BP21-SL03"
+   ],
+   "name": "Lyelth, Immaculate Idol",
+   "names": {
+    "en": "Lyelth, Immaculate Idol",
+    "cn": "无谬偶像·雷琉",
+    "ja": "無謬の偶像・ライル"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Put a Lyelth's Marionette token into your EX area.\nOn Super-Evolve - Select a Puppetry token follower in your EX area and, if there are at least 3 Puppetry cards in your cemetery, give it {[attack]}+4/{[defense]}+4.",
+    "cn": "【进化时】将1张『雷琉的人偶』卡置于EX区域。\n【超进化时】选择自己EX区域的1个人偶类型·衍生物·从者。如果如果自己的墓场中的人偶类型·卡片为3张及以上的话，使其《攻击力》+4/《生命值》+4。",
+    "ja": "【進化時】『ライルの人形』1枚をEXエリアに置く。\n【超進化時】自分のEXエリアの人形・トークン・フォロワー1体を選ぶ。自分の墓場の人形・カードが3枚以上なら、それは攻撃力+4/体力+4する。\n―――――――――――――――\n『ライルの人形』エルフ人形・学院・フォロワーコスト0攻撃力1/体力1これは場にいる限り、『操り人形』でもある。【疾走】【必殺】【守護】"
+   },
+   "traits": [
+    "人形",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-004",
+   "printings": [
+    "BP21-004",
+    "BP21-SL04",
+    "BP21-U01"
+   ],
+   "name": "Titania, Queen of Fairies",
+   "names": {
+    "en": "Titania, Queen of Fairies",
+    "cn": "羽翅女王·提泰妮娅",
+    "ja": "翅の女王・ティターニア"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[fanfare]} If there are at least 2 Pixie cards in your EX area, search your deck for a Pixie follower not named Titania, Queen of Fairies that costs 3 or less, summon it, then shuffle.\n{[act]} {[cost01]}, engage this, bury this: Select an enemy follower on the field, destroy it, and its controller summons a Fairy token. Activate only if there are 5 Pixie cards in your EX area.",
+    "cn": "《入场曲》如果自己EX区域的妖精类型·卡片为2张及以上的话，从自己的牌堆之中搜寻1张「与这张卡不同名的原始消费为3及以下的妖精类型·从者卡」，并召唤到场上。\n《起动》《消费1》将这张卡《横置》置于墓场：选择敌方场上的1个从者。将其破坏。其玩家将1个『妖精』召唤到场上。这个能力在自己EX区域的妖精类型·卡片为5张的话才可使用。",
+    "ja": "ファンファーレ自分のEXエリアの妖精・カードが2枚以上なら、自分のデッキから「これと同名を除く元のコスト3以下の妖精・フォロワー」1枚を探し、場に出す。\n起動コスト1これをアクト墓場に置く：相手の場のフォロワー1体を選ぶ。それを破壊する。それのプレイヤーは『フェアリー』1体を場に出す。この能力は自分のEXエリアの妖精・カードが5枚なら使える。"
+   },
+   "traits": [
+    "妖精",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "BP21-005",
+   "printings": [
+    "BP21-005",
+    "BP21-P01"
+   ],
+   "name": "Cleaver Cat",
+   "names": {
+    "en": "Cleaver Cat",
+    "cn": "切剁猫女",
+    "ja": "カッティングキャット"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Discard a card: Look at the top 3 cards of your deck. You may reveal an Academic or Beast card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》将1张手牌舍弃：查看自己的牌堆顶3张卡。从那之中，可以将1张「学院类型·卡片或野兽类型·卡片」公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ手札1枚を捨てる：自分のデッキの上3枚を見る。その中から、学院・カードか獣・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "学院",
+    "獣",
+    "コック"
+   ]
+  },
+  {
+   "id": "BP21-006",
+   "printings": [
+    "BP21-006",
+    "BP21-P02"
+   ],
+   "name": "Cleaver Cat",
+   "names": {
+    "en": "Cleaver Cat",
+    "cn": "切剁猫女",
+    "ja": "カッティングキャット"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Return another Academic or Beast follower from your field to its owner's hand: Select an enemy follower on the field and deal it 3 damage.",
+    "cn": "【进化时】将场上的其他的1个学院类型·从者或场上的其他的1个野兽类型·从者放回手牌：选择敌方场上的1个从者。给予其3点伤害。（放回到手牌的衍生物会从游戏中移出）",
+    "ja": "【進化時】場の他の学院・フォロワー1体か場の他の獣・フォロワー1体を手札に戻す：相手の場のフォロワー1体を選ぶ。それに3ダメージ。（手札に戻ったトークンはゲームから取り除く）"
+   },
+   "traits": [
+    "学院",
+    "獣",
+    "コック"
+   ]
+  },
+  {
+   "id": "BP21-007",
+   "printings": [
+    "BP21-007",
+    "PR-575"
+   ],
+   "name": "Cynthia, Chivalrous Elf",
+   "names": {
+    "en": "Cynthia, Chivalrous Elf",
+    "cn": "森林的骑士精神·辛西亚",
+    "ja": "フォレストシバルリー・シンシア"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 4,
+   "defense": 2,
+   "text": {
+    "en": "Rush. Assail.\n{[fanfare]} Choose 1. (1) Select up to 2 Pixie token followers in your EX area or on your field, and give them {[attack]}+1/{[defense]}+1. (2) Summon 2 Fairy tokens.",
+    "cn": "【突进】【指定攻击】\n《入场曲》从下述之中抉择1项。\n【1】选择「自己场上或自己EX区域的妖精类型·衍生物·从者卡」合计最多2张。使其《攻击力》+1/《生命值》+1。\n【2】将2个『妖精』召唤到场上。",
+    "ja": "【突進】【指定攻撃】\nファンファーレ下記から1つチョイスする。【1】自分の場や自分のEXエリアの妖精・トークン・フォロワー2枚まで選ぶ。それは攻撃力+1/体力+1する。【2】『フェアリー』2体を場に出す。\n―――――――――――――――\n『フェアリー』エルフ妖精・フォロワーコスト1攻撃力1/体力1"
+   },
+   "traits": [
+    "エルフ族"
+   ]
+  },
+  {
+   "id": "BP21-008",
+   "printings": [
+    "BP21-008",
+    "BP21-P03"
+   ],
+   "name": "Dwarven Lumberjack",
+   "names": {
+    "en": "Dwarven Lumberjack",
+    "cn": "伐木斧的矮人",
+    "ja": "伐採斧のドワーフ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Whenever another Academic or Beast follower is put onto your field, select an enemy follower on the field. Deal 5 damage to it and 1 damage to its leader.\n{[fanfare]} You may summon an Academic or Beast follower that costs 4 or less from your hand.",
+    "cn": "当其他的学院类型·从者或野兽类型·从者召唤到自己的场上时，选择敌方场上的1个从者。给予其5点伤害。给予其主战者1点伤害。\n《入场曲》可以将自己的手牌中的1张「原始消费为4及以下的学院类型·从者卡或原始消费为4及以下的野兽类型·从者卡」召唤到场上。",
+    "ja": "自分の場に他の学院・フォロワーか獣・フォロワーが出たとき、相手の場のフォロワー1体を選ぶ。それに5ダメージ。それのリーダーに1ダメージ。\nファンファーレ自分の手札の元のコスト4以下の学院・フォロワーか元のコスト4以下の獣・フォロワー1枚を場に出してよい。"
+   },
+   "traits": [
+    "精霊",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-009",
+   "printings": [
+    "BP21-009",
+    "BP21-P04"
+   ],
+   "name": "Elven Farmhand",
+   "names": {
+    "en": "Elven Farmhand",
+    "cn": "农作精灵",
+    "ja": "農作のエルフ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "エルフ族",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-010",
+   "printings": [
+    "BP21-010",
+    "BP21-P05"
+   ],
+   "name": "Elven Farmhand",
+   "names": {
+    "en": "Elven Farmhand",
+    "cn": "农作精灵",
+    "ja": "農作のエルフ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Look at the top 5 cards of your deck. You may summon up to two 1-cost Academic and/or Beast followers from among them. Put the rest on the bottom of your deck in any order.",
+    "cn": "【进化时】查看自己的牌堆顶5张卡。从那之中，可以将「原始消费为1的学院类型·从者卡或原始消费为1的野兽类型·从者卡」合计最多2张召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "【進化時】自分のデッキの上5枚を見る。その中から、元のコスト1の学院・フォロワーや元のコスト1の獣・フォロワー2枚まで場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "エルフ族",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-011",
+   "printings": [
+    "BP21-011",
+    "PR-569"
+   ],
+   "name": "Fauna Handler",
+   "names": {
+    "en": "Fauna Handler",
+    "cn": "自然驯服师",
+    "ja": "ナチュラルテイマー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "When this leaves the field, select an Academic or Beast follower on your field and give it {[attack]}+1/{[defense]}+1.",
+    "cn": "当这张卡离开场上时，选择自己场上的1个学院类型·从者或自己场上的1个野兽类型·从者。使其《攻击力》+1/《生命值》+1。",
+    "ja": "これが場を離れたとき、自分の場の学院・フォロワー1体か自分の場の獣・フォロワー1体を選ぶ。それは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "学院",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-012",
+   "printings": [
+    "BP21-012",
+    "BP21-P06"
+   ],
+   "name": "Fairy Funfact",
+   "names": {
+    "en": "Fairy Funfact",
+    "cn": "妖精的学习",
+    "ja": "妖精の学習"
+   },
+   "class": "Forestcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Summon a Fairy token. Give each Pixie token follower on your field Rush and Assail. Combo (3) - Draw a card.",
+    "cn": "将1个『妖精』召唤到场上。使自己场上的全体妖精类型·衍生物·从者各获得【突进】【指定攻击】能力。【连击_3】抽取1张卡。",
+    "ja": "『フェアリー』1体を場に出す。自分の場の妖精・トークン・フォロワーすべては【突進】【指定攻撃】を持つ。【コンボ_3】1枚引く。\n―――――――――――――――\n『フェアリー』エルフ妖精・フォロワーコスト1攻撃力1/体力1"
+   },
+   "traits": [
+    "妖精",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-013",
+   "printings": [
+    "BP21-013",
+    "BP21-P07"
+   ],
+   "name": "Bladebunny",
+   "names": {
+    "en": "Bladebunny",
+    "cn": "剑兔",
+    "ja": "ソードラビット"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost00]}: Evolve this. Activate only if a card was returned to hand from your field this turn.\nWhen this is returned to hand from your field, you may summon a Bladebunny from your hand.",
+    "cn": "《进化》《消费0》：使这张卡进化。这个能力在这个回合，如果已有自己的卡片从场上放回到手牌的话才可使用。\n当这张卡从场上放回到手牌时，可以将自己的手牌中的1张『剑兔』召唤到场上。",
+    "ja": "進化コスト0：これは進化する。この能力はこのターン、自分のカードが場から手札に戻っていたなら使える。\nこれが場から手札に戻ったとき、自分の手札の『ソードラビット』1枚を場に出してよい。"
+   },
+   "traits": [
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-014",
+   "printings": [
+    "BP21-014",
+    "BP21-P08"
+   ],
+   "name": "Bladebunny",
+   "names": {
+    "en": "Bladebunny",
+    "cn": "剑兔",
+    "ja": "ソードラビット"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "",
+    "cn": "-",
+    "ja": ""
+   },
+   "traits": [
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-015",
+   "printings": [
+    "BP21-015",
+    "BP21-P09"
+   ],
+   "name": "Vanguard Tigress",
+   "names": {
+    "en": "Vanguard Tigress",
+    "cn": "迅虎少女",
+    "ja": "タイガーガール"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 4,
+   "defense": 3,
+   "text": {
+    "en": "Storm.\nStrike - Banish 3 Beast cards from your cemetery: Select an enemy follower on the field and deal it 4 damage.",
+    "cn": "【疾驰】\n【攻击时】将墓场中的3张野兽类型·卡片消失：选择敌方场上的1个从者。给予其4点伤害。",
+    "ja": "【疾走】\n【攻撃時】墓場の獣・カード3枚を消滅：相手の場のフォロワー1体を選ぶ。それに4ダメージ。"
+   },
+   "traits": [
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-016",
+   "printings": [
+    "BP21-016",
+    "BP21-P10"
+   ],
+   "name": "Flying Mistletoe Squirrel",
+   "names": {
+    "en": "Flying Mistletoe Squirrel",
+    "cn": "栖木的飞鼠",
+    "ja": "宿り木のモモンガ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Return a Beast follower not named Flying Mistletoe Squirrel from your field to its owner's hand: Give this Storm. Draw a card",
+    "cn": "《入场曲》将场上的1个「与这张卡不同名的野兽类型·从者」放回手牌：使这张卡获得【疾驰】能力。抽取1张卡。",
+    "ja": "ファンファーレ場の「これと同名を除く獣・フォロワー」1体を手札に戻す：これは【疾走】を持つ。1枚引く。"
+   },
+   "traits": [
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-017",
+   "printings": [
+    "BP21-017"
+   ],
+   "name": "Spiritelementalist",
+   "names": {
+    "en": "Spiritelementalist",
+    "cn": "林野的精灵术师",
+    "ja": "ワイルドエレメンタラー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 5,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Deal 5 damage to each enemy follower on the field",
+    "cn": "《入场曲》给予敌方场上的全体从者各5点伤害。",
+    "ja": "ファンファーレ相手の場のフォロワーすべてに5ダメージ。"
+   },
+   "traits": [
+    "エルフ族"
+   ]
+  },
+  {
+   "id": "BP21-018",
+   "printings": [
+    "BP21-018"
+   ],
+   "name": "Wild Profusion",
+   "names": {
+    "en": "Wild Profusion",
+    "cn": "绚绽之庭",
+    "ja": "繚乱の庭"
+   },
+   "class": "Forestcraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Summon a Fairy token.\nActivate {[engage]} this, bury this: Select an enemy follower on the field and deal it X damage. X equals the total number of Pixie token followers on your field and in your EX area.",
+    "cn": "《入场曲》将1个『妖精』召唤到场上。\n《起动》将这张卡《横置》置于墓场：选择敌方场上的1个从者。给予其X点伤害。X为「自己场上与自己EX区域的妖精类型·衍生物·从者卡的张数的合计」。",
+    "ja": "ファンファーレ『フェアリー』1体を場に出す。\n起動これをアクト墓場に置く：相手の場のフォロワー1体を選ぶ。それにXダメージ。Xは「自分の場と自分のEXエリアの妖精・トークン・フォロワーの枚数の合計」である。\n―――――――――――――――\n『フェアリー』エルフ妖精・フォロワーコスト1攻撃力1/体力1"
+   },
+   "traits": [
+    "妖精"
+   ]
+  },
+  {
+   "id": "BP21-019",
+   "printings": [
+    "BP21-019",
+    "BP21-SL05"
+   ],
+   "name": "Lecia & Nano, Twilight Trainees",
+   "names": {
+    "en": "Lecia & Nano, Twilight Trainees",
+    "cn": "校舍的黄昏·莉夏与奈诺",
+    "ja": "学び舎の黄昏・リーシャ＆ナノ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "While there's another Academic follower on your field, this has Bane.\n{[fanfare]} Search your deck for a 1-cost follower, summon it, then shuffle.",
+    "cn": "只要自己的场上有其他的学院类型·从者存在，使这张卡获得【必杀】能力。\n《入场曲》从自己的牌堆之中搜寻原始消费为1的1张从者卡，并召唤到场上。",
+    "ja": "自分の場に他の学院・フォロワーがいる限り、これは【必殺】を持つ。\nファンファーレ自分のデッキから元のコスト1のフォロワー1枚を探し、場に出す。"
+   },
+   "traits": [
+    "指揮官",
+    "兵士",
+    "学院",
+    "超克"
+   ]
+  },
+  {
+   "id": "BP21-020",
+   "printings": [
+    "BP21-020",
+    "BP21-SL06"
+   ],
+   "name": "Galdr, Heroic Headmaster",
+   "names": {
+    "en": "Galdr, Heroic Headmaster",
+    "cn": "英杰学园长·盖尔德鲁",
+    "ja": "英傑の学園長・ガルドル"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} {[cost02]} Search your deck for an Academic follower that costs 2 or less, summon it, then shuffle.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》《消费2》：从自己的牌堆之中搜寻原始消费为2及以下的1张学院类型·从者卡，并召唤到场上。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレコスト2：自分のデッキから元のコスト2以下の学院・フォロワー1枚を探し、場に出す。"
+   },
+   "traits": [
+    "指揮官",
+    "学院",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-021",
+   "printings": [
+    "BP21-021",
+    "BP21-SL07"
+   ],
+   "name": "Galdr, Heroic Headmaster",
+   "names": {
+    "en": "Galdr, Heroic Headmaster",
+    "cn": "英杰学园长·盖尔德鲁",
+    "ja": "英傑の学園長・ガルドル"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Search your deck for an Academic follower that costs 3 or less, summon it, then shuffle.\nOn Super-Evolve - Give this \"If an Academic follower you control would take damage, it takes that much minus 2 instead.\"",
+    "cn": "【进化时】从自己的牌堆之中搜寻原始消费为3及以下的1张学院类型·从者卡，并召唤到场上。\n【超进化时】使这张卡获得「只要有这张卡在场上存在，使自己场上的学院类型·从者受到的伤害各-2」能力。",
+    "ja": "【進化時】自分のデッキから元のコスト3以下の学院・フォロワー1枚を探し、場に出す。\n【超進化時】これは「これが場にいる限り、自分の場の学院・フォロワーが受けるダメージを-2する」を持つ。"
+   },
+   "traits": [
+    "指揮官",
+    "学院",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-022",
+   "printings": [
+    "BP21-022",
+    "BP21-SL08",
+    "BP21-U02"
+   ],
+   "name": "Yurius, Levin Authority",
+   "names": {
+    "en": "Yurius, Levin Authority",
+    "cn": "雷维翁超越者·尤里乌斯",
+    "ja": "レヴィオンの超越者・ユリウス"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Reveal 2 Levin cards from your hand: Choose 1 of the following. If there are at least 5 Levin cards in your cemetery, choose up to 3 instead. (1) Select an enemy follower on the field and destroy it. (2) Deal 3 damage to each enemy leader. (3) Draw 2 cards and discard a card.",
+    "cn": "《入场曲》将手牌中的2张雷维翁类型·卡片公开：从下述之中抉择1项。如果自己的墓场中的雷维翁类型·卡片为5张及以上的话，转变为最多3项。\n【1】选择敌方场上的1个从者。将其破坏。\n【2】给予敌方的全体主战者各3点伤害。\n【3】抽取2张卡。将自己的1张手牌舍弃。",
+    "ja": "ファンファーレ手札のレヴィオン・カード2枚を公開：下記から1つチョイスする。自分の墓場のレヴィオン・カードが5枚以上なら、代わりに3つまで。\n【1】相手の場のフォロワー1体を選ぶ。それを破壊する。【2】相手のリーダーすべてに3ダメージ。【3】2枚引く。自分の手札1枚を捨てる。"
+   },
+   "traits": [
+    "貴族",
+    "レヴィオン"
+   ]
+  },
+  {
+   "id": "BP21-023",
+   "printings": [
+    "BP21-023",
+    "BP21-P11"
+   ],
+   "name": "Agile Twinblader",
+   "names": {
+    "en": "Agile Twinblader",
+    "cn": "飞跃的双剑手",
+    "ja": "飛躍の双剣使い"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this. Activate only if this was put onto the field by an ability.\n{[fanfare]} If this was put onto the field by an ability, give it Storm.",
+    "cn": "《进化》《消费1》：使这张卡进化。这个能力在「这张卡以能力召唤到场上的话」才可使用。\n《入场曲》如果这张卡以能力召唤到场上的话，使这张卡获得【疾驰】能力。",
+    "ja": "進化コスト1：これは進化する。この能力はこれが能力によって場に出ていたなら使える。\nファンファーレこれが能力によって場に出ていたなら、これは【疾走】を持つ。"
+   },
+   "traits": [
+    "兵士",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-024",
+   "printings": [
+    "BP21-024",
+    "BP21-P12"
+   ],
+   "name": "Agile Twinblader",
+   "names": {
+    "en": "Agile Twinblader",
+    "cn": "飞跃的双剑手",
+    "ja": "飛躍の双剣使い"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Strike - {[cost02]}: If there's another Academic follower on your field, refresh this. Activate only once per turn.",
+    "cn": "【攻击时】《消费2》：如果自己的场上有其他的学院类型·从者的话，将这张卡竖置。这个能力在1回合仅限发动1次。",
+    "ja": "【攻撃時】コスト2：自分の場に他の学院・フォロワーがいるなら、これをスタンドする。この能力は1ターンに1回働く。"
+   },
+   "traits": [
+    "兵士",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-025",
+   "printings": [
+    "BP21-025",
+    "PR-576"
+   ],
+   "name": "Weiss, Discerning Professor",
+   "names": {
+    "en": "Weiss, Discerning Professor",
+    "cn": "拣选的教员·汎斯",
+    "ja": "選別の教員・ヴァイス"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "At the start of your end phase, select an enemy leader or enemy follower on the field and deal it damage equal to the number of other Academic followers on your field.\n{[fanfare]} Look at the top 5 cards of your deck. You may summon up to 2 Academic followers that cost a total of 4 or less from among them. Put the rest on the bottom of your deck in any order.",
+    "cn": "当自己的结束阶段到来时，选择敌方的1位主战者或敌方场上的1个从者。给予其与「自己场上的其他的学院类型·从者的数量」等量的伤害。\n《入场曲》查看自己的牌堆顶5张卡。从那之中，直到原始消费的合计变为4及以下、可以将学院类型·从者卡最多2张召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "自分のエンドフェイズが来たとき、相手のリーダー1人か相手の場のフォロワー1体を選ぶ。それに「自分の場の他の学院・フォロワーの数」と同じダメージ。\nファンファーレ自分のデッキの上5枚を見る。その中から、学院・フォロワーを元のコストの合計が4以下になるように2枚まで場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "学院",
+    "超克",
+    "キラー"
+   ]
+  },
+  {
+   "id": "BP21-026",
+   "printings": [
+    "BP21-026",
+    "PR-585"
+   ],
+   "name": "Twilight and Silver",
+   "names": {
+    "en": "Twilight and Silver",
+    "cn": "黄昏与白银",
+    "ja": "黄昏と白銀"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "You may play this for 2 more play points.\nChoose 1. If you played this for 2 more play points, choose up to 2 instead. (1) Search your deck for a follower with \"Amelia\" in its name, summon it, then shuffle. (2) Search your deck for a follower with \"Lecia\" in its name, summon it, then shuffle.",
+    "cn": "将这张卡使用之际，可以将消费+2。\n从下述之中抉择1项。如果将消费+2的话，转变为最多2项。\n【1】从自己的牌堆中搜寻1张「卡片名包含『艾蜜莉亚』的从者卡」，并召唤到场上。\n【2】从自己的牌堆中搜寻1张「卡片名包含『莉夏』的从者卡」，并召唤到场上。",
+    "ja": "これをプレイする際、コストを+2してよい。\n下記から1つチョイスする。コストを+2したなら、代わりに2つまで。\n【1】自分のデッキから「カード名に『エミリア』を含むフォロワー」1枚を探し、場に出す。【2】自分のデッキから「カード名に『リーシャ』を含むフォロワー」1枚を探し、場に出す。"
+   },
+   "traits": [
+    "指揮官"
+   ]
+  },
+  {
+   "id": "BP21-027",
+   "printings": [
+    "BP21-027",
+    "BP21-P13"
+   ],
+   "name": "Tony, Plucky Polliwog",
+   "names": {
+    "en": "Tony, Plucky Polliwog",
+    "cn": "耿直的琢磨·托尼",
+    "ja": "愚直なる研磨・トニー"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this.\n{[fanfare]} If this was put onto the field by an ability, evolve it.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《入场曲》如果这张卡以能力召唤到场上的话，使这张卡进化。",
+    "ja": "進化コスト2：これは進化する。\nファンファーレこれが能力によって場に出ていたなら、これは進化する。"
+   },
+   "traits": [
+    "兵士",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-028",
+   "printings": [
+    "BP21-028",
+    "BP21-P14"
+   ],
+   "name": "Tony, Plucky Polliwog",
+   "names": {
+    "en": "Tony, Plucky Polliwog",
+    "cn": "耿直的琢磨·托尼",
+    "ja": "愚直なる研磨・トニー"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Draw a card.",
+    "cn": "【进化时】抽取1张卡。",
+    "ja": "【進化時】1枚引く。"
+   },
+   "traits": [
+    "兵士",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-029",
+   "printings": [
+    "BP21-029",
+    "PR-570"
+   ],
+   "name": "Deadeye Trainee",
+   "names": {
+    "en": "Deadeye Trainee",
+    "cn": "神准训练生",
+    "ja": "必中の訓練生"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Select an enemy follower on the field. If this was put onto the field by an ability, destroy it and deal 1 damage to its leader.",
+    "cn": "【守护】\n《入场曲》选择敌方场上的1个从者。如果这张卡以能力召唤到场上的话，将其破坏。给予其主战者1点伤害。",
+    "ja": "【守護】\nファンファーレ相手の場のフォロワー1体を選ぶ。これが能力によって場に出ていたなら、それを破壊する。それのリーダーに1ダメージ。"
+   },
+   "traits": [
+    "兵士",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-030",
+   "printings": [
+    "BP21-030",
+    "BP21-P15"
+   ],
+   "name": "Sharp Strategist",
+   "names": {
+    "en": "Sharp Strategist",
+    "cn": "妙才战略家",
+    "ja": "才気の戦略家"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Activate {[costX]}, engage this: Select an Academic follower that costs X or less in your cemetery not named Sharp Strategist and summon it.",
+    "cn": "《起动》《消费X》将这张卡《横置》：选择自己的墓场中的1张「与这张卡不同名的原始消费为X及以下的学院类型·从者卡」。将其召唤到场上。",
+    "ja": "起動コストXこれをアクト：自分の墓場の「これと同名を除く元のコストX以下の学院・フォロワー」1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "指揮官",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-031",
+   "printings": [
+    "BP21-031",
+    "BP21-P16"
+   ],
+   "name": "Kitty Sergeant",
+   "names": {
+    "en": "Kitty Sergeant",
+    "cn": "军士猫",
+    "ja": "サージェントキャット"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWhenever another follower is put onto your field, give your leader {[defense]}+1.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n当其他的从者召唤到自己的场上时，使自己的主战者《生命值》+1。",
+    "ja": "進化コスト1：これは進化する。\n自分の場に他のフォロワーが出たとき、自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "指揮官",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-032",
+   "printings": [
+    "BP21-032",
+    "BP21-P17"
+   ],
+   "name": "Kitty Sergeant",
+   "names": {
+    "en": "Kitty Sergeant",
+    "cn": "军士猫",
+    "ja": "サージェントキャット"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Whenever another follower is put onto your field, give your leader {[defense]}+1.\nOn Evolve - Look at the top 4 cards of your deck. You may summon a follower that costs 4 or less from among them. Put the rest on the bottom of your deck in any order.",
+    "cn": "当其他的从者召唤到自己的场上时，使自己的主战者《生命值》+1。\n【进化时】查看自己的牌堆顶4张卡。从那之中，可以将原始消费为4及以下的1张从者卡召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "自分の場に他のフォロワーが出たとき、自分のリーダーは体力+1する。\n【進化時】自分のデッキの上4枚を見る。その中から、元のコスト4以下のフォロワー1枚を場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "指揮官",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-033",
+   "printings": [
+    "BP21-033",
+    "BP21-P18"
+   ],
+   "name": "Fervent Fist-Fighter",
+   "names": {
+    "en": "Fervent Fist-Fighter",
+    "cn": "奋勇格斗家",
+    "ja": "奮闘する格闘家"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "Rush.\n{[fanfare]} If this was put onto the field by an ability, give it {[attack]}+2 and Assail.",
+    "cn": "【突进】\n《入场曲》如果这张卡以能力召唤到场上的话，使这张卡《攻击力》+2，并获得【指定攻击】能力。",
+    "ja": "【突進】\nファンファーレこれが能力によって場に出ていたなら、これは攻撃力+2して、【指定攻撃】を持つ。"
+   },
+   "traits": [
+    "兵士",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-034",
+   "printings": [
+    "BP21-034",
+    "BP21-P19"
+   ],
+   "name": "Levin Archer",
+   "names": {
+    "en": "Levin Archer",
+    "cn": "雷维翁弓箭手",
+    "ja": "レヴィオンの弓使い"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Look at the top 2 cards of your deck. You may reveal a Levin card from among them and add it to your hand. Bury the rest.\nActivate {[engage]} this: Select an enemy follower on the field and, if there are at least 5 Levin cards in your cemetery, deal it 3 damage.",
+    "cn": "《入场曲》查看自己的牌堆顶2张卡。从那之中，可以将1张雷维翁类型·卡片公开并加入手牌。将剩余的卡置于墓场。\n《起动》将这张卡《横置》：选择敌方场上的1个从者。如果自己的墓场中的雷维翁类型·卡片为5张及以上的话，给予其3点伤害。",
+    "ja": "ファンファーレ自分のデッキの上2枚を見る。その中から、レヴィオン・カード1枚を公開して手札に加えてよい。残りを墓場に置く。\n起動これをアクト：相手の場のフォロワー1体を選ぶ。自分の墓場のレヴィオン・カードが5枚以上なら、それに3ダメージ。"
+   },
+   "traits": [
+    "兵士",
+    "レヴィオン"
+   ]
+  },
+  {
+   "id": "BP21-035",
+   "printings": [
+    "BP21-035",
+    "BP21-P20"
+   ],
+   "name": "Aggressive Advance",
+   "names": {
+    "en": "Aggressive Advance",
+    "cn": "势不可当",
+    "ja": "快進撃"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "When playing this, engage an Officer follower on your field: This costs 1 less.\nSelect an enemy follower on the field. Deal it 4 damage and summon a Knight token.",
+    "cn": "将这张卡使用之际，将场上的1个士兵类型·从者《横置》：将消费-1。\n选择敌方场上的1个从者。给予其4点伤害。将1个『骑士』召唤到场上。",
+    "ja": "これをプレイする際、場の兵士・フォロワー1体をアクト：コストを-1する。\n相手の場のフォロワー1体を選ぶ。それに4ダメージ。『ナイト』1体を場に出す。\n―――――――――――――――\n『ナイト』ロイヤル兵士・フォロワーコスト1攻撃力1/体力1"
+   },
+   "traits": [
+    "兵士"
+   ]
+  },
+  {
+   "id": "BP21-036",
+   "printings": [
+    "BP21-036"
+   ],
+   "name": "Lieutenant's Report",
+   "names": {
+    "en": "Lieutenant's Report",
+    "cn": "战场纪录",
+    "ja": "戦場の記録"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select up to 2 Officer followers in your cemetery and add them to your hand.",
+    "cn": "选择自己的墓场中的士兵类型·从者卡最多2张。将其加入手牌。",
+    "ja": "自分の墓場の兵士・フォロワー2枚まで選ぶ。それを手札に加える。"
+   },
+   "traits": [
+    "指揮官"
+   ]
+  },
+  {
+   "id": "BP21-037",
+   "printings": [
+    "BP21-037",
+    "BP21-SL09",
+    "PR-583"
+   ],
+   "name": "Amaryllis, the Princess",
+   "names": {
+    "en": "Amaryllis, the Princess",
+    "cn": "童话公主·阿玛丽丽丝",
+    "ja": "御伽の姫・アマリリス"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 0,
+   "defense": 3,
+   "text": {
+    "en": "At the start of your end phase, you may bury the top card of your deck.\nOnce per turn, when this takes ability damage, give this {[attack]}+2.\n{[fanfare]} If there are at least 10 Academic cards in your cemetery, put a Curse of Suffering token into your EX area.",
+    "cn": "当自己的结束阶段到来时，可以将自己的牌堆顶1张卡置于墓场。\n每个回合1次，当这张卡受到能力伤害时，使这张卡《攻击力》+2。\n《入场曲》如果自己的墓场中的学院类型·卡片为10张及以上的话，将1张『苦痛』卡置于EX区域。",
+    "ja": "自分のエンドフェイズが来たとき、自分のデッキの上1枚を墓場に置いてよい。\nターンごとに1回、これが能力ダメージを受けたとき、これは攻撃力+2する。\nファンファーレ自分の墓場の学院・カードが10枚以上なら、『痛苦』1枚をEXエリアに置く。\n―――――――――――――――\n『痛苦』ウィッチ魔法使い・学院・プリンセス・スペルコスト1相手のリーダーすべてと相手の場のフォロワーすべてと自分の場の『御伽の姫・アマリリス』すべてに2ダメージ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "BP21-038",
+   "printings": [
+    "BP21-038",
+    "BP21-SL10"
+   ],
+   "name": "Anne, Brilliant Mage",
+   "names": {
+    "en": "Anne, Brilliant Mage",
+    "cn": "光艳之魔导·安",
+    "ja": "精彩の魔導・アン"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Discard an Academic card: Draw a card.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》将手牌中的1张学院类型·卡片舍弃：抽取1张卡。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ手札の学院・カード1枚を捨てる：1枚引く。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "BP21-039",
+   "printings": [
+    "BP21-039",
+    "BP21-SL11"
+   ],
+   "name": "Anne, Brilliant Mage",
+   "names": {
+    "en": "Anne, Brilliant Mage",
+    "cn": "光艳之魔导·安",
+    "ja": "精彩の魔導・アン"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Summon an Anne's Summoning token and, if there are at least 10 Academic cards in your cemetery, give it Assail.\nOn Super-Evolve - Search your deck for an Anne's Sorcery, reveal it, add it to your hand, then shuffle. The next Anne's Sorcery you play this turn costs 5 less.",
+    "cn": "【进化时】将1个『安的巨大英灵』召唤到场上。如果自己的墓场中的学院类型·卡片为10张及以上的话，使其获得【指定攻击】能力。\n【超进化时】从自己的牌堆之中搜寻1张『安的宏大魔法』卡，并加入手牌。这个回合，下次自己将『安的宏大魔法』卡使用之际，将其消费-5。",
+    "ja": "【進化時】『アンの大英霊』1体を場に出す。自分の墓場の学院・カードが10枚以上なら、それは【指定攻撃】を持つ。\n【超進化時】自分のデッキから『アンの大魔法』1枚を探し、手札に加える。このターン、次に自分が『アンの大魔法』をプレイする際、コストを-5する。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "BP21-040",
+   "printings": [
+    "BP21-040",
+    "BP21-SL12",
+    "BP21-U03"
+   ],
+   "name": "Ceridwen, Eternal Duality",
+   "names": {
+    "en": "Ceridwen, Eternal Duality",
+    "cn": "双魂的永恒·关德温",
+    "ja": "双魂の久遠・ケリドウェン"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "At the start of your end phase, select an enemy leader or enemy follower on the field and, if you've used Earth Rite to remove at least 1 Stack counters from cards on your field with Stack this turn, deal it 2 damage.\n{[fanfare]} - Earth Rite: Search your deck for a follower with Earth Rite or Earth Sigil amulet that costs 1 or less, summon it, then shuffle.",
+    "cn": "当自己的结束阶段到来时，选择敌方的1位主战者或敌方场上的1个从者。如果这个回合中以自己的【土之秘术】能力已将自己场上的【蓄积】取除1个及以上的话，给予其2点伤害。\n《入场曲》【土之秘术】从自己的牌堆之中搜寻1张「原始消费为1及以下的持有【土之秘术】能力的从者卡或原始消费为1及以下的土之印类型·护符卡」，并召唤到场上。",
+    "ja": "自分のエンドフェイズが来たとき、相手のリーダー1人か相手の場のフォロワー1体を選ぶ。このターン中に自分の【土の秘術】によって自分の場の【スタック】を1個以上取っていたなら、それに2ダメージ。\nファンファーレ【土の秘術】自分のデッキから元のコスト1以下の【土の秘術】を持つフォロワーか元のコスト1以下の土の印・アミュレット1枚を探し、場に出す。"
+   },
+   "traits": [
+    "錬金術師",
+    "禁忌"
+   ]
+  },
+  {
+   "id": "BP21-041",
+   "printings": [
+    "BP21-041"
+   ],
+   "name": "Grea, Crimson Promise",
+   "names": {
+    "en": "Grea, Crimson Promise",
+    "cn": "缔结之红莲·古蕾娅",
+    "ja": "結びの紅蓮・グレア"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Discard an Academic card: Draw a card.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》将手牌中的1张学院类型·卡片舍弃：抽取1张卡。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ手札の学院・カード1枚を捨てる：1枚引く。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "BP21-042",
+   "printings": [
+    "BP21-042"
+   ],
+   "name": "Grea, Crimson Promise",
+   "names": {
+    "en": "Grea, Crimson Promise",
+    "cn": "缔结之红莲·古蕾娅",
+    "ja": "結びの紅蓮・グレア"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field and deal it 2 damage. If there are at least 10 Academic cards in your cemetery, deal 4 damage instead and 1 damage to its leader.",
+    "cn": "【进化时】选择敌方场上的1个从者。给予其2点伤害。如果自己的墓场中的学院类型·卡片为10张及以上的话，转变为4点伤害。给予其主战者1点伤害。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それに2ダメージ。自分の墓場の学院・カードが10枚以上なら、代わりに4ダメージ。それのリーダーに1ダメージ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "BP21-043",
+   "printings": [
+    "BP21-043",
+    "PR-571"
+   ],
+   "name": "Mysterian Exchange Party",
+   "names": {
+    "en": "Mysterian Exchange Party",
+    "cn": "马纳历亚派对",
+    "ja": "マナリアパーティー"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 7,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "When this is discarded by the ability of an Academic card you control, draw a card.\n----------\nLook at the top 5 cards of your deck. You may summon up to 3 Academic followers that cost a total of 6 or less from among them. Put the rest on the bottom of your deck in any order.",
+    "cn": "当以自己的学院类型·卡片的能力将这张卡从自己的手牌中舍弃时，抽取1张卡。\n----------\n查看自己的牌堆顶5张卡。从那之中，直到原始消费的合计变为6及以下、可以将学院类型·从者卡最多3张召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "自分の学院・カードの能力によってこれを自分の手札から捨てたとき、1枚引く。\n----------\n自分のデッキの上5枚を見る。その中から、学院・フォロワーを元のコストの合計が6以下になるように3枚まで場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "BP21-044",
+   "printings": [
+    "BP21-044",
+    "BP21-P21"
+   ],
+   "name": "Mystic Rune",
+   "names": {
+    "en": "Mystic Rune",
+    "cn": "神秘的魔法阵",
+    "ja": "神秘の魔法陣"
+   },
+   "class": "Runecraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Stack.\n{[fanfare]} Put an Emergency Summoning token or a Reactive Barrier token into your EX area.",
+    "cn": "【蓄积】\n《入场曲》将1张『紧急召唤』卡或1张『术式结界』卡置于EX区域。",
+    "ja": "【スタック】\nファンファーレ『緊急召喚』1枚か『術式結界』1枚をEXエリアに置く。\n―――――――――――――――\n『緊急召喚』ウィッチ錬金術師・土の印・アミュレットコスト0【スタック】ファンファーレ『防御型ゴーレム』1体を場に出す。自分の場に元のコスト3以上の錬金術師・フォロワーがいるなら、『ガーディアンゴーレム』1枚をEXエリアに置く。\n『術式結界』ウィッチ錬金術師・土の印・アミュレットコスト0【スタック】ファンファーレ1枚引く。自分の場に元のコスト3以上の錬金術師・フォロワーがいるなら、代わりに2枚。"
+   },
+   "traits": [
+    "錬金術師",
+    "土の印"
+   ]
+  },
+  {
+   "id": "BP21-045",
+   "printings": [
+    "BP21-045",
+    "BP21-P22"
+   ],
+   "name": "Gruinne, Leonardian Provost",
+   "names": {
+    "en": "Gruinne, Leonardian Provost",
+    "cn": "鲁纳尔的教会长·葛芮妮",
+    "ja": "ルナルの教会長・グリュネ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Add 1 to a Stack on your field. (If there are no cards on your field with Stack, summon a Magic Sediment token with 1 Stack counter.)\nActivate {[engage]} this, Earth Rite (2): Deal 1 damage to each enemy follower on the field",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》将自己场上的【蓄积】+1。（如果自己的场上没有持有【蓄积】能力的卡片的话，将1个『大地之魔片』召唤到场上并将【蓄积】增加）\n《起动》将这张卡《横置》【土之秘术_2】：给予敌方场上的全体从者各1点伤害。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分の場の【スタック】を+1する。（自分の場に【スタック】を持つカードがないなら、『大地の魔片』1つを場に出し【スタック】を+する）\n起動これをアクト【土の秘術_2】：相手の場のフォロワーすべてに1ダメージ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-046",
+   "printings": [
+    "BP21-046",
+    "BP21-P23"
+   ],
+   "name": "Gruinne, Leonardian Provost",
+   "names": {
+    "en": "Gruinne, Leonardian Provost",
+    "cn": "鲁纳尔的教会长·葛芮妮",
+    "ja": "ルナルの教会長・グリュネ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve - Add 1 to a Stack on your field.\nActivate {[engage]} this, Earth Rite (2): Deal 1 damage to each enemy follower on the field.",
+    "cn": "【进化时】将自己场上的【蓄积】+1。\n《起动》将这张卡《横置》【土之秘术_2】：给予敌方场上的全体从者各1点伤害。",
+    "ja": "【進化時】自分の場の【スタック】を+1する。\n起動これをアクト【土の秘術_2】：相手の場のフォロワーすべてに1ダメージ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-047",
+   "printings": [
+    "BP21-047",
+    "PR-577"
+   ],
+   "name": "Leeds, Pining Witch",
+   "names": {
+    "en": "Leeds, Pining Witch",
+    "cn": "恋咒术师·莉姿",
+    "ja": "カースドソーサラー・リーズ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Banish the top card of your deck.\nActivate {[engage]} this, banish this: Select an enemy follower on the field. Deal it 4 damage and draw a card. Activate only if there are at least 5 cards in your banished zone.",
+    "cn": "《入场曲》将自己的牌堆顶1张卡消失。\n《起动》将这张卡《横置》消失：选择敌方场上的1个从者。给予其4点伤害。抽取1张卡。这个能力在自己的消失领域为5张及以上的话才可使用。",
+    "ja": "ファンファーレ自分のデッキの上1枚を消滅させる。\n起動これをアクト消滅：相手の場のフォロワー1体を選ぶ。それに4ダメージ。1枚引く。この能力は自分の消滅領域が5枚以上なら使える。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-048",
+   "printings": [
+    "BP21-048",
+    "BP21-P24"
+   ],
+   "name": "Bell Witch",
+   "names": {
+    "en": "Bell Witch",
+    "cn": "手铃魔法师",
+    "ja": "鐘の魔術師"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Look at the top 4 cards of your deck. From among them, you may put up to 1 Academic follower and up to 1 Academic spell into your EX area. Put the rest on the bottom of your deck in any order.",
+    "cn": "《入场曲》查看自己的牌堆顶4张卡。从那之中，可以将学院类型·从者卡与学院类型·法术卡各最多1张置于EX区域。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "ファンファーレ自分のデッキの上4枚を見る。その中から、学院・フォロワーと学院・スペルそれぞれ1枚までEXエリアに置いてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-049",
+   "printings": [
+    "BP21-049"
+   ],
+   "name": "Wolf Whisperer",
+   "names": {
+    "en": "Wolf Whisperer",
+    "cn": "狼群召唤师",
+    "ja": "群れの召喚士"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "魔法使い",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-050",
+   "printings": [
+    "BP21-050"
+   ],
+   "name": "Wolf Whisperer",
+   "names": {
+    "en": "Wolf Whisperer",
+    "cn": "狼群召唤师",
+    "ja": "群れの召喚士"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Look at the top 5 cards of your deck. You may summon up to 2 followers with different classes that costs 4 or less from among them. Put the rest on the bottom of your deck in any order.",
+    "cn": "【进化时】查看自己的牌堆顶5张卡。从那之中，可以将原始消费为4及以下的、职业各不相同的从者卡最多2张召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "【進化時】自分のデッキの上5枚を見る。その中から、元のコスト4以下のフォロワーをクラスが異なるように2枚まで場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "魔法使い",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-051",
+   "printings": [
+    "BP21-051",
+    "BP21-P25"
+   ],
+   "name": "Evamia, Spinner of Threads",
+   "names": {
+    "en": "Evamia, Spinner of Threads",
+    "cn": "织系丝线·艾葳米亚",
+    "ja": "紡ぎ繋ぐ糸・エヴァミア"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "{[fanfare]} Banish the top card of your deck. Then, if there are at least 5 cards in your banished zone, summon a Mystic Artifact token.",
+    "cn": "《入场曲》将自己的牌堆顶1张卡消失。如果自己的消失领域为5张及以上的话，将1个『神秘的创造物』召唤到场上。",
+    "ja": "ファンファーレ自分のデッキの上1枚を消滅させる。自分の消滅領域が5枚以上なら、『ミスティックアーティファクト』1体を場に出す。\n―――――――――――――――\n『ミスティックアーティファクト』ニュートラル超克・フォロワーコスト3攻撃力2/体力3【守護】ファンファーレ1枚引く。"
+   },
+   "traits": [
+    "超克"
+   ]
+  },
+  {
+   "id": "BP21-052",
+   "printings": [
+    "BP21-052",
+    "BP21-P26"
+   ],
+   "name": "Arcane Instruction",
+   "names": {
+    "en": "Arcane Instruction",
+    "cn": "魔法指导",
+    "ja": "魔術指南"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "When playing this, engage 2 Academic followers on your field: This costs 2 less.\nSelect a follower on your field. Give it {[attack]}+1/{[defense]}+1 and draw a card.",
+    "cn": "将这张卡使用之际，将场上的2个学院类型·从者《横置》：将消费-2。\n选择自己场上的1个从者。使其《攻击力》+1/《生命值》+1。抽取1张卡。",
+    "ja": "これをプレイする際、場の学院・フォロワー2体をアクト：コストを-2する。\n自分の場のフォロワー1体を選ぶ。それは攻撃力+1/体力+1する。1枚引く。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-053",
+   "printings": [
+    "BP21-053",
+    "BP21-P27"
+   ],
+   "name": "Aqueous Sphere",
+   "names": {
+    "en": "Aqueous Sphere",
+    "cn": "液态球体",
+    "ja": "リキッドスフィア"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSpellchain (10) - This costs 2 less to play.\nSelect an enemy follower on the field and deal it 4 damage.",
+    "cn": "《快速》\n将这张卡使用之际，【魔力连锁_10】将消费-2。\n选择敌方场上的1个从者。给予其4点伤害。",
+    "ja": "クイック\nこれをプレイする際、【スペルチェイン_10】コストを-2する。\n相手の場のフォロワー1体を選ぶ。それに4ダメージ。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "BP21-054",
+   "printings": [
+    "BP21-054",
+    "BP21-P28"
+   ],
+   "name": "Binding Ritual",
+   "names": {
+    "en": "Binding Ritual",
+    "cn": "束缚术式",
+    "ja": "束縛術式"
+   },
+   "class": "Runecraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Stack.\n{[fanfare]} Select an enemy follower on the field and engage it. It doesn't refresh during its controller's next start phase.",
+    "cn": "【蓄积】\n《入场曲》选择敌方场上的1个从者。将其横置。使其在下个其玩家的开始阶段中不能竖置。",
+    "ja": "【スタック】\nファンファーレ相手の場のフォロワー1体を選ぶ。それをアクトする。それは次のそれのプレイヤーのスタートフェイズにスタンドしない。"
+   },
+   "traits": [
+    "魔法使い",
+    "土の印"
+   ]
+  },
+  {
+   "id": "BP21-055",
+   "printings": [
+    "BP21-055",
+    "BP21-SL13"
+   ],
+   "name": "Lilium, the Wyrmwitch",
+   "names": {
+    "en": "Lilium, the Wyrmwitch",
+    "cn": "龙之魔女·莉莉尤姆",
+    "ja": "竜の魔女・リリウム"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "竜使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-056",
+   "printings": [
+    "BP21-056",
+    "BP21-SL14"
+   ],
+   "name": "Lilium, the Wyrmwitch",
+   "names": {
+    "en": "Lilium, the Wyrmwitch",
+    "cn": "龙之魔女·莉莉尤姆",
+    "ja": "竜の魔女・リリウム"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "At the start of your end phase, if there are at least 3 Academic followers on your field, summon a Lilium's Hatchling token.\nOn Evolve - Search your deck for an Academic follower not named Lilium, the Wyrmwitch, reveal it, add it to your hand, then shuffle.\nOn Super-Evolve - Summon a Lilium's Dragon token.",
+    "cn": "当自己的结束阶段到来时，如果自己场上的学院类型·从者为3个及以上的话，将1个『莉莉尤姆的幼龙』召唤到场上。\n【进化时】从自己的牌堆之中搜寻1张「与这张卡不同名的学院类型·从者卡」，并加入手牌。\n【超进化时】将1个『莉莉尤姆的巨龙』召唤到场上。",
+    "ja": "自分のエンドフェイズが来たとき、自分の場の学院・フォロワーが3体以上なら、『リリウムの幼竜』1体を場に出す。\n【進化時】自分のデッキから「これと同名を除く学院・フォロワー」1枚を探し、手札に加える。\n【超進化時】『リリウムの巨竜』1体を場に出す。"
+   },
+   "traits": [
+    "竜使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-057",
+   "printings": [
+    "BP21-057",
+    "BP21-SL15"
+   ],
+   "name": "Coach Joe, Fiery Counselor",
+   "names": {
+    "en": "Coach Joe, Fiery Counselor",
+    "cn": "热血龙教师·乔",
+    "ja": "熱血の竜教師・ジョー"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Whenever an Academic follower is put onto your field, if this in your EX area, place a passion counter on it.\nActivate {[engage]} this: If this or a card in your EX area has at least 10 passion counters, deal 5 damage to each enemy leader and enemy follower on the field. Give this {[defense]}+6.\n{[act]} {[cost00]}: Put this from your hand into your EX area.",
+    "cn": "当学院类型·从者召唤到自己的场上时，将1个情热指示物置于到自己EX区域的这张卡上。\n《起动》将这张卡《横置》：如果这张卡或自己EX区域的1张卡片的情热指示物为10个及以上的话，给予敌方的全体主战者与敌方场上的全体从者各5点伤害。使这张卡《生命值》+6。\n《起动》《消费0》：将自己的手牌中的这张卡置于EX区域。",
+    "ja": "自分の場に学院・フォロワーが出たとき、自分のEXエリアのこれに情熱カウンター1個を置く。\n起動これをアクト：これか自分のEXエリアのカード1枚の情熱カウンターが10個以上なら、相手のリーダーすべてと相手の場のフォロワーすべてに5ダメージ。これは体力+6する。\n起動コスト0：自分の手札のこれをEXエリアに置く。"
+   },
+   "traits": [
+    "ドラゴニュート",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-058",
+   "printings": [
+    "BP21-058",
+    "BP21-SL16",
+    "BP21-SP01",
+    "BP21-U04"
+   ],
+   "name": "Lumiore, Prestigious Gold",
+   "names": {
+    "en": "Lumiore, Prestigious Gold",
+    "cn": "金色威信·璐米欧儿",
+    "ja": "金色の威信・リュミオール"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "At the start of your end phase, if there are at least 3 Dragonewt followers on your field, deal 3 damage to each enemy leader and enemy follower on the field.\n{[fanfare]} Discard a card: Search your deck for a 2-cost Dragonewt follower and a 1-cost Dragonewt follower, summon them, then shuffle",
+    "cn": "当自己的结束阶段到来时，如果自己场上的龙人类型·从者为3个及以上的话，给予敌方的全体主战者与敌方场上的全体从者各3点伤害。\n《入场曲》将1张手牌舍弃：从自己的牌堆之中搜寻原始消费为2的1张龙人类型·从者卡与原始消费为1的1张龙人类型·从者卡，并召唤到场上。",
+    "ja": "自分のエンドフェイズが来たとき、自分の場のドラゴニュート・フォロワーが3体以上なら、相手のリーダーすべてと相手の場のフォロワーすべてに3ダメージ。\nファンファーレ手札1枚を捨てる：自分のデッキから元のコスト2のドラゴニュート・フォロワー1枚と元のコスト1のドラゴニュート・フォロワー1枚を探し、場に出す。"
+   },
+   "traits": [
+    "ドラゴニュート"
+   ]
+  },
+  {
+   "id": "BP21-059",
+   "printings": [
+    "BP21-059",
+    "BP21-P29"
+   ],
+   "name": "Grand Slam Tamer",
+   "names": {
+    "en": "Grand Slam Tamer",
+    "cn": "全胜驭龙使",
+    "ja": "グランドスラムの竜使い"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} If Overflow is active for you, look at the top 3 cards of your deck. You may reveal an Academic card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》如果处于【觉醒】状态的话，查看自己的牌堆顶3张卡。从那之中，可以将1张学院类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ【覚醒】状態なら、自分のデッキの上3枚を見る。その中から、学院・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "竜使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-060",
+   "printings": [
+    "BP21-060",
+    "BP21-P30"
+   ],
+   "name": "Grand Slam Tamer",
+   "names": {
+    "en": "Grand Slam Tamer",
+    "cn": "全胜驭龙使",
+    "ja": "グランドスラムの竜使い"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field, deal it 2 damage. If there's a card in your EX area with at least 4 passion counters, deal it 4 damage instead. If it has at least 10, give this {[defense]}+6.",
+    "cn": "【进化时】选择敌方场上的1个从者。给予其2点伤害。如果自己EX区域的1张卡片的情热指示物为4个及以上的话，转变为4点伤害。如果为10个及以上的话，使这张卡《生命值》+6。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それに2ダメージ。自分のEXエリアのカード1枚の情熱カウンターが4個以上なら、代わりに4ダメージ。10個以上なら、これは体力+6する。"
+   },
+   "traits": [
+    "竜使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-061",
+   "printings": [
+    "BP21-061",
+    "BP21-P31"
+   ],
+   "name": "Dion, Scarlet Scion",
+   "names": {
+    "en": "Dion, Scarlet Scion",
+    "cn": "绯色贵公子·迪翁",
+    "ja": "緋色の貴公子・ディオン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 3,
+   "defense": 1,
+   "text": {
+    "en": "Rush. Assail.\nStrike - If there's a card in your EX area with at least 4 passion counters, increase your max play points by 1. If it has at least 10, give this {[defense]}+6.",
+    "cn": "【突进】【指定攻击】\n【攻击时】如果自己EX区域的1张卡片的情热指示物为4个及以上的话，将自己的PP最大值+1点。如果为10个及以上的话，使这张卡《生命值》+6。",
+    "ja": "【突進】【指定攻撃】\n【攻撃時】自分のEXエリアのカード1枚の情熱カウンターが4個以上なら、自分のPP最大値を+1する。10個以上なら、これは体力+6する。"
+   },
+   "traits": [
+    "ドラゴニュート",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-062",
+   "printings": [
+    "BP21-062",
+    "PR-578"
+   ],
+   "name": "Argente, Purest Silver",
+   "names": {
+    "en": "Argente, Purest Silver",
+    "cn": "银色清纯·雅尔贞特",
+    "ja": "銀色の清純・アルジャンテ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Ward.\nAt the start of your end phase, if there's a Lumiore, Prestigious Gold on your field, give your leader {[defense]}+3.\n{[fanfare]} Draw a card.",
+    "cn": "【守护】\n当自己的结束阶段到来时，如果自己的场上有『金色威信·璐米欧儿』的话，使自己的主战者《生命值》+3。\n《入场曲》抽取1张卡。",
+    "ja": "【守護】\n自分のエンドフェイズが来たとき、自分の場に『金色の威信・リュミオール』がいるなら、自分のリーダーは体力+3する。\nファンファーレ1枚引く。"
+   },
+   "traits": [
+    "ドラゴニュート"
+   ]
+  },
+  {
+   "id": "BP21-063",
+   "printings": [
+    "BP21-063",
+    "BP21-P32"
+   ],
+   "name": "Dragonborn Striker",
+   "names": {
+    "en": "Dragonborn Striker",
+    "cn": "龙人前锋",
+    "ja": "竜人のストライカー"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost03]}: Evolve this.\nStorm.\nStrike - If there's a card in your EX area with at least 4 passion counters, evolve this. If it has at least 10, give this {[defense]}+6.",
+    "cn": "《进化》《消费3》：使这张卡进化。\n【疾驰】\n【攻击时】如果自己EX区域的1张卡片的情热指示物为4个及以上的话，使这张卡进化。如果为10个及以上的话，使这张卡《生命值》+6。",
+    "ja": "進化コスト3：これは進化する。\n【疾走】\n【攻撃時】自分のEXエリアのカード1枚の情熱カウンターが4個以上なら、これは進化する。10個以上なら、これは体力+6する。"
+   },
+   "traits": [
+    "ドラゴニュート",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-064",
+   "printings": [
+    "BP21-064",
+    "BP21-P33"
+   ],
+   "name": "Dragonborn Striker",
+   "names": {
+    "en": "Dragonborn Striker",
+    "cn": "龙人前锋",
+    "ja": "竜人のストライカー"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Storm.",
+    "cn": "【疾驰】",
+    "ja": "【疾走】"
+   },
+   "traits": [
+    "ドラゴニュート",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-065",
+   "printings": [
+    "BP21-065",
+    "BP21-P34"
+   ],
+   "name": "Gunbein, Lofty Dragonewt",
+   "names": {
+    "en": "Gunbein, Lofty Dragonewt",
+    "cn": "威严的龙人·刚培恩",
+    "ja": "貫禄のドラゴニュート・ガンベイン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Ward.\n{[fanfare]} {[cost02]} Search your deck for a Gunbein, Lofty Dragonewt, summon it, then shuffle.\nActivate {[engage]} this: Select an enemy follower on the field. If there's a card in your EX area with at least 4 passion counters, deal it 4 damage. If it has at least 10, give this {[defense]}+6.",
+    "cn": "【守护】\n《入场曲》《消费2》：从自己的牌堆之中搜寻1张『威严的龙人·刚培恩』卡，并召唤到场上。\n《起动》将这张卡《横置》：选择敌方场上的1个从者。如果自己EX区域的1张卡片的情热指示物为4个及以上的话，给予其4点伤害。如果为10个及以上的话，使这张卡《生命值》+6。",
+    "ja": "【守護】\nファンファーレコスト2：自分のデッキから『貫禄のドラゴニュート・ガンベイン』1枚を探し、場に出す。\n起動これをアクト：相手の場のフォロワー1体を選ぶ。自分のEXエリアのカード1枚の情熱カウンターが4個以上なら、それに4ダメージ。10個以上なら、これは体力+6する。"
+   },
+   "traits": [
+    "ドラゴニュート",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-066",
+   "printings": [
+    "BP21-066",
+    "BP21-P35"
+   ],
+   "name": "Charlotte, Dragonewt",
+   "names": {
+    "en": "Charlotte, Dragonewt",
+    "cn": "龙人少女·夏洛特",
+    "ja": "ドラゴニュート・シャルロット"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 10,
+   "attack": 4,
+   "defense": 9,
+   "text": {
+    "en": "Storm. Ward.\n{[fanfare]} Reveal the top card of your deck. If it's a {[dragoncraft]} follower, summon it. Otherwise, draw the revealed card.",
+    "cn": "【疾驰】【守护】\n《入场曲》将自己的牌堆顶1张卡公开。如果公开的卡片为《龙族职业》从者卡的话，将其召唤到场上。如果公开的卡片不为《龙族职业》从者卡的话，抽取1张卡。",
+    "ja": "【疾走】【守護】\nファンファーレ自分のデッキの上1枚を公開する。公開したカードがドラゴンフォロワーなら、それを場に出す。公開したカードがドラゴンフォロワーでないなら、1枚引く。"
+   },
+   "traits": [
+    "竜使い",
+    "ドラゴニュート"
+   ]
+  },
+  {
+   "id": "BP21-067",
+   "printings": [
+    "BP21-067",
+    "BP21-P36"
+   ],
+   "name": "Ipupiara",
+   "names": {
+    "en": "Ipupiara",
+    "cn": "伊普皮亚拉",
+    "ja": "イプピアーラ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this.\n{[fanfare]} If this wasn't put onto the field from hand, evolve it.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《入场曲》如果这张卡从手牌以外召唤到场上的话，使这张卡进化。",
+    "ja": "進化コスト2：これは進化する。\nファンファーレこれが手札以外から場に出ていたなら、これは進化する。"
+   },
+   "traits": [
+    "海洋"
+   ]
+  },
+  {
+   "id": "BP21-068",
+   "printings": [
+    "BP21-068",
+    "BP21-P37"
+   ],
+   "name": "Ipupiara",
+   "names": {
+    "en": "Ipupiara",
+    "cn": "伊普皮亚拉",
+    "ja": "イプピアーラ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 5,
+   "text": {
+    "en": "Assail. Bane.\nStrike - Deal 2 damage to each enemy leader.",
+    "cn": "【指定攻击】【必杀】\n【攻击时】给予敌方的全体主战者各2点伤害。",
+    "ja": "【指定攻撃】【必殺】\n【攻撃時】相手のリーダーすべてに2ダメージ。"
+   },
+   "traits": [
+    "海洋"
+   ]
+  },
+  {
+   "id": "BP21-069",
+   "printings": [
+    "BP21-069",
+    "PR-572"
+   ],
+   "name": "Megalorca Rider",
+   "names": {
+    "en": "Megalorca Rider",
+    "cn": "虎鲸冲浪家",
+    "ja": "オルカサーファー"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "Ward.\n{[lastwords]} Draw a card.\nActivate {[engage]} this: If there's a card in your EX area with at least 4 passion counters, give your leader {[defense]}+2. If it has at least 10, give this {[defense]}+6",
+    "cn": "【守护】\n《谢幕曲》抽取1张卡。\n《起动》将这张卡《横置》：如果自己EX区域的1张卡片的情热指示物为4个及以上的话，使自己的主战者《生命值》+2。如果为10个及以上的话，使这张卡《生命值》+6。",
+    "ja": "【守護】\nラストワード1枚引く。\n起動これをアクト：自分のEXエリアのカード1枚の情熱カウンターが4個以上なら、自分のリーダーは体力+2する。10個以上なら、これは体力+6する。"
+   },
+   "traits": [
+    "海洋",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-070",
+   "printings": [
+    "BP21-070",
+    "PR-589"
+   ],
+   "name": "Augite Wyrm",
+   "names": {
+    "en": "Augite Wyrm",
+    "cn": "碎石龙",
+    "ja": "砕石竜"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 9,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} Deal 6 damage to each enemy follower on the field.\n{[act]} {[cost01]}, discard this: Draw a card.",
+    "cn": "《入场曲》给予敌方场上的全体从者各6点伤害。\n《起动》《消费1》将手牌中的这张卡舍弃：抽取1张卡。",
+    "ja": "ファンファーレ相手の場のフォロワーすべてに6ダメージ。\n起動コスト1手札のこれを捨てる：1枚引く。"
+   },
+   "traits": [
+    "竜族"
+   ]
+  },
+  {
+   "id": "BP21-071",
+   "printings": [
+    "BP21-071",
+    "BP21-P38"
+   ],
+   "name": "Stormscale",
+   "names": {
+    "en": "Stormscale",
+    "cn": "荒天圣龙",
+    "ja": "荒天のドラゴン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Whenever a non-{[dragoncraft]} card is put into your EX area, select an enemy follower on the field. Deal it 5 damage and give your leader {[defense]}+2.\n{[fanfare]} Do the following 2 times. \"Put the top card of your deck into your EX area.\"",
+    "cn": "每个回合1次，当「非《龙族职业》的卡片」置于到自己的EX区域时，选择敌方场上的1个从者。给予其5点伤害。使自己的主战者《生命值》+2。\n《入场曲》将下述动作进行2次。将自己的牌堆顶1张卡置于EX区域。",
+    "ja": "ターンごとに1回、自分のEXエリアに「ドラゴンでないカード」が置かれたとき、相手の場のフォロワー1体を選ぶ。それに5ダメージ。自分のリーダーは体力+2する。\nファンファーレ下記を2回くり返す。自分のデッキの上1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "竜族"
+   ]
+  },
+  {
+   "id": "BP21-072",
+   "printings": [
+    "BP21-072",
+    "BP21-P39"
+   ],
+   "name": "Dragon Hunt",
+   "names": {
+    "en": "Dragon Hunt",
+    "cn": "猎龙砍击",
+    "ja": "ドラゴンハント"
+   },
+   "class": "Dragoncraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select an enemy follower on the field and destroy it. If it costs 4 or more, draw a card.",
+    "cn": "选择敌方场上的1个从者。将其破坏。如果其原始消费为4及以上的话，抽取1张卡。",
+    "ja": "相手の場のフォロワー1体を選ぶ。それを破壊する。それの元のコストが4以上なら、1枚引く。"
+   },
+   "traits": [
+    "竜族",
+    "キラー"
+   ]
+  },
+  {
+   "id": "BP21-073",
+   "printings": [
+    "BP21-073",
+    "BP21-SL17"
+   ],
+   "name": "Cornelius, the Corpse King",
+   "names": {
+    "en": "Cornelius, the Corpse King",
+    "cn": "尸术王·科里内路司",
+    "ja": "屍術王・コルネリウス"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Select an Academic follower that costs 2 or less in your cemetery. Summon it and give it \"At the start of your end phase, bury this.\"",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》选择自己的墓场中的原始消费为2及以下的1张学院类型·从者卡。将其召唤到场上。使其获得「当自己的结束阶段到来时，将这张卡置于墓场」能力。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分の墓場の元のコスト2以下の学院・フォロワー1枚を選ぶ。それを場に出す。それは「自分のエンドフェイズが来たとき、これを墓場に置く」を持つ。"
+   },
+   "traits": [
+    "死霊術師",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-074",
+   "printings": [
+    "BP21-074",
+    "BP21-SL18"
+   ],
+   "name": "Cornelius, the Corpse King",
+   "names": {
+    "en": "Cornelius, the Corpse King",
+    "cn": "尸术王·科里内路司",
+    "ja": "屍術王・コルネリウス"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Select an Academic follower that costs 3 or less in your cemetery and summon it.\nOn Super-Evolve - Do the following 3 times. \"Roll a 6-sided die.\"",
+    "cn": "【进化时】选择自己的墓场中的原始消费为3及以下的1张学院类型·从者卡。将其召唤到场上。\n【超进化时】将下述动作进行3次。掷骰子。",
+    "ja": "【進化時】自分の墓場の元のコスト3以下の学院・フォロワー1枚を選ぶ。それを場に出す。\n【超進化時】下記を3回くり返す。サイコロをふる。"
+   },
+   "traits": [
+    "死霊術師",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-075",
+   "printings": [
+    "BP21-075",
+    "BP21-SL19",
+    "BP21-U05"
+   ],
+   "name": "Galom, Empress Fist",
+   "names": {
+    "en": "Galom, Empress Fist",
+    "cn": "帝拳·荷洛穆",
+    "ja": "エンペラーフィスト・ガロム"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Whenever you roll a 6-sided die, select an enemy follower on the field and deal it damage equal to the number you roll.\nWhenever you roll a 6-sided die, if you roll a 6, deal 4 damage to each enemy leader.\n{[fanfare]} Roll a 6-sided die.",
+    "cn": "当自己掷骰子时，选择敌方场上的1个从者。给予其与「出现数目」等量的伤害。\n当自己掷骰子时，如果出现数目为6的话，给予敌方的全体主战者各4点伤害。\n《入场曲》掷骰子。",
+    "ja": "自分がサイコロをふったとき、相手の場のフォロワー1体を選ぶ。それに「出た目」と同じダメージ。\n自分がサイコロをふったとき、出た目が6なら、相手のリーダーすべてに4ダメージ。\nファンファーレサイコロをふる。"
+   },
+   "traits": [
+    "魔界",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-076",
+   "printings": [
+    "BP21-076",
+    "BP21-SL20"
+   ],
+   "name": "Vulgus, Infernal Headmistress",
+   "names": {
+    "en": "Vulgus, Infernal Headmistress",
+    "cn": "逢魔校长·沃露嘉丝",
+    "ja": "逢魔の校長・ヴォルガス"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Look at the top 2 cards of your deck. You may reveal an Academic card from among them and add it to your hand. Put the rest on the bottom of your deck in any order. The next Academic card that costs 2 or less you play this turn costs 2 less.\nActivate {[engage]} this, bury another card on your field: Select an enemy follower on the field. Deal it 3 damage and draw a card. Activate only if you rolled a 6-sided die this turn.",
+    "cn": "《入场曲》查看自己的牌堆顶2张卡。从那之中，可以将1张学院类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。这个回合，下次自己将原始消费为2及以下的学院类型·卡片使用之际，将其消费-2。\n《起动》将这张卡《横置》将场上的其他的1张卡片置于墓场：选择敌方场上的1个从者。给予其3点伤害。抽取1张卡。这个能力在这个回合，如果自己已投掷骰子的话才可使用。",
+    "ja": "ファンファーレ自分のデッキの上2枚を見る。その中から、学院・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。このターン、次に自分が元のコスト2以下の学院・カードをプレイする際、コストを-2する。\n起動これをアクト場の他のカード1枚を墓場に置く：相手の場のフォロワー1体を選ぶ。それに3ダメージ。1枚引く。この能力はこのターン、自分がサイコロをふっていたなら使える。"
+   },
+   "traits": [
+    "魔界",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-077",
+   "printings": [
+    "BP21-077",
+    "BP21-P40"
+   ],
+   "name": "Arka, Sin Spinner",
+   "names": {
+    "en": "Arka, Sin Spinner",
+    "cn": "凶轮手·亚琉嘉",
+    "ja": "バッドスピナー・アルカ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWhenever you roll a 6-sided die, select an enemy follower on the field and deal it 1 damage. If you roll a 6, deal it 3 damage instead.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n当自己掷骰子时，选择敌方场上的1个从者。给予其1点伤害。如果出现数目为6的话，转变为3点伤害。",
+    "ja": "進化コスト1：これは進化する。\n自分がサイコロをふったとき、相手の場のフォロワー1体を選ぶ。それに1ダメージ。出た目が6なら、代わりに3ダメージ。"
+   },
+   "traits": [
+    "魔界",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-078",
+   "printings": [
+    "BP21-078",
+    "BP21-P41"
+   ],
+   "name": "Arka, Sin Spinner",
+   "names": {
+    "en": "Arka, Sin Spinner",
+    "cn": "凶轮手·亚琉嘉",
+    "ja": "バッドスピナー・アルカ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Whenever you roll a 6-sided die, select an enemy follower on the field and deal it 1 damage. If you roll a 6, deal it 3 damage instead.\nOn Evolve - Do the following 2 times. \"Roll a 6-sided die.\"",
+    "cn": "当自己掷骰子时，选择敌方场上的1个从者。给予其1点伤害。如果出现数目为6的话，转变为3点伤害。\n【进化时】将下述动作进行2次。掷骰子。",
+    "ja": "自分がサイコロをふったとき、相手の場のフォロワー1体を選ぶ。それに1ダメージ。出た目が6なら、代わりに3ダメージ。\n【進化時】下記を2回くり返す。サイコロをふる。"
+   },
+   "traits": [
+    "魔界",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-079",
+   "printings": [
+    "BP21-079",
+    "BP21-P42"
+   ],
+   "name": "Exella, Nocturnal General",
+   "names": {
+    "en": "Exella, Nocturnal General",
+    "cn": "暮夜魔将·艾瑟菈",
+    "ja": "ノクターンジェネラル・エクセラ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "Storm.\nStrike - Give this {[attack]}+X. X equals the number of other followers on your field with Storm.",
+    "cn": "【疾驰】\n【攻击时】使这张卡《攻击力》+X。X为「自己场上的其他的持有【疾驰】能力的从者的数量」。",
+    "ja": "【疾走】\n【攻撃時】これは攻撃力+Xする。Xは「自分の場の他の【疾走】を持つフォロワーの数」である。"
+   },
+   "traits": [
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP21-080",
+   "printings": [
+    "BP21-080",
+    "BP21-P43"
+   ],
+   "name": "Bad-Girl Life",
+   "names": {
+    "en": "Bad-Girl Life",
+    "cn": "不良少女的校园生活",
+    "ja": "バッドスクールライフ"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Draw a card. Do the following 2 times. \"Roll a 6-sided die.\"",
+    "cn": "抽取1张卡。将下述动作进行2次。掷骰子。",
+    "ja": "1枚引く。下記を2回くり返す。サイコロをふる。"
+   },
+   "traits": [
+    "魔界",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-081",
+   "printings": [
+    "BP21-081",
+    "PR-573"
+   ],
+   "name": "Mach-Speed Maron",
+   "names": {
+    "en": "Mach-Speed Maron",
+    "cn": "神速跑腿·玛萝",
+    "ja": "韋駄天のパシリ・マロン"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost03]}: Evolve this.\n{[fanfare]} Roll a 6-sided die. If you rolled a 6 when rolling a die this turn, evolve this.",
+    "cn": "《进化》《消费3》：使这张卡进化。\n《入场曲》掷骰子。这个回合，如果自己投掷骰子的出现数目有6的话，使这张卡进化。",
+    "ja": "進化コスト3：これは進化する。\nファンファーレサイコロをふる。このターン、自分がふったサイコロの出た目に6があるなら、これは進化する。"
+   },
+   "traits": [
+    "魔界",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-082",
+   "printings": [
+    "BP21-082",
+    "PR-574"
+   ],
+   "name": "Mach-Speed Maron",
+   "names": {
+    "en": "Mach-Speed Maron",
+    "cn": "神速跑腿·玛萝",
+    "ja": "韋駄天のパシリ・マロン"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 2,
+   "text": {
+    "en": "Storm.",
+    "cn": "【疾驰】",
+    "ja": "【疾走】"
+   },
+   "traits": [
+    "魔界",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-083",
+   "printings": [
+    "BP21-083",
+    "BP21-P44"
+   ],
+   "name": "Demon-Eyed Gangster",
+   "names": {
+    "en": "Demon-Eyed Gangster",
+    "cn": "魔眼太妹",
+    "ja": "魔眼のスケバン"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "Whenever you roll a 6-sided die, if you roll a 6, deal 2 damage to each enemy leader.\n{[act]} {[cost00]}: Roll a 6-sided die. Activate only once per turn.",
+    "cn": "当自己掷骰子时，如果出现数目为6的话，给予敌方的全体主战者各2点伤害。\n《起动》《消费0》：掷骰子。这个能力在1回合可以使用1次。",
+    "ja": "自分がサイコロをふったとき、出た目が6なら、相手のリーダーすべてに2ダメージ。\n起動コスト0：サイコロをふる。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "魔界",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-084",
+   "printings": [
+    "BP21-084",
+    "BP21-P45"
+   ],
+   "name": "Noble Demoness",
+   "names": {
+    "en": "Noble Demoness",
+    "cn": "恶魔千金",
+    "ja": "悪魔の令嬢"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Whenever another 2-cost follower is put onto your field, deal 1 damage to each enemy leader.",
+    "cn": "当其他的原始消费为2的从者召唤到自己的场上时，给予敌方的全体主战者各1点伤害。",
+    "ja": "自分の場に他の元のコスト2のフォロワーが出たとき、相手のリーダーすべてに1ダメージ。"
+   },
+   "traits": [
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP21-085",
+   "printings": [
+    "BP21-085",
+    "BP21-P46"
+   ],
+   "name": "Bonebreaker Bladesman",
+   "names": {
+    "en": "Bonebreaker Bladesman",
+    "cn": "骸骨粉碎者",
+    "ja": "スケルトンブレイカー"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost05]}: Evolve this.\nAssail.\nFollower Strike - Deal each enemy leader damage equal to this follower's attack.",
+    "cn": "《进化》《消费5》：使这张卡进化。\n【指定攻击】\n【攻击时】如果对从者进行攻击的话，给予敌方的全体主战者各与「这张卡的攻击力」等量的伤害。",
+    "ja": "進化コスト5：これは進化する。\n【指定攻撃】\n【攻撃時】フォロワーへの攻撃なら、相手のリーダーすべてに「これの攻撃力」と同じダメージ。"
+   },
+   "traits": [
+    "死者",
+    "キラー"
+   ]
+  },
+  {
+   "id": "BP21-086",
+   "printings": [
+    "BP21-086",
+    "BP21-P47"
+   ],
+   "name": "Bonebreaker Bladesman",
+   "names": {
+    "en": "Bonebreaker Bladesman",
+    "cn": "骸骨粉碎者",
+    "ja": "スケルトンブレイカー"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 6,
+   "text": {
+    "en": "Assail.\nFollower Strike - Deal each enemy leader damage equal to this follower's attack.\nOn Evolve - Select an enemy follower on the field and deal it 4 damage.",
+    "cn": "【指定攻击】\n【攻击时】如果对从者进行攻击的话，给予敌方的全体主战者各与「这张卡的攻击力」等量的伤害。\n【进化时】选择敌方场上的1个从者。给予其4点伤害。",
+    "ja": "【指定攻撃】\n【攻撃時】フォロワーへの攻撃なら、相手のリーダーすべてに「これの攻撃力」と同じダメージ。\n【進化時】相手の場のフォロワー1体を選ぶ。それに4ダメージ。"
+   },
+   "traits": [
+    "死者",
+    "キラー"
+   ]
+  },
+  {
+   "id": "BP21-087",
+   "printings": [
+    "BP21-087",
+    "BP21-P48"
+   ],
+   "name": "Denan, Big Bad Boss",
+   "names": {
+    "en": "Denan, Big Bad Boss",
+    "cn": "极徒会头目·登南",
+    "ja": "極徒会表番・デナン"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Whenever you roll a 6-sided die, select a follower on your field. If you roll a 6, give it {[attack]}+1/{[defense]}+1.\n{[act]} {[cost00]}: Roll a 6-sided die. Activate only once per turn.",
+    "cn": "当自己掷骰子时，选择自己场上的1个从者。如果出现数目为6的话，使其《攻击力》+1/《生命值》+1。\n《起动》《消费0》：掷骰子。这个能力在1回合可以使用1次。",
+    "ja": "自分がサイコロをふったとき、自分の場のフォロワー1体を選ぶ。出た目が6なら、それは攻撃力+1/体力+1する。\n起動コスト0：サイコロをふる。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "魔界",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-088",
+   "printings": [
+    "BP21-088",
+    "BP21-P49"
+   ],
+   "name": "Malicious Blader",
+   "names": {
+    "en": "Malicious Blader",
+    "cn": "恶意的剑士",
+    "ja": "マリシャスブレイダー"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} If there are at least five 2-cost cards in your cemetery, recover 2 play points.",
+    "cn": "《入场曲》如果自己的墓场中的原始消费为2的卡片为5张及以上的话，将自己的PP回复2点。",
+    "ja": "ファンファーレ自分の墓場の元のコスト2のカードが5枚以上なら、自分のPPを2回復する。"
+   },
+   "traits": [
+    "キラー"
+   ]
+  },
+  {
+   "id": "BP21-089",
+   "printings": [
+    "BP21-089"
+   ],
+   "name": "Serenading Succubus",
+   "names": {
+    "en": "Serenading Succubus",
+    "cn": "音诱梦魔",
+    "ja": "誘いの夢魔"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "At the start of your end phase, select up to 2 enemy followers on the field and engage them. They doesn't refresh during their controller's next start phase. Give your leader {[defense]}+3.",
+    "cn": "当自己的结束阶段到来时，选择敌方场上的从者最多2个。将其横置。使其在下个其玩家的开始阶段中不能竖置。使自己的主战者《生命值》+3。",
+    "ja": "自分のエンドフェイズが来たとき、相手の場のフォロワー2体まで選ぶ。それをアクトする。それは次のそれのプレイヤーのスタートフェイズにスタンドしない。自分のリーダーは体力+3する。"
+   },
+   "traits": [
+    "魔界"
+   ]
+  },
+  {
+   "id": "BP21-090",
+   "printings": [
+    "BP21-090",
+    "BP21-P50"
+   ],
+   "name": "Spirit Invasion",
+   "names": {
+    "en": "Spirit Invasion",
+    "cn": "灵体入侵",
+    "ja": "霊体の侵入"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Choose up to 2. (1) Banish an {[abysscraft]} follower from your cemetery: Select an enemy follower on the field and deal it damage equal to 2 times the attack of the {[abysscraft]} follower banished this way. (2) Banish a non-{[abysscraft]} follower from your cemetery: Select an enemy follower on the field and deal it damage equal to the attack of the non-{[abysscraft]} follower banished this way.",
+    "cn": "从下述之中抉择最多2项。\n【1】将墓场中的1张《梦魇职业》从者卡消失：选择敌方场上的1个从者。给予其与「以这个能力消失的《梦魇职业》从者卡的攻击力」的2倍等量的伤害。\n【2】将墓场中的1张「非《梦魇职业》的从者卡」消失：选择敌方场上的1个从者。给予其与「以这个能力消失的「非《梦魇职业》的从者卡」的攻击力」等量的伤害。",
+    "ja": "下記から2つまでチョイスする。【1】墓場のナイトメアフォロワー1枚を消滅：相手の場のフォロワー1体を選ぶ。それに「これによって消滅したナイトメアフォロワーの攻撃力」の2倍のダメージ。【2】墓場の「ナイトメアでないフォロワー」1枚を消滅：相手の場のフォロワー1体を選ぶ。それに「これによって消滅した「ナイトメアでないフォロワー」の攻撃力」と同じダメージ。"
+   },
+   "traits": [
+    "死者"
+   ]
+  },
+  {
+   "id": "BP21-091",
+   "printings": [
+    "BP21-091",
+    "BP21-SL21"
+   ],
+   "name": "Verdilia, Rogue Professor",
+   "names": {
+    "en": "Verdilia, Rogue Professor",
+    "cn": "异端的指导者·贝尔迪俪亚",
+    "ja": "異端の指導者・ベルディリア"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWard.\n{[fanfare]} Select an enemy follower on the field and, if this was put onto the field by an ability, deal it 2 damage.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】\n《入场曲》选择敌方场上的1个从者。如果这张卡以能力召唤到场上的话，给予其2点伤害。",
+    "ja": "進化コスト1：これは進化する。\n【守護】\nファンファーレ相手の場のフォロワー1体を選ぶ。これが能力によって場に出ていたなら、それに2ダメージ。"
+   },
+   "traits": [
+    "先導",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-092",
+   "printings": [
+    "BP21-092",
+    "BP21-SL22"
+   ],
+   "name": "Verdilia, Rogue Professor",
+   "names": {
+    "en": "Verdilia, Rogue Professor",
+    "cn": "异端的指导者·贝尔迪俪亚",
+    "ja": "異端の指導者・ベルディリア"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "Ward.\nOn Evolve - Give your leader {[defense]}+1. Draw a card.\nOn Super-Evolve - Put a Cyclical Guidance token into your EX area.",
+    "cn": "【守护】\n【进化时】使自己的主战者《生命值》+1。抽取1张卡。\n【超进化时】将1张『久远的指引』卡置于EX区域。",
+    "ja": "【守護】\n【進化時】自分のリーダーは体力+1する。1枚引く。\n【超進化時】『長久の導き』1枚をEXエリアに置く。\n―――――――――――――――\n『長久の導き』ビショップ先導・学院・スペルコスト2相手の場のフォロワーX体まで選ぶ。それに5ダメージ。自分の場の学院・フォロワーすべては攻撃力+1/体力+1する。Xは「このターン中に自分のリーダーの体力を+した回数」である。"
+   },
+   "traits": [
+    "先導",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-093",
+   "printings": [
+    "BP21-093",
+    "BP21-SL23",
+    "BP21-U06"
+   ],
+   "name": "Elluvia, Graceful Lady",
+   "names": {
+    "en": "Elluvia, Graceful Lady",
+    "cn": "华丽淑女·耶伦毕菈",
+    "ja": "華麗なる淑女・エルヴィーラ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Twice per turn, when your leader gains {[defense]}, give each other follower on your field {[attack]}+1/{[defense]}+1.\n{[fanfare]} You may summon an Academic follower not named Elluvia, Graceful Lady that costs X or less from your hand. X equals your remaining play points.",
+    "cn": "每个回合2次，当自己的主战者的《生命值》获得+时，使自己场上的其他的全体从者各《攻击力》+1/《生命值》+1。\n《入场曲》可以将自己的手牌中的1张「与这张卡不同名的原始消费为X及以下的学院类型·从者卡」召唤到场上。X为「自己的剩余PP」。",
+    "ja": "ターンごとに2回、自分のリーダーの体力を+したとき、自分の場の他のフォロワーすべては攻撃力+1/体力+1する。\nファンファーレ自分の手札の「これと同名を除く元のコストX以下の学院・フォロワー」1枚を場に出してよい。Xは「自分の残りPP」である。"
+   },
+   "traits": [
+    "信仰",
+    "学院",
+    "光輝"
+   ]
+  },
+  {
+   "id": "BP21-094",
+   "printings": [
+    "BP21-094",
+    "BP21-SL24"
+   ],
+   "name": "Wilbert, Desolate Paladin",
+   "names": {
+    "en": "Wilbert, Desolate Paladin",
+    "cn": "呜咽的圣骑士·维尔伯特",
+    "ja": "嗚咽の聖騎士・ウィルバート"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWard.\n{[fanfare]} Summon a Holy Cavalier token.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】\n《入场曲》将1个『圣骑兵』召唤到场上。",
+    "ja": "進化コスト1：これは進化する。\n【守護】\nファンファーレ『聖騎兵』1体を場に出す。\n―――――――――――――――\n『聖騎兵』ビショップ先導・フォロワーコスト1攻撃力1/体力2【守護】これの攻撃力を+したとき、これは【突進】を持つ。"
+   },
+   "traits": [
+    "挑戦者",
+    "先導"
+   ]
+  },
+  {
+   "id": "BP21-095",
+   "printings": [
+    "BP21-095",
+    "BP21-SL25"
+   ],
+   "name": "Wilbert, Desolate Paladin",
+   "names": {
+    "en": "Wilbert, Desolate Paladin",
+    "cn": "呜咽的圣骑士·维尔伯特",
+    "ja": "嗚咽の聖騎士・ウィルバート"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Ward.\nOn Evolve - Choose 1. (1) Summon a Holy Cavalier token. Give each Holy Cavalier on your field {[attack]}+1 and Assail. (2) Put a Crest: Wilbert, Desolate Paladin token into your EX area.",
+    "cn": "【守护】\n【进化时】从下述之中抉择1项。\n【1】将1个『圣骑兵』召唤到场上。使自己场上的全体『圣骑兵』各《攻击力》+1，并获得【指定攻击】能力。\n【2】将1张『纹章 哀泣的圣骑士·维尔伯特』卡置于EX区域。",
+    "ja": "【守護】\n【進化時】下記から1つチョイスする。【1】『聖騎兵』1体を場に出す。自分の場の『聖騎兵』すべては攻撃力+1して、【指定攻撃】を持つ。【2】『クレスト 嗚咽の聖騎士・ウィルバート』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "挑戦者",
+    "先導"
+   ]
+  },
+  {
+   "id": "BP21-096",
+   "printings": [
+    "BP21-096",
+    "PR-579"
+   ],
+   "name": "Lou, Lady-in-Training",
+   "names": {
+    "en": "Lou, Lady-in-Training",
+    "cn": "优雅修练·露",
+    "ja": "優雅なる修練・ルゥ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this. Activate only if this gained defense this turn.\n{[fanfare]} If there's another Academic follower on your field, give your leader {[defense]}+1.",
+    "cn": "《消费1》：使这张卡进化。这个能力在这个回合，如果这张卡的《生命值》已获得+的话才可使用。\n《入场曲》如果自己的场上有其他的学院类型·从者的话，使自己的主战者《生命值》+1。",
+    "ja": "進化コスト1：これは進化する。この能力はこのターン、これの体力を+していたなら使える。\nファンファーレ自分の場に他の学院・フォロワーがいるなら、自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "信仰",
+    "学院",
+    "光輝"
+   ]
+  },
+  {
+   "id": "BP21-097",
+   "printings": [
+    "BP21-097",
+    "PR-580"
+   ],
+   "name": "Lou, Lady-in-Training",
+   "names": {
+    "en": "Lou, Lady-in-Training",
+    "cn": "优雅修练·露",
+    "ja": "優雅なる修練・ルゥ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field and deal it damage equal to this follower's attack.",
+    "cn": "【进化时】选择敌方场上的1个从者。给予其与「这张卡的攻击力」等量的伤害。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それに「これの攻撃力」と同じダメージ。"
+   },
+   "traits": [
+    "信仰",
+    "学院",
+    "光輝"
+   ]
+  },
+  {
+   "id": "BP21-098",
+   "printings": [
+    "BP21-098",
+    "BP21-P51"
+   ],
+   "name": "Kira, Resilient Maiden",
+   "names": {
+    "en": "Kira, Resilient Maiden",
+    "cn": "恒心少女·琪蓝",
+    "ja": "不退転の乙女・キーラ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "Ward.\n{[fanfare]} {[cost03]} Search your deck for an Elluvia, Graceful Lady, summon it, then shuffle.\nActivate {[engage]} this: Give your leader {[defense]}+1. Activate only if there's another Academic follower on your field.",
+    "cn": "【守护】\n《入场曲》《消费3》：从自己的牌堆之中搜寻1张『华丽淑女·耶伦毕菈』卡，并召唤到场上。\n《起动》将这张卡《横置》：使自己的主战者《生命值》+1。这个能力在自己的场上有其他的学院类型·从者的话才可使用。",
+    "ja": "【守護】\nファンファーレコスト3：自分のデッキから『華麗なる淑女・エルヴィーラ』1枚を探し、場に出す。\n起動これをアクト：自分のリーダーは体力+1する。この能力は自分の場に他の学院・フォロワーがいるなら使える。"
+   },
+   "traits": [
+    "信仰",
+    "学院",
+    "光輝"
+   ]
+  },
+  {
+   "id": "BP21-099",
+   "printings": [
+    "BP21-099",
+    "BP21-P52"
+   ],
+   "name": "Orchid's Examination Hall",
+   "names": {
+    "en": "Orchid's Examination Hall",
+    "cn": "奥琪朵的试场",
+    "ja": "オーキッドの試験場"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Activate {[engage]} this: Select an Academic follower on your field and give it {[attack]}+1/{[defense]}+1. Activate only if your leader gained {[defense]} this turn.\n{[act]} {[cost01]}, discard an Academic amulet: Search your deck for a 1-cost Academic follower, reveal it, add it to your hand, then shuffle. Activate only once per turn",
+    "cn": "《起动》将这张卡《横置》：选择自己场上的1个学院类型·从者。使其《攻击力》+1/《生命值》+1。这个能力在这个回合，如果自己的主战者的《生命值》已获得+的话才可使用。\n《起动》《消费1》将手牌中的1张学院类型·护符卡舍弃：从自己的牌堆之中搜寻原始消费为1的1张学院类型·从者卡，并加入手牌。这个能力在1回合可以使用1次。",
+    "ja": "起動これをアクト：自分の場の学院・フォロワー1体を選ぶ。それは攻撃力+1/体力+1する。この能力はこのターン、自分のリーダーの体力を+していたなら使える。\n起動コスト1手札の学院・アミュレット1枚を捨てる：自分のデッキから元のコスト1の学院・フォロワー1枚を探し、手札に加える。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "信仰",
+    "学院",
+    "光輝"
+   ]
+  },
+  {
+   "id": "BP21-100",
+   "printings": [
+    "BP21-100",
+    "BP21-P53"
+   ],
+   "name": "Pureflame Lady",
+   "names": {
+    "en": "Pureflame Lady",
+    "cn": "净火千金",
+    "ja": "浄火の令嬢"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWhenever this gains {[defense]}, deal 1 damage to each enemy follower on the field.\n{[fanfare]} If there's another Academic follower on your field, give this {[attack]}+1/{[defense]}+1.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n当这张卡的《生命值》获得+时，给予敌方场上的全体从者各1点伤害。\n《入场曲》如果自己的场上有其他的学院类型·从者的话，使这张卡《攻击力》+1/《生命值》+1。",
+    "ja": "進化コスト1：これは進化する。\nこれの体力を+したとき、相手の場のフォロワーすべてに1ダメージ。\nファンファーレ自分の場に他の学院・フォロワーがいるなら、これは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "信仰",
+    "学院",
+    "光輝"
+   ]
+  },
+  {
+   "id": "BP21-101",
+   "printings": [
+    "BP21-101",
+    "BP21-P54"
+   ],
+   "name": "Pureflame Lady",
+   "names": {
+    "en": "Pureflame Lady",
+    "cn": "净火千金",
+    "ja": "浄火の令嬢"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "Whenever this gains{[defense]}, deal 1 damage to each enemy follower on the field.\nOn Evolve - Select your leader or a follower on your field and give it {[defense]}+2.",
+    "cn": "当这张卡的《生命值》获得+时，给予敌方场上的全体从者各1点伤害。\n【进化时】选择自己的主战者或自己场上的1个从者。使其《生命值》+2。",
+    "ja": "これの体力を+したとき、相手の場のフォロワーすべてに1ダメージ。\n【進化時】自分のリーダーか自分の場のフォロワー1体を選ぶ。それは体力+2する。"
+   },
+   "traits": [
+    "信仰",
+    "学院",
+    "光輝"
+   ]
+  },
+  {
+   "id": "BP21-102",
+   "printings": [
+    "BP21-102",
+    "BP21-P55"
+   ],
+   "name": "Kyrie, Fragment of Hope",
+   "names": {
+    "en": "Kyrie, Fragment of Hope",
+    "cn": "希望的残片·奇利烨",
+    "ja": "希望の断片・キリエ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Draw a card. Recover 3 play points.",
+    "cn": "【守护】\n《入场曲》抽取1张卡。将自己的PP回复3点。",
+    "ja": "【守護】\nファンファーレ1枚引く。自分のPPを3回復する。"
+   },
+   "traits": [
+    "超克"
+   ]
+  },
+  {
+   "id": "BP21-103",
+   "printings": [
+    "BP21-103",
+    "BP21-P56"
+   ],
+   "name": "Pureflower Maiden",
+   "names": {
+    "en": "Pureflower Maiden",
+    "cn": "纯真的花少女",
+    "ja": "純真の花少女"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Once per turn, when this gains {[defense]}, draw a card.\nActivate {[engage]} this: Give your leader {[defense]}+1. Activate only if there's another Academic follower on your field.",
+    "cn": "每个回合1次，当自己的主战者的《生命值》获得+时，抽取1张卡。\n《起动》将这张卡《横置》：使自己的主战者《生命值》+1。这个能力在自己的场上有其他的学院类型·从者的话才可使用。",
+    "ja": "ターンごとに1回、これの体力を+したとき、1枚引く。\n起動これをアクト：自分のリーダーは体力+1する。この能力は自分の場に他の学院・フォロワーがいるなら使える。"
+   },
+   "traits": [
+    "信仰",
+    "学院",
+    "光輝",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-104",
+   "printings": [
+    "BP21-104",
+    "BP21-P57"
+   ],
+   "name": "Zlatorog",
+   "names": {
+    "en": "Zlatorog",
+    "cn": "金角羚",
+    "ja": "ズラトロク"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this.\nWard.\n{[fanfare]} Draw a card. If this wasn't put onto the field from hand, give it {[attack]}+2/{[defense]}+2.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n【守护】\n《入场曲》抽取1张卡。如果这张卡从手牌以外召唤到场上的话，使这张卡《攻击力》+2/《生命值》+2。",
+    "ja": "進化コスト2：これは進化する。\n【守護】\nファンファーレ1枚引く。これが手札以外から場に出ていたなら、これは攻撃力+2/体力+2する。"
+   },
+   "traits": [
+    "光輝",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-105",
+   "printings": [
+    "BP21-105",
+    "BP21-P58"
+   ],
+   "name": "Zlatorog",
+   "names": {
+    "en": "Zlatorog",
+    "cn": "金角羚",
+    "ja": "ズラトロク"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Ward.\nOn Evolve - You may summon a follower with Ward that costs 5 or less from your hand",
+    "cn": "【守护】\n【进化时】可以将自己的手牌中的原始消费为5及以下的持有【守护】能力的1张从者卡召唤到场上。",
+    "ja": "【守護】\n【進化時】自分の手札の元のコスト5以下の【守護】を持つフォロワー1枚を場に出してよい。"
+   },
+   "traits": [
+    "光輝",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-106",
+   "printings": [
+    "BP21-106",
+    "BP21-P59"
+   ],
+   "name": "Aqua Priestess",
+   "names": {
+    "en": "Aqua Priestess",
+    "cn": "圣水神职者",
+    "ja": "アクアプリースト"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 7,
+   "attack": 4,
+   "defense": 5,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Search your deck for a spell that costs 5 or less, put it into your EX area, then shuffle. It costs 5 less to play this turn.",
+    "cn": "【守护】\n《入场曲》从自己的牌堆之中搜寻原始消费为5及以下的1张法术卡，并置于EX区域。这个回合，将其使用之际，将其消费-5。",
+    "ja": "【守護】\nファンファーレ自分のデッキから元のコスト5以下のスペル1枚を探し、EXエリアに置く。このターン、それをプレイする際、コストを-5する。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "BP21-107",
+   "printings": [
+    "BP21-107"
+   ],
+   "name": "Holy Armored Cheetah",
+   "names": {
+    "en": "Holy Armored Cheetah",
+    "cn": "圣铠猎豹",
+    "ja": "聖鎧のチーター"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Whenever your leader gains {[defense]}, give this Storm.",
+    "cn": "当自己的主战者的生命值获得+时，使这张卡获得【疾驰】能力。",
+    "ja": "自分のリーダーの体力を+したとき、これは【疾走】を持つ。"
+   },
+   "traits": [
+    "信仰",
+    "獣"
+   ]
+  },
+  {
+   "id": "BP21-108",
+   "printings": [
+    "BP21-108",
+    "BP21-P60"
+   ],
+   "name": "Hierophant's Implements",
+   "names": {
+    "en": "Hierophant's Implements",
+    "cn": "教皇的祭器",
+    "ja": "教皇の祭器"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Activate {[engage]} this, bury an amulet: Deal 1 damage to each enemy leader. Give your leader {[defense]}+1.",
+    "cn": "《起动》将这张卡《横置》将场上的1个护符置于墓场：给予敌方的全体主战者各1点伤害。使自己的主战者《生命值》+1。",
+    "ja": "起動これをアクト場のアミュレット1つを墓場に置く：相手のリーダーすべてに1ダメージ。自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "BP21-109",
+   "printings": [
+    "BP21-109",
+    "BP21-P61"
+   ],
+   "name": "Sublime Talisman",
+   "names": {
+    "en": "Sublime Talisman",
+    "cn": "尊贵的避邪物",
+    "ja": "気高き魔除け"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "When your leader takes ability damage, bury this: Give your leader {[defense]}+4 and draw a card.",
+    "cn": "当自己的主战者受到能力伤害时，将这张卡置于墓场：使自己的主战者《生命值》+4。抽取1张卡。",
+    "ja": "自分のリーダーが能力ダメージを受けたとき、これを墓場に置く：自分のリーダーは体力+4する。1枚引く。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "BP21-110",
+   "printings": [
+    "BP21-110",
+    "BP21-SL26"
+   ],
+   "name": "Lucius, Travelled Trainer",
+   "names": {
+    "en": "Lucius, Travelled Trainer",
+    "cn": "传奇教师·路西乌斯",
+    "ja": "レジェンドティーチャー・ルシウス"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Give your leader {[defense]}+1. Draw a card.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》使自己的主战者《生命值》+1。抽取1张卡。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分のリーダーは体力+1する。1枚引く。"
+   },
+   "traits": [
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-111",
+   "printings": [
+    "BP21-111",
+    "BP21-SL27"
+   ],
+   "name": "Lucius, Travelled Trainer",
+   "names": {
+    "en": "Lucius, Travelled Trainer",
+    "cn": "传奇教师·路西乌斯",
+    "ja": "レジェンドティーチャー・ルシウス"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 5,
+   "text": {
+    "en": "On Evolve - Discard an Academic card: Select an enemy follower on the field and deal it 4 damage.",
+    "cn": "【进化时】将手牌中的1张学院类型·卡片舍弃：选择敌方场上的1个从者。给予其4点伤害。",
+    "ja": "【進化時】手札の学院・カード1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに4ダメージ。"
+   },
+   "traits": [
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-112",
+   "printings": [
+    "BP21-112",
+    "BP21-SL28",
+    "BP21-U07"
+   ],
+   "name": "Gretina, Champion Fighter",
+   "names": {
+    "en": "Gretina, Champion Fighter",
+    "cn": "驱动领域·格蕾缇娜",
+    "ja": "駆動の領域・グレティナ"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 4,
+   "defense": 5,
+   "text": {
+    "en": "While you don't have a Super Evolution Point, this has Storm.\nActivate Discard an Academic card: Select an enemy follower on the field. Deal it 5 damage and draw a card. Activate only once per turn",
+    "cn": "只要自己的SEP为0，使这张卡获得【疾驰】能力。\n《起动》将手牌中1张学院类型·卡片舍弃：选择敌方场上的1个从者。给予其5点伤害。抽取1张卡。这个能力在1回合可以使用1次。",
+    "ja": "自分のSEPが0である限り、これは【疾走】を持つ。\n起動手札の学院・カード1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに5ダメージ。1枚引く。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "機械",
+    "学院",
+    "超克"
+   ]
+  },
+  {
+   "id": "BP21-113",
+   "printings": [
+    "BP21-113",
+    "PR-565"
+   ],
+   "name": "Arriet, Luxvoice Learner",
+   "names": {
+    "en": "Arriet, Luxvoice Learner",
+    "cn": "煌奏学徒·亨莉雅妲",
+    "ja": "煌奏の学徒・アンリエット"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Look at the top 3 cards of your deck. You may reveal an Academic card from among them and add it to your hand. Put the rest on the bottom of your deck in any order. If there are at least 3 Academic followers on your field, give this {[attack]}+1.",
+    "cn": "《入场曲》查看自己的牌堆顶3张卡。从那之中，可以将1张学院类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。如果自己场上的学院类型·从者为3个及以上的话，使这张卡《攻击力》+1。",
+    "ja": "ファンファーレ自分のデッキの上3枚を見る。その中から、学院・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。自分の場の学院・フォロワーが3体以上なら、これは攻撃力+1する。"
+   },
+   "traits": [
+    "学院",
+    "シンガー"
+   ]
+  },
+  {
+   "id": "BP21-114",
+   "printings": [
+    "BP21-114",
+    "PR-582"
+   ],
+   "name": "Lainecrest Academy",
+   "names": {
+    "en": "Lainecrest Academy",
+    "cn": "宏伟的校舍",
+    "ja": "大いなる学び舎"
+   },
+   "class": "Neutral",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Look at the top 3 cards of your deck. You may reveal an Academic card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.\nActivate {[engage]} this, bury this: Give your leader {[defense]}+1. Activate only if there at least 2 Academic followers on your field.",
+    "cn": "《入场曲》查看自己的牌堆顶3张卡。从那之中，可以将1张学院类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。\n《起动》将这张卡《横置》置于墓场：使自己的主战者《生命值》+1。这个能力在自己场上的学院类型·从者为2个及以上的话才可使用。",
+    "ja": "ファンファーレ自分のデッキの上3枚を見る。その中から、学院・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。\n起動これをアクト墓場に置く：自分のリーダーは体力+1する。この能力は自分の場の学院・フォロワーが2体以上なら使える。"
+   },
+   "traits": [
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-115",
+   "printings": [
+    "BP21-115",
+    "PR-584"
+   ],
+   "name": "Goblin Genius",
+   "names": {
+    "en": "Goblin Genius",
+    "cn": "聪颖的哥布林",
+    "ja": "スマートゴブリン"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} If there are at least 3 Academic followers on your field, give your leader {[defense]}+1.",
+    "cn": "《入场曲》如果自己场上的学院类型·从者为3个及以上的话，使自己的主战者《生命值》+1。",
+    "ja": "ファンファーレ自分の場の学院・フォロワーが3体以上なら、自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "学院",
+    "ゴブリン"
+   ]
+  },
+  {
+   "id": "BP21-116",
+   "printings": [
+    "BP21-116",
+    "BP21-P62"
+   ],
+   "name": "Goblin's Gratitude",
+   "names": {
+    "en": "Goblin's Gratitude",
+    "cn": "情谊的证明",
+    "ja": "絆の証明"
+   },
+   "class": "Neutral",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Look at the top 4 cards of your deck. You may reveal up to 2 Academic cards from among them and add them to your hand. Put the rest on the bottom of your deck in any order. Recover 1 play point.",
+    "cn": "查看自己的牌堆顶4张卡。从那之中，可以将学院类型·卡片最多2张公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。将自己的PP回复1点。",
+    "ja": "自分のデッキの上4枚を見る。その中から、学院・カード2枚まで公開して手札に加えてよい。残りを好きな順にデッキの下に置く。自分のPPを1回復する。"
+   },
+   "traits": [
+    "学院",
+    "ゴブリン"
+   ]
+  },
+  {
+   "id": "BP21-PR10",
+   "printings": [
+    "BP21-PR10",
+    "DSD01a-009",
+    "DSD01a-P03"
+   ],
+   "name": "グレアの炎熱",
+   "names": {
+    "en": "グレアの炎熱",
+    "cn": "",
+    "ja": ""
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": "クイック\n相手の場のフォロワー1体を選ぶ。それに2ダメージ。自分の墓場の学院・カードが5枚以上なら、代わりに3ダメージ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "BP21-T01",
+   "printings": [
+    "BP21-T01",
+    "BP21-P63"
+   ],
+   "name": "Lyelth's Marionette",
+   "names": {
+    "en": "Lyelth's Marionette",
+    "cn": "雷琉的人偶",
+    "ja": "ライルの人形"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": true,
+   "cost": 0,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "While this card is on the field, its name is also Puppet.\nStorm. Bane. Ward.",
+    "cn": "这张卡只要在场上存在，也视为『悬丝傀儡』使用。\n【疾驰】【必杀】【守护】",
+    "ja": "これは場にいる限り、『操り人形』でもある。\n【疾走】【必殺】【守護】"
+   },
+   "traits": [
+    "人形",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-T02",
+   "printings": [
+    "BP21-T02",
+    "BP21-P64"
+   ],
+   "name": "Verdant Prayer",
+   "names": {
+    "en": "Verdant Prayer",
+    "cn": "新绿的显现",
+    "ja": "緑の顕現"
+   },
+   "class": "Forestcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 5,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Look at the top 7 cards of your deck. You may summon up to 3 Academic and/or Beast followers that cost a total of 5 or less from among them. Put the rest on the bottom of your deck in any order. Give each follower on your field {[attack]}+1/{[defense]}+1.",
+    "cn": "查看自己的牌堆顶7张卡。从那之中，直到原始消费的合计变为5及以下、可以将「学院类型·从者卡或野兽类型·从者卡」合计最多3张召唤到场上。将剩余的卡以任意顺序置于牌堆底。使自己场上的全体从者各《攻击力》+1/《生命值》+1。",
+    "ja": "自分のデッキの上7枚を見る。その中から、学院・フォロワーや獣・フォロワーを元のコストの合計が5以下になるように3枚まで場に出してよい。残りを好きな順にデッキの下に置く。自分の場のフォロワーすべては攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "エルフ族",
+    "学院",
+    "超克"
+   ]
+  },
+  {
+   "id": "BP21-T03",
+   "printings": [
+    "BP21-T03",
+    "BP21-P65"
+   ],
+   "name": "Curse of Suffering",
+   "names": {
+    "en": "Curse of Suffering",
+    "cn": "苦痛",
+    "ja": "痛苦"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Deal 2 damage to each enemy leader, each enemy follower, and each Amaryllis, the Princess on your field.",
+    "cn": "给予敌方的全体主战者与敌方场上的全体从者与自己场上的全体『童话公主·阿玛丽丽丝』各2点伤害。",
+    "ja": "相手のリーダーすべてと相手の場のフォロワーすべてと自分の場の『御伽の姫・アマリリス』すべてに2ダメージ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "BP21-T04",
+   "printings": [
+    "BP21-T04"
+   ],
+   "name": "Emergency Summoning",
+   "names": {
+    "en": "Emergency Summoning",
+    "cn": "紧急召唤",
+    "ja": "緊急召喚"
+   },
+   "class": "Runecraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": true,
+   "cost": 0,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Stack.\n{[fanfare]} Summon a Guardform Golem token. If there's an Alchemist follower that costs at least 3 on your field, put a Guardian Golem token into your EX area.",
+    "cn": "【蓄积】\n《入场曲》将1个『防御型巨像』召唤到场上。如果自己的场上有原始消费为3及以上的炼金术师类型·从者的话，将1张『守护者巨像』卡置于EX区域。",
+    "ja": "【スタック】\nファンファーレ『防御型ゴーレム』1体を場に出す。自分の場に元のコスト3以上の錬金術師・フォロワーがいるなら、『ガーディアンゴーレム』1枚をEXエリアに置く。\n―――――――――――――――\n『防御型ゴーレム』ウィッチゴーレム・フォロワーコスト2攻撃力2/体力3【守護】\n『ガーディアンゴーレム』ウィッチゴーレム・フォロワーコスト3攻撃力3/体力5【守護】ラストワード自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "錬金術師",
+    "土の印"
+   ]
+  },
+  {
+   "id": "BP21-T05",
+   "printings": [
+    "BP21-T05"
+   ],
+   "name": "Reactive Barrier",
+   "names": {
+    "en": "Reactive Barrier",
+    "cn": "术式结界",
+    "ja": "術式結界"
+   },
+   "class": "Runecraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": true,
+   "cost": 0,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Stack.\n{[fanfare]} Draw a card. If there's an Alchemist follower that costs at least 3 on your field, draw 2 instead.",
+    "cn": "【蓄积】\n《入场曲》抽取1张卡。如果自己的场上有原始消费为3及以上的炼金术师类型·从者的话，转变为2张。",
+    "ja": "【スタック】\nファンファーレ1枚引く。自分の場に元のコスト3以上の錬金術師・フォロワーがいるなら、代わりに2枚。"
+   },
+   "traits": [
+    "錬金術師",
+    "土の印"
+   ]
+  },
+  {
+   "id": "BP21-T06",
+   "printings": [
+    "BP21-T06",
+    "BP21-P66"
+   ],
+   "name": "Lilium's Hatchling",
+   "names": {
+    "en": "Lilium's Hatchling",
+    "cn": "莉莉尤姆的幼龙",
+    "ja": "リリウムの幼竜"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": true,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "Ward.\n{[lastwords]} Give your leader {[defense]}+1.",
+    "cn": "【守护】\n《谢幕曲》使自己的主战者《生命值》+1。",
+    "ja": "【守護】\nラストワード自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "竜族",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-T07",
+   "printings": [
+    "BP21-T07",
+    "BP21-P67"
+   ],
+   "name": "Lilium's Dragon",
+   "names": {
+    "en": "Lilium's Dragon",
+    "cn": "莉莉尤姆的巨龙",
+    "ja": "リリウムの巨竜"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": true,
+   "cost": 2,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Rush. Assail.\nFollower Strike - Change the enemy follower's attack and defense to 1.",
+    "cn": "【突进】【指定攻击】\n【攻击时】如果对从者进行攻击的话，将其攻击力与生命值各变为1。",
+    "ja": "【突進】【指定攻撃】\n【攻撃時】フォロワーへの攻撃なら、それの攻撃力と体力を1にする。"
+   },
+   "traits": [
+    "竜族",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-T08",
+   "printings": [
+    "BP21-T08",
+    "BP21-P68"
+   ],
+   "name": "Holy Cavalier",
+   "names": {
+    "en": "Holy Cavalier",
+    "cn": "圣骑兵",
+    "ja": "聖騎兵"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": true,
+   "cost": 1,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "Ward.\nWhenever this gains {[attack]}, give it Rush.",
+    "cn": "【守护】\n当这张卡的《攻击力》获得+时，使这张卡获得【突进】能力。",
+    "ja": "【守護】\nこれの攻撃力を+したとき、これは【突進】を持つ。"
+   },
+   "traits": [
+    "先導"
+   ]
+  },
+  {
+   "id": "BP21-T09",
+   "printings": [
+    "BP21-T09",
+    "BP21-P69"
+   ],
+   "name": "Cyclical Guidance",
+   "names": {
+    "en": "Cyclical Guidance",
+    "cn": "久远的指引",
+    "ja": "長久の導き"
+   },
+   "class": "Havencraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select up to X enemy followers on the field. Deal them each 5 damage and give each Academic follower on your field {[attack]}+1{[defense]}+1. X equals the number of time your leader has gained defense this turn.",
+    "cn": "选择敌方场上的从者最多X个。给予其各5点伤害。使自己场上的学院类型·从者各《攻击力》+1/《生命值》+1。X为「这个回合中自己的主战者的《生命值》获得+的次数」。",
+    "ja": "相手の場のフォロワーX体まで選ぶ。それに5ダメージ。自分の場の学院・フォロワーすべては攻撃力+1/体力+1する。Xは「このターン中に自分のリーダーの体力を+した回数」である。"
+   },
+   "traits": [
+    "先導",
+    "学院"
+   ]
+  },
+  {
+   "id": "BP21-T10",
+   "printings": [
+    "BP21-T10",
+    "BP21-P70"
+   ],
+   "name": "Crest: Wilbert, Desolate Paladin",
+   "names": {
+    "en": "Crest: Wilbert, Desolate Paladin",
+    "cn": "纹章 呜咽的圣骑士·维尔伯特",
+    "ja": "クレスト 嗚咽の聖騎士・ウィルバート"
+   },
+   "class": "Havencraft",
+   "type": "crest",
+   "evolved": false,
+   "token": true,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[act]} {[cost00]}: Select a follower with Ward on your field and, if there are at least 3 followers with Ward on your field, give it {[attack]}+1/{[defense]}+1. If there are at least 5, give {[attack]}+2/{[defense]}+2 instead. Activate only once per turn",
+    "cn": "《起动》《消费0》：选择自己场上的持有【守护】能力的1个从者。如果自己场上的持有【守护】能力的从者为3个及以上的话，使其《攻击力》+1/《生命值》+1。如果为5个的话，转变为《攻击力》+2/《生命值》+2。这个能力在1回合可以使用1次。",
+    "ja": "起動コスト0：自分の場の【守護】を持つフォロワー1体を選ぶ。自分の場の【守護】を持つフォロワーが3体以上なら、それは攻撃力+1/体力+1する。5体なら、代わりに攻撃力+2/体力+2する。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "挑戦者",
+    "先導"
+   ]
+  }
+ ]
+}

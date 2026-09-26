@@ -122,6 +122,13 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   "BP19-006": { name_en: "Verdant Lieutenant (Evolved)" },
   "BP19-P02": { name_en: "Verdant Lieutenant (Evolved)" },
   "BP19-083": { name_en: "Underworld Lieutenant (Evolved)" },
+  // The same for BP20-024 / P14 (base BP20-023 "Congregant of Usurpation", 簒奪の団結者).
+  "BP20-024": { name_en: "Congregant of Usurpation (Evolved)" },
+  "BP20-P14": { name_en: "Congregant of Usurpation (Evolved)" },
+  // "Lilium, the Witchwyrm (Evolved)": the two halves of the name are swapped. It is the evolved card of BP21-055
+  // "Lilium, the Wyrmwitch" — the same Japanese name 竜の魔女・リリウム and Chinese name 龙之魔女·莉莉尤姆 (CR 5.16.1.1.1).
+  "BP21-056": { name_en: "Lilium, the Wyrmwitch (Evolved)" },
+  "BP21-SL14": { name_en: "Lilium, the Wyrmwitch (Evolved)" },
   // Back faces of double-faced cards (see above).
   "BP09-005": { back: BP09_005_BACK },
   "BP09-P02": { back: BP09_005_BACK },

@@ -30,6 +30,12 @@ export interface SmokeExtras {
 }
 
 /**
+ * A crest in the player's EX area in every busy scenario (CR 10.3.6; BP20), so that every card also runs
+ * next to one: a card that is not playable, has no cost and counts as a card in the EX area.
+ */
+const SMOKE_CREST = "BP20-T11";
+
+/**
  * Whole-set checks (every card script of one set runs, in random situations):
  *  1. every card is played / evolved / activated in a busy scenario with random choices;
  *  2. random games between random decks built from the set.
@@ -106,7 +112,7 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
               ...(extras.field ?? []),
             ],
             evolveDeck: card.evolved ? [physical] : [],
-            ex: ["BP01-T03", "BP01-T11", ...(card.token || card.advanced ? [card.id] : [])],
+            ex: ["BP01-T03", "BP01-T11", ...(card.id === SMOKE_CREST ? [] : [SMOKE_CREST]), ...(card.token || card.advanced ? [card.id] : [])],
             // 10 spells for Spellchain, plus a few other cards for Necrocharge.
             cemetery: [...pick(`${card.id}:spells`, spells, 10), ...pick(`${card.id}:cem`, playable, 6), ...(extras.cemetery ?? [])],
             deck: pick(`${card.id}:deck`, playable, 12),
@@ -156,7 +162,9 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
       const action =
         d.actions.find((a) => a.type === "evolve" && mine(a.card) && revealed(a) === card.id) ??
         d.actions.find((a) => a.type === "play" && mine(a.card)) ??
-        d.actions.find((a) => a.type === "activate" && mine(a.card));
+        d.actions.find((a) => a.type === "activate" && mine(a.card)) ??
+        // A crest can't be played (CR 8.2.1): without an activated ability it works through the end phase.
+        (card.type === "crest" ? d.actions.find((a) => a.type === "endMainPhase") : undefined);
       if (!action) skipped.push(card.id);
       else {
         g.act({ type: "mainPhase", action });

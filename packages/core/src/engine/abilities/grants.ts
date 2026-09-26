@@ -74,6 +74,16 @@ export const GRANT_ABILITIES: Record<GrantedAbilityId, AbilityDef> = {
       if (fx.game.card(fx.self)?.zone === "cemetery") yield* fx.banish([fx.self]);
     },
   },
+  // BP21-073 "At the start of your end phase, bury this." It belongs to the summoned follower and remains if Cornelius
+  // leaves the field (ruling, CR 10.9.1.2).
+  buryAtEnd: {
+    kind: "automatic",
+    timing: "other",
+    trigger: (e, me) => !me.lookBack && e.type === "phaseStarted" && e.phase === "end" && e.player === me.controller,
+    *resolve(fx) {
+      if (fx.game.card(fx.self)?.zone === "field") yield* fx.bury([fx.self]);
+    },
+  },
   // BP08-106 "At the start of your end phase, return this card to its owner's hand." The ability
   // belongs to the summoned follower and remains if Sahaquiel leaves (CR 10.9.1.2).
   returnToHandAtEnd: {

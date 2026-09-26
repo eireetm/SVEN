@@ -13,7 +13,7 @@ import { performableModes } from "../flow/play-card";
 import type { G } from "../runtime/context";
 import { confirm } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
-import { characteristics } from "../state/characteristics";
+import { abilityZones, characteristics } from "../state/characteristics";
 import { makeReader } from "../query";
 import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX } from "./keyword-abilities";
 import { GRANT_ABILITIES, GRANT_PREFIX } from "./grants";
@@ -153,8 +153,9 @@ export function canPlayActivated(
   const found = activatedAbility(g, card, index);
   if (!found || found.ability.evolve) return false;
   const { ability, def } = found;
-  // CR 10.3.5 — valid only on the field unless the text says otherwise (e.g. BP06-059, EX area).
-  if (!(ability.validIn ?? ["field"]).includes(c.zone)) return false;
+  // CR 10.3.5 — valid only on the field unless the text says otherwise (e.g. BP06-059, EX area);
+  // 10.3.6 — a crest's only in the EX area.
+  if (!abilityZones(g, def, ability).includes(c.zone)) return false;
   if (timing === "quick" && !ability.quick) return false; // CR 12.3.3
   const perTurn = activationsPerTurn(ability);
   if (perTurn !== null && usesThisTurn(g.state, c, abilityKey(def, index)) >= perTurn) return false;
@@ -184,14 +185,15 @@ function activationsPerTurn(ability: ActivatedAbility): number | null {
 /**
  * Cards whose activated abilities may be playable now: the player's field, plus cards in their
  * hand, EX area or cemetery that have an activated ability valid there (CR 10.3.5, e.g. BP06-079
- * in the hand, BP06-059 in the EX area, BP07-038 in the cemetery).
+ * in the hand, BP06-059 in the EX area, BP07-038 in the cemetery; 10.3.6 crests in the EX area).
  */
 export function cardsWithActivatedAbilities(g: G, player: PlayerId): CardId[] {
   const zones = g.state.players[player].zones;
   const elsewhere = (["hand", "ex", "cemetery"] as const).flatMap((zone) =>
-    zones[zone].filter((id) =>
-      g.scripts[g.state.cards[id]!.def]?.abilities?.some((a) => a.kind === "activated" && a.validIn?.includes(zone)),
-    ),
+    zones[zone].filter((id) => {
+      const def = g.state.cards[id]!.def;
+      return g.scripts[def]?.abilities?.some((a) => a.kind === "activated" && abilityZones(g, def, a).includes(zone));
+    }),
   );
   return [...zones.field, ...elsewhere];
 }

@@ -3,7 +3,7 @@ import type { DamageInfo } from "../../script/types";
 import type { G } from "../runtime/context";
 import { chooseOptions } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
-import { activeScript, characteristics } from "../state/characteristics";
+import { activeScript, characteristics, inAbilityZone, passiveSources } from "../state/characteristics";
 import { effectInForce } from "../state/effects";
 import { thisTurn } from "../state/turn-counts";
 import { makeReader } from "../query";
@@ -120,7 +120,7 @@ export function* dealDamage(g: G, instances: readonly DamageInstance[]): Proc<Da
         const plus = e.change.amount;
         replacements.push({ apply: (a) => a + plus });
       }
-      const own = src.zone === "field" ? activeScript(g, d.source)?.field?.damageDealt : undefined;
+      const own = inAbilityZone(g, d.source) ? activeScript(g, d.source)?.field?.damageDealt : undefined;
       if (own) passive((a) => own(reader, d.source!, info(a)));
     }
     const prevented = state.effects.some(
@@ -136,7 +136,7 @@ export function* dealDamage(g: G, instances: readonly DamageInstance[]): Proc<Da
       if (taken) passive((a) => taken(reader, d.target, info(a)));
     }
     for (const p of [0, 1] as const) {
-      for (const f of state.players[p].zones.field) {
+      for (const f of passiveSources(g, p)) {
         const field = activeScript(g, f)?.field;
         if (!field) continue;
         if (field.damageBy) passive((a) => field.damageBy!(reader, f, info(a)));
@@ -153,6 +153,10 @@ export function* dealDamage(g: G, instances: readonly DamageInstance[]): Proc<Da
       if (e.change.kind === "damageReduction") {
         const amount = e.change.amount;
         replacements.push({ apply: (a) => a - amount }); // BP14-T07
+      }
+      if (e.change.kind === "reduceNextDamage" && !usedUp.has(e.id)) {
+        const amount = e.change.amount;
+        replacements.push({ apply: (a) => a - amount, usesUp: e.id }); // BP20-103
       }
     }
     const once = state.effects.find(
@@ -188,6 +192,7 @@ export function* dealDamage(g: G, instances: readonly DamageInstance[]): Proc<Da
   for (const d of dealt) {
     g.emit({ type: "damageDealt", source: d.source, target: d.target, amount: d.amount, kind: d.kind, combat: d.combat });
     const c = state.cards[d.target]!;
+    if (c.zone === "field") thisTurn(state, c.controller).followersDamagedBy.push({ source: d.source, target: d.target }); // BP20-025, 069
     if (c.zone === "leader") {
       const defense = state.players[c.controller].leaderDefense;
       g.emit({ type: "leaderDefenseChanged", player: c.controller, defense, delta: -d.amount });

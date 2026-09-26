@@ -98,7 +98,9 @@ export function playVariants(
   if (!c) return [];
   if (timing !== "effect" && !playableFrom(g, player, card)) return [];
   const ch = characteristics(g, card);
-  if (ch.type === "leader" || ch.evolved || ch.cost === null) return [];
+  // CR 8.2.1 — a card is played by paying its cost: leaders and crests have none (2.5; a crest can't be
+  // in the resolution zone either, 9.1.4.2 — confirmed by the project owner).
+  if (ch.type === "leader" || ch.type === "crest" || ch.evolved || ch.cost === null) return [];
   if (timing === "quick" && !ch.keywords.includes("quick")) return [];
   // BP05-006 — "can't play followers during their next main phase", by an effect too (ruling).
   if (ch.type === "follower" && g.state.phase === "main" && restricted(g.state, player, "cantPlayFollowers")) return [];
@@ -153,7 +155,7 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
   }
   let modes: Mode[] = [];
   if (spell?.modes) {
-    const chosen = yield* chooseModes(g, player, spell, played);
+    const chosen = yield* chooseModes(g, player, spell, played, option?.id ?? null);
     if (chosen === null) throw new EngineError("card played without a performable option");
     modes = chosen;
   }

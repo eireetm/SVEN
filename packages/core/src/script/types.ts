@@ -227,6 +227,11 @@ export interface FieldPassives {
    * an end phase starts (either player's; two of these: 2 more — rulings).
    */
   extraEndPhaseTriggers?: number;
+  /**
+   * CR 5.18 — "If you would choose 1 or more options, choose any number instead" (BP20-T06, a crest):
+   * its controller chooses 1 to all of the performable options (ruling) whenever they choose.
+   */
+  chooseAnyNumberOfOptions?: boolean;
 }
 
 /** A cost the engine cannot express with the standard parts (select and move cards, counters...). */
@@ -288,7 +293,8 @@ export interface TargetSpec {
   /**
    * Not a card selected by an earlier selection of the same card or ability (BP19-080 "Select a
    * 5-cost or lower Condemned follower and a 3-cost or lower Condemned follower from your
-   * cemetery"). Only for "up to" selections.
+   * cemetery"). For "up to" selections, or a required selection of 1 card (BP20-084: then the
+   * card or ability can only be played if all of them can be made).
    */
   distinct?: boolean;
   /**
@@ -385,7 +391,7 @@ export interface ActivatedAbility {
    */
   modes?: readonly Mode[];
   /** See SpellAbility.modeCount. */
-  modeCount?(game: GameReader, controller: PlayerId, self: CardId): number;
+  modeCount?(game: GameReader, controller: PlayerId, self: CardId, playOption?: string | null): number;
   targets?: readonly TargetSpec[];
   /** Not used for evolve abilities (the engine performs CR 5.16). */
   resolve?(fx: EffectContext): Proc<void>;
@@ -439,7 +445,7 @@ export interface AutomaticAbility {
   earthRite?: EarthRiteSpec;
   modes?: readonly Mode[];
   /** See SpellAbility.modeCount. */
-  modeCount?(game: GameReader, controller: PlayerId, self: CardId): number;
+  modeCount?(game: GameReader, controller: PlayerId, self: CardId, playOption?: string | null): number;
   targets?: readonly TargetSpec[];
   resolve?(fx: EffectContext): Proc<void>;
 }
@@ -451,9 +457,10 @@ export interface SpellAbility {
   modes?: readonly Mode[];
   /**
    * "Choose up to N of the following" (CR 5.18.2.1: 1 to N options). Without it, exactly one
-   * option is chosen. Evaluated when the card or ability is played (5.18.3.1, 5.18.3.1.1).
+   * option is chosen. Evaluated when the card or ability is played (5.18.3.1, 5.18.3.1.1); a spell gets the
+   * play option it is played with (BP21-026 "If you played this for 2 more play points, choose up to 2").
    */
-  modeCount?(game: GameReader, controller: PlayerId, self: CardId): number;
+  modeCount?(game: GameReader, controller: PlayerId, self: CardId, playOption?: string | null): number;
   targets?: readonly TargetSpec[];
   resolve?(fx: EffectContext): Proc<void>;
 }

@@ -42,7 +42,25 @@ function required(g: Env, spec: TargetSpec, controller: PlayerId, self: CardId):
  */
 export function targetsAvailable(g: Env, specs: readonly TargetSpec[] | undefined, controller: PlayerId, self: CardId): boolean {
   if (!specs) return true;
-  return specs.every((s) => candidatesOf(g, s, controller, self).length >= required(g, s, controller, self));
+  return feasibleFrom(g, specs, controller, self, 0, []);
+}
+
+/**
+ * Can the selections from `index` on all be made, given the cards `used` by the earlier ones? A `distinct`
+ * selection can't take a card an earlier one took (BP20-084 "a 5-cost or less ... and a 3-cost or less ...":
+ * two different cards, both needed — rulings), so a required selection followed by one is tried card by card.
+ */
+function feasibleFrom(g: Env, specs: readonly TargetSpec[], controller: PlayerId, self: CardId, index: number, used: readonly CardId[]): boolean {
+  const spec = specs[index];
+  if (!spec) return true;
+  const need = required(g, spec, controller, self);
+  const candidates = candidatesOf(g, spec, controller, self).filter((id) => !(spec.distinct && used.includes(id)));
+  if (candidates.length < need) return false;
+  const laterDistinct = specs.slice(index + 1).some((t) => t.distinct && required(g, t, controller, self) > 0);
+  // An "up to" selection can take nothing, so it never stands in a later one's way.
+  if (need === 0 || !laterDistinct) return feasibleFrom(g, specs, controller, self, index + 1, used);
+  if (need !== 1) throw new EngineError("a required selection before a distinct one must be of 1 card");
+  return candidates.some((c) => feasibleFrom(g, specs, controller, self, index + 1, [...used, c]));
 }
 
 /**
@@ -59,12 +77,18 @@ export function* chooseTargets(
   if (!specs || specs.length === 0) return [];
   if (!targetsAvailable(g, specs, controller, self)) return null;
   const chosen: CardId[][] = [];
-  for (const spec of specs) {
+  for (const [index, spec] of specs.entries()) {
     if (spec.count < 0) throw new EngineError("negative target count");
     if (spec.max && !spec.upTo) throw new EngineError("a target maximum is only for \"up to\" selections");
-    if ((spec.distinct || spec.distinctNames) && !spec.upTo) throw new EngineError("distinct targets are only for \"up to\" selections");
+    if (spec.distinctNames && !spec.upTo) throw new EngineError("targets with different names are only for \"up to\" selections");
+    if (spec.distinct && !spec.upTo && spec.count !== 1) throw new EngineError("a required distinct selection must be of 1 card");
     const earlier = chosen.flat();
-    const candidates = candidatesOf(g, spec, controller, self).filter((id) => !(spec.distinct && earlier.includes(id)));
+    // Only choices after which the later selections can still be made (the principle of CR 10.6.2.1.2).
+    const constrained =
+      required(g, spec, controller, self) > 0 && specs.slice(index + 1).some((t) => t.distinct && required(g, t, controller, self) > 0);
+    const candidates = candidatesOf(g, spec, controller, self).filter(
+      (id) => !(spec.distinct && earlier.includes(id)) && (!constrained || feasibleFrom(g, specs, controller, self, index + 1, [...earlier, id])),
+    );
     const cap = spec.max ? Math.max(0, spec.max(makeReader(g), controller, self)) : spec.count;
     const max = Math.min(spec.count, cap, candidates.length);
     const min = required(g, spec, controller, self);

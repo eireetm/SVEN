@@ -34,6 +34,7 @@ export function staticValue(type: CardType, attack: number | null, defense: numb
     return attack + 0.6 * defense + 0.2 * c + (keywords.includes("ward") ? 1 : 0) + (keywords.includes("bane") ? 1.5 : 0);
   }
   if (type === "amulet") return 1.5 + 0.3 * c;
+  if (type === "crest") return 2; // an effect that lasts in the EX area (CR 10.3.6), like evaluate.ts
   return 0.5 * c;
 }
 

@@ -19,8 +19,9 @@ export default defineCard({
     atStartOfYourEndPhase({
       *resolve(fx) {
         const opponent = fx.game.opponent(fx.controller);
-        const [kind] = yield* fx.choose(OPTIONS, 1, 1, opponent);
-        yield* fx.restrictPlayer(opponent, kind as PlayerRestriction["kind"]);
+        // Any number of them instead if the opponent has BP20-T06 (CR 5.18: they choose).
+        const kinds = yield* fx.choose(OPTIONS, 1, fx.game.choosesAnyNumberOfOptions(opponent) ? OPTIONS.length : 1, opponent);
+        for (const kind of kinds) yield* fx.restrictPlayer(opponent, kind as PlayerRestriction["kind"]);
       },
     }),
   ],

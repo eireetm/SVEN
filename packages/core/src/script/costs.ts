@@ -244,27 +244,39 @@ export function leaderDefenseCost(x: number): CustomCost {
  * the hand (BP19-038 rulings). The cards may come from both places (12.18.2.1); this card needs room in the EX
  * area once the buried cards have left it (CR 4.8.3.2), so only choices that can be completed are offered. For
  * the text, `fx.memory.fusion` is this card's id in the EX area and `fx.memory.fused` the fused cards' ids in
- * the cemetery, comma-separated (12.18.4).
+ * the cemetery, comma-separated (12.18.4). `upTo`: "Fuse N or less [cards]" (BP20-020): the player chooses how
+ * many, at least 1 (CR 12.18.2.2, 12.18.2.2.1), among the numbers that can be completed.
  */
-export function fuse(filter: Filter, n = 1): CustomCost {
+export function fuse(filter: Filter, n = 1, opts: { upTo?: boolean } = {}): CustomCost {
   const inZone = (g: GameReader, c: PlayerId, self: CardId, zone: "hand" | "ex") =>
     g.cards(c, zone).filter((id) => id !== self && filter(g, id));
   // Cards that must come from the EX area so that this card fits there.
   const mustBury = (g: GameReader, c: PlayerId) => Math.max(0, g.cards(c, "ex").length + 1 - g.exAreaLimit(c));
   // Can `need` more cards be fused from `hand` + `ex` candidates, `bury` of them at least from the EX area?
   const feasible = (hand: number, ex: number, need: number, bury: number) => Math.max(bury, need - hand) <= Math.min(ex, need);
+  // The numbers of cards that can be fused now.
+  const counts = (g: GameReader, c: PlayerId, self: CardId): number[] => {
+    const hand = inZone(g, c, self, "hand").length;
+    const ex = inZone(g, c, self, "ex").length;
+    return (opts.upTo ? Array.from({ length: n }, (_, i) => i + 1) : [n]).filter((k) => feasible(hand, ex, k, mustBury(g, c)));
+  };
   return {
-    canPay: (g, c, self) =>
-      g.card(self)?.zone === "hand" && feasible(inZone(g, c, self, "hand").length, inZone(g, c, self, "ex").length, n, mustBury(g, c)),
+    canPay: (g, c, self) => g.card(self)?.zone === "hand" && counts(g, c, self).length > 0,
     *pay(fx) {
       const g = fx.game;
+      const ks = counts(g, fx.controller, fx.self);
+      let total = ks[0] ?? 0;
+      if (ks.length > 1) {
+        const [pick] = yield* fx.choose(ks.map((k) => ({ id: String(k), label: `Fuse ${k}` })));
+        total = Number(pick ?? total);
+      }
       const chosen: CardId[] = [];
-      for (let i = 0; i < n; i++) {
+      for (let i = 0; i < total; i++) {
         const hand = inZone(g, fx.controller, fx.self, "hand").filter((id) => !chosen.includes(id));
         const ex = inZone(g, fx.controller, fx.self, "ex").filter((id) => !chosen.includes(id));
         const buried = chosen.filter((id) => g.card(id)?.zone === "ex").length;
         const bury = Math.max(0, mustBury(g, fx.controller) - buried);
-        const need = n - i - 1;
+        const need = total - i - 1;
         const options = [
           ...(feasible(hand.length - 1, ex.length, need, bury) ? hand : []),
           ...(feasible(hand.length, ex.length - 1, need, Math.max(0, bury - 1)) ? ex : []),
@@ -292,6 +304,18 @@ export function removeCountersFromThis(counter: string, n = 1): CustomCost {
     canPay: (g, _c, self) => g.counters(self, counter) >= n,
     *pay(fx) {
       yield* fx.removeCounters(fx.self, counter, n);
+    },
+  };
+}
+
+/** "Discard this and a [matching] card" from the hand — both at once (CR 5.12), e.g. BP15-074, BP20-042. */
+export function discardThisAnd(filter: Filter): CustomCost {
+  const others = (g: GameReader, self: CardId, p: PlayerId) => g.cards(p, "hand").filter((id) => id !== self && filter(g, id));
+  return {
+    canPay: (g, c, self) => g.card(self)?.zone === "hand" && others(g, self, c).length > 0,
+    *pay(fx) {
+      const [other] = yield* fx.chooseCards(others(fx.game, fx.self, fx.controller), 1, 1);
+      yield* fx.discardCards(other === undefined ? [fx.self] : [fx.self, other]);
     },
   };
 }

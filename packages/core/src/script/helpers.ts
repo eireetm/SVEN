@@ -1,11 +1,11 @@
 import type { CardType } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import type { TriggerData } from "../model/state";
-import type { CardMove, GameEvent } from "../events/types";
+import type { CardMove, GameEvent, MoveCause } from "../events/types";
 import type { EffectContext } from "../engine/effects/context";
 import type { Proc } from "../engine/runtime/proc";
 import type { GameReader } from "../engine/query";
-import { costAtMost } from "./targets";
+import { costAtMost, isCrest } from "./targets";
 import type {
   ActivatedAbility,
   AutomaticAbility,
@@ -341,6 +341,28 @@ export function whenFollowerToCemetery(spec: TimingSpec): AutomaticAbility {
 }
 
 /**
+ * "Whenever you play or fuse a [trait] card" (BP20-019, 029, 033, T02 "a Loot card"): once per card played (CR
+ * 10.6.2.7), and once per card with the trait fused by one of your Fuse abilities (the cards discarded or buried for
+ * it are "fused", CR 12.18.4.1; a fused token no longer exists, so its printed traits are used). Data: the card.
+ */
+export function whenYouPlayOrFuse(spec: TimingSpec, trait: string): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game) => {
+      if (me.lookBack) return false;
+      if (e.type === "cardPlayed") return e.player === me.controller && game.info(e.card).traits.includes(trait) ? [{ card: e.card }] : false;
+      if (e.type === "cardsFused" && e.player === me.controller) {
+        return e.fused
+          .filter((id, i) => (game.card(id) ? game.info(id).traits : game.db.get(e.fusedDefs[i]!).traits).includes(trait))
+          .map((card) => ({ card }));
+      }
+      return false;
+    },
+    spec,
+  );
+}
+
+/**
  * "When this card is fused by your [matching] card's ability" (CR 12.18.4.1, BP19-048): valid in the
  * cemetery, where a fused card is put. Data: the card that underwent fusion (in the EX area).
  */
@@ -521,6 +543,31 @@ export const whenThisGainsStats = (spec: TimingSpec) =>
   automatic("other", (e, me) => !me.lookBack && e.type === "statsGained" && e.card === me.card, spec);
 
 /**
+ * "Whenever this gains {[defense]}" / "{[attack]}" (BP21-100, 101, 103, T08): an effect's +X, or a super-evolution's +1/+1
+ * (CR 12.2.4.1; BP21-101 ruling) — not the stats of the evolved card itself (BP21-100 ruling). On either player's turn.
+ */
+export const whenThisGainsDefense = (spec: TimingSpec) =>
+  automatic("other", (e, me) => !me.lookBack && e.type === "statsGained" && e.card === me.card && e.defense > 0, spec);
+export const whenThisGainsAttack = (spec: TimingSpec) =>
+  automatic("other", (e, me) => !me.lookBack && e.type === "statsGained" && e.card === me.card && e.attack > 0, spec);
+
+/**
+ * "When your leader takes [ability] damage" (BP21-109): more than 0 damage (CR 5.14); ability damage is any but attack and
+ * combat damage (CR 5.14.3, ruling). On either player's turn.
+ */
+export const whenYourLeaderTakesDamage = (spec: TimingSpec, opts: { ability?: boolean } = {}) =>
+  automatic(
+    "other",
+    (e, me, game) =>
+      !me.lookBack &&
+      e.type === "damageDealt" &&
+      e.amount > 0 &&
+      e.target === game.leader(me.controller) &&
+      (!opts.ability || e.kind === "ability"),
+    spec,
+  );
+
+/**
  * "Whenever you discard 1 or more cards" (BP12-052): once for cards discarded together, e.g. at
  * the hand limit (rulings); once more for a later discard.
  */
@@ -581,6 +628,36 @@ export const whenDiscarded = (spec: TimingSpec) =>
   automatic(
     "other",
     (e, me) => me.lookBack && moves(e).some((m) => m.card === me.card && m.reason === "discard" && m.from?.zone === "hand"),
+    spec,
+    { validIn: ["hand"] },
+  );
+
+/**
+ * "Whenever you roll a 6-sided die" (BP21-075, 077, 083, 087): once per roll (BP21-078 ruling), and each triggered
+ * ability refers to the result of the roll that triggered it (CR 5.20). Data: `count` is the result.
+ */
+export const whenYouRollADie = (spec: TimingSpec) =>
+  automatic("other", (e, me) => (!me.lookBack && e.type === "dieRolled" && e.player === me.controller ? [{ count: e.result }] : false), spec);
+
+/**
+ * "When this is discarded by the ability of a [matching] card you control" (BP21-043): valid in the
+ * hand (CR 10.3.4); the discard (CR 5.12) is done by an ability — its effect or its cost — of a card
+ * its controller controls, matching as that card was then (CardMove.cause).
+ */
+export const whenDiscardedByYourCard = (spec: TimingSpec, by: (cause: MoveCause) => boolean) =>
+  automatic(
+    "other",
+    (e, me) =>
+      me.lookBack &&
+      moves(e).some(
+        (m) =>
+          m.card === me.card &&
+          m.reason === "discard" &&
+          m.from?.zone === "hand" &&
+          m.cause !== undefined &&
+          m.cause.controller === me.controller &&
+          by(m.cause),
+      ),
     spec,
     { validIn: ["hand"] },
   );
@@ -807,3 +884,8 @@ export function spell(spec: Omit<import("./types").SpellAbility, "kind">): impor
 }
 
 export type { PlayerId };
+
+/** "the number of crests in your EX area" (BP20; CR 9.1.1.1 — they are cards there). */
+export function crestsInEx(game: GameReader, player: PlayerId): number {
+  return game.cards(player, "ex").filter((id) => isCrest(game, id)).length;
+}

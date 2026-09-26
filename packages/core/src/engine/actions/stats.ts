@@ -11,5 +11,6 @@ export function recordStatsGained(g: G, card: CardId, attack: number, defense: n
   const c = g.state.cards[card];
   if (!c || (attack <= 0 && defense <= 0)) return;
   thisTurn(g.state, c.controller).statsGained.push(card);
+  if (defense > 0) thisTurn(g.state, c.controller).defenseGained.push(card); // BP21-096
   g.emit({ type: "statsGained", card, attack: Math.max(0, attack), defense: Math.max(0, defense) });
 }

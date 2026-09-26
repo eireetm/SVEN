@@ -53,6 +53,9 @@ export const enemyCardOnField = (o: Opts = {}) => spec((g, c) => g.cards(g.oppon
 /** "a follower on your field" */
 export const yourFollower = (o: Opts = {}) => spec((g, c) => g.followers(c), o);
 
+/** "your leader or a follower on your field" (BP21-101). */
+export const yourLeaderOrFollower = (o: Opts = {}) => spec((g, c) => [g.leader(c), ...g.followers(c)], o);
+
 /** "another follower on your field" */
 export const anotherYourFollower = (o: Opts = {}) => spec((g, c, self) => g.followers(c).filter((id) => id !== self), o);
 
@@ -94,6 +97,8 @@ export const inAnyExArea = (o: Opts = {}) => spec((g, c) => [...g.cards(c, "ex")
 export const isFollower: Filter = (g, id) => ofType(g, id, "follower");
 export const isAmulet: Filter = (g, id) => ofType(g, id, "amulet");
 export const isSpell: Filter = (g, id) => ofType(g, id, "spell");
+/** CR 2.3.2 — a crest (BP20; tokens in the EX area, 9.1.4.2). */
+export const isCrest: Filter = (g, id) => ofType(g, id, "crest");
 export const hasTrait = (trait: string): Filter => (g, id) => g.info(id).traits.includes(trait);
 export const isClass = (cls: string): Filter => (g, id) => g.info(id).class === cls;
 export const costAtMost = (n: number): Filter => (g, id) => (g.info(id).cost ?? Infinity) <= n;

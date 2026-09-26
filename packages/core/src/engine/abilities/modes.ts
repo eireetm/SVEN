@@ -6,11 +6,13 @@ import type { G } from "../runtime/context";
 import { chooseOptions } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { makeReader, type GameReader } from "../query";
+import { activeScript, passiveSources } from "../state/characteristics";
+import type { Env } from "../state/access";
 import { chooseTargets } from "./targets";
 
 export interface ModeSpec {
   modes?: readonly Mode[] | undefined;
-  modeCount?: ((game: GameReader, controller: PlayerId, self: CardId) => number) | undefined;
+  modeCount?: ((game: GameReader, controller: PlayerId, self: CardId, playOption?: string | null) => number) | undefined;
 }
 
 /**
@@ -20,15 +22,26 @@ export interface ModeSpec {
  *    number of options (5.18.2.3) and determined when played, e.g. Spellchain (5.18.3.1.1).
  * Returns the chosen options in listed order, or null when nothing can be chosen.
  */
-export function* chooseModes(g: G, player: PlayerId, spec: ModeSpec, self: CardId): Proc<Mode[] | null> {
+export function* chooseModes(g: G, player: PlayerId, spec: ModeSpec, self: CardId, playOption: string | null = null): Proc<Mode[] | null> {
   if (!spec.modes) return [];
   const performable = performableModes(g, spec.modes, player, self);
   if (performable.length === 0) return null;
-  const count = spec.modeCount ? Math.min(spec.modeCount(makeReader(g), player, self), performable.length) : 1;
+  const count = spec.modeCount ? Math.min(spec.modeCount(makeReader(g), player, self, playOption), performable.length) : 1;
   if (count <= 0) return null; // 5.18.2.2
   const options = performable.map((m) => ({ id: m.id, label: m.label }));
-  const ids = yield* chooseOptions(g, player, "mode", options, 1, count, self);
+  const max = choosesAnyNumberOfOptions(g, player) ? performable.length : count;
+  const ids = yield* chooseOptions(g, player, "mode", options, 1, max, self);
   return spec.modes.filter((m) => ids.includes(m.id));
+}
+
+/**
+ * CR 5.18 — does `player` choose any number of options instead of the stated number ("If you would
+ * choose 1 or more options, choose any number instead", BP20-T06 in their EX area)? Then they choose
+ * 1 to all of the performable options (ruling). Scripts that choose options themselves ask
+ * `GameReader.choosesAnyNumberOfOptions` (BP04-007, BP05-006, BP17-056).
+ */
+export function choosesAnyNumberOfOptions(env: Env, player: PlayerId): boolean {
+  return passiveSources(env, player).some((id) => activeScript(env, id)?.field?.chooseAnyNumberOfOptions === true);
 }
 
 /**

@@ -6,7 +6,7 @@ import type { G } from "./runtime/context";
 import { selectCards } from "./runtime/decide";
 import type { Proc } from "./runtime/proc";
 import { getCard, type Env } from "./state/access";
-import { activeScript, characteristics } from "./state/characteristics";
+import { activeScript, characteristics, passiveSources } from "./state/characteristics";
 import { moveCards } from "./state/zones";
 import { restrictionCount } from "./state/restrictions";
 import { thisTurn } from "./state/turn-counts";
@@ -33,7 +33,7 @@ export function playCost(g: Env, card: CardId, player: PlayerId, option: PlayOpt
   let cost = setTo ?? option?.setCost ?? setByEffect ?? base;
   cost += g.scripts[getCard(g.state, card).def]?.playCost?.(reader, card, player) ?? 0;
   for (const p of [0, 1] as const) {
-    for (const f of g.state.players[p].zones.field) {
+    for (const f of passiveSources(g, p)) {
       cost += activeScript(g, f)?.field?.playCostOf?.(reader, f, card, player) ?? 0;
     }
   }

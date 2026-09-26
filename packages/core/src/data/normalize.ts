@@ -70,6 +70,9 @@ export function parseCardType(cardNo: string, raw: readonly string[]): {
       case "Leader":
         primaries.push("leader");
         break;
+      case "Crest":
+        primaries.push("crest");
+        break;
       case "Evolved":
         evolved = true;
         break;
@@ -89,6 +92,10 @@ export function parseCardType(cardNo: string, raw: readonly string[]): {
   }
   if (evolved && type !== "follower" && type !== "amulet") {
     throw new CardDataError(`${cardNo}: evolved card must be a follower or amulet in the supported sets`);
+  }
+  // CR 9.1.4.2 — crests exist only as tokens (BP20). A crest that is not a token fails until one appears.
+  if (type === "crest" && (!token || evolved || advanced)) {
+    throw new CardDataError(`${cardNo}: a crest must be a token in the supported sets`);
   }
   // CR 9.2 — advanced cards are followers (BP10) or spells (BP13). Other kinds fail until they appear.
   if (advanced && (evolved || token || (type !== "follower" && type !== "spell"))) {
@@ -147,8 +154,9 @@ function checkStats(
   const fail = (msg: string) => {
     throw new CardDataError(`${cardNo}: ${msg} (cost=${cost}, atk=${atk}, def=${def})`);
   };
-  if (type === "leader") {
-    if (cost !== null || atk !== null || def !== null) fail("leader must not have cost/atk/def");
+  if (type === "leader" || type === "crest") {
+    // CR 2.5 — neither is played, so neither has a cost (crests: 9.1.4.2, BP20).
+    if (cost !== null || atk !== null || def !== null) fail(`${type} must not have cost/atk/def`);
     return;
   }
   if (type === "follower") {

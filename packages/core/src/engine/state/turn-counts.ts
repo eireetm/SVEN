@@ -5,6 +5,7 @@ import type { GameState, TurnCounts } from "../../model/state";
 export function emptyTurnCounts(turn: number): TurnCounts {
   return {
     turn,
+    followersDamagedBy: [],
     discarded: 0,
     followersDestroyed: 0,
     followersToCemetery: 0,
@@ -15,10 +16,12 @@ export function emptyTurnCounts(turn: number): TurnCounts {
     leaderDefenseLost: 0,
     stackRemovedByEarthRite: 0,
     statsGained: [],
+    defenseGained: [],
     evolved: 0,
     leftField: [],
     leaderDefenseGained: 0,
     playFromBanished: false,
+    diceRolled: [],
   };
 }
 

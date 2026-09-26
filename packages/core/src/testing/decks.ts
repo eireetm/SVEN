@@ -1,6 +1,6 @@
 import type { CardDefinition } from "../model/card";
 import type { Engine } from "../engine/engine";
-import type { DeckList } from "../engine/deck";
+import { hasCardText, type DeckList } from "../engine/deck";
 import { randomInt, seedRng } from "../rng/rng";
 
 /**
@@ -12,7 +12,7 @@ export function deckPool(engine: Engine, cards: readonly CardDefinition[] = engi
   evolve: CardDefinition[];
 } {
   const usable = cards.filter(
-    (c) => (engine.scripts[c.id] !== undefined || c.text.en === "") && !c.token && c.type !== "leader" && c.frontFace === undefined,
+    (c) => (engine.scripts[c.id] !== undefined || !hasCardText(c)) && !c.token && c.type !== "leader" && c.frontFace === undefined,
   );
   return {
     main: usable.filter((c) => !c.evolved && !c.advanced),

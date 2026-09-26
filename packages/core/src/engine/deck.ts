@@ -23,7 +23,12 @@ export type ImplementationStatus = "vanilla" | "scripted" | "missing";
 /** Does the engine know how this card behaves? Cards without card text need no script. */
 export function implementationStatus(scripts: ScriptRegistry, def: CardDefinition): ImplementationStatus {
   if (scripts[def.id]) return "scripted";
-  return def.text.en === "" ? "vanilla" : "missing";
+  return hasCardText(def) ? "missing" : "vanilla";
+}
+
+/** Card text in any language: a Japanese-only card (BP21-PR10) has an empty English text. */
+export function hasCardText(def: CardDefinition): boolean {
+  return def.text.en !== "" || (def.text.ja ?? "") !== "";
 }
 
 /**

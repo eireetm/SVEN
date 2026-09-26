@@ -45,6 +45,11 @@ export function testToken(id: string, cost: number, attack: number, defense: num
   return { ...base(id, o), type: "follower", cost, attack, defense, evolved: false, token: true };
 }
 
+/** A crest (CR 2.3.2): a token without cost, attack or defense that exists only in the EX area (9.1.4.2). */
+export function testCrest(id: string, o: Common = {}): CardDefinition {
+  return { ...base(id, o), type: "crest", cost: null, attack: null, defense: null, evolved: false, token: true };
+}
+
 export function testLeader(id: string, cls: CardClass, o: Common = {}): CardDefinition {
   return { ...base(id, { ...o, class: cls }), type: "leader", cost: null, attack: null, defense: null, evolved: false, token: false };
 }

@@ -80,6 +80,16 @@ for (const c of cards) {
   if (raw.effect_ja && !raw.effect_cn) warnings.push(`${c.id}: missing Chinese text`);
 }
 
+// CR 5.16.1.1.1 — an evolved card has its base card's name, unless a card evolves a follower "into" it by name (the
+// double-faced cards, BP09-038). An evolved card matching neither can never be used: usually a misspelt English name.
+const EVOLVED_UNDER_OTHER_NAMES = new Set(["BP03-058", "BP04-061", "BP04-062"]); // the Lævateinn Dragon forms (data/fixes.ts)
+const baseNames = new Set(cards.filter((c) => !c.evolved && c.frontFace === undefined).map((c) => c.name));
+const allEnglish = cards.map((c) => c.text.en).join("\n");
+for (const c of cards) {
+  if (!c.evolved || c.frontFace !== undefined || baseNames.has(c.name) || EVOLVED_UNDER_OTHER_NAMES.has(c.id)) continue;
+  if (!allEnglish.includes(c.name)) warnings.push(`${c.id}: evolved card "${c.name}" has no base card of the same name (CR 5.16.1.1.1)`);
+}
+
 mkdirSync(outDir, { recursive: true });
 const summary: string[] = [];
 for (const set of SUPPORTED_SETS) {

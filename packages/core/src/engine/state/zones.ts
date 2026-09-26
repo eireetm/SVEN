@@ -1,12 +1,12 @@
 import type { CardDatabase } from "../../data/database";
-import type { DefId, PrintingId } from "../../model/card";
+import type { CardType, DefId, PrintingId } from "../../model/card";
 import { opponentOf, type CardId, type PlayerId } from "../../model/ids";
 import type { CardInstance, GameState, PlayerZone, ZoneName } from "../../model/state";
-import type { CardMove, MoveReason } from "../../events/types";
+import type { CardMove, MoveCause, MoveReason } from "../../events/types";
 import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import { getCard, nextSeq } from "./access";
-import { activeScript, characteristics, grantedAbilitiesOf } from "./characteristics";
+import { activeScript, characteristics, grantedAbilitiesOf, passiveSources } from "./characteristics";
 import { effectInForce } from "./effects";
 import { thisTurn } from "./turn-counts";
 
@@ -52,6 +52,8 @@ export interface MoveSpec {
    * not remained under the new controller since the turn started (CR 8.4.2.1).
    */
   keepState?: boolean;
+  /** The card whose ability moves it (CardMove.cause). */
+  cause?: MoveCause;
 }
 
 /** CR 4.2.3.3 — default faceup state per zone. */
@@ -68,8 +70,16 @@ const DEFAULT_FACE_UP: Readonly<Record<ZoneName, boolean>> = {
   resolution: true, // CR 4.11.2 public
 };
 
-/** CR 9.1.4.1 / 9.1.4.3 — zones where follower, amulet and spell tokens may exist. */
-const TOKEN_ZONES: readonly ZoneName[] = ["ex", "field", "resolution"];
+/**
+ * CR 9.1.4 — may a token of this type exist in this zone? Followers and amulets: EX area, field,
+ * resolution zone (9.1.4.1); crests: only the EX area (9.1.4.2); spells: EX area, resolution zone
+ * (9.1.4.3).
+ */
+export function tokenMayExist(type: CardType, zone: ZoneName): boolean {
+  if (type === "crest") return zone === "ex";
+  if (type === "spell") return zone === "ex" || zone === "resolution";
+  return zone === "ex" || zone === "field" || zone === "resolution";
+}
 /** CR 9.2.2 — zones an advanced card can stay in; anywhere else it goes to the evolve deck faceup. */
 const ADVANCED_ZONES: readonly ZoneName[] = ["field", "ex", "resolution", "evolveDeck"];
 
@@ -151,6 +161,41 @@ function stackReplacesLeaving(g: G, card: CardInstance, to: ZoneName): boolean {
 }
 
 /**
+ * CR 9.1.5.1.3 — a crest is not moved into an EX area that already has a crest with the same name
+ * (nor a second one with the same name moved there by the same process).
+ */
+function withoutDuplicateCrests(g: G, specs: readonly MoveSpec[]): MoveSpec[] {
+  const taken = new Map<PlayerId, Set<string>>();
+  const namesIn = (p: PlayerId): Set<string> => {
+    let names = taken.get(p);
+    if (!names) {
+      names = new Set(crestNames(g, g.state.players[p].zones.ex));
+      taken.set(p, names);
+    }
+    return names;
+  };
+  return specs.filter((spec) => {
+    const c = getCard(g.state, spec.card);
+    const def = g.db.get(c.def);
+    if (def.type !== "crest" || spec.to !== "ex") return true;
+    const names = namesIn(spec.player ?? c.owner);
+    if (names.has(def.name)) return false;
+    names.add(def.name);
+    return true;
+  });
+}
+
+/** The names of the crests among these cards (CR 9.1.5.1). */
+export function crestNames(g: { state: GameState; db: CardDatabase }, cards: readonly CardId[]): string[] {
+  const out: string[] = [];
+  for (const id of cards) {
+    const def = g.db.get(getCard(g.state, id).def);
+    if (def.type === "crest") out.push(def.name);
+  }
+  return out;
+}
+
+/**
  * CR 10.10.1 — "If an enemy follower would be put from the field into the cemetery, banish it
  * instead" (BP18-061, while a card with it is on the other side's field): the move goes to the
  * banished zone, so it is not a destruction or a burial (10.10.1.1) and Last Words don't trigger
@@ -161,7 +206,7 @@ function banishInsteadOfCemetery(g: G, spec: MoveSpec): MoveSpec {
   const c = getCard(g.state, spec.card);
   if (c.zone !== "field" || characteristics(g, c.id).type !== "follower") return spec;
   if (activeScript(g, c.id)?.cannotBeBanishedByAbilities) return spec;
-  const replacing = g.state.players[opponentOf(c.controller)].zones.field.some(
+  const replacing = passiveSources(g, opponentOf(c.controller)).some(
     (id) => activeScript(g, id)?.field?.banishesEnemyFollowersInsteadOfCemetery === true,
   );
   return replacing ? { ...spec, to: "banished", reason: "banish" } : spec;
@@ -177,7 +222,10 @@ function banishInsteadOfCemetery(g: G, spec: MoveSpec): MoveSpec {
  */
 export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReason): CardId[] {
   const { state } = g;
-  const specs = allSpecs.filter((s) => !stackReplacesLeaving(g, getCard(state, s.card), s.to)).map((s) => banishInsteadOfCemetery(g, s));
+  const specs = withoutDuplicateCrests(
+    g,
+    allSpecs.filter((s) => !stackReplacesLeaving(g, getCard(state, s.card), s.to)).map((s) => banishInsteadOfCemetery(g, s)),
+  );
   if (specs.length === 0) return [];
   // Look-back information is captured before anything moves (CR 10.7.4.1).
   const olds = specs.map((s) => getCard(state, s.card));
@@ -237,6 +285,7 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
       card.playedFrom = old.zone; // CR 5.5.3 the zone the card is played from
     } else if (spec.to === "field") {
       card.enteredFrom = old.zone === "resolution" ? (old.playedFrom ?? old.zone) : old.zone;
+      if (old.zone !== "resolution" || (spec.reason ?? reason) !== "resolve") card.enteredByAbility = true; // BP21-023
     }
     attach(state, card, spec.position);
 
@@ -256,9 +305,11 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
       to: { player: toPlayer, zone: spec.to, faceUp: card.faceUp },
       reason: spec.reason ?? reason,
       before: befores[i]!,
+      ...(spec.cause ? { cause: spec.cause } : {}),
     });
     newIds.push(card.id);
-    if (g.db.get(old.def).token && !TOKEN_ZONES.includes(spec.to)) eliminated.push(card.id);
+    const printed = g.db.get(old.def);
+    if (printed.token && !tokenMayExist(printed.type, spec.to)) eliminated.push(card.id); // CR 9.1.4.4
     // "This turn" counts for card conditions (turn-counts.ts).
     const why = spec.reason ?? reason;
     if (why === "discard") thisTurn(state, old.controller).discarded += 1; // CR 5.12
@@ -323,6 +374,7 @@ export function createCards(g: G, specs: readonly CreateSpec[], reason: MoveReas
   const ids = specs.map((spec) => {
     const def = g.db.get(spec.def);
     const card = freshInstance(g.state, def.printings[0]!, def.id, spec.player, spec.player, spec.to, spec);
+    if (spec.to === "field") card.enteredByAbility = true; // a summoned token (CR 5.5.2.1; BP21-023)
     initFieldCounters(g, card);
     attach(g.state, card, undefined);
     moves.push({

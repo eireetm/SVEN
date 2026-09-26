@@ -27,7 +27,8 @@ export default defineCard({
           { id: "search", label: "(2) Up to 2 Natura spells with different names into your EX area" },
           { id: "leader", label: "(3) Leader +2" },
         ];
-        const modes = yield* fx.choose(options, 1, Math.min(x, options.length));
+        // Any number of them instead with BP20-T06 (CR 5.18).
+        const modes = yield* fx.choose(options, 1, fx.game.choosesAnyNumberOfOptions(fx.controller) ? options.length : Math.min(x, options.length));
         const target = modes.includes("destroy") ? yield* fx.selectCards(enemies, 1, 1) : [];
         yield* fx.banish(yield* fx.chooseCards(trees, x, x));
         if (modes.includes("destroy")) yield* fx.destroy(target);

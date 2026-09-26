@@ -79,6 +79,11 @@ export interface CardInstance {
    * the card was not newly put onto the field (CR 5.22 steal keeps its previous state).
    */
   enteredFrom: ZoneName | null;
+  /**
+   * Put onto the field it is on by an ability, not by being played (CR 5.5; e.g. BP21-023 "Activate only if this
+   * was put onto the field by an ability"). Summoned tokens too.
+   */
+  enteredByAbility?: boolean;
 }
 
 export interface PlayerState {
@@ -121,6 +126,11 @@ export interface ReturnedCard {
 
 export interface TurnCounts {
   turn: number;
+  /**
+   * This player's followers that took damage (more than 0) this turn, with the card that dealt it (its
+   * id then; CR 5.14), e.g. BP20-025 "an enemy follower that took damage this turn from this", BP20-069.
+   */
+  followersDamagedBy: { source: CardId | null; target: CardId }[];
   /** Cards this player discarded (CR 5.12). */
   discarded: number;
   /** This player's followers destroyed (CR 5.6, including rules handling 11.3). */
@@ -158,6 +168,8 @@ export interface TurnCounts {
    * defense this turn" (ruling: also after it took damage).
    */
   statsGained: CardId[];
+  /** Those of them that gained defense (BP21-096 "Activate only if this gained defense this turn"). */
+  defenseGained: CardId[];
   /**
    * Evolutions of followers on this player's field this turn (CR 5.16; super-evolving is evolving,
    * 12.2.4; by an effect too), e.g. BP16-018 "If a follower on your field evolved this turn" (it
@@ -178,6 +190,11 @@ export interface TurnCounts {
    * allowing what CR 8.2.1 does not (CR 1.3.1).
    */
   playFromBanished: boolean;
+  /**
+   * The results of the six-sided dice this player rolled this turn, in order (CR 5.20), e.g. BP21-076 "if you rolled a
+   * 6-sided die this turn", BP21-081 "if you rolled a 6 when rolling a die this turn".
+   */
+  diceRolled: number[];
 }
 
 /** A persistent effect (CR 10.2.1.2) applied to one card object. */
@@ -259,6 +276,11 @@ export type EffectChange =
    * so it does not use it up (ruling).
    */
   | { kind: "preventNextDamage" }
+  /**
+   * "The next time [it] would take damage this turn, it takes that much -N instead" (BP20-103): used up by the
+   * next damage it changes; several apply together, and one that finds the damage already at 0 stays (ruling).
+   */
+  | { kind: "reduceNextDamage"; amount: number }
   /** "If [it] would take more than N damage, it takes N instead" (BP05-101): each instance (ruling). */
   | { kind: "damageCap"; max: number }
   /**
@@ -327,7 +349,8 @@ export type GrantedAbilityId =
   | "lastWordsLeaderDraw"
   | "strikeDamageLeaders2"
   | "strikeLeaderLossDamage"
-  | "machinaPlayPing";
+  | "machinaPlayPing"
+  | "buryAtEnd";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {

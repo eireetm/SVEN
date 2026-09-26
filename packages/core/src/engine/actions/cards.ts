@@ -1,15 +1,15 @@
 import type { DefId } from "../../model/card";
 import type { CardId, PlayerId } from "../../model/ids";
-import type { MoveReason } from "../../events/types";
+import type { MoveCause, MoveReason } from "../../events/types";
 import { randomInt, shuffleInPlace } from "../../rng/rng";
-import { activeScript } from "../state/characteristics";
+import { activeScript, passiveSources } from "../state/characteristics";
 import type { G } from "../runtime/context";
 import { chooseOptions, selectCards } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { getCard } from "../state/access";
 import { hasKeyword, isFollowerOnField } from "../state/characteristics";
 import { exAreaLimit, fieldLimit } from "../state/limits";
-import { createCards, moveCards } from "../state/zones";
+import { createCards, crestNames, moveCards } from "../state/zones";
 import { makeReader } from "../query";
 
 /**
@@ -68,7 +68,7 @@ function drawForbidden(g: G, p: PlayerId): boolean {
   const startPhase = g.state.phase === "start" && g.state.activePlayer === p;
   let reader: ReturnType<typeof makeReader> | null = null;
   for (const q of [0, 1] as const) {
-    for (const id of g.state.players[q].zones.field) {
+    for (const id of passiveSources(g, q)) {
       const forbids = activeScript(g, id)?.field?.forbidsDraw;
       if (forbids && forbids((reader ??= makeReader(g)), id, p, startPhase)) return true;
     }
@@ -125,18 +125,18 @@ export function returnToHand(g: G, cards: readonly CardId[]): CardId[] {
   return present.length === 0 ? [] : moveCards(g, present.map((card) => ({ card, to: "hand" as const })), "effect");
 }
 
-/** CR 5.12 — discard the given hand cards to their owner's cemetery. */
-export function discardCards(g: G, cards: readonly CardId[]): CardId[] {
+/** CR 5.12 — discard the given hand cards to their owner's cemetery; `cause`: the card whose ability does it. */
+export function discardCards(g: G, cards: readonly CardId[], cause?: MoveCause): CardId[] {
   if (cards.length === 0) return [];
-  return moveCards(g, cards.map((card) => ({ card, to: "cemetery" as const })), "discard");
+  return moveCards(g, cards.map((card) => ({ card, to: "cemetery" as const, ...(cause ? { cause } : {}) })), "discard");
 }
 
 /** CR 5.19 / 5.12 — discard `count` cards chosen at random from the player's hand (seeded RNG). */
-export function discardRandomCards(g: G, p: PlayerId, count: number): CardId[] {
+export function discardRandomCards(g: G, p: PlayerId, count: number, cause?: MoveCause): CardId[] {
   const hand = [...g.state.players[p].zones.hand];
   const chosen: CardId[] = [];
   for (let i = 0; i < count && hand.length > 0; i++) chosen.push(hand.splice(randomInt(g.state.rng, hand.length), 1)[0]!);
-  return discardCards(g, chosen);
+  return discardCards(g, chosen, cause);
 }
 
 /** CR 5.21 — reveal cards to all players until the current effect has been resolved. */
@@ -216,7 +216,9 @@ export function* putIntoEx(g: G, cards: readonly CardId[], chooser: PlayerId, in
 /**
  * CR 5.5.2 / 9.1.2 — create tokens in `player`'s field or EX area. When they do not all fit
  * (4.4.4.2 / 4.8.3.2) the controller of the effect chooses which are created (BP01-032,
- * BP01-101 rulings). Returns the ids of the created tokens.
+ * BP01-101 rulings). Crests are created only in an EX area (9.1.4.2) that has no crest with the
+ * same name, and only one of several with the same name created together (9.1.5.1.1, 9.1.5.1.2);
+ * those are left out before the limit is applied. Returns the ids of the created tokens.
  */
 export function* createTokens(
   g: G,
@@ -226,6 +228,14 @@ export function* createTokens(
   zone: "field" | "ex",
   source: CardId | null = null,
 ): Proc<CardId[]> {
+  const crests = new Set(zone === "ex" ? crestNames(g, g.state.players[player].zones.ex) : []);
+  defs = defs.filter((id) => {
+    const def = g.db.get(id);
+    if (def.type !== "crest") return true;
+    if (zone !== "ex" || crests.has(def.name)) return false;
+    crests.add(def.name);
+    return true;
+  });
   const limit = zone === "field" ? fieldLimit(g, player) : exAreaLimit(g, player);
   const room = Math.max(0, limit - g.state.players[player].zones[zone].length);
   let chosen = [...defs];

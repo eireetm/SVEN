@@ -5,6 +5,7 @@
 // and does nothing. The option and its target are
 // chosen as it resolves (nothing can happen in between); only options that can be performed are
 // offered (CR 5.18.3.1.2), and an enemy follower with Aura cannot be selected (CR 12.15).
+import type { CardId } from "../../model/ids";
 import { activated, defineCard } from "../helpers";
 
 export default defineCard({
@@ -21,11 +22,16 @@ export default defineCard({
             ...(enemies.length > 0 ? [{ id: "weaken", label: "An enemy follower gets -2/-2" }] : []),
           ];
           if (options.length === 0) return;
-          const [mode] = yield* fx.choose(options);
-          const [id] = yield* fx.selectCards(mode === "buff" ? mine : enemies, 1, 1);
-          if (id === undefined) return;
-          if (mode === "buff") yield* fx.giveStats(id, 2, 2);
-          else yield* fx.giveStats(id, -2, -2);
+          // Any number of them instead with BP20-T06 (CR 5.18), in listed order (10.6.2.8.2.2).
+          const modes = yield* fx.choose(options, 1, fx.game.choosesAnyNumberOfOptions(fx.controller) ? options.length : 1);
+          const targets: CardId[] = [];
+          for (const mode of modes) targets.push(...(yield* fx.selectCards(mode === "buff" ? mine : enemies, 1, 1)));
+          for (const [i, mode] of modes.entries()) {
+            const id = targets[i];
+            if (id === undefined) continue;
+            if (mode === "buff") yield* fx.giveStats(id, 2, 2);
+            else yield* fx.giveStats(id, -2, -2);
+          }
         },
       },
     ),

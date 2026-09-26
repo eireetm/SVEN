@@ -25,10 +25,10 @@ export const CARD_CLASSES = [
 export type CardClass = (typeof CARD_CLASSES)[number];
 
 /**
- * CR 2.3.2 primary card types. "crest" exists in the rules but no BP01 card uses it;
- * add it here (and to the loader) when a set that needs it is imported.
+ * CR 2.3.2 primary card types. Crests (BP20) are tokens that exist only in the EX area (9.1.4.2), one
+ * per name there (9.1.5), whose abilities work in the EX area (10.3.6); they can't be played.
  */
-export type CardType = "leader" | "follower" | "amulet" | "spell";
+export type CardType = "leader" | "follower" | "amulet" | "spell" | "crest";
 
 export interface LocalizedText {
   /** English — authoritative for implementation (official EN text). */

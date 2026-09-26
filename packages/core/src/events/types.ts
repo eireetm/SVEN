@@ -30,6 +30,18 @@ export interface ZoneRef {
   faceUp: boolean;
 }
 
+/**
+ * The card whose ability moved a card, as it was at that moment (BP21-043 "when this is discarded
+ * by the ability of an Academic card you control"). Recorded for discards by effects and costs.
+ */
+export interface MoveCause {
+  card: CardId;
+  def: DefId;
+  controller: PlayerId;
+  type: CardType;
+  traits: string[];
+}
+
 /** One card changing zones. CR 4.1.4: the card gets a new id in the new zone. */
 export interface CardMove {
   /**
@@ -76,6 +88,8 @@ export interface CardMove {
      */
     noDamage?: true;
   } | null;
+  /** The card whose ability moved it (discards, CR 5.12); absent for rules and the player's own actions. */
+  cause?: MoveCause;
 }
 
 export type GameEvent =
@@ -130,7 +144,14 @@ export type GameEvent =
    * cards fused in the process (12.18.4.1), now in the cemetery. E.g. BP19-048 "When this card is
    * fused by your Condemned follower's ability".
    */
-  | { type: "cardsFused"; player: PlayerId; card: CardId; fused: CardId[] }
+  | {
+      type: "cardsFused";
+      player: PlayerId;
+      card: CardId;
+      fused: CardId[];
+      /** The fused cards' definitions, in the same order: a fused token no longer exists (CR 9.1.4.4). */
+      fusedDefs: DefId[];
+    }
   /**
    * The card gained attack and/or defense: an effect gave it +X (CR 5.27), or a super-evolution
    * its +1/+1 (12.2.4.1). E.g. BP11-082 "Whenever this follower gains attack or defense".

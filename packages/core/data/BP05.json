@@ -1476,8 +1476,8 @@
    "printings": [
     "BP05-052",
     "BP05-SL10",
-    "SP01-028",
     "BP20-R08",
+    "SP01-028",
     "SP01-SL28",
     "SP01-SP18",
     "SP01-U16"
@@ -1511,8 +1511,8 @@
     "BP05-053",
     "BP05-SL11",
     "BP05-U04",
-    "SP01-029",
     "BP20-R09",
+    "SP01-029",
     "SP01-SL29",
     "SP01-SP19",
     "SP01-U17"
@@ -3015,8 +3015,8 @@
     "BP05-105",
     "BP05-SL21",
     "BP05-U07",
-    "PR-096",
-    "BP20-R17"
+    "BP20-R17",
+    "PR-096"
    ],
    "name": "Gilnelise, Omen of Craving",
    "names": {
@@ -3538,8 +3538,8 @@
    "id": "BP05-T01",
    "printings": [
     "BP05-T01",
-    "PR-401",
-    "BP20-T15"
+    "BP20-T15",
+    "PR-401"
    ],
    "name": "Destruction in White",
    "names": {
@@ -3568,8 +3568,8 @@
    "id": "BP05-T02",
    "printings": [
     "BP05-T02",
-    "PR-402",
-    "BP20-T16"
+    "BP20-T16",
+    "PR-402"
    ],
    "name": "Destruction in Black",
    "names": {

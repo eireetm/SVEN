@@ -1,7 +1,7 @@
 import type { CardClass, CardDefinition, CardType, DefId } from "../../model/card";
-import type { CardId } from "../../model/ids";
+import type { CardId, PlayerId } from "../../model/ids";
 import type { Keyword } from "../../model/keyword";
-import type { GameState, GrantedAbilityId } from "../../model/state";
+import type { GameState, GrantedAbilityId, ZoneName } from "../../model/state";
 import type { AbilityDef, CardScript } from "../../script/types";
 import { GRANT_ABILITIES, GRANT_PREFIX } from "../abilities/grants";
 import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX } from "../abilities/keyword-abilities";
@@ -75,6 +75,41 @@ const NO_ABILITIES: CardScript = {};
  */
 export function activeScript(env: Env, id: CardId): CardScript | undefined {
   return abilitiesLostAt(env.state, id) !== null ? NO_ABILITIES : env.scripts[infoDefId(env, id)];
+}
+
+const ON_FIELD: readonly ZoneName[] = ["field"];
+const IN_EX: readonly ZoneName[] = ["ex"];
+
+/**
+ * CR 10.3.5 / 10.3.6 — where the abilities of a card with this definition work unless its text says
+ * otherwise: a crest's in the EX area, other cards' on the field. (Abilities given by effects,
+ * "grant:" definitions, work on the field.)
+ */
+export function defaultAbilityZones(env: Env, def: DefId): readonly ZoneName[] {
+  return env.db.has(def) && env.db.get(def).type === "crest" ? IN_EX : ON_FIELD;
+}
+
+/** The zones where an ability of a card with definition `def` works: its `validIn`, else the default. */
+export function abilityZones(env: Env, def: DefId, ability: { readonly validIn?: readonly ZoneName[] | undefined }): readonly ZoneName[] {
+  return ability.validIn ?? defaultAbilityZones(env, def);
+}
+
+/** Is a card where its passive abilities work (CR 10.3.5 / 10.3.6: the field, or the EX area for a crest)? */
+export function inAbilityZone(env: Env, id: CardId): boolean {
+  const c = getCard(env.state, id);
+  return defaultAbilityZones(env, c.def).includes(c.zone);
+}
+
+/**
+ * CR 10.3.5 / 10.3.6 — the cards of a player whose passive abilities (`CardScript.field`) work: the
+ * cards on their field and the crests in their EX area. (The EX-area passives of other cards are
+ * `CardScript.exPassives`, BP13-003.) Without crests this is the field list itself.
+ */
+export function passiveSources(env: Env, player: PlayerId): readonly CardId[] {
+  const zones = env.state.players[player].zones;
+  let crests: CardId[] | null = null;
+  for (const id of zones.ex) if (env.db.get(getCard(env.state, id).def).type === "crest") (crests ??= []).push(id);
+  return crests === null ? zones.field : [...zones.field, ...crests];
 }
 
 /**
@@ -179,10 +214,10 @@ export function characteristics(env: Env, id: CardId): Characteristics {
     reader ??= makeReader(env);
     for (const k of script.selfKeywords(reader, id)) addKeyword(k);
   }
-  // Keywords given by passive abilities of cards on the field (e.g. BP01-091), and of cards in an
-  // EX area whose passives work there too (CR 10.3.5, BP13-003).
+  // Keywords given by passive abilities of cards on the field (e.g. BP01-091) and of crests in an EX
+  // area (CR 10.3.6), and of cards in an EX area whose passives work there too (CR 10.3.5, BP13-003).
   for (const p of [0, 1] as const) {
-    for (const f of state.players[p].zones.field) {
+    for (const f of passiveSources(env, p)) {
       const passive = activeScript(env, f)?.field?.keywordsFor;
       if (!passive || lost(getCard(state, f).zoneSeq)) continue;
       reader ??= makeReader(env);
@@ -250,7 +285,7 @@ export function grantedAbilitiesOf(env: Env, id: CardId): GrantedAbilityId[] {
   }
   let reader: ReturnType<typeof makeReader> | null = null;
   for (const p of [0, 1] as const) {
-    for (const giver of state.players[p].zones.field) {
+    for (const giver of passiveSources(env, p)) {
       const grantsFor = activeScript(env, giver)?.field?.grantsFor;
       if (!grantsFor || !kept(getCard(state, giver).zoneSeq)) continue;
       reader ??= makeReader(env);

@@ -9,7 +9,7 @@ import { recordStatsGained } from "../actions/stats";
 import type { G } from "../runtime/context";
 import type { Proc } from "../runtime/proc";
 import { getCard, nextSeq } from "../state/access";
-import { activeScript, characteristics } from "../state/characteristics";
+import { activeScript, characteristics, passiveSources } from "../state/characteristics";
 import { moveCards } from "../state/zones";
 import { makeReader } from "../query";
 import { makeEffectContext } from "../effects/context";
@@ -29,7 +29,7 @@ export function evolveAbilityUsedThisTurn(g: G, p: PlayerId): boolean {
  * equivalent abilities keep the limit of 8.3.2.1 (BP18-001 rulings).
  */
 export function unlimitedEvolve(g: G, p: PlayerId): boolean {
-  return g.state.players[p].zones.field.some((id) => activeScript(g, id)?.field?.unlimitedEvolve === true);
+  return passiveSources(g, p).some((id) => activeScript(g, id)?.field?.unlimitedEvolve === true);
 }
 
 /** CR 12.2.4 — may this player pay a super-evolution point right now? */

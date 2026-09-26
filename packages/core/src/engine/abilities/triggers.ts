@@ -1,12 +1,12 @@
 import type { DefId } from "../../model/card";
 import type { CardId, PlayerId } from "../../model/ids";
-import type { GrantedAbilityId, PendingAbility, PlayerZone, TriggerData, ZoneName } from "../../model/state";
+import type { GrantedAbilityId, PendingAbility, PlayerZone, TriggerData } from "../../model/state";
 import type { GameEvent } from "../../events/types";
 import type { AutomaticAbility, TriggerSubject } from "../../script/types";
 import { cloneJson } from "../../util/json";
 import type { G } from "../runtime/context";
 import { nextSeq, recordUse, usesThisTurn } from "../state/access";
-import { abilitiesLostAt, activeScript, hasKeyword, infoDefId } from "../state/characteristics";
+import { abilitiesLostAt, abilityZones, activeScript, hasKeyword, infoDefId, passiveSources } from "../state/characteristics";
 import { makeReader, type GameReader } from "../query";
 import { abilityKey, getAbility } from "./play-ability";
 import { GRANT_ABILITIES, GRANT_PREFIX } from "./grants";
@@ -21,7 +21,7 @@ interface Candidate {
   source: CardId;
 }
 
-/** Zones scanned for automatic abilities that declare `validIn` other than the field. */
+/** Zones scanned for automatic abilities that work outside the field (`validIn`, or a crest's in the EX area, CR 10.3.6). */
 const OTHER_ZONES: readonly PlayerZone[] = ["hand", "ex", "cemetery", "banished", "leader"];
 
 /**
@@ -32,7 +32,7 @@ const OTHER_ZONES: readonly PlayerZone[] = ["hand", "ex", "cemetery", "banished"
 function instances(g: G, event: GameEvent, controller: PlayerId): number {
   if (event.type !== "phaseStarted" || event.phase !== "end") return 1;
   let n = 1;
-  for (const id of g.state.players[controller].zones.field) n += activeScript(g, id)?.field?.extraEndPhaseTriggers ?? 0;
+  for (const id of passiveSources(g, controller)) n += activeScript(g, id)?.field?.extraEndPhaseTriggers ?? 0;
   return n;
 }
 
@@ -76,7 +76,8 @@ function addPending(g: G, controller: PlayerId, source: CardId, sourceDef: DefId
 /**
  * CR 10.7.2 — after every event, find automatic abilities whose trigger condition it
  * satisfies and make them pending (once per match, 10.7.2.1). Scanned:
- *  - cards in zones where each ability is valid (CR 10.3.5: field unless stated otherwise);
+ *  - cards in zones where each ability is valid (CR 10.3.5: field unless stated otherwise; 10.3.6:
+ *    a crest's in the EX area);
  *  - cards that just moved in this event, with the information they had in the zone they
  *    left (look-back, CR 10.7.4.1 / 10.7.4.2) — e.g. Last Words, "when this is discarded";
  *  - delayed triggers created by effects (CR 10.7.5), which trigger only once (10.7.5.1).
@@ -96,7 +97,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
     for (const zone of OTHER_ZONES) {
       for (const id of state.players[p].zones[zone]) {
         const def = state.cards[id]!.def;
-        if (!scripts[def]?.abilities?.some((a) => a.kind === "automatic" && a.validIn?.includes(zone))) continue;
+        if (!scripts[def]?.abilities?.some((a) => a.kind === "automatic" && abilityZones(g, def, a).includes(zone))) continue;
         candidates.push({ subject: { card: id, controller: p, zone, lookBack: false }, abilityDef: def, source: id });
       }
     }
@@ -116,7 +117,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
   for (const c of candidates) {
     scripts[c.abilityDef]?.abilities?.forEach((ability, index) => {
       if (ability.kind !== "automatic" || ability.delayed) return;
-      if (!(ability.validIn ?? (["field"] as readonly ZoneName[])).includes(c.subject.zone)) return;
+      if (!abilityZones(g, c.abilityDef, ability).includes(c.subject.zone)) return; // CR 10.3.5 / 10.3.6
       for (const data of matches(ability, event, c.subject, reader)) {
         // "During your turn, whenever ..." (triggerIf); an "if" in the effect (condition) is only
         // checked when the ability is played (play-ability.ts, BP10-109 ruling).
@@ -143,7 +144,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
     if (state.cards[e.target]?.zone === "field" && !lostBefore(e.target, e.seq)) granted.push({ card: e.target, grant: e.change.grant });
   }
   const onField = [...state.players[0].zones.field, ...state.players[1].zones.field];
-  for (const giver of onField) {
+  for (const giver of [...passiveSources(g, 0), ...passiveSources(g, 1)]) {
     const grantsFor = activeScript(g, giver)?.field?.grantsFor;
     if (!grantsFor) continue;
     const since = state.cards[giver]!.zoneSeq;

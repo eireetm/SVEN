@@ -5,7 +5,7 @@ import { confirmationTiming } from "../abilities/confirmation";
 import type { G } from "../runtime/context";
 import type { Proc } from "../runtime/proc";
 import { isOnField, leaderOf } from "../state/access";
-import { activeScript, characteristics, hasKeyword, isFollowerOnField } from "../state/characteristics";
+import { activeScript, characteristics, hasKeyword, isFollowerOnField, passiveSources } from "../state/characteristics";
 import { makeReader } from "../query";
 import { effectPreventsAttack } from "../state/effects";
 import { thisTurn } from "../state/turn-counts";
@@ -48,7 +48,7 @@ export function attackTargets(g: G, attacker: CardId): CardId[] {
   // BP06-113 — while it is on the field, a follower that can attack a follower can't attack leaders.
   const followersFirst =
     followers.length > 0 &&
-    [...g.state.players[0].zones.field, ...g.state.players[1].zones.field].some((id) => activeScript(g, id)?.field?.followersBeforeLeaders);
+    [...passiveSources(g, 0), ...passiveSources(g, 1)].some((id) => activeScript(g, id)?.field?.followersBeforeLeaders);
   const leaderAllowed =
     (onFieldSinceTurnStart(g, attacker) || hasKeyword(g, attacker, "storm")) &&
     !followersFirst &&
@@ -86,7 +86,7 @@ function cannotAttackNow(g: G, attacker: CardId): boolean {
   const ban = activeScript(g, attacker)?.cannotAttack;
   if (ban === true) return true;
   if (typeof ban === "function" && ban(makeReader(g), attacker)) return true;
-  for (const id of [...g.state.players[0].zones.field, ...g.state.players[1].zones.field]) {
+  for (const id of [...passiveSources(g, 0), ...passiveSources(g, 1)]) {
     const prevents = activeScript(g, id)?.field?.preventsAttack;
     if (prevents?.(makeReader(g), id, attacker)) return true;
   }
@@ -101,9 +101,7 @@ function cannotAttackNow(g: G, attacker: CardId): boolean {
 function combatDamageOf(g: G, follower: CardId): number {
   const ch = characteristics(g, follower);
   const controller = g.state.cards[follower]!.controller;
-  const fromDefense = g.state.players[controller].zones.field.some(
-    (id) => activeScript(g, id)?.field?.combatDamageFromDefense,
-  );
+  const fromDefense = passiveSources(g, controller).some((id) => activeScript(g, id)?.field?.combatDamageFromDefense);
   return (fromDefense ? ch.defense : ch.attack) ?? 0;
 }
 

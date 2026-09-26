@@ -6,9 +6,10 @@ import type { Keyword } from "../model/keyword";
 import type { CardInstance, GameState, PlayerZone, ReturnedCard, ZoneName } from "../model/state";
 import type { Env } from "./state/access";
 import { leaderOf, usesThisTurn } from "./state/access";
-import { activeScript, characteristics, currentStats, infoDefId, isBoxed, isFollowerOnField, namesOf, typeAndTraits, type Characteristics } from "./state/characteristics";
+import { activeScript, characteristics, currentStats, infoDefId, isBoxed, isFollowerOnField, namesOf, passiveSources, typeAndTraits, type Characteristics } from "./state/characteristics";
 import { exAreaLimit, fieldLimit } from "./state/limits";
 import { playVariants } from "./flow/play-card";
+import { choosesAnyNumberOfOptions } from "./abilities/modes";
 import { countsThisTurn } from "./state/turn-counts";
 import { effectInForce } from "./state/effects";
 
@@ -103,6 +104,12 @@ export interface GameReader {
   faceDownEvolveDeck(player: PlayerId): CardId[];
   /** Zone a field card was put onto the field from (CR 5.5.3). Null when it was not newly put there. */
   enteredFrom(id: CardId): ZoneName | null;
+  /** Was the field card put onto the field by an ability, not by being played (BP21-023; summoned tokens too)? */
+  enteredByAbility(id: CardId): boolean;
+  /** The results of the dice the player rolled this turn, in order (CR 5.20; BP21-076, 081). */
+  diceRolledThisTurn(player: PlayerId): readonly number[];
+  /** Did this card gain defense this turn (an effect's +X or a super-evolution's +1, CR 12.2.4.1; BP21-096)? */
+  gainedDefenseThisTurn(id: CardId): boolean;
   /** Cards returned from this player's field to a hand this turn (BP03-005). */
   returnedToHandThisTurn(player: PlayerId): number;
   /** The cards returned from this player's field to a hand this turn, as they were on the field (BP10-009). */
@@ -131,6 +138,18 @@ export interface GameReader {
   turnsPassed(player: PlayerId): number;
   /** "For the rest of this turn, you may play cards from your banished zone" (BP18-T03). */
   canPlayFromBanished(player: PlayerId): boolean;
+  /**
+   * Did the follower `target` (the id it had on the field) take damage from the card `source` (the id it
+   * has now) this turn (CR 5.14)? E.g. BP20-025 "an enemy follower that took damage this turn from this".
+   */
+  tookDamageThisTurnFrom(target: CardId, source: CardId): boolean;
+  /** Did this follower (as it is now on the field) take damage this turn (CR 5.14; BP20-069)? */
+  tookDamageThisTurn(target: CardId): boolean;
+  /**
+   * CR 5.18 — does this player choose 1 to all performable options whenever they would choose 1 or
+   * more (BP20-T06)? For scripts that let a player choose options themselves.
+   */
+  choosesAnyNumberOfOptions(player: PlayerId): boolean;
   /**
    * Has this card gained the quoted text `text` its own script implements (EffectChange "gainedText",
    * BP18-081)? Safe in passives: it does not compute card information.
@@ -196,7 +215,7 @@ export function makeReader(env: Env): GameReader {
     combo: (p, x) => reader.playedThisTurn(p) >= x,
     spellsInCemetery: (p) => ps(p).zones.cemetery.filter((id) => env.db.get(state().cards[id]!.def).type === "spell").length,
     spellchainCount: (p) => {
-      const withFollowers = ps(p).zones.field.some((id) => activeScript(env, id)?.field?.spellchainCountsRunecraftFollowers);
+      const withFollowers = passiveSources(env, p).some((id) => activeScript(env, id)?.field?.spellchainCountsRunecraftFollowers);
       return ps(p).zones.cemetery.filter((id) => {
         const d = env.db.get(state().cards[id]!.def);
         return d.type === "spell" || (withFollowers && d.type === "follower" && d.class === "Runecraft");
@@ -229,6 +248,12 @@ export function makeReader(env: Env): GameReader {
     faceUpEvolveDeck: (p) => ps(p).zones.evolveDeck.filter((id) => state().cards[id]!.faceUp),
     faceDownEvolveDeck: (p) => ps(p).zones.evolveDeck.filter((id) => !state().cards[id]!.faceUp),
     enteredFrom: (id) => state().cards[id]?.enteredFrom ?? null,
+    enteredByAbility: (id) => state().cards[id]?.enteredByAbility === true,
+    diceRolledThisTurn: (p) => countsThisTurn(state(), p).diceRolled,
+    gainedDefenseThisTurn: (id) => {
+      const c = state().cards[id];
+      return c !== undefined && countsThisTurn(state(), c.controller).defenseGained.includes(id);
+    },
     returnedToHandThisTurn: (p) => countsThisTurn(state(), p).returnedToHand,
     cardsReturnedToHandThisTurn: (p) => countsThisTurn(state(), p).returnedCards,
     cardsPlayedThisTurn: (p) => countsThisTurn(state(), p).played,
@@ -240,6 +265,10 @@ export function makeReader(env: Env): GameReader {
     leaderDefenseGainedThisTurn: (p) => countsThisTurn(state(), p).leaderDefenseGained,
     turnsPassed: (p) => ps(p).turnsPassed,
     canPlayFromBanished: (p) => countsThisTurn(state(), p).playFromBanished,
+    tookDamageThisTurnFrom: (target, source) =>
+      ([0, 1] as const).some((p) => countsThisTurn(state(), p).followersDamagedBy.some((x) => x.target === target && x.source === source)),
+    tookDamageThisTurn: (target) => ([0, 1] as const).some((p) => countsThisTurn(state(), p).followersDamagedBy.some((x) => x.target === target)),
+    choosesAnyNumberOfOptions: (p) => choosesAnyNumberOfOptions(env, p),
     banishableByAbilities: (id) => {
       const c = state().cards[id];
       return c !== undefined && !(c.zone === "field" && activeScript(env, id)?.cannotBeBanishedByAbilities === true);

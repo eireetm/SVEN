@@ -3,7 +3,7 @@ import { opponentOf, type CardId, type PlayerId } from "../../model/ids";
 import { IMPLEMENTED_KEYWORDS, type Keyword } from "../../model/keyword";
 import type { CardType } from "../../model/card";
 import type { EffectChange, EffectDuration, GrantedAbilityId, PlayerRestriction, TriggerData } from "../../model/state";
-import type { GameEvent } from "../../events/types";
+import type { GameEvent, MoveCause } from "../../events/types";
 import type { CustomCost } from "../../script/types";
 import {
   banishCards,
@@ -337,6 +337,8 @@ export interface EffectContext {
   changeEvolveCost(card: CardId, amount: number, until: Until): Proc<void>;
   /** "The next time [it] would take damage, it doesn't take damage" (BP05-017; a leader card too). */
   preventNextDamage(target: CardId, until: Until): Proc<void>;
+  /** "The next time [target] would take damage (this turn), it takes that much -N instead" (BP20-103; CR 5.14.2). */
+  reduceNextDamage(target: CardId, amount: number, until: Until): Proc<void>;
   /** "If [it] would take more than N damage, it takes N instead" (BP05-101; a leader card too). */
   capDamage(target: CardId, max: number, until: Until): Proc<void>;
   /** A restriction on `player`'s next turn (BP05-006, see PlayerRestriction). */
@@ -369,7 +371,8 @@ export interface EffectContext {
 }
 
 /** Where a search puts the cards it finds. */
-export type SearchDestination = "hand" | "field" | "ex" | "banish" | "cemetery";
+/** Where a found card goes; "deck": it stays in the deck, found and revealed (BP20-117 "summon any number of them"). */
+export type SearchDestination = "hand" | "field" | "ex" | "banish" | "cemetery" | "deck";
 
 /** The option id of declareCardName for a name that no card in the pool has. */
 const OTHER_NAME = "(other name)";
@@ -399,6 +402,19 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
   init.memory ??= {};
   const memory = init.memory;
   const selfIfPresent = () => (g.state.cards[init.self] ? init.self : null);
+  /** This ability's card as it is now (or as printed, once it is gone), for cards it moves. */
+  const cause = (): MoveCause => {
+    const reader = makeReader(g);
+    const now = g.state.cards[init.self] ? reader.typeAndTraits(init.self) : null;
+    const printed = g.db.get(init.sourceDef);
+    return {
+      card: init.self,
+      def: init.sourceDef,
+      controller: ctrl,
+      type: now?.type ?? printed.type,
+      traits: [...(now?.traits ?? printed.traits)],
+    };
+  };
   /** An instance of this ability's damage (CR 5.14.3.3). */
   const abilityDamage = (target: CardId, amount: number): DamageInstance => ({
     source: selfIfPresent(),
@@ -483,16 +499,16 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       const hand = g.state.players[player].zones.hand;
       const n = Math.min(max, hand.length);
       const chosen = yield* selectCards(g, player, "discard", hand, Math.min(min, n), n, selfIfPresent());
-      return discardCards(g, chosen);
+      return discardCards(g, chosen, cause());
     },
     *discardCards(cards) {
-      return discardCards(g, cards);
+      return discardCards(g, cards, cause());
     },
     *discardRandom(count, player = ctrl) {
-      return discardRandomCards(g, player, count);
+      return discardRandomCards(g, player, count, cause());
     },
     *discardHand(player = ctrl) {
-      return discardCards(g, [...g.state.players[player].zones.hand]);
+      return discardCards(g, [...g.state.players[player].zones.hand], cause());
     },
     *mill(count, player = ctrl) {
       return millCards(g, player, count);
@@ -524,7 +540,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
         chosen = yield* selectCards(g, player, "search", matching, min, max, selfIfPresent(), deck);
       }
       if (opts.reveal ?? true) revealCards(g, player, chosen);
-      const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [], cemetery: [] };
+      const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [], cemetery: [], deck: [] };
       for (const card of chosen) groups[opts.destination ? yield* opts.destination(card) : (opts.to ?? "hand")].push(card);
       const moved = yield* moveFound(groups, player, opts.engaged ?? false);
       shuffleDeck(g, player); // CR 5.8.2
@@ -534,7 +550,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       const deck = [...g.state.players[ctrl].zones.deck];
       const destinationOf = (i: number): SearchDestination => (typeof opts.to === "string" ? opts.to : (opts.to?.[i] ?? "hand"));
       const chosen: CardId[] = [];
-      const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [], cemetery: [] };
+      const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [], cemetery: [], deck: [] };
       for (const [i, filter] of filters.entries()) {
         const matching = deck.filter((id) => !chosen.includes(id) && filter(id));
         // CR 4.1.2.2 — a card in the deck need not be found (BP04-086 ruling).
@@ -775,10 +791,16 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       // 12.18.2.1 — each fused card is discarded from the hand (5.12) or buried from the EX area.
       const specs = fused
         .filter((id) => g.state.cards[id] !== undefined)
-        .map((id) => ({ card: id, to: "cemetery" as const, reason: g.state.cards[id]!.zone === "hand" ? ("discard" as const) : ("effect" as const) }));
+        .map((id) => ({
+          card: id,
+          to: "cemetery" as const,
+          reason: g.state.cards[id]!.zone === "hand" ? ("discard" as const) : ("effect" as const),
+          cause: cause(),
+        }));
+      const fusedDefs = specs.map((s) => g.state.cards[s.card]!.def);
       const moved = specs.length > 0 ? moveCards(g, specs, "effect") : [];
       const [self] = g.state.cards[card]?.zone === "hand" ? yield* putIntoEx(g, [card], ctrl) : [];
-      if (self !== undefined) g.emit({ type: "cardsFused", player: ctrl, card: self, fused: moved });
+      if (self !== undefined) g.emit({ type: "cardsFused", player: ctrl, card: self, fused: moved, fusedDefs });
       return { card: self ?? null, fused: moved };
     },
     *nextPlayCostsLess(key, amount) {
@@ -834,6 +856,9 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *changeEvolveCost(card, amount, until) {
       if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "evolveCost", amount });
     },
+    *reduceNextDamage(target, amount, until) {
+      addEffect(target, until, { kind: "reduceNextDamage", amount });
+    },
     *preventNextDamage(target, until) {
       addEffect(target, until, { kind: "preventNextDamage" });
     },
@@ -852,6 +877,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *rollDie(player = ctrl) {
       const result = randomInt(g.state.rng, 6) + 1;
+      thisTurn(g.state, player).diceRolled.push(result); // BP21-076, 081
       g.emit({ type: "dieRolled", player, result });
       return result;
     },

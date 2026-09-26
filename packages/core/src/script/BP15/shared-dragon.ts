@@ -1,12 +1,8 @@
 // Shared pieces of BP15 Dragoncraft card scripts (not a card: the file name has no set prefix).
-import type { CardId, PlayerId } from "../../model/ids";
-import type { GameReader } from "../../engine/query";
-import type { AutomaticAbility, CustomCost } from "../types";
+import type { AutomaticAbility } from "../types";
 import { type TimingSpec, whenFollowerEntersYourField, whenThisTakesDamage, whenYouDiscard } from "../helpers";
 import { engageThis } from "../costs";
 import { marine } from "./shared";
-
-type Filter = (g: GameReader, id: CardId) => boolean;
 
 /**
  * "During your turn, whenever this takes ability damage, ..." (BP15-057, 066, 067, 072): also when the damage
@@ -44,15 +40,5 @@ export const mermaidOfPunishment = (): AutomaticAbility =>
     { another: true, filter: marine },
   );
 
-/** BP15-074 "discard this and a [matching] card" — both at once (CR 5.12), from the hand. */
-export const discardThisAnd = (filter: Filter): CustomCost => {
-  const others = (g: GameReader, self: CardId, p: PlayerId) =>
-    g.cards(p, "hand").filter((id) => id !== self && filter(g, id));
-  return {
-    canPay: (g, c, self) => g.card(self)?.zone === "hand" && others(g, self, c).length > 0,
-    *pay(fx) {
-      const [other] = yield* fx.chooseCards(others(fx.game, fx.self, fx.controller), 1, 1);
-      yield* fx.discardCards(other === undefined ? [fx.self] : [fx.self, other]);
-    },
-  };
-};
+// Moved to script/costs.ts (also used by BP20-042); re-exported for BP15's scripts.
+export { discardThisAnd } from "../costs";

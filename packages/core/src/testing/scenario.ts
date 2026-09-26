@@ -25,6 +25,10 @@ export interface FieldCardSpec {
   evolvedThisTurn?: boolean;
   /** CR 15.1 counters; Stack cards default to { stack: 1 } as when put onto the field (13.3.2.2). */
   counters?: Record<string, number>;
+  /** Put onto the field by an ability, not by playing it (BP21-023 "if this was put onto the field by an ability"). */
+  enteredByAbility?: boolean;
+  /** It gained defense this turn (BP21-096 "Activate only if this gained defense this turn"). */
+  gainedDefenseThisTurn?: boolean;
 }
 
 export interface ScenarioSide {
@@ -33,7 +37,8 @@ export interface ScenarioSide {
   deck?: PrintingId[];
   hand?: PrintingId[];
   field?: (PrintingId | FieldCardSpec)[];
-  ex?: PrintingId[];
+  /** EX-area cards, optionally with counters (e.g. a crest's reversal counters, BP20-T02). */
+  ex?: (PrintingId | { card: PrintingId; counters?: Record<string, number> })[];
   cemetery?: PrintingId[];
   /** Cards in the banished zone (e.g. BP13-008 "at least 9 cards in your banished zone"). */
   banished?: PrintingId[];
@@ -100,15 +105,22 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
     };
     place("deck", side.deck);
     place("hand", side.hand);
-    place("ex", side.ex);
+    for (const entry of side.ex ?? []) {
+      const e = typeof entry === "string" ? { card: entry } : entry;
+      const id = placeInitialCard(state, engine.db, e.card, p, "ex");
+      if (e.counters) state.cards[id]!.counters = { ...e.counters };
+    }
     place("cemetery", side.cemetery);
     place("banished", side.banished);
     place("evolveDeck", side.evolveDeck);
     for (const printing of side.faceUpEvolveDeck ?? []) placeInitialCard(state, engine.db, printing, p, "evolveDeck", { faceUp: true });
+    const gainedDefense: string[] = [];
     for (const entry of side.field ?? []) {
       const f: FieldCardSpec = typeof entry === "string" ? { card: entry } : entry;
       const id = placeInitialCard(state, engine.db, f.card, p, "field", { engaged: f.engaged ?? false });
       const c = state.cards[id]!;
+      if (f.enteredByAbility) c.enteredByAbility = true;
+      if (f.gainedDefenseThisTurn) gainedDefense.push(id);
       c.enteredFieldTurn = f.enteredThisTurn ? turn : turn - 1;
       c.damage = f.damage ?? 0;
       const stack: Record<string, number> = engine.scripts[c.def]?.keywords?.includes("stack") ? { stack: 1 } : {};
@@ -131,6 +143,9 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
     ps.leaderDefense = side.leaderDefense ?? config.rules.leaderDefense;
     ps.evolutionPoints = side.evolutionPoints ?? config.rules.evolutionPoints[p === first ? 0 : 1];
     ps.superEvolutionPoints = side.superEvolutionPoints ?? config.rules.superEvolutionPoints;
+    if (gainedDefense.length > 0) {
+      ps.thisTurn = { ...ps.thisTurn, turn, statsGained: [...gainedDefense], defenseGained: [...gainedDefense] };
+    }
     if (side.returnedToHand) ps.thisTurn = { ...ps.thisTurn, turn, returnedToHand: side.returnedToHand };
     if (side.playedThisTurn) ps.cardsPlayed = { turn, count: side.playedThisTurn };
     if (side.stackRemovedByEarthRite) ps.thisTurn = { ...ps.thisTurn, turn, stackRemovedByEarthRite: side.stackRemovedByEarthRite };
