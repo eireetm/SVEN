@@ -37,9 +37,10 @@ describe("normalizePrinting", () => {
   it("CR 2.3 — parses primary and special card types", () => {
     expect(parseCardType("x", ["Follower", "Evolved"])).toEqual({ type: "follower", evolved: true, token: false, advanced: false });
     expect(parseCardType("x", ["Spell", "Token"])).toEqual({ type: "spell", evolved: false, token: true, advanced: false });
-    // CR 9.2 — advanced followers (BP10); advanced spells (BP13) are not supported yet.
+    // CR 9.2 — advanced followers (BP10) and spells (BP13); other advanced kinds are not supported yet.
     expect(parseCardType("x", ["Follower", "Advanced"])).toEqual({ type: "follower", evolved: false, token: false, advanced: true });
-    expect(() => parseCardType("x", ["Spell", "Advanced"])).toThrow(CardDataError);
+    expect(parseCardType("x", ["Spell", "Advanced"])).toEqual({ type: "spell", evolved: false, token: false, advanced: true });
+    expect(() => parseCardType("x", ["Amulet", "Advanced"])).toThrow(CardDataError);
     expect(() => parseCardType("x", ["Follower", "Advance"])).toThrow(CardDataError);
     expect(() => parseCardType("x", ["Follower", "Spell"])).toThrow(CardDataError);
     expect(() => parseCardType("x", ["Token"])).toThrow(CardDataError);

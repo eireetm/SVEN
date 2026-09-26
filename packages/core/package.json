@@ -19,6 +19,7 @@
     "./sets/bp10": "./src/sets/bp10.ts",
     "./sets/bp11": "./src/sets/bp11.ts",
     "./sets/bp12": "./src/sets/bp12.ts",
+    "./sets/bp13": "./src/sets/bp13.ts",
     "./testing": "./src/testing/index.ts"
   }
 }

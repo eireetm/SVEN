@@ -40,6 +40,12 @@ export interface CardScript {
   /** Passive abilities that work while this card is on the field (CR 10.1.1.3, 10.3.5). */
   field?: FieldPassives;
   /**
+   * Passive abilities that also work while this card is in its controller's EX area (CR 10.3.5
+   * "unless indicated otherwise"; BP13-003 "While this card is on your field or in your EX area,
+   * ..."). Only keyword-giving passives are read from the EX area so far.
+   */
+  exPassives?: Pick<FieldPassives, "keywordsFor">;
+  /**
    * CR 8.4.3.2.1 "This follower can't attack enemies." A function is the conditional form
    * (BP03-110 "if this follower has no Fable counters").
    */

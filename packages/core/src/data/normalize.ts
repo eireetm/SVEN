@@ -90,9 +90,9 @@ export function parseCardType(cardNo: string, raw: readonly string[]): {
   if (evolved && type !== "follower" && type !== "amulet") {
     throw new CardDataError(`${cardNo}: evolved card must be a follower or amulet in the supported sets`);
   }
-  // CR 9.2 — BP10's advanced cards are followers (BP13 has advanced spells: not supported yet).
-  if (advanced && (evolved || token || type !== "follower")) {
-    throw new CardDataError(`${cardNo}: advanced card must be a follower in the supported sets`);
+  // CR 9.2 — advanced cards are followers (BP10) or spells (BP13). Other kinds fail until they appear.
+  if (advanced && (evolved || token || (type !== "follower" && type !== "spell"))) {
+    throw new CardDataError(`${cardNo}: advanced card must be a follower or spell in the supported sets`);
   }
   return { type, evolved, token, advanced };
 }

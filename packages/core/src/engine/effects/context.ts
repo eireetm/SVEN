@@ -257,6 +257,12 @@ export interface EffectContext {
   /** CR 5.22 — move an opponent's field card onto your field. Null when the field is full. */
   steal(card: CardId): Proc<CardId | null>;
   /**
+   * CR 5.22.2 — give control of a card on its controller's field to another player (default: that
+   * controller's opponent): it moves to their field, keeping its state (5.22.4). Null when that
+   * field is full (BP13-043).
+   */
+  giveControl(card: CardId, player?: PlayerId): Proc<CardId | null>;
+  /**
    * CR 5.16.1.1 — evolve a follower by this effect. The controller may decline. A follower of
    * another player can't be evolved (BP07-104 ruling, CR 4.6.2).
    */
@@ -688,6 +694,11 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     memory,
     playOption: init.playOption ?? null,
+    *giveControl(card, player) {
+      const c = g.state.cards[card];
+      if (!c || c.zone !== "field") return null;
+      return stealCard(g, card, player ?? fx.game.opponent(c.controller));
+    },
     *steal(card) {
       return stealCard(g, card, ctrl);
     },

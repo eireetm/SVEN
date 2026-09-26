@@ -652,6 +652,21 @@ export function* lookAtTopCards(
 }
 
 /**
+ * "You may play a [matching] card from your evolve deck" (BP13-036 Rending Blast, an advanced spell).
+ * Only the facedown cards there are the evolve deck (CR 4.6.3), so a used card can't be played
+ * again. It is played as usual (CR 10.6.2): its cost is paid (BP13-036 ruling), and when it leaves
+ * the resolution zone it goes back to the evolve deck faceup (9.2.2).
+ */
+export function* playFromEvolveDeck(fx: EffectContext, filter: (game: GameReader, card: CardId) => boolean): Proc<void> {
+  const playable = fx.game.faceDownEvolveDeck(fx.controller).filter((id) => filter(fx.game, id) && fx.game.canPlay(id, fx.controller));
+  // Copies of the same card are one choice.
+  const defOf = (id: CardId) => fx.game.card(id)?.def;
+  const choices = playable.filter((id, i) => playable.findIndex((other) => defOf(other) === defOf(id)) === i);
+  const [card] = yield* fx.chooseCards(choices, 0, 1);
+  if (card !== undefined) yield* fx.playCard(card);
+}
+
+/**
  * Select cards among `candidates`, up to `max`, whose original costs (元のコスト, printed) total
  * at most `budget` (BP07-037, 071, BP09-037). Picked one at a time, each time only from those that still fit
  * (the BP06-024 pattern: only completable choices are offered).

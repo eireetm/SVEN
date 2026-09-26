@@ -35,6 +35,8 @@ export interface ScenarioSide {
   field?: (PrintingId | FieldCardSpec)[];
   ex?: PrintingId[];
   cemetery?: PrintingId[];
+  /** Cards in the banished zone (e.g. BP13-008 "at least 9 cards in your banished zone"). */
+  banished?: PrintingId[];
   evolveDeck?: PrintingId[];
   /** Faceup cards in the evolve deck area (CR 4.6.3), e.g. evolved followers that were used. */
   faceUpEvolveDeck?: PrintingId[];
@@ -87,13 +89,14 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
   ([0, 1] as PlayerId[]).forEach((p) => {
     const side = spec.players[p];
     const ps = state.players[p];
-    const place = (zone: "deck" | "hand" | "ex" | "cemetery" | "evolveDeck", cards: PrintingId[] | undefined) => {
+    const place = (zone: "deck" | "hand" | "ex" | "cemetery" | "banished" | "evolveDeck", cards: PrintingId[] | undefined) => {
       for (const printing of cards ?? []) placeInitialCard(state, engine.db, printing, p, zone);
     };
     place("deck", side.deck);
     place("hand", side.hand);
     place("ex", side.ex);
     place("cemetery", side.cemetery);
+    place("banished", side.banished);
     place("evolveDeck", side.evolveDeck);
     for (const printing of side.faceUpEvolveDeck ?? []) placeInitialCard(state, engine.db, printing, p, "evolveDeck", { faceUp: true });
     for (const entry of side.field ?? []) {

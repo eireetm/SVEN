@@ -165,13 +165,20 @@ export function characteristics(env: Env, id: CardId): Characteristics {
     reader ??= makeReader(env);
     for (const k of script.selfKeywords(reader, id)) addKeyword(k);
   }
-  // Keywords given by passive abilities of cards on the field (e.g. BP01-091).
+  // Keywords given by passive abilities of cards on the field (e.g. BP01-091), and of cards in an
+  // EX area whose passives work there too (CR 10.3.5, BP13-003).
   for (const p of [0, 1] as const) {
     for (const f of state.players[p].zones.field) {
       const passive = activeScript(env, f)?.field?.keywordsFor;
       if (!passive || lost(getCard(state, f).zoneSeq)) continue;
       reader ??= makeReader(env);
       for (const k of passive(reader, f, id)) addKeyword(k);
+    }
+    for (const x of state.players[p].zones.ex) {
+      const passive = env.scripts[getCard(state, x).def]?.exPassives?.keywordsFor;
+      if (!passive || lost(getCard(state, x).zoneSeq)) continue;
+      reader ??= makeReader(env);
+      for (const k of passive(reader, x, id)) addKeyword(k);
     }
   }
   if (type !== "follower" && baseDef.type !== "leader") {

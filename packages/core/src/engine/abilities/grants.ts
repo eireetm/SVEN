@@ -106,6 +106,20 @@ export const GRANT_ABILITIES: Record<GrantedAbilityId, AbilityDef> = {
       if (fx.game.card(fx.self)?.zone === "field") yield* fx.giveStats(fx.self, 2, 2);
     },
   },
+  // BP13-119 (for the rest of the turn): "{[lastwords]} Give your leader {[defense]}+2. Draw a
+  // card." Each gift is its own ability, so two of them trigger twice (ruling).
+  lastWordsLeaderDraw: {
+    kind: "automatic",
+    timing: "lastWords",
+    trigger: (e, me) =>
+      me.lookBack &&
+      e.type === "cardsMoved" &&
+      e.moves.some((m) => m.card === me.card && m.from?.zone === "field" && m.to.zone === "cemetery"),
+    *resolve(fx) {
+      yield* fx.giveLeaderDefense(fx.controller, 2);
+      yield* fx.draw(1);
+    },
+  },
   // BP11-011 (given to Pixie tokens for the rest of the turn): "Activate {[engage]}: Select an
   // enemy follower on the field. Deal 3 damage to it and 1 damage to its leader."
   activateEngageDamage3: {

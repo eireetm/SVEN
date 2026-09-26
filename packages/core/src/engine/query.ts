@@ -33,7 +33,10 @@ export interface GameReader {
   opponent(player: PlayerId): PlayerId;
   /** CR 15.1 */
   counters(id: CardId, counter: string): number;
-  /** Does this definition have an evolve ability (printed "{[evolve]}")? */
+  /**
+   * Does this definition have an evolve ability (CR 12.2)? Read from its script: a text that only
+   * mentions "{[evolve]}" (BP13-115 "a follower with {[evolve]}") doesn't have one.
+   */
   hasEvolveAbility(def: DefId): boolean;
   /** CR 13.2.1 — cards the player has played this turn. */
   playedThisTurn(player: PlayerId): number;
@@ -151,7 +154,7 @@ export function makeReader(env: Env): GameReader {
     leader: (p) => leaderOf(state(), p),
     opponent: opponentOf,
     counters: (id, counter) => state().cards[id]?.counters[counter] ?? 0,
-    hasEvolveAbility: (def) => env.db.get(def).text.en.includes("{[evolve]}"),
+    hasEvolveAbility: (def) => (env.scripts[def]?.abilities ?? []).some((a) => a.kind === "activated" && a.evolve === true),
     playedThisTurn: (p) => (ps(p).cardsPlayed.turn === state().turn ? ps(p).cardsPlayed.count : 0),
     combo: (p, x) => reader.playedThisTurn(p) >= x,
     spellsInCemetery: (p) => ps(p).zones.cemetery.filter((id) => env.db.get(state().cards[id]!.def).type === "spell").length,

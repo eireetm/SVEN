@@ -272,7 +272,8 @@ export type GrantedAbilityId =
   | "lastWordsBanishSelf"
   | "returnToHandAtEnd"
   | "strikePlus2"
-  | "activateEngageDamage3";
+  | "activateEngageDamage3"
+  | "lastWordsLeaderDraw";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {
