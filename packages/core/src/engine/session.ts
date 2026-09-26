@@ -1,11 +1,13 @@
 import type { CardDatabase } from "../data/database";
 import type { Answer, Decision, Input } from "../model/decision";
 import { opponentOf, type PlayerId } from "../model/ids";
+import { seedRng } from "../rng/rng";
 import type { GameResult, GameState } from "../model/state";
 import type { GameEvent } from "../events/types";
 import type { ScriptRegistry } from "../script/types";
 import { cloneJson } from "../util/json";
 import { collectTriggers } from "./abilities/triggers";
+import { cardsInDecision, resampleHidden } from "./determinize";
 import { EngineError, IllegalInputError } from "./errors";
 import { runGame } from "./flow/game";
 import type { G } from "./runtime/context";
@@ -50,6 +52,11 @@ export class GameSession {
   private inputs: Input[] = [];
   private buffer: GameEvent[] = [];
   private failure: unknown = null;
+  /**
+   * Set on a copy made by determinized() between anchors: its checkpoint still holds the real hidden
+   * cards, so it must not be snapshotted or cloned until the next anchor replaces the checkpoint.
+   */
+  private checkpointStale = false;
   private readonly g: G;
   private readonly checkpoints: boolean;
   /** Events produced while starting (or restoring) the game, before the first decision. */
@@ -166,12 +173,44 @@ export class GameSession {
   /** JSON-serializable snapshot (requires checkpoints). */
   snapshot(): GameSnapshot {
     if (!this.checkpoints) throw new EngineError("snapshot() needs a session with checkpoints enabled");
+    if (this.checkpointStale) throw new EngineError("this determinized copy can only be copied from its next main phase on");
     return { format: 1, checkpoint: cloneJson(this.checkpoint), inputs: cloneJson(this.inputs) };
   }
 
   /** An independent copy of this game (for search / "what if"). */
   clone(options: SessionOptions = this.options): GameSession {
     return GameSession.restore(this.env, this.snapshot(), options);
+  }
+
+  /**
+   * A copy of this game as `viewer` knows it (docs/bot.md): every card whose identity `viewer` can't
+   * see (CR 4.1.2) is dealt again at random from the same hidden cards (resampleHidden), and future
+   * random events are reseeded, so the copy tells nothing the viewer doesn't know. The opponent's
+   * deck list counts as known. Same seed, same information → same copy. Needs checkpoints and a
+   * game past its setup (bots decide mulligans without looking ahead).
+   *
+   * At a main phase decision (the one right after its checkpoint) the checkpoint itself is
+   * resampled, so the copy can be cloned. Otherwise the real game is replayed first — earlier
+   * answers, and decisions the engine answered itself (a main phase with nothing but ending it),
+   * may depend on the real cards — and the live state resampled; that copy can be cloned from its
+   * next main phase on.
+   */
+  determinized(viewer: PlayerId, seed: string | number, options: SessionOptions = this.options): GameSession {
+    const snapshot = this.snapshot();
+    if (snapshot.checkpoint.anchor?.kind !== "mainPhase") throw new EngineError("determinized() needs a game past its setup");
+    const keep = new Set(this.pendingDecision?.player === viewer ? cardsInDecision(this.pendingDecision) : []);
+    const rng = seedRng(`determinize:${seed}`);
+    const futureRng = seedRng(`determinize-rng:${seed}`);
+    if (snapshot.inputs.length === 0 && this.pendingDecision?.type === "mainPhase") {
+      resampleHidden(snapshot.checkpoint, viewer, rng, keep);
+      snapshot.checkpoint.rng = futureRng;
+      return GameSession.restore(this.env, snapshot, options);
+    }
+    const copy = GameSession.restore(this.env, snapshot, options);
+    resampleHidden(copy.live, viewer, rng, keep);
+    copy.live.rng = futureRng;
+    copy.checkpointStale = true;
+    return copy;
   }
 
   private takeBuffer(): GameEvent[] {
@@ -190,6 +229,7 @@ export class GameSession {
           if (this.checkpoints) {
             this.checkpoint = cloneJson(this.live);
             this.inputs = [];
+            this.checkpointStale = false;
           }
           step = gen.next(undefined);
           continue;

@@ -1,0 +1,10 @@
+{
+  "name": "@sve/bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Bots that play the Shadowverse: Evolve engine through its public API (greedy simulation bot).",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

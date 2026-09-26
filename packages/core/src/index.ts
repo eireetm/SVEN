@@ -49,6 +49,9 @@ export type { Characteristics } from "./engine/state/characteristics";
 export type { EffectContext } from "./engine/effects/context";
 export type { Proc } from "./engine/runtime/proc";
 export { forcedAnswer } from "./engine/runtime/decide";
+export { defaultAnswer, randomAnswer, enumerateAnswers, legalSelection } from "./engine/runtime/answers";
+export { validateAnswer } from "./engine/runtime/validate";
+export { seedRng, randomInt, shuffleInPlace, type RngState } from "./rng/rng";
 
 export type { CardScript, ScriptRegistry, AbilityDef, ActivatedAbility, AutomaticAbility, SpellAbility, TargetSpec, CostSpec, TriggerSubject } from "./script/types";
 export * as script from "./script/helpers";

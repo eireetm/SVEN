@@ -114,7 +114,16 @@ export interface GameReader {
   hasEarthRite(id: CardId): boolean;
 }
 
+/**
+ * One reader per context object: every method reads `env.state` when it is called, so a reader can
+ * be reused for as long as its context lives. Building one creates dozens of closures, and the
+ * engine asks for a reader on almost every rules check (it was ~40% of a random game's time).
+ */
+const readers = new WeakMap<Env, GameReader>();
+
 export function makeReader(env: Env): GameReader {
+  const cached = readers.get(env);
+  if (cached) return cached;
   const state = () => env.state;
   const ps = (p: PlayerId) => env.state.players[p];
   const reader: GameReader = {
@@ -191,5 +200,6 @@ export function makeReader(env: Env): GameReader {
       );
     },
   };
+  readers.set(env, reader);
   return reader;
 }

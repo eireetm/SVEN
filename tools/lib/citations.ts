@@ -21,14 +21,30 @@ function walk(dir: string): string[] {
   });
 }
 
-export function scanCitations(root: string, dirs: readonly string[]): Citation[] {
+/** A directory to scan; `commentsOnly` for code with ordinary decimals (the bot's weights). */
+export interface CitationDir {
+  path: string;
+  commentsOnly?: boolean;
+}
+
+/** The comment part of a line: after "//", or the whole line inside a block comment ("*" lines). */
+function commentText(line: string): string {
+  const slash = line.indexOf("//");
+  if (slash >= 0) return line.slice(slash + 2);
+  const t = line.trimStart();
+  return t.startsWith("*") || t.startsWith("/*") ? line : "";
+}
+
+export function scanCitations(root: string, dirs: readonly (string | CitationDir)[]): Citation[] {
   const out: Citation[] = [];
-  for (const dir of dirs) {
-    for (const file of walk(join(root, dir))) {
+  for (const entry of dirs) {
+    const dir = typeof entry === "string" ? { path: entry } : entry;
+    for (const file of walk(join(root, dir.path))) {
       const rel = relative(root, file).replaceAll("\\", "/");
       readFileSync(file, "utf8")
         .split("\n")
-        .forEach((text, i) => {
+        .forEach((line, i) => {
+          const text = dir.commentsOnly ? commentText(line) : line;
           for (const m of text.matchAll(CLAUSE)) out.push({ clause: m[1]!, file: rel, line: i + 1 });
         });
     }
@@ -57,4 +73,10 @@ export function compareClauses(a: string, b: string): number {
   return 0;
 }
 
-export const CITATION_DIRS = ["packages/core/src", "packages/core/test"] as const;
+export const CITATION_DIRS: readonly CitationDir[] = [
+  { path: "packages/core/src" },
+  { path: "packages/core/test" },
+  // Bot code has ordinary decimals (evaluation weights such as 1.5); only its comments cite rules.
+  { path: "packages/bot/src", commentsOnly: true },
+  { path: "packages/bot/test", commentsOnly: true },
+];

@@ -1,0 +1,8 @@
+{
+  // Tests may use Node APIs (e.g. reading source files for architecture checks).
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}

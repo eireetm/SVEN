@@ -347,7 +347,11 @@ export interface FightRecord {
 
 export type Phase = "setup" | "start" | "main" | "end" | "over";
 
-export type LossReason = "leaderDefense" | "deckOut" | "concede" | "effect";
+/**
+ * Why a player lost. "perpetualCycle": a cycle neither player could stop ended the game in a draw
+ * (CR 15.2.1.3); both players are listed, so the winner is null (1.2.2).
+ */
+export type LossReason = "leaderDefense" | "deckOut" | "concede" | "effect" | "perpetualCycle";
 
 export interface GameResult {
   /** null = draw (CR 1.2.2). */

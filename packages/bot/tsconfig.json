@@ -1,0 +1,9 @@
+{
+  // Bot source: like the core, ES built-ins only, so bots stay deterministic and host
+  // independent (no clocks, no IO); a bot's choices depend only on its seed and what it sees.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": []
+  },
+  "include": ["src/**/*.ts"]
+}
