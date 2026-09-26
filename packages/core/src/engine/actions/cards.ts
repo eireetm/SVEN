@@ -10,6 +10,7 @@ import { getCard } from "../state/access";
 import { hasKeyword, isFollowerOnField } from "../state/characteristics";
 import { exAreaLimit, fieldLimit } from "../state/limits";
 import { createCards, moveCards } from "../state/zones";
+import { makeReader } from "../query";
 
 /**
  * CR 5.22 — steal a card on an opponent's field: move it onto `newController`'s field.
@@ -45,6 +46,7 @@ export function shuffleDeck(g: G, p: PlayerId): void {
  */
 export function drawCards(g: G, p: PlayerId, count: number): CardId[] {
   const drawn: CardId[] = [];
+  if (drawForbidden(g, p)) return drawn; // CR 1.3.3 — no draw at all, so no empty-deck loss either
   const ps = g.state.players[p];
   for (let i = 0; i < count; i++) {
     const top = ps.zones.deck[0];
@@ -55,6 +57,23 @@ export function drawCards(g: G, p: PlayerId, count: number): CardId[] {
     drawn.push(...moveCards(g, [{ card: top, to: "hand", player: p }], "draw"));
   }
   return drawn;
+}
+
+/**
+ * CR 1.3.3 — a passive of a card on either field forbids the player to draw now (BP10-076
+ * "Opponents can't draw cards outside of their start phase"). Adding cards to the hand
+ * otherwise is not drawing (its ruling).
+ */
+function drawForbidden(g: G, p: PlayerId): boolean {
+  const startPhase = g.state.phase === "start" && g.state.activePlayer === p;
+  let reader: ReturnType<typeof makeReader> | null = null;
+  for (const q of [0, 1] as const) {
+    for (const id of g.state.players[q].zones.field) {
+      const forbids = activeScript(g, id)?.field?.forbidsDraw;
+      if (forbids && forbids((reader ??= makeReader(g)), id, p, startPhase)) return true;
+    }
+  }
+  return false;
 }
 
 /** Put the top `count` cards of a deck into its owner's cemetery (as many as there are, 1.3.2). */

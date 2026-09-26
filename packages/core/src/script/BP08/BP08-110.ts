@@ -2,7 +2,7 @@
 // Evolve (2). Fanfare: deal damage to an enemy follower equal to the number of faceup evolved
 // followers in your evolve deck; evolved amulets do not count (rulings; CR 4.6.3, 5.14).
 import { defineCard, evolveAbility, fanfare } from "../helpers";
-import { enemyFollower } from "../targets";
+import { enemyFollower, isEvolvedFollower } from "../targets";
 
 export default defineCard({
   abilities: [
@@ -10,10 +10,7 @@ export default defineCard({
     fanfare({
       targets: [enemyFollower()],
       *resolve(fx) {
-        const x = fx.game.faceUpEvolveDeck(fx.controller).filter((id) => {
-          const d = fx.game.db.get(fx.game.card(id)!.def);
-          return d.evolved && d.type === "follower";
-        }).length;
+        const x = fx.game.faceUpEvolveDeck(fx.controller).filter((id) => isEvolvedFollower(fx.game, id)).length;
         yield* fx.dealDamage(fx.targets[0]![0]!, x);
       },
     }),

@@ -112,6 +112,13 @@ export interface PlayerState {
 }
 
 /** Per-turn counts of one player (valid only while `turn` is the current turn). */
+/** A card that went from a field to a hand, as it was on the field (TurnCounts.returnedCards). */
+export interface ReturnedCard {
+  names: string[];
+  type: CardType;
+  traits: string[];
+}
+
 export interface TurnCounts {
   turn: number;
   /** Cards this player discarded (CR 5.12). */
@@ -127,6 +134,11 @@ export interface TurnCounts {
   followerAttacks: number;
   /** Cards that left this player's field for a hand (e.g. BP03-005 "returned to hand this turn"). */
   returnedToHand: number;
+  /**
+   * What those cards were on the field (look-back, CR 10.7.4.1), e.g. BP10-009 "if a Beast
+   * follower not named Salvia Panther was returned to hand from your field this turn".
+   */
+  returnedCards: ReturnedCard[];
   /** Definitions of the cards this player played (CR 10.6.2.7), in order (e.g. BP04-022 "the 1st Commander card"). */
   played: DefId[];
   /**

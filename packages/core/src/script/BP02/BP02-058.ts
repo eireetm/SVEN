@@ -10,7 +10,7 @@ export default defineCard({
     whenFollowerEntersYourField(
       {
         oncePerTurn: true,
-        condition: (g, c) => g.activePlayer === c,
+        triggerIf: (g, c) => g.activePlayer === c,
         targets: [enemyLeaderOrFollower()],
         *resolve(fx) {
           yield* fx.dealDamage(fx.targets[0]![0]!, 5);

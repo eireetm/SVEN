@@ -51,6 +51,7 @@ export interface TimingSpec {
   modes?: readonly Mode[];
   modeCount?: AutomaticAbility["modeCount"];
   condition?: AutomaticAbility["condition"];
+  triggerIf?: AutomaticAbility["triggerIf"];
   oncePerTurn?: boolean;
   timesPerTurn?: number;
   resolve?(fx: EffectContext): Proc<void>;
@@ -292,6 +293,23 @@ export function whenEnemyFollowerToCemetery(spec: TimingSpec, opts: { onlyYourTu
         )
         .map((m) => ({ card: m.newCard ?? m.card! }));
     },
+    spec,
+  );
+}
+
+/**
+ * "Whenever a card is put into your EX area" (BP10-094) — once per card, from any zone, created
+ * tokens too, during either player's turn (its ruling). Data: the card.
+ */
+export function whenCardPutIntoYourEx(spec: TimingSpec): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me): readonly TriggerData[] =>
+      me.lookBack
+        ? []
+        : moves(e)
+            .filter((m) => m.to.zone === "ex" && m.to.player === me.controller && m.from?.zone !== "ex" && m.newCard !== null)
+            .map((m) => ({ card: m.newCard! })),
     spec,
   );
 }

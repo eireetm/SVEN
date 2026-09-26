@@ -7,7 +7,7 @@ export default defineCard({
   abilities: [
     evolveAbility(2),
     whenEnemyFollowerDestroyed({
-      condition: (g, p) => g.activePlayer === p,
+      triggerIf: (g, p) => g.activePlayer === p,
       *resolve(fx) {
         if (fx.game.card(fx.self)?.zone === "field") yield* fx.giveStats(fx.self, 1, 0);
       },

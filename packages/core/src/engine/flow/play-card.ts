@@ -30,15 +30,14 @@ function spellAbilityOf(g: Env, card: CardId): SpellAbility | undefined {
   return ref?.ability as SpellAbility | undefined;
 }
 
-/** CR 5.18.3.1.2 — options that can be performed (and so may be chosen). */
+/**
+ * CR 5.18.3.1.2 — options that can be performed (and so may be chosen). An option with Earth Rite
+ * can be chosen without paying it, even with no Stack on the field; it then does nothing (13.3.3.2
+ * "you may ... If you paid this additional cost"; BP10-050 ruling).
+ */
 export function performableModes(g: Env, modes: readonly Mode[], player: PlayerId, self: CardId): Mode[] {
   const reader = makeReader(g);
-  return modes.filter(
-    (m) =>
-      (m.available?.(reader, player, self) ?? true) &&
-      targetsAvailable(g, m.targets, player, self) &&
-      (!m.earthRite || earthRiteSources(g, player).length > 0),
-  );
+  return modes.filter((m) => (m.available?.(reader, player, self) ?? true) && targetsAvailable(g, m.targets, player, self));
 }
 
 /** Can the spell's text be performed at all (targets, required Earth Rite, modes)? */
@@ -121,8 +120,8 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
     modes = chosen;
   }
   let earthRite = false;
-  if (modes.some((m) => m.earthRite) || spell?.earthRite?.mode === "required") earthRite = true;
-  else if (spell?.earthRite && earthRiteSources(g, player, spell.earthRite.count).length > 0) {
+  if (spell?.earthRite?.mode === "required") earthRite = true;
+  else if ((spell?.earthRite || modes.some((m) => m.earthRite)) && earthRiteSources(g, player, spell?.earthRite?.count).length > 0) {
     earthRite = yield* confirm(g, player, "earthRite", played);
   }
   // 10.6.2.3 targets (of each chosen option, 5.18.4)

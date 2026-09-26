@@ -50,10 +50,12 @@ export function parseCardType(cardNo: string, raw: readonly string[]): {
   type: CardType;
   evolved: boolean;
   token: boolean;
+  advanced: boolean;
 } {
   const primaries: CardType[] = [];
   let evolved = false;
   let token = false;
+  let advanced = false;
   for (const t of raw) {
     switch (t) {
       case "Follower":
@@ -74,6 +76,9 @@ export function parseCardType(cardNo: string, raw: readonly string[]): {
       case "Token":
         token = true;
         break;
+      case "Advanced":
+        advanced = true;
+        break;
       default:
         throw new CardDataError(`${cardNo}: unsupported card_type entry "${t}"`);
     }
@@ -85,7 +90,11 @@ export function parseCardType(cardNo: string, raw: readonly string[]): {
   if (evolved && type !== "follower" && type !== "amulet") {
     throw new CardDataError(`${cardNo}: evolved card must be a follower or amulet in the supported sets`);
   }
-  return { type, evolved, token };
+  // CR 9.2 — BP10's advanced cards are followers (BP13 has advanced spells: not supported yet).
+  if (advanced && (evolved || token || type !== "follower")) {
+    throw new CardDataError(`${cardNo}: advanced card must be a follower in the supported sets`);
+  }
+  return { type, evolved, token, advanced };
 }
 
 function parseClass(cardNo: string, raw: string): CardClass {
@@ -157,7 +166,7 @@ function checkStats(
 
 export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   const cardNo = raw.card_no;
-  const { type, evolved, token } = parseCardType(cardNo, raw.card_type);
+  const { type, evolved, token, advanced } = parseCardType(cardNo, raw.card_type);
   checkStats(cardNo, type, evolved, raw.cost, raw.atk, raw.def);
   const doubleFaced = raw.back !== undefined && raw.back !== null;
 
@@ -178,6 +187,7 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
       type,
       evolved,
       token,
+      ...(advanced ? { advanced: true as const } : {}),
       cost: raw.cost,
       attack: raw.atk,
       defense: raw.def,
@@ -248,7 +258,8 @@ function stripEvolvedSuffix(cardNo: string, name: string, evolved: boolean, doub
  * "Pecorine [Princess Form]", Forestcraft and Swordcraft).
  */
 export function identityKey(d: NormalizedPrinting["def"]): string {
-  const base = `${d.type}|${d.evolved ? "evolved" : "base"}|${d.token ? "token" : "card"}|${d.name}`;
+  const special = d.evolved ? "evolved" : d.advanced ? "advanced" : "base";
+  const base = `${d.type}|${special}|${d.token ? "token" : "card"}|${d.name}`;
   return d.type === "leader" ? `${base}|${d.class}` : base;
 }
 

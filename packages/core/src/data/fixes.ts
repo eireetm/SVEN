@@ -104,6 +104,10 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   // An evolved card without the " (Evolved)" suffix; its Japanese name 骸の代弁者 is that of the
   // base card BP09-080 "Orator of the Bones", and its card type is Evolved.
   "BP09-081": { name_en: "Orator of the Bones (Evolved)" },
+  // The evolved card of BP10-048 "Piquant Potioneer" is named "Potion Wizard (Evolved)", an older
+  // translation: both have the Japanese name ポーションウィザード and the Chinese name 魔药巫师, and
+  // BP10-048's evolve ability evolves this follower (same name, CR 5.16.1.1.1).
+  "BP10-049": { name_en: "Piquant Potioneer (Evolved)" },
   // Back faces of double-faced cards (see above).
   "BP09-005": { back: BP09_005_BACK },
   "BP09-P02": { back: BP09_005_BACK },

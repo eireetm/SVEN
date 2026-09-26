@@ -38,6 +38,7 @@ import type { G } from "../runtime/context";
 import { cardRefs, chooseOptions, confirm, orderCards, selectCards } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { getCard, nextSeq } from "../state/access";
+import { characteristics } from "../state/characteristics";
 import { exAreaLimit } from "../state/limits";
 import { moveCards } from "../state/zones";
 import { makeReader, type GameReader } from "../query";
@@ -129,6 +130,11 @@ export interface EffectContext {
        * that many must be found, as far as the deck has them (BP08-108 ruling). Not for "up to".
        */
       required?: boolean;
+      /**
+       * "up to N ... with different names" (BP10-027): found one at a time, each time only among
+       * cards whose name differs from those already found.
+       */
+      distinctNames?: boolean;
     },
   ): Proc<CardId[]>;
   /**
@@ -137,6 +143,13 @@ export interface EffectContext {
    * the deck shuffled once.
    */
   searchEach(filters: readonly ((card: CardId) => boolean)[], opts?: { to?: SearchDestination }): Proc<CardId[]>;
+  /**
+   * "You may summon a [card] from your evolve deck" / "put ... from your evolve deck into your EX
+   * area" (BP10 advanced cards, CR 9.2): the player looks at their evolve deck (4.6.2) and picks up
+   * to `max` (default 1) matching facedown cards — faceup ones are not part of it (4.6.3). Returns
+   * the moved cards.
+   */
+  fromEvolveDeck(filter: (card: CardId) => boolean, opts: { to: "field" | "ex"; max?: number; engaged?: boolean }): Proc<CardId[]>;
   /** CR 5.11 — the player looks at these cards (e.g. BP04-056 "look at the top card"); nothing moves. */
   lookAt(cards: readonly CardId[], player?: PlayerId): Proc<void>;
   /** CR 5.11 the top cards of a deck (the player looks at them). */
@@ -413,7 +426,20 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       // A card in a non-public zone need not be found (CR 4.1.2.2), so the minimum is 0 — unless
       // only a number of cards is specified (5.8.1.1).
       const min = opts.required ? max : 0;
-      const chosen = yield* selectCards(g, player, "search", matching, min, max, selfIfPresent(), deck);
+      let chosen: CardId[];
+      if (opts.distinctNames) {
+        chosen = [];
+        const name = (id: CardId) => characteristics(g, id).name;
+        for (let i = 0; i < max; i++) {
+          const left = matching.filter((id) => !chosen.some((c) => name(c) === name(id)));
+          const one = Math.min(1, left.length);
+          const [card] = yield* selectCards(g, player, "search", left, i < min ? one : 0, one, selfIfPresent(), deck);
+          if (card === undefined) break;
+          chosen.push(card);
+        }
+      } else {
+        chosen = yield* selectCards(g, player, "search", matching, min, max, selfIfPresent(), deck);
+      }
       if (opts.reveal ?? true) revealCards(g, player, chosen);
       const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [] };
       for (const card of chosen) groups[opts.destination ? yield* opts.destination(card) : (opts.to ?? "hand")].push(card);
@@ -436,6 +462,14 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       const moved = yield* moveFound(groups, ctrl);
       shuffleDeck(g, ctrl); // CR 5.8.2
       return moved;
+    },
+    *fromEvolveDeck(filter, opts) {
+      const evolveDeck = [...g.state.players[ctrl].zones.evolveDeck];
+      const matching = evolveDeck.filter((id) => !g.state.cards[id]!.faceUp && filter(id));
+      const chosen = yield* selectCards(g, ctrl, "pick", matching, 0, Math.min(opts.max ?? 1, matching.length), selfIfPresent(), evolveDeck);
+      if (chosen.length === 0) return [];
+      if (opts.to === "ex") return yield* putIntoEx(g, chosen, ctrl);
+      return yield* putOntoField(g, chosen, ctrl, "effect", { chooser: ctrl, engaged: opts.engaged ?? false });
     },
     *lookAt(cards, player = ctrl) {
       const present = cards.filter((id) => g.state.cards[id] !== undefined);

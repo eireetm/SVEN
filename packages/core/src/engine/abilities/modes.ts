@@ -48,11 +48,13 @@ export function* chooseModeTargets(g: G, player: PlayerId, modes: readonly Mode[
 /**
  * CR 5.18.1 — resolve the chosen options in listed order. An option written "[process]:
  * [effect]" (10.4.7.2) is only applied if its controller executes the process when it resolves
- * (10.4.7.5; BP03-117 ruling: the option may be chosen and the process not executed).
+ * (10.4.7.5; BP03-117 ruling: the option may be chosen and the process not executed). An option
+ * with Earth Rite is only applied if Earth Rite was paid (13.3.3.2; BP10-050 ruling).
  */
 export function* resolveModes(modes: readonly Mode[], fxFor: (mode: Mode, index: number) => EffectContext): Proc<void> {
   for (const [i, m] of modes.entries()) {
     const fx = fxFor(m, i);
+    if (m.earthRite && !fx.earthRitePaid) continue;
     if (m.cost && !(yield* fx.optionalCost(m.cost))) continue;
     yield* m.resolve(fx);
   }

@@ -50,6 +50,12 @@ export interface CardDefinition {
   type: CardType;
   /** Special type "evolved" (CR 2.3.3.1). */
   evolved: boolean;
+  /**
+   * Special type "advanced" (CR 2.3.3.1, 9.2; BP10): built into the evolve deck (6.1.1.3), put onto
+   * the field or into the EX area by effects, and back to the evolve deck faceup when it would go
+   * anywhere else (9.2.2). Present only when true.
+   */
+  advanced?: true;
   /** Token (CR 9.1). */
   token: boolean;
   /**

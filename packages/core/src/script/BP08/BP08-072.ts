@@ -4,24 +4,16 @@
 // {[evolve]} {[cost01]}: Evolve this follower.
 // Activate from hand, pay 1 and put this card into your EX area: look at the top 2, optionally take
 // a Departed card, and bury the rest (ruling, CR 5.11, 10.3.5).
-import type { CustomCost } from "../types";
+import { putThisFromHandIntoEx } from "../costs";
 import { activated, defineCard, evolveAbility, lookAtTopCards } from "../helpers";
 import { hasTrait } from "../targets";
-
-/** "Put this card from your hand into your EX area": impossible with a full EX area (CR 4.8.3.2, 10.4.2.2). */
-const selfToEx: CustomCost = {
-  canPay: (g, c, self) => g.card(self)?.zone === "hand" && g.cards(c, "ex").length < g.exAreaLimit(c),
-  *pay(fx) {
-    yield* fx.putIntoEx([fx.self]);
-  },
-};
 
 export default defineCard({
   playCost: (g, _self, c) => (g.cards(c, "cemetery").filter((id) => hasTrait("死者")(g, id)).length >= 15 ? -5 : 0),
   abilities: [
     evolveAbility(1),
     activated(
-      { playPoints: 1, custom: selfToEx },
+      { playPoints: 1, custom: putThisFromHandIntoEx },
       {
         validIn: ["hand"],
         *resolve(fx) {

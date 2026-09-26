@@ -102,6 +102,13 @@ export const isToken: Filter = (g, id) => g.info(id).baseDef.token;
 /** Has the special type "evolved" (CR 2.3.3.1): an evolved follower on the field. */
 export const isEvolved: Filter = (g, id) => g.info(id).evolved;
 export const isUnevolved: Filter = (g, id) => !g.info(id).evolved;
+/**
+ * An evolved follower card (エボルヴフォロワー), e.g. "faceup evolved followers in your evolve deck":
+ * not an evolved amulet (BP08-090, BP08-110 ruling) nor an advanced follower (CR 9.2, BP10).
+ */
+export const isEvolvedFollower: Filter = (g, id) => ofType(g, id, "follower") && g.info(id).evolved;
+/** An advanced card (CR 9.2), e.g. BP10-063 "an advanced follower with "Dual Form" in its name". */
+export const isAdvanced: Filter = (g, id) => g.info(id).def.advanced === true;
 /** Put onto the field during this turn (CR 8.4.2.1), e.g. BP02-101. */
 export const enteredThisTurn: Filter = (g, id) => g.enteredFieldThisTurn(id);
 export const and = (...fs: Filter[]): Filter => (g, id) => fs.every((f) => f(g, id));

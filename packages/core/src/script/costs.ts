@@ -56,6 +56,28 @@ export const banishThisFromCemetery: CustomCost = {
   },
 };
 
+/**
+ * "Put this card from your hand into your EX area" — a cost of an ability valid in the hand
+ * (BP08-072, BP10-017). Impossible with a full EX area (CR 4.8.3.2, 10.4.2.2; BP10-017 ruling).
+ */
+export const putThisFromHandIntoEx: CustomCost = {
+  canPay: (g, c, self) => g.card(self)?.zone === "hand" && g.cards(c, "ex").length < g.exAreaLimit(c),
+  *pay(fx) {
+    yield* fx.putIntoEx([fx.self]);
+  },
+};
+
+/**
+ * "Bury this card" (this card on the field) as the process of an automatic ability or an option,
+ * e.g. BP10-019 "(4) {[cost04]}, bury this card: ..." (CR 10.4.7.5).
+ */
+export const buryThis: CustomCost = {
+  canPay: (g, _c, self) => g.card(self)?.zone === "field",
+  *pay(fx) {
+    yield* fx.bury([fx.self]);
+  },
+};
+
 /** "Discard this card" — a cost of an ability valid in the hand (BP08-037, 105; CR 10.3.5, 5.12). */
 export const discardThis: CustomCost = {
   canPay: (g, _c, self) => g.card(self)?.zone === "hand",

@@ -15,7 +15,7 @@ export default defineCard({
     whenCardEntersYourField(
       {
         oncePerTurn: true,
-        condition: (g, c) => g.activePlayer === c,
+        triggerIf: (g, c) => g.activePlayer === c,
         *resolve(fx) {
           yield* fx.giveLeaderDefense(fx.controller, 1);
         },

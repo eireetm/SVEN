@@ -106,7 +106,9 @@ export function collectTriggers(g: G, event: GameEvent): void {
       if (ability.kind !== "automatic" || ability.delayed) return;
       if (!(ability.validIn ?? (["field"] as readonly ZoneName[])).includes(c.subject.zone)) return;
       for (const data of matches(ability, event, c.subject, reader)) {
-        if (ability.condition && !ability.condition(reader, c.subject.controller, c.source)) continue;
+        // "During your turn, whenever ..." (triggerIf); an "if" in the effect (condition) is only
+        // checked when the ability is played (play-ability.ts, BP10-109 ruling).
+        if (ability.triggerIf && !ability.triggerIf(reader, c.subject.controller, c.source)) continue;
         if (!withinPerTurnLimit(g, ability, c.source, abilityKey(c.abilityDef, index))) continue;
         addPending(g, c.subject.controller, c.source, c.abilityDef, index, event, data);
       }
@@ -142,6 +144,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
     const controller = state.cards[card]!.controller;
     const subject: TriggerSubject = { card, controller, zone: "field", lookBack: false };
     for (const data of matches(ability, event, subject, reader)) {
+      if (ability.triggerIf && !ability.triggerIf(reader, controller, card)) continue;
       if (!withinPerTurnLimit(g, ability, card, abilityKey(`${GRANT_PREFIX}${grant}`, 0))) continue;
       addPending(g, controller, card, `${GRANT_PREFIX}${grant}`, 0, event, data);
     }
@@ -157,6 +160,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
         const ability = GRANT_ABILITIES[grant];
         if (ability.kind !== "automatic") continue;
         for (const data of matches(ability, event, subject, reader)) {
+          if (ability.triggerIf && !ability.triggerIf(reader, m.before.controller, m.newCard ?? m.card)) continue;
           addPending(g, m.before.controller, m.newCard ?? m.card, `${GRANT_PREFIX}${grant}`, 0, event, data);
         }
       }

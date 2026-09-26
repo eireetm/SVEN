@@ -12,7 +12,7 @@ export default defineCard({
     whenYouDiscard(
       {
         oncePerTurn: true,
-        condition: (g, c) => g.activePlayer === c,
+        triggerIf: (g, c) => g.activePlayer === c,
         *resolve(fx) {
           yield* fx.draw(1);
         },

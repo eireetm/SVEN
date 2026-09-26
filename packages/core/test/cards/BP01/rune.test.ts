@@ -135,11 +135,16 @@ describe("BP01 Runecraft", () => {
     expect(t.counters(SEDIMENT, "stack")).toBe(3);
   });
 
-  it("067 Runic Guardian — (1) Earth Rite +1/+2 only when payable, else (2) Magic Sediment", () => {
-    const t = d({ me: { hand: ["BP01-067"], field: [SEDIMENT], playPoints: 3 } }).play("BP01-067").none().choose("1");
+  it("067 Runic Guardian — (1) Earth Rite +1/+2 or (2) Magic Sediment; (1) without Earth Rite does nothing", () => {
+    const t = d({ me: { hand: ["BP01-067"], field: [SEDIMENT], playPoints: 3 } }).play("BP01-067").none().choose("1").yes();
     expect(t.stats("BP01-067")).toEqual([4, 6]);
-    const none = d({ me: { hand: ["BP01-067"], playPoints: 3 } }).play("BP01-067").none();
-    expect(none.field()).toEqual(["BP01-067", SEDIMENT]);
+    const sediment = d({ me: { hand: ["BP01-067"], playPoints: 3 } }).play("BP01-067").none().choose("2");
+    expect(sediment.field()).toEqual(["BP01-067", SEDIMENT]);
+    // Choosable with no Stack on the field, or with Earth Rite declined (BP10-050 ruling, CR 13.3.3.2).
+    const noStack = d({ me: { hand: ["BP01-067"], playPoints: 3 } }).play("BP01-067").none().choose("1");
+    expect([noStack.field(), noStack.stats("BP01-067")]).toEqual([["BP01-067"], [3, 4]]);
+    const declined = d({ me: { hand: ["BP01-067"], field: [SEDIMENT], playPoints: 3 } }).play("BP01-067").none().choose("1").no();
+    expect([declined.stats("BP01-067"), declined.counters(SEDIMENT, "stack")]).toEqual([[3, 4], 1]);
   });
 
   it("068 / 069 Crafty Warlock — Last Words Magic Sediment; evolved also adds 1 to a Stack", () => {

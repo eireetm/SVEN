@@ -56,12 +56,13 @@ export function validateDeck(
   const evolve = deck.evolve.map((p) => resolve(p, "evolve deck")).filter((d): d is CardDefinition => d !== null);
 
   for (const d of main) {
-    if (d.type === "leader" || d.evolved || d.token) {
+    if (d.type === "leader" || d.evolved || d.advanced || d.token) {
       problems.push(`main deck: ${d.id} ${d.name} cannot be in the main deck (6.1.1.2, 9.1.4)`);
     }
   }
+  // CR 6.1.1.3 — only evolved cards and advanced cards (9.2) go into the evolve deck.
   for (const d of evolve) {
-    if (!d.evolved || d.token) problems.push(`evolve deck: ${d.id} ${d.name} is not an evolved card (6.1.1.3)`);
+    if (!(d.evolved || d.advanced) || d.token) problems.push(`evolve deck: ${d.id} ${d.name} is not an evolved or advanced card (6.1.1.3)`);
   }
   if (!config.allowUnimplementedCards) {
     const missing = new Set(

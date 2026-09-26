@@ -34,7 +34,7 @@ function raw(printing: string): RawCardJson | null {
 }
 
 function stats(c: CardDefinition): string {
-  const kind = [c.type, c.evolved ? "evolved" : "", c.token ? "token" : ""].filter(Boolean).join(" ");
+  const kind = [c.type, c.evolved ? "evolved" : "", c.advanced ? "advanced" : "", c.token ? "token" : ""].filter(Boolean).join(" ");
   const nums = [c.cost === null ? "" : `cost ${c.cost}`, c.attack === null ? "" : `${c.attack}/${c.defense}`];
   return [kind, c.class, ...nums.filter(Boolean), `traits ${JSON.stringify(c.traits)}`].join(" | ");
 }

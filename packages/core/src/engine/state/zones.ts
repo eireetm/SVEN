@@ -69,6 +69,8 @@ const DEFAULT_FACE_UP: Readonly<Record<ZoneName, boolean>> = {
 
 /** CR 9.1.4.1 / 9.1.4.3 — zones where follower, amulet and spell tokens may exist. */
 const TOKEN_ZONES: readonly ZoneName[] = ["ex", "field", "resolution"];
+/** CR 9.2.2 — zones an advanced card can stay in; anywhere else it goes to the evolve deck faceup. */
+const ADVANCED_ZONES: readonly ZoneName[] = ["field", "ex", "resolution", "evolveDeck"];
 
 function zoneList(state: GameState, player: PlayerId, zone: ZoneName): CardId[] {
   return zone === "resolution" ? state.resolution : state.players[player].zones[zone];
@@ -161,7 +163,8 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
   if (specs.length === 0) return [];
   // Look-back information is captured before anything moves (CR 10.7.4.1).
   const olds = specs.map((s) => getCard(state, s.card));
-  const fieldTypes = olds.map((c) => (c.zone === "field" ? characteristics(g, c.id).type : null));
+  const fieldInfos = olds.map((c) => (c.zone === "field" ? characteristics(g, c.id) : null));
+  const fieldTypes = fieldInfos.map((info) => info?.type ?? null);
   const befores = olds.map((c) => {
     const onField = c.zone === "field" ? characteristics(g, c.id) : null;
     const before: NonNullable<CardMove["before"]> = {
@@ -233,7 +236,12 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
     // "This turn" counts for card conditions (turn-counts.ts).
     const why = spec.reason ?? reason;
     if (why === "discard") thisTurn(state, old.controller).discarded += 1; // CR 5.12
-    if (old.zone === "field" && spec.to === "hand") thisTurn(state, old.controller).returnedToHand += 1;
+    if (old.zone === "field" && spec.to === "hand") {
+      const counts = thisTurn(state, old.controller);
+      counts.returnedToHand += 1;
+      const info = fieldInfos[i]!;
+      counts.returnedCards.push({ names: [...info.names], type: info.type, traits: [...info.traits] }); // BP10-009
+    }
     if (why === "destroy" && old.zone === "field" && g.db.get(befores[i]!.abilityDef).type === "follower") {
       thisTurn(state, old.controller).followersDestroyed += 1; // CR 5.6
     }
@@ -245,6 +253,13 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
 
   g.emit({ type: "cardsMoved", moves });
   if (eliminated.length > 0) eliminateTokens(g, eliminated);
+  // CR 9.2.2 — an advanced card moved anywhere else (a cemetery, hand, deck, banished) is put
+  // into its owner's evolve deck faceup right after the move, before the rest of the process.
+  const strays = newIds.filter((id) => {
+    const c = state.cards[id];
+    return c !== undefined && g.db.get(c.def).advanced === true && !ADVANCED_ZONES.includes(c.zone);
+  });
+  if (strays.length > 0) moveCards(g, strays.map((card) => ({ card, to: "evolveDeck", faceUp: true })), "rules");
   return newIds;
 }
 

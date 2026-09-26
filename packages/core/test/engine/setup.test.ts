@@ -132,7 +132,7 @@ describe("CR 6.1 deck construction", () => {
     const off = { deckRestrictions: false };
     expect(engine.validateDeck({ main: ["EVOLVER-E"], evolve: [] }, off).join()).toMatch(/cannot be in the main deck/);
     expect(engine.validateDeck({ main: ["TOKEN"], evolve: [] }, off).join()).toMatch(/cannot be in the main deck/);
-    expect(engine.validateDeck({ main: [], evolve: ["V1"] }, off).join()).toMatch(/not an evolved card/);
+    expect(engine.validateDeck({ main: [], evolve: ["V1"] }, off).join()).toMatch(/not an evolved or advanced card/);
     expect(engine.validateDeck({ leader: "V1", main: [], evolve: [] }, off).join()).toMatch(/not a leader card/);
     expect(engine.validateDeck({ main: ["NOPE"], evolve: [] }, off).join()).toMatch(/unknown card number NOPE/);
   });

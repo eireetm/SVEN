@@ -35,8 +35,11 @@ function raw(over: Partial<RawCardJson>): RawCardJson {
 
 describe("normalizePrinting", () => {
   it("CR 2.3 — parses primary and special card types", () => {
-    expect(parseCardType("x", ["Follower", "Evolved"])).toEqual({ type: "follower", evolved: true, token: false });
-    expect(parseCardType("x", ["Spell", "Token"])).toEqual({ type: "spell", evolved: false, token: true });
+    expect(parseCardType("x", ["Follower", "Evolved"])).toEqual({ type: "follower", evolved: true, token: false, advanced: false });
+    expect(parseCardType("x", ["Spell", "Token"])).toEqual({ type: "spell", evolved: false, token: true, advanced: false });
+    // CR 9.2 — advanced followers (BP10); advanced spells (BP13) are not supported yet.
+    expect(parseCardType("x", ["Follower", "Advanced"])).toEqual({ type: "follower", evolved: false, token: false, advanced: true });
+    expect(() => parseCardType("x", ["Spell", "Advanced"])).toThrow(CardDataError);
     expect(() => parseCardType("x", ["Follower", "Advance"])).toThrow(CardDataError);
     expect(() => parseCardType("x", ["Follower", "Spell"])).toThrow(CardDataError);
     expect(() => parseCardType("x", ["Token"])).toThrow(CardDataError);

@@ -5,10 +5,10 @@
 // 12.7.1).
 import type { EffectContext } from "../../engine/effects/context";
 import { defineCard, strike } from "../helpers";
-import { isFollower } from "../targets";
+import { isEvolvedFollower } from "../targets";
 
 const faceupEvolvedFollowers = (fx: EffectContext) =>
-  fx.game.faceUpEvolveDeck(fx.controller).filter((id) => isFollower(fx.game, id)).length;
+  fx.game.faceUpEvolveDeck(fx.controller).filter((id) => isEvolvedFollower(fx.game, id)).length;
 
 export default defineCard({
   keywords: ["storm"],

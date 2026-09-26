@@ -1,7 +1,8 @@
 // BP01-067 Runic Guardian — Runecraft follower, 3, 3/4.
 // Ward. // {[fanfare]} Choose one of the following effects. (1) Earth Rite: Give this follower
 // +1/+2. (2) Summon a Magic Sediment token.
-// Option (1) can only be chosen when Earth Rite can be paid (CR 5.18.3.1.2, 13.3.3.2).
+// Option (1) can be chosen without paying Earth Rite, even with no Stack on the field; it then does
+// nothing (CR 13.3.3.2 "you may"; BP10-050 ruling on the same wording).
 import { defineCard, fanfare } from "../helpers";
 
 export default defineCard({

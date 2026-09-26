@@ -19,7 +19,8 @@ describe("BP09 Neutral", () => {
     const both = d({ me: { field: ["BP09-103"], evolveDeck: ["BP09-104"], cemetery: [...FIVE_SPELLS, ...FIVE_AMULETS], deck: ["V1", "V3"] }, opp: { field: ["V5"] } });
     both.evolve("BP09-103").flush();
     expect([both.leader(), both.field("opp"), both.hand()]).toEqual([25, [], ["V1", "V3"]]);
-    const spells = d({ me: { field: ["BP09-103"], evolveDeck: ["BP09-104"], cemetery: FIVE_SPELLS, deck: ["V1", "V3"] }, opp: { field: ["V5"] } }).evolve("BP09-103");
+    // Both On Evolve abilities trigger; the one whose condition doesn't hold does nothing when it resolves.
+    const spells = d({ me: { field: ["BP09-103"], evolveDeck: ["BP09-104"], cemetery: FIVE_SPELLS, deck: ["V1", "V3"] }, opp: { field: ["V5"] } }).evolve("BP09-103").flush();
     expect([spells.leader(), spells.field("opp"), spells.hand()]).toEqual([25, ["V5"], ["V1"]]);
   });
 

@@ -40,10 +40,11 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
   const engine = poolEngine();
   const extras = opts.extras ?? {};
   const defs = SETS[set].cards;
-  const playable = defs.filter((c) => !c.token && !c.evolved && c.type !== "leader");
+  const playable = defs.filter((c) => !c.token && !c.evolved && !c.advanced && c.type !== "leader");
   const spells = playable.filter((c) => c.type === "spell");
-  // Back faces of double-faced cards (CR 2.14) are not cards by themselves.
-  const evolvedCards = defs.filter((c) => c.evolved && c.frontFace === undefined);
+  // Evolve deck cards (CR 6.1.1.3): evolved and advanced cards. Back faces of double-faced cards
+  // (CR 2.14) are not cards by themselves.
+  const evolvedCards = defs.filter((c) => (c.evolved || c.advanced) && c.frontFace === undefined);
 
   const assertOk = (g: GameSession) => {
     const errors = checkInvariants(g.state as never, engine.db, g.decision);
@@ -94,8 +95,9 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
         ...(inOpponentsTurn ? { turn: 6 } : {}),
         players: [
           {
-            // Tokens cannot exist in a hand (CR 9.1.4.1 / 9.1.4.3), so they are played from the EX area.
-            hand: [...(card.evolved || card.token ? ["BP01-042"] : [card.id]), ...(extras.hand ?? [])],
+            // Tokens cannot exist in a hand (CR 9.1.4.1 / 9.1.4.3), nor can advanced cards (9.2.2), so
+            // they are played from the EX area.
+            hand: [...(card.evolved || card.token || card.advanced ? ["BP01-042"] : [card.id]), ...(extras.hand ?? [])],
             field: [
               ...(card.evolved ? [base.id] : []),
               "BP01-T10", // a Stack amulet for Earth Rite
@@ -104,7 +106,7 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
               ...(extras.field ?? []),
             ],
             evolveDeck: card.evolved ? [physical] : [],
-            ex: ["BP01-T03", "BP01-T11", ...(card.token ? [card.id] : [])],
+            ex: ["BP01-T03", "BP01-T11", ...(card.token || card.advanced ? [card.id] : [])],
             // 10 spells for Spellchain, plus a few other cards for Necrocharge.
             cemetery: [...pick(`${card.id}:spells`, spells, 10), ...pick(`${card.id}:cem`, playable, 6), ...(extras.cemetery ?? [])],
             deck: pick(`${card.id}:deck`, playable, 12),

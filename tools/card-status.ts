@@ -41,7 +41,7 @@ for (const set of SUPPORTED_SETS) {
   const tested = testedCards(set);
   const rows = cards.map((c) => {
     const status = engine.implementationStatus(c.id);
-    const kind = [c.type, c.evolved ? "evolved" : "", c.token ? "token" : "", c.frontFace ? "(back face)" : ""].filter(Boolean).join(" ");
+    const kind = [c.type, c.evolved ? "evolved" : "", c.advanced ? "advanced" : "", c.token ? "token" : "", c.frontFace ? "(back face)" : ""].filter(Boolean).join(" ");
     return { c, status, tested: tested.has(c.id), kind };
   });
   const count = (s: string) => rows.filter((r) => r.status === s).length;

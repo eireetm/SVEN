@@ -92,10 +92,13 @@ describe("BP07 Runecraft", () => {
   });
 
   it("048 / 049 Magiblade Witch — evolved: a Magic Sediment, or Earth Rite: 4 damage divided between up to 2", () => {
-    const sediment = d({ me: { field: ["BP07-048"], evolveDeck: ["BP07-049"], playPoints: 1 }, opp: { field: ["V5"] } }).evolve("BP07-048");
-    expect(sediment.field()).toEqual(["BP07-048", SEDIMENT]); // only (1) without Earth Rite
+    const sediment = d({ me: { field: ["BP07-048"], evolveDeck: ["BP07-049"], playPoints: 1 }, opp: { field: ["V5"] } }).evolve("BP07-048").choose("sediment");
+    expect(sediment.field()).toEqual(["BP07-048", SEDIMENT]);
+    // (2) can be chosen without a Stack on the field and does nothing (BP10-050 ruling, CR 13.3.3.2).
+    const noStack = d({ me: { field: ["BP07-048"], evolveDeck: ["BP07-049"], playPoints: 1 }, opp: { field: ["V5"] } }).evolve("BP07-048").choose("damage").pick("opp:V5");
+    expect(noStack.stats("opp:V5")).toEqual([5, 5]);
     const rite = d({ me: { field: ["BP07-048", SEDIMENT], evolveDeck: ["BP07-049"], playPoints: 1 }, opp: { field: ["V5", "V1"] } });
-    rite.evolve("BP07-048").choose("damage").pick("opp:V5", "opp:V1").choose("2");
+    rite.evolve("BP07-048").choose("damage").yes().pick("opp:V5", "opp:V1").choose("2");
     expect([rite.field("opp"), rite.stats("opp:V5"), rite.field()]).toEqual([["V5"], [5, 3], ["BP07-048"]]);
   });
 

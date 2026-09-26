@@ -10,6 +10,7 @@ export function emptyTurnCounts(turn: number): TurnCounts {
     followersToCemetery: 0,
     followerAttacks: 0,
     returnedToHand: 0,
+    returnedCards: [],
     played: [],
     leaderDefenseLost: 0,
   };

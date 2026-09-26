@@ -3,7 +3,7 @@ import type { CardType, DefId } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import { opponentOf } from "../model/ids";
 import type { Keyword } from "../model/keyword";
-import type { CardInstance, GameState, PlayerZone, ZoneName } from "../model/state";
+import type { CardInstance, GameState, PlayerZone, ReturnedCard, ZoneName } from "../model/state";
 import type { Env } from "./state/access";
 import { leaderOf } from "./state/access";
 import { activeScript, characteristics, currentStats, isFollowerOnField, namesOf, typeAndTraits, type Characteristics } from "./state/characteristics";
@@ -93,6 +93,8 @@ export interface GameReader {
   enteredFrom(id: CardId): ZoneName | null;
   /** Cards returned from this player's field to a hand this turn (BP03-005). */
   returnedToHandThisTurn(player: PlayerId): number;
+  /** The cards returned from this player's field to a hand this turn, as they were on the field (BP10-009). */
+  cardsReturnedToHandThisTurn(player: PlayerId): readonly ReturnedCard[];
   /** Definitions of the cards this player played this turn, in order (BP04-022). */
   cardsPlayedThisTurn(player: PlayerId): readonly DefId[];
   /** Times this player's leader lost defense this turn (BP05-069/081; each damage and "-X defense"). */
@@ -166,6 +168,7 @@ export function makeReader(env: Env): GameReader {
     faceDownEvolveDeck: (p) => ps(p).zones.evolveDeck.filter((id) => !state().cards[id]!.faceUp),
     enteredFrom: (id) => state().cards[id]?.enteredFrom ?? null,
     returnedToHandThisTurn: (p) => countsThisTurn(state(), p).returnedToHand,
+    cardsReturnedToHandThisTurn: (p) => countsThisTurn(state(), p).returnedCards,
     cardsPlayedThisTurn: (p) => countsThisTurn(state(), p).played,
     leaderDefenseLostThisTurn: (p) => countsThisTurn(state(), p).leaderDefenseLost,
     playZone: (id) => {

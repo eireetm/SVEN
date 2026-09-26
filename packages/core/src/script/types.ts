@@ -154,6 +154,12 @@ export interface FieldPassives {
    */
   preventsAttack?(game: GameReader, self: CardId, follower: CardId): boolean;
   /**
+   * CR 1.3.3 — forbids `player` to draw now (BP10-076 "Opponents can't draw cards outside of
+   * their start phase"; `startPhase`: it is that player's start phase). The draw doesn't happen.
+   * Asked of the cards on both fields.
+   */
+  forbidsDraw?(game: GameReader, self: CardId, player: PlayerId, startPhase: boolean): boolean;
+  /**
    * BP02-035/036 "include both spells and Runecraft followers when counting your Spellchain"
    * (CR 13.3.1.1 counts spells in the cemetery).
    */
@@ -229,7 +235,11 @@ export interface Mode {
   id: string;
   label: string;
   targets?: readonly TargetSpec[];
-  /** Choosing this option pays Earth Rite (the option cannot be performed without it). */
+  /**
+   * "(N) Earth Rite: [effect]" (CR 13.3.3.2): the option can be chosen without Earth Rite, even with
+   * no Stack on the field; its controller may pay Earth Rite while playing, and the option does
+   * nothing if it wasn't paid (BP10-050 ruling).
+   */
   earthRite?: boolean;
   /**
    * "(1) [process]: [effect]" — the option's effect is applied only if its controller executes
@@ -324,8 +334,17 @@ export interface AutomaticAbility {
    * element, each pending instance getting that data (CR 10.7.2.1).
    */
   trigger(event: GameEvent, me: TriggerSubject, game: GameReader): boolean | readonly TriggerData[];
-  /** "if ..." condition checked when it triggers and again when it is played. */
+  /**
+   * "If ..." in its effect: checked when it is played, not when it triggers — the ability becomes
+   * pending anyway and does nothing if the condition doesn't hold then (CR 10.7.3.2). The player
+   * may resolve other pending abilities first to meet it (BP08-071, BP10-109 rulings).
+   */
   condition?(game: GameReader, controller: PlayerId, self: CardId): boolean;
+  /**
+   * A restriction that is part of the trigger condition (CR 10.1.1.2.1.1), e.g. "During your turn,
+   * whenever ...": checked when the event happens; the ability doesn't become pending otherwise.
+   */
+  triggerIf?(game: GameReader, controller: PlayerId, self: CardId): boolean;
   /** CR 10.7.2.2 — becomes pending at most once per turn. */
   oncePerTurn?: boolean;
   /** CR 10.7.2.2 "[N] times per turn" — becomes pending at most N times per turn (BP07-036). */

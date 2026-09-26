@@ -8,7 +8,7 @@ import { defineCard, whenOpponentDiscards } from "../helpers";
 
 const fromCemetery = {
   ...whenOpponentDiscards({
-    condition: (g, c) => g.activePlayer === c,
+    triggerIf: (g, c) => g.activePlayer === c,
     cost: playPointsCost(1),
     *resolve(fx) {
       if (fx.game.card(fx.self)?.zone === "cemetery") yield* fx.putOntoField([fx.self]);

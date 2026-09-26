@@ -71,12 +71,14 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
     modes = chosen;
   }
   if (modes.length === 0 && !targetsAvailable(g, ability.targets, ctrl, self)) return; // 10.6.2.3.3 -> 10.7.3.2
-  let earthRite = modes.some((m) => m.earthRite);
   // Earth Rite of the whole ability, also one with options (BP07-038 "{[fanfare]}, Earth Rite:
   // Choose ..."): without it nothing would happen (13.3.3.2 "If you paid this additional cost").
-  if (ability.earthRite) {
-    if (earthRitePayable(g, ctrl, ability.earthRite)) earthRite = yield* confirm(g, ctrl, "earthRite", self);
-    if (!earthRite && ability.earthRite.mode === "required") return; // nothing would happen
+  // An option's Earth Rite may be paid or not (BP10-050 ruling); unpaid, the option does nothing.
+  let earthRite = false;
+  const riteSpec: EarthRiteSpec | undefined = ability.earthRite ?? (modes.some((m) => m.earthRite) ? { mode: "optional" } : undefined);
+  if (riteSpec) {
+    if (earthRitePayable(g, ctrl, riteSpec)) earthRite = yield* confirm(g, ctrl, "earthRite", self);
+    if (!earthRite && ability.earthRite?.mode === "required") return; // nothing would happen
   }
   if (ability.cost) {
     if (!ability.cost.canPay(reader, ctrl, self)) return;
@@ -178,6 +180,10 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
   // 10.6.2.2 options (5.18)
   const modes = ability.modes ? yield* chooseModes(g, player, ability, card) : [];
   if (modes === null) throw new EngineError("activated ability played without a performable option");
+  // An option's Earth Rite may be paid or not (BP10-050 ruling, 13.3.3.2).
+  if (!earthRite && modes.some((m) => m.earthRite) && earthRitePayable(g, player, { mode: "optional" })) {
+    earthRite = yield* confirm(g, player, "earthRite", card);
+  }
   // 10.6.2.3 targets (of each chosen option, 5.18.4)
   const targets = modes.length === 0 ? yield* chooseTargets(g, ability.targets, player, card) : [];
   const modeTargets = yield* chooseModeTargets(g, player, modes, card);

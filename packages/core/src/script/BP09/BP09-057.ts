@@ -14,7 +14,7 @@ export default defineCard({
     }),
     whenYouPlay(
       {
-        condition: (g, c) => g.activePlayer === c,
+        triggerIf: (g, c) => g.activePlayer === c,
         *resolve(fx) {
           yield* fx.dealDamageEach(fx.game.followers(fx.game.opponent(fx.controller)), 2);
         },
