@@ -158,6 +158,19 @@ export interface TurnCounts {
    * defense this turn" (ruling: also after it took damage).
    */
   statsGained: CardId[];
+  /**
+   * Evolutions of followers on this player's field this turn (CR 5.16; super-evolving is evolving,
+   * 12.2.4; by an effect too), e.g. BP16-018 "If a follower on your field evolved this turn" (it
+   * counts after the follower has left the field).
+   */
+  evolved: number;
+  /**
+   * Cards that left this player's field this turn, as they were there (look-back, CR 10.7.4.1),
+   * e.g. BP16-011 "unless a follower you control has left the field this turn", BP17-061 "the number
+   * of cards named Naterran Great Tree that left your field this turn". A change of control is not
+   * leaving the field.
+   */
+  leftField: ReturnedCard[];
 }
 
 /** A persistent effect (CR 10.2.1.2) applied to one card object. */
@@ -247,6 +260,11 @@ export type EffectChange =
    */
   | { kind: "damageReduction"; amount: number }
   /**
+   * "If this would deal damage, it deals that much plus N instead" (BP17-T06; two of them are +2 —
+   * ruling). A replacement effect on the damage this card deals (CR 5.14.2).
+   */
+  | { kind: "damageDealtPlus"; amount: number }
+  /**
    * "It doesn't refresh during its controller's next start phase" (BP06-056): skipped in the
    * next start phase of its controller after this turn (CR 7.2.3), then the effect ends. It
    * applies even if the card is already engaged (ruling).
@@ -294,7 +312,8 @@ export type GrantedAbilityId =
   | "activateEngageDamage3"
   | "lastWordsLeaderDraw"
   | "strikeDamageLeaders2"
-  | "strikeLeaderLossDamage";
+  | "strikeLeaderLossDamage"
+  | "machinaPlayPing";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {
@@ -339,6 +358,11 @@ export interface DelayedTrigger {
    * put from the field into the cemetery this turn" (the selected follower).
    */
   data?: TriggerData;
+  /**
+   * CR 10.7.5.1 "unless a time frame is specified": "For the rest of this turn, whenever ..."
+   * (BP17-T07) triggers every time until it ends, instead of once.
+   */
+  repeat?: true;
 }
 
 /**

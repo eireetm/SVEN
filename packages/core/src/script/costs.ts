@@ -117,6 +117,20 @@ export function discardA(filter: Filter): CustomCost {
 }
 
 /**
+ * "Discard N [matching] cards" from your hand, together (CR 5.12), e.g. BP16-037 "Discard 2 Academic cards" —
+ * other cards than this one, as for `discardA`.
+ */
+export function discardMatching(filter: Filter, n: number): CustomCost {
+  const cards = (g: GameReader, c: PlayerId, self: CardId) => g.cards(c, "hand").filter((id) => id !== self && filter(g, id));
+  return {
+    canPay: (g, c, self) => cards(g, c, self).length >= n,
+    *pay(fx) {
+      yield* fx.discardCards(yield* fx.chooseCards(cards(fx.game, fx.controller, fx.self), n, n));
+    },
+  };
+}
+
+/**
  * "Put N [matching] cards from your field into their owner's cemetery" (may include this card
  * itself, e.g. BP07-T01), all at once.
  */

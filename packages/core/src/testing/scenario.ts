@@ -52,6 +52,8 @@ export interface ScenarioSide {
   playedThisTurn?: number;
   /** Stack counters this player removed by Earth Rite this turn (CR 13.3.3.2, e.g. BP14-037). */
   stackRemovedByEarthRite?: number;
+  /** Cards that already left this player's field this turn (BP16-011 "unless a follower you control has left the field"). */
+  leftFieldThisTurn?: PrintingId[];
 }
 
 export interface ScenarioSpec {
@@ -130,6 +132,13 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
     if (side.returnedToHand) ps.thisTurn = { ...ps.thisTurn, turn, returnedToHand: side.returnedToHand };
     if (side.playedThisTurn) ps.cardsPlayed = { turn, count: side.playedThisTurn };
     if (side.stackRemovedByEarthRite) ps.thisTurn = { ...ps.thisTurn, turn, stackRemovedByEarthRite: side.stackRemovedByEarthRite };
+    if (side.leftFieldThisTurn) {
+      const left = side.leftFieldThisTurn.map((printing) => {
+        const def = engine.db.has(printing) ? engine.db.get(printing) : engine.db.ofPrinting(printing);
+        return { names: [def.name], type: def.type, traits: [...def.traits] };
+      });
+      ps.thisTurn = { ...ps.thisTurn, turn, leftField: left };
+    }
   });
 
   return engine.restore({ format: 1, checkpoint: state, inputs: [] }, options);

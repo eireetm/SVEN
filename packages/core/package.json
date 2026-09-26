@@ -22,6 +22,8 @@
     "./sets/bp13": "./src/sets/bp13.ts",
     "./sets/bp14": "./src/sets/bp14.ts",
     "./sets/bp15": "./src/sets/bp15.ts",
+    "./sets/bp16": "./src/sets/bp16.ts",
+    "./sets/bp17": "./src/sets/bp17.ts",
     "./testing": "./src/testing/index.ts"
   }
 }

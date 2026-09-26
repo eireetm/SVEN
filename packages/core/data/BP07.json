@@ -3432,8 +3432,8 @@
    "printings": [
     "BP07-T01",
     "BP12-T10",
-    "PR-193",
-    "BP17-T17"
+    "BP17-T17",
+    "PR-193"
    ],
    "name": "Assembly Droid",
    "names": {
@@ -3462,8 +3462,8 @@
    "printings": [
     "BP07-T02",
     "BP12-T11",
-    "PR-194",
-    "BP17-T18"
+    "BP17-T18",
+    "PR-194"
    ],
    "name": "Repair Mode",
    "names": {
@@ -3492,8 +3492,8 @@
    "printings": [
     "BP07-T03",
     "BP12-T12",
-    "PR-195",
     "BP17-T19",
+    "PR-195",
     "SP01-T03"
    ],
    "name": "Naterran Great Tree",

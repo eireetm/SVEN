@@ -251,6 +251,11 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
       const info = fieldInfos[i]!;
       counts.returnedCards.push({ names: [...info.names], type: info.type, traits: [...info.traits] }); // BP10-009
     }
+    // Left the field (not a change of control): BP16-011, BP17-061.
+    if (old.zone === "field" && spec.to !== "field") {
+      const info = fieldInfos[i]!;
+      thisTurn(state, old.controller).leftField.push({ names: [...info.names], type: info.type, traits: [...info.traits] });
+    }
     if (why === "destroy" && old.zone === "field" && g.db.get(befores[i]!.abilityDef).type === "follower") {
       thisTurn(state, old.controller).followersDestroyed += 1; // CR 5.6
     }

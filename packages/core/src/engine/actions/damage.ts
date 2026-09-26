@@ -114,6 +114,12 @@ export function* dealDamage(g: G, instances: readonly DamageInstance[]): Proc<Da
     if (d.sourceDealsNoDamage) replacements.push({ apply: () => 0 });
     if (src && d.source !== null) {
       if (state.effects.some((e) => e.target === d.source && e.change.kind === "cannotDealDamage")) replacements.push({ apply: () => 0 });
+      // "If this would deal damage, it deals that much plus N instead" (BP17-T06), each one separately.
+      for (const e of state.effects) {
+        if (e.target !== d.source || e.change.kind !== "damageDealtPlus" || !effectInForce(state, e)) continue;
+        const plus = e.change.amount;
+        replacements.push({ apply: (a) => a + plus });
+      }
       const own = src.zone === "field" ? activeScript(g, d.source)?.field?.damageDealt : undefined;
       if (own) passive((a) => own(reader, d.source!, info(a)));
     }

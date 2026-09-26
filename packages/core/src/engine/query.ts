@@ -107,6 +107,13 @@ export interface GameReader {
   /** Stack counters the player removed by Earth Rite this turn (CR 13.3.3.2; BP14-037). */
   stackRemovedByEarthRiteThisTurn(player: PlayerId): number;
   /**
+   * Did a follower on this player's field evolve this turn (CR 5.16; super-evolving too, 12.2.4)?
+   * E.g. BP16-018 "If a follower on your field evolved this turn" (super-evolution counts — ruling).
+   */
+  followerEvolvedThisTurn(player: PlayerId): boolean;
+  /** Cards that left this player's field this turn, as they were there (BP16-011, BP17-061). */
+  cardsLeftFieldThisTurn(player: PlayerId): readonly ReturnedCard[];
+  /**
    * The zone a card is being played from: its zone, or the zone it was played from once it is in
    * the resolution zone (CR 5.5.3), e.g. for "costs 3 less to play from the EX area" (BP05-106),
    * which applies while the cost is determined (CR 10.6.2.5).
@@ -195,6 +202,8 @@ export function makeReader(env: Env): GameReader {
     cardsPlayedThisTurn: (p) => countsThisTurn(state(), p).played,
     leaderDefenseLostThisTurn: (p) => countsThisTurn(state(), p).leaderDefenseLost,
     stackRemovedByEarthRiteThisTurn: (p) => countsThisTurn(state(), p).stackRemovedByEarthRite,
+    followerEvolvedThisTurn: (p) => countsThisTurn(state(), p).evolved > 0,
+    cardsLeftFieldThisTurn: (p) => countsThisTurn(state(), p).leftField,
     playZone: (id) => {
       const c = state().cards[id];
       if (!c) return null;

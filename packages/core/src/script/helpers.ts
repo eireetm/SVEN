@@ -226,6 +226,24 @@ export const whenThisTakesDamage = (spec: TimingSpec, opts: { onlyYourTurn?: boo
   );
 
 /**
+ * "[During your turn,] whenever this deals damage to an enemy leader" (BP16-082): attack damage or
+ * ability damage it deals; 0 or less is no damage, so an attack with 0 attack doesn't trigger it
+ * (ruling, CR 1.3.2.2).
+ */
+export const whenThisDealsDamageToEnemyLeader = (spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}) =>
+  automatic(
+    "other",
+    (e, me, game) =>
+      !me.lookBack &&
+      e.type === "damageDealt" &&
+      e.source === me.card &&
+      e.amount > 0 &&
+      e.target === game.leader(game.opponent(me.controller)) &&
+      (!opts.onlyYourTurn || game.activePlayer === me.controller),
+    spec,
+  );
+
+/**
  * "Whenever you draw a card [outside of your start phase]" — once per card drawn (BP05-094
  * ruling). Adding a card to the hand otherwise is not drawing (its ruling). Data: the card.
  */

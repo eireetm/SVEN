@@ -4,6 +4,7 @@ import type { CostSpec } from "../../script/types";
 import { canPayLeaderDefense, changeLeaderDefense } from "../actions/leader";
 import { payPlayPoints, spendPoints } from "../actions/points";
 import { EngineError } from "../errors";
+import { thisTurn } from "../state/turn-counts";
 import { recordStatsGained } from "../actions/stats";
 import type { G } from "../runtime/context";
 import type { Proc } from "../runtime/proc";
@@ -222,6 +223,7 @@ export function evolveCard(g: G, fieldCard: CardId, evolveDeckCard: CardId, supe
     });
     c.superEvolved = true;
   }
+  thisTurn(g.state, c.controller).evolved += 1; // BP16-018 "if a follower on your field evolved this turn"
   g.emit({ type: "evolved", card: fieldCard, evolveCard: linked, superEvolved: superEvolve });
   if (superEvolve) recordStatsGained(g, fieldCard, 1, 1); // 12.2.4.1 (BP11-114 ruling: it gains attack and defense)
   return linked;

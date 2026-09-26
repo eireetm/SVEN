@@ -1,6 +1,6 @@
 import type { GrantedAbilityId } from "../../model/state";
 import type { AbilityDef } from "../../script/types";
-import { enemyFollower } from "../../script/targets";
+import { enemyFollower, hasTrait } from "../../script/targets";
 
 /**
  * Abilities an effect can give a card (`EffectChange` kind "grantedAbility"). They are not
@@ -125,6 +125,17 @@ export const GRANT_ABILITIES: Record<GrantedAbilityId, AbilityDef> = {
     *resolve(fx) {
       const x = fx.game.leaderDefenseLostThisTurn(fx.controller);
       yield* fx.dealDamageEach(fx.game.followers(fx.game.opponent(fx.controller)), x);
+    },
+  },
+  // BP17-042 Tetra, Serene Sapphire (Evolved), for the rest of the turn: "Whenever you play a Machina
+  // card, deal 1 damage to each enemy leader and enemy follower on the field."
+  machinaPlayPing: {
+    kind: "automatic",
+    timing: "other",
+    trigger: (e, me, game) => !me.lookBack && e.type === "cardPlayed" && e.player === me.controller && hasTrait("機械")(game, e.card),
+    *resolve(fx) {
+      const opp = fx.game.opponent(fx.controller);
+      yield* fx.dealDamageEach([fx.game.leader(opp), ...fx.game.followers(opp)], 1);
     },
   },
   // BP13-119 (for the rest of the turn): "{[lastwords]} Give your leader {[defense]}+2. Draw a

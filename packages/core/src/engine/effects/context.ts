@@ -136,6 +136,11 @@ export interface EffectContext {
        * cards whose name differs from those already found.
        */
       distinctNames?: boolean;
+      /**
+       * "up to N ... that cost a total of X or less" (BP16-096, BP17-021; 元のコスト): found one at a
+       * time, each time only among cards that still fit the total.
+       */
+      totalCostAtMost?: number;
     },
   ): Proc<CardId[]>;
   /**
@@ -200,6 +205,11 @@ export interface EffectContext {
    */
   reduceDamage(target: CardId, amount: number, until: Until): Proc<void>;
   /**
+   * "If this would deal damage, it deals that much plus N instead" (BP17-T06 "for the rest of this
+   * turn"): a replacement effect on the damage the card deals (CR 5.14.2); two of them give +2 (ruling).
+   */
+  dealsMoreDamage(card: CardId, amount: number, until?: Until): Proc<void>;
+  /**
    * "It doesn't take (combat / ability) damage" (CR 5.14.2 replacement, 5.14.3.2). The target
    * may be a leader card (BP04-103).
    */
@@ -254,9 +264,11 @@ export interface EffectContext {
   /**
    * CR 10.7.5 register a delayed trigger: ability `index` of this ability's definition. `data` is
    * what it watches, given to its trigger as `me.delayedData` (BP15-001 "When it's put from the
-   * field into the cemetery this turn").
+   * field into the cemetery this turn"). `repeat` (with "endOfTurn"): "For the rest of this turn,
+   * whenever ..." triggers every time until the turn ends (CR 10.7.5.1 "unless a time frame is
+   * specified", BP17-T07).
    */
-  delay(index: number, until?: "endOfTurn", data?: TriggerData): Proc<void>;
+  delay(index: number, until?: "endOfTurn", data?: TriggerData, opts?: { repeat?: boolean }): Proc<void>;
   /**
    * A slot a cost's `pay` can fill for the effect that follows it. Shared by the pay and the
    * resolve of one ability. Not stored in GameState — a replay re-runs the ability.
@@ -480,11 +492,15 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       // only a number of cards is specified (5.8.1.1).
       const min = opts.required ? max : 0;
       let chosen: CardId[];
-      if (opts.distinctNames) {
+      if (opts.distinctNames || opts.totalCostAtMost !== undefined) {
         chosen = [];
         const name = (id: CardId) => characteristics(g, id).name;
+        const cost = (id: CardId) => characteristics(g, id).cost ?? 0;
         for (let i = 0; i < max; i++) {
-          const left = matching.filter((id) => !chosen.some((c) => name(c) === name(id)));
+          const budget = (opts.totalCostAtMost ?? Infinity) - chosen.reduce((sum, c) => sum + cost(c), 0);
+          const left = matching.filter(
+            (id) => !chosen.includes(id) && (!opts.distinctNames || !chosen.some((c) => name(c) === name(id))) && cost(id) <= budget,
+          );
           const one = Math.min(1, left.length);
           const [card] = yield* selectCards(g, player, "search", left, i < min ? one : 0, one, selfIfPresent(), deck);
           if (card === undefined) break;
@@ -605,6 +621,9 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *reduceDamage(target, amount, until) {
       addEffect(target, until, { kind: "damageReduction", amount });
     },
+    *dealsMoreDamage(card, amount, until = null) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "damageDealtPlus", amount });
+    },
     *preventDamage(target, damage, until) {
       addEffect(target, until, { kind: "preventDamage", damage });
     },
@@ -695,7 +714,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *playCard(card, opts = {}) {
       yield* playCard(g, ctrl, card, { setCost: opts.cost, byEffect: true });
     },
-    *delay(index, until, data) {
+    *delay(index, until, data, opts = {}) {
       const seq = nextSeq(g.state);
       g.state.delayed.push({
         id: `d${seq}`,
@@ -707,6 +726,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
         createdTurn: g.state.turn,
         until: until ?? null,
         ...(data ? { data } : {}),
+        ...(opts.repeat && until === "endOfTurn" ? { repeat: true as const } : {}),
       });
     },
     memory,

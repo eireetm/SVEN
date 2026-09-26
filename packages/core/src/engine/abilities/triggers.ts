@@ -190,6 +190,11 @@ export function collectTriggers(g: G, event: GameEvent): void {
     if (d.data) subject.delayedData = d.data; // what it watches (BP15-001)
     const hits = matches(ability, event, subject, reader);
     if (hits.length === 0) continue;
+    if (d.repeat) {
+      // "For the rest of this turn, whenever ..." — a time frame is specified (CR 10.7.5.1).
+      for (const hit of hits) addPending(g, d.controller, d.source ?? "", d.sourceDef, d.ability, event, hit);
+      continue;
+    }
     state.delayed = state.delayed.filter((x) => x.id !== d.id); // CR 10.7.5.1
     addPending(g, d.controller, d.source ?? "", d.sourceDef, d.ability, event, hits[0]!);
   }

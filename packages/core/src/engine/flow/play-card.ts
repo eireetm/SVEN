@@ -1,5 +1,5 @@
 import type { CardId, PlayerId } from "../../model/ids";
-import type { Mode, PlayOption, SpellAbility } from "../../script/types";
+import type { Mode, PlayOption, SpellAbility, TargetSpec } from "../../script/types";
 import { putOntoField } from "../actions/cards";
 import { canPayPlayPoints, payPlayPoints } from "../actions/points";
 import { chooseTargets, targetsAvailable } from "../abilities/targets";
@@ -38,6 +38,16 @@ function spellAbilityOf(g: Env, card: CardId): SpellAbility | undefined {
 export function performableModes(g: Env, modes: readonly Mode[], player: PlayerId, self: CardId): Mode[] {
   const reader = makeReader(g);
   return modes.filter((m) => (m.available?.(reader, player, self) ?? true) && targetsAvailable(g, m.targets, player, self));
+}
+
+/**
+ * The spell's target selections as the chosen play option allows them (`PlayOption.targetFilter`,
+ * BP17-030: the cost depends on the selected target, CR 10.6.2.3 before 10.6.2.5).
+ */
+function targetsFor(spell: SpellAbility, option: PlayOption | null): readonly TargetSpec[] | undefined {
+  const filter = option?.targetFilter;
+  if (!filter || !spell.targets) return spell.targets;
+  return spell.targets.map((t) => ({ ...t, candidates: (game, c, self) => t.candidates(game, c, self).filter((id) => filter(game, id)) }));
 }
 
 /** Can the spell's text be performed at all (targets, required Earth Rite, modes)? */
@@ -80,6 +90,10 @@ export function playVariants(
   const options: (PlayOption | null)[] = [...(script?.playOptionsRequired ? [] : [null]), ...(script?.playOptions ?? [])];
   return options.filter((o) => {
     if (o && !o.canPay(reader, player, card)) return false;
+    if (o?.targetFilter && ch.type === "spell") {
+      const spell = spellAbilityOf(g, card);
+      if (spell && !targetsAvailable(g, targetsFor(spell, o), player, card)) return false;
+    }
     if (!canPayPlayPoints(g, player, playCost(g, card, player, o, opts.setCost))) return false;
     if (ch.type === "follower" || ch.type === "amulet") {
       const onField = g.state.players[player].zones.field.length - (o?.freesFieldSlots ?? 0);
@@ -127,7 +141,7 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
     earthRite = yield* confirm(g, player, "earthRite", played);
   }
   // 10.6.2.3 targets (of each chosen option, 5.18.4)
-  const targets = spell && modes.length === 0 ? yield* chooseTargets(g, spell.targets, player, played) : [];
+  const targets = spell && modes.length === 0 ? yield* chooseTargets(g, targetsFor(spell, option), player, played) : [];
   const modeTargets = yield* chooseModeTargets(g, player, modes, played);
   if (targets === null || modeTargets === null) throw new EngineError("card played without legal targets");
   // One memory for the play option's process and the effect (BP15-PR12 "the number of Idolatry cards

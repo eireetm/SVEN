@@ -1,4 +1,4 @@
-import type { DefId } from "../model/card";
+import type { CardType, DefId } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import type { Keyword } from "../model/keyword";
 import type { GrantedAbilityId, TriggerData, ZoneName } from "../model/state";
@@ -24,6 +24,13 @@ export interface CardScript {
    * must not call `game.info()` (that would recurse).
    */
   selfKeywords?(game: GameReader, self: CardId): readonly Keyword[];
+  /**
+   * The card type this card has on the field under a condition of its own (CR 5.25), e.g. BP16-093
+   * "While this has at least 4 prayer counters, it's a follower" (undefined: its printed type). A
+   * passive: not while it has lost its abilities. Like `selfKeywords`, it must not call
+   * `game.info()` (that would recurse).
+   */
+  typeWhile?(game: GameReader, self: CardId): CardType | undefined;
   abilities?: readonly AbilityDef[];
   /**
    * Passive change of this card's own play cost (e.g. "Spellchain (5): This card costs 3 less
@@ -283,6 +290,13 @@ export interface PlayOption {
   setCost?: number;
   /** "This card costs N less to play" (negative). */
   costDelta?: number;
+  /**
+   * Only these cards may be selected as the spell's targets when it is played this way: a cost that
+   * depends on the selected target (BP17-030 "This costs 2 less to play if you selected a follower
+   * on your field with "Leod" in its name") is written as options with disjoint target filters.
+   * Targets are selected before the cost is determined (CR 10.6.2.3, 10.6.2.5).
+   */
+  targetFilter?(game: GameReader, card: CardId): boolean;
 }
 
 /** CR 10.1.1.1 */

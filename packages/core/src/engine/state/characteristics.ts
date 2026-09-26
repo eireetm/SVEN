@@ -100,6 +100,20 @@ function visibleFaceDefId(env: Env, c: { def: DefId; backFace: boolean }): DefId
 }
 
 /**
+ * The card type before effects: the printed type, or the type the card gives itself on the field by
+ * its own passive while it has its abilities (`CardScript.typeWhile`, BP16-093 "While this has at
+ * least 4 prayer counters, it's a follower"; boxed, it is an amulet again — rulings). Effects that
+ * change the type come later (CR 10.9.1.3, 10.9.1.6: the passive's timestamp is when the card was
+ * put onto the field).
+ */
+function selfType(env: Env, id: CardId, printed: CardType, lostAt: number | null): CardType {
+  const c = getCard(env.state, id);
+  if (c.zone !== "field" || lostAt !== null) return printed;
+  const typeWhile = env.scripts[infoDefId(env, id)]?.typeWhile;
+  return typeWhile?.(makeReader(env), id) ?? printed;
+}
+
+/**
  * CR 10.9.1 — derive a card's information:
  *  1. printed information, or the linked evolve-zone card's information on the field
  *     (excluding cost) (10.9.1.1, 10.9.1.1.1, 5.16.1.2);
@@ -127,7 +141,7 @@ export function characteristics(env: Env, id: CardId): Characteristics {
   const addKeyword = (k: Keyword) => {
     if (!keywords.includes(k)) keywords.push(k);
   };
-  let type = def.type;
+  let type = selfType(env, id, def.type, lostAt);
   let attack = def.attack;
   let defense = def.defense;
   const traits = [...def.traits];
@@ -269,11 +283,12 @@ export function namesOf(env: Env, id: CardId): string[] {
  */
 export function typeAndTraits(env: Env, id: CardId): { type: CardType; traits: readonly string[] } {
   const def = env.db.get(infoDefId(env, id));
-  let type = def.type;
+  let type = selfType(env, id, def.type, abilitiesLostAt(env.state, id));
   const traits = [...def.traits];
   for (const e of env.state.effects) {
     if (e.target !== id || !effectInForce(env.state, e)) continue;
     if (e.change.kind === "changeType") type = e.change.type;
+    else if (e.change.kind === "maneuver" && def.attack !== null && def.defense !== null) type = "follower"; // CR 5.32.1
     else if (e.change.kind === "trait" && !traits.includes(e.change.trait)) traits.push(e.change.trait);
   }
   return { type, traits };
@@ -288,13 +303,18 @@ export function currentStats(env: Env, id: CardId): { attack: number | null; def
   const c = getCard(env.state, id);
   const baseDef = env.db.get(c.def);
   const def = env.db.get(infoDefId(env, id));
-  let type = def.type;
+  let type = selfType(env, id, def.type, abilitiesLostAt(env.state, id));
   let attack = def.attack;
   let defense = def.defense;
   for (const e of env.state.effects) {
     if (e.target !== id || !effectInForce(env.state, e)) continue;
     if (e.change.kind === "changeType") type = e.change.type;
-    else if (e.change.kind === "stats") {
+    else if (e.change.kind === "maneuver" && def.attack !== null && def.defense !== null) {
+      // CR 5.32.1 — as in `characteristics`: the printed values, earlier changes don't carry over.
+      type = "follower";
+      attack = def.attack;
+      defense = def.defense;
+    } else if (e.change.kind === "stats") {
       if (attack !== null) attack += e.change.attack;
       if (defense !== null) defense += e.change.defense;
     }
