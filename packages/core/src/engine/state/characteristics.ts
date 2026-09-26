@@ -49,13 +49,21 @@ export interface Characteristics {
   abilitiesLostAt: number | null;
 }
 
-/** Timestamp of the latest "loses all abilities" effect in force on the card (BP05-061), or null. */
+/**
+ * Timestamp of the latest "loses all abilities" effect in force on the card (BP05-061), or null.
+ * Being Boxed is one too (CR 5.31.2, 5.31.2.1).
+ */
 export function abilitiesLostAt(state: Readonly<GameState>, id: CardId): number | null {
   let at: number | null = null;
   for (const e of state.effects) {
-    if (e.target === id && e.change.kind === "loseAbilities" && effectInForce(state, e)) at = e.seq;
+    if (e.target === id && (e.change.kind === "loseAbilities" || e.change.kind === "boxed") && effectInForce(state, e)) at = e.seq;
   }
   return at;
+}
+
+/** CR 5.31 — is the card Boxed (e.g. BP11-024 "a Boxed enemy follower")? */
+export function isBoxed(state: Readonly<GameState>, id: CardId): boolean {
+  return state.effects.some((e) => e.target === id && e.change.kind === "boxed" && effectInForce(state, e));
 }
 
 const NO_ABILITIES: CardScript = {};
@@ -132,6 +140,14 @@ export function characteristics(env: Env, id: CardId): Characteristics {
       if (!traits.includes(e.change.trait)) traits.push(e.change.trait);
     } else if (e.change.kind === "changeType") {
       type = e.change.type;
+    } else if (e.change.kind === "maneuver") {
+      // CR 5.32.1 — an amulet with printed attack and defense becomes a follower with those
+      // values; changes from before it (an earlier maneuver's) don't carry over (rulings).
+      if (def.attack !== null && def.defense !== null) {
+        type = "follower";
+        attack = def.attack;
+        defense = def.defense;
+      }
     } else if (e.change.kind === "stats") {
       if (attack !== null) attack += e.change.attack;
       if (defense !== null) defense += e.change.defense;
@@ -142,8 +158,14 @@ export function characteristics(env: Env, id: CardId): Characteristics {
       if (ability.kind === "activated") grantedAbilities.push({ def: `${GRANT_PREFIX}${e.change.grant}`, index: 0, ability });
     }
   }
-  // Keywords given by passive abilities of cards on the field (e.g. BP01-091).
   let reader: ReturnType<typeof makeReader> | null = null;
+  // Keywords the card gives itself under a condition, in any zone (BP12-058 "While Overflow is
+  // active for you, this card has Quick").
+  if (lostAt === null && script?.selfKeywords) {
+    reader ??= makeReader(env);
+    for (const k of script.selfKeywords(reader, id)) addKeyword(k);
+  }
+  // Keywords given by passive abilities of cards on the field (e.g. BP01-091).
   for (const p of [0, 1] as const) {
     for (const f of state.players[p].zones.field) {
       const passive = activeScript(env, f)?.field?.keywordsFor;

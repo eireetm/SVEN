@@ -13,6 +13,7 @@ export function emptyTurnCounts(turn: number): TurnCounts {
     returnedCards: [],
     played: [],
     leaderDefenseLost: 0,
+    statsGained: [],
   };
 }
 

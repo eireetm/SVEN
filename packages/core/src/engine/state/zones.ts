@@ -7,6 +7,7 @@ import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import { getCard, nextSeq } from "./access";
 import { characteristics, grantedAbilitiesOf } from "./characteristics";
+import { effectInForce } from "./effects";
 import { thisTurn } from "./turn-counts";
 
 /**
@@ -175,9 +176,17 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
       names: onField ? [...onField.names] : [g.db.get(c.def).name],
     };
     if (onField) before.keywords = [...onField.keywords]; // BP06-090
+    if (onField) {
+      before.type = onField.type; // BP11-002 "a Mount card", BP12-088 "an amulet"
+      before.traits = [...onField.traits];
+    }
     const grants = onField ? grantedAbilitiesOf(g, c.id) : [];
     if (grants.length > 0) before.grants = grants; // BP07-038 a given Last Words
     if (onField && onField.abilitiesLostAt !== null) before.abilitiesLost = true; // BP05-061
+    // "This follower doesn't deal damage" in force there (BP12-109 ruling on BP10-T01's Last Words).
+    if (onField && state.effects.some((e) => e.target === c.id && e.change.kind === "cannotDealDamage" && effectInForce(state, e))) {
+      before.noDamage = true;
+    }
     return before;
   });
 

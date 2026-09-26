@@ -75,7 +75,9 @@ export function playVariants(
   if (own && !own(makeReader(g), card, player)) return [];
   if (ch.type === "spell" && !spellPlayable(g, card, player)) return [];
   const reader = makeReader(g);
-  const options: (PlayOption | null)[] = [null, ...(g.scripts[c.def]?.playOptions ?? [])];
+  // "As an additional cost to play this card, ..." (e.g. BP11-007): not without one of its options.
+  const script = g.scripts[c.def];
+  const options: (PlayOption | null)[] = [...(script?.playOptionsRequired ? [] : [null]), ...(script?.playOptions ?? [])];
   return options.filter((o) => {
     if (o && !o.canPay(reader, player, card)) return false;
     if (!canPayPlayPoints(g, player, playCost(g, card, player, o, opts.setCost))) return false;

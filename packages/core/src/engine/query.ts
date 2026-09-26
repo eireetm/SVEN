@@ -5,9 +5,9 @@ import { opponentOf } from "../model/ids";
 import type { Keyword } from "../model/keyword";
 import type { CardInstance, GameState, PlayerZone, ReturnedCard, ZoneName } from "../model/state";
 import type { Env } from "./state/access";
-import { leaderOf } from "./state/access";
-import { activeScript, characteristics, currentStats, isFollowerOnField, namesOf, typeAndTraits, type Characteristics } from "./state/characteristics";
-import { exAreaLimit } from "./state/limits";
+import { leaderOf, usesThisTurn } from "./state/access";
+import { activeScript, characteristics, currentStats, isBoxed, isFollowerOnField, namesOf, typeAndTraits, type Characteristics } from "./state/characteristics";
+import { exAreaLimit, fieldLimit } from "./state/limits";
 import { playVariants } from "./flow/play-card";
 import { countsThisTurn } from "./state/turn-counts";
 
@@ -81,6 +81,8 @@ export interface GameReader {
   namesOf(id: CardId): readonly string[];
   /** CR 4.8.3 — the current limit of the player's EX area (e.g. BP08-072's cost needs room). */
   exAreaLimit(player: PlayerId): number;
+  /** CR 4.4.4 — the most cards the player's field can hold (effects may change it). */
+  fieldLimit(player: PlayerId): number;
   /** "If your followers attacked at least N times this turn" (CR 8.4.5). */
   followerAttacksThisTurn(player: PlayerId): number;
   /** Was the card put onto the field it is on during this turn? (CR 8.4.2.1) */
@@ -112,6 +114,12 @@ export interface GameReader {
   canSelect(id: CardId, player: PlayerId): boolean;
   /** The card's script has an Earth Rite cost (CR 13.3.3), so a search for "a card with Earth Rite" finds it. */
   hasEarthRite(id: CardId): boolean;
+  /** CR 5.31 — is the card Boxed (BP11-024 "a Boxed enemy follower")? */
+  isBoxed(id: CardId): boolean;
+  /** Has the card gained attack or defense this turn (BP11-035; an effect's +X or a super-evolution)? */
+  gainedStatsThisTurn(id: CardId): boolean;
+  /** How often `key` was recorded for this card this turn (`fx.recordUse`, e.g. BP11-092's options). */
+  usesThisTurn(id: CardId, key: string): number;
 }
 
 /**
@@ -171,6 +179,7 @@ export function makeReader(env: Env): GameReader {
     statsOf: (id) => currentStats(env, id),
     namesOf: (id) => namesOf(env, id),
     exAreaLimit: (p) => exAreaLimit(env, p),
+    fieldLimit: (p) => fieldLimit(env, p),
     followerAttacksThisTurn: (p) => countsThisTurn(state(), p).followerAttacks,
     enteredFieldThisTurn: (id) => state().cards[id]?.zone === "field" && state().cards[id]!.enteredFieldTurn === state().turn,
     faceUpEvolveDeck: (p) => ps(p).zones.evolveDeck.filter((id) => state().cards[id]!.faceUp),
@@ -188,6 +197,15 @@ export function makeReader(env: Env): GameReader {
     canSelect: (id, p) => {
       const c = state().cards[id];
       return c !== undefined && !(c.zone === "field" && c.controller !== p && characteristics(env, id).keywords.includes("aura"));
+    },
+    isBoxed: (id) => isBoxed(state(), id),
+    gainedStatsThisTurn: (id) => {
+      const c = state().cards[id];
+      return c !== undefined && countsThisTurn(state(), c.controller).statsGained.includes(id);
+    },
+    usesThisTurn: (id, key) => {
+      const c = state().cards[id];
+      return c === undefined ? 0 : usesThisTurn(state(), c, key);
     },
     hasEarthRite: (id) => {
       const def = state().cards[id]?.def;

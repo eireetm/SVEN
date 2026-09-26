@@ -16,6 +16,11 @@ export interface DamageInstance {
   amount: number;
   /** CR 5.14.3 */
   kind: "attack" | "combat" | "ability";
+  /**
+   * Dealt by an ability of a card that left the field while "it doesn't deal damage" applied to
+   * it there (look-back, CR 10.7.4.1.2; BP12-109 ruling).
+   */
+  sourceDealsNoDamage?: boolean;
 }
 
 /** One replacement effect that changes an instance of damage (CR 5.14.2, 10.10). */
@@ -106,6 +111,7 @@ export function* dealDamage(g: G, instances: readonly DamageInstance[]): Proc<Da
       if (change && change(d.amount) !== 0) replacements.push({ apply: (a) => a + change(a) });
     };
     const src = d.source !== null ? state.cards[d.source] : undefined;
+    if (d.sourceDealsNoDamage) replacements.push({ apply: () => 0 });
     if (src && d.source !== null) {
       if (state.effects.some((e) => e.target === d.source && e.change.kind === "cannotDealDamage")) replacements.push({ apply: () => 0 });
       const own = src.zone === "field" ? activeScript(g, d.source)?.field?.damageDealt : undefined;

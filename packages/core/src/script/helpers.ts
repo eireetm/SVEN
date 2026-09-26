@@ -298,17 +298,25 @@ export function whenEnemyFollowerToCemetery(spec: TimingSpec, opts: { onlyYourTu
 }
 
 /**
- * "Whenever a card is put into your EX area" (BP10-094) — once per card, from any zone, created
- * tokens too, during either player's turn (its ruling). Data: the card.
+ * "Whenever a [matching] card is put into your EX area" (BP10-094; BP11-008 "a Mount card") — once
+ * per card, from any zone, created tokens too, during either player's turn (BP10-094 ruling).
+ * Data: the card.
  */
-export function whenCardPutIntoYourEx(spec: TimingSpec): AutomaticAbility {
+export function whenCardPutIntoYourEx(spec: TimingSpec, filter?: (game: GameReader, card: CardId) => boolean): AutomaticAbility {
   return automatic(
     "other",
-    (e, me): readonly TriggerData[] =>
+    (e, me, game): readonly TriggerData[] =>
       me.lookBack
         ? []
         : moves(e)
-            .filter((m) => m.to.zone === "ex" && m.to.player === me.controller && m.from?.zone !== "ex" && m.newCard !== null)
+            .filter(
+              (m) =>
+                m.to.zone === "ex" &&
+                m.to.player === me.controller &&
+                m.from?.zone !== "ex" &&
+                m.newCard !== null &&
+                (filter === undefined || (game.card(m.newCard) !== undefined && filter(game, m.newCard))),
+            )
             .map((m) => ({ card: m.newCard! })),
     spec,
   );
@@ -445,6 +453,69 @@ export const whenYourLeaderDefenseDropsToZero = (spec: TimingSpec) =>
 /** "When this card is returned to hand from your field". */
 export const whenReturnedToHand = (spec: TimingSpec) =>
   automatic("other", (e, me) => me.lookBack && moves(e).some((m) => m.card === me.card && m.from?.zone === "field" && m.to.zone === "hand"), spec);
+
+/**
+ * "Whenever this follower gains attack or defense" (BP11-082): an effect giving it +X, or the
+ * +1/+1 of a super-evolution (CR 12.2.4.1; BP11-114 ruling).
+ */
+export const whenThisGainsStats = (spec: TimingSpec) =>
+  automatic("other", (e, me) => !me.lookBack && e.type === "statsGained" && e.card === me.card, spec);
+
+/**
+ * "Whenever you discard 1 or more cards" (BP12-052): once for cards discarded together, e.g. at
+ * the hand limit (rulings); once more for a later discard.
+ */
+export function whenYouDiscardAny(spec: TimingSpec): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me) => !me.lookBack && moves(e).some((m) => m.reason === "discard" && m.from?.zone === "hand" && m.from.player === me.controller),
+    spec,
+  );
+}
+
+/** "Whenever a player discards a card" (BP11-070) — once per card, either player. Data: the card and its player. */
+export function whenAnyPlayerDiscards(spec: TimingSpec): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me): readonly TriggerData[] =>
+      me.lookBack
+        ? []
+        : moves(e)
+            .filter((m) => m.reason === "discard" && m.from?.zone === "hand" && m.newCard !== null)
+            .map((m) => ({ card: m.newCard!, player: m.from!.player })),
+    spec,
+  );
+}
+
+/**
+ * "Whenever a [matching] card you control leaves the field" — once per card (BP11-002 "a Mount
+ * card", BP12-088 "an amulet"). `filter` sees the look-back information (`m.before`, with the
+ * card's type and traits there). It also triggers when this card leaves at the same time (CR
+ * 10.7.4.2); `includeSelf` also counts this card's own leaving. Data: the card after the move.
+ */
+export function whenYourCardLeaves(
+  spec: TimingSpec,
+  opts: { onlyYourTurn?: boolean; includeSelf?: boolean; filter?: (m: CardMove, game: GameReader) => boolean } = {},
+): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game): readonly TriggerData[] => {
+      if (me.zone !== "field" || (opts.onlyYourTurn && game.activePlayer !== me.controller)) return [];
+      return moves(e)
+        .filter(
+          (m) =>
+            m.from?.zone === "field" &&
+            m.to.zone !== "field" &&
+            m.before !== null &&
+            m.before.controller === me.controller &&
+            (opts.includeSelf || m.card !== me.card) &&
+            (opts.filter?.(m, game) ?? true),
+        )
+        .map((m) => ({ card: m.newCard ?? m.card! }));
+    },
+    spec,
+  );
+}
 
 /** "When this card is discarded" — valid in the hand (CR 10.3.4). */
 export const whenDiscarded = (spec: TimingSpec) =>

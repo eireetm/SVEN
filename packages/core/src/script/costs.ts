@@ -56,6 +56,14 @@ export const banishThisFromCemetery: CustomCost = {
   },
 };
 
+/** "Banish this card from your EX area", with `validIn: ["ex"]` (e.g. BP12-095). */
+export const banishThisFromEx: CustomCost = {
+  canPay: (g, _c, self) => g.card(self)?.zone === "ex",
+  *pay(fx) {
+    yield* fx.banish([fx.self]);
+  },
+};
+
 /**
  * "Put this card from your hand into your EX area" — a cost of an ability valid in the hand
  * (BP08-072, BP10-017). Impossible with a full EX area (CR 4.8.3.2, 10.4.2.2; BP10-017 ruling).

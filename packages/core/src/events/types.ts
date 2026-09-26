@@ -1,4 +1,4 @@
-import type { DefId, PrintingId } from "../model/card";
+import type { CardType, DefId, PrintingId } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import type { Keyword } from "../model/keyword";
 import type { GameResult, GrantedAbilityId, ZoneName } from "../model/state";
@@ -63,6 +63,18 @@ export interface CardMove {
     keywords?: Keyword[];
     grants?: GrantedAbilityId[];
     abilitiesLost?: true;
+    /**
+     * A card leaving the field: its card type and traits there (e.g. BP11-002 "when a Mount card
+     * you control leaves the field"; a maneuvered amulet is a follower, CR 5.32).
+     */
+    type?: CardType;
+    traits?: string[];
+    /**
+     * It had "This follower doesn't deal damage" in force on the field: abilities triggered by
+     * its leaving (e.g. Last Words) use that information (CR 10.7.4.1.2) and deal no damage
+     * (BP12-109 ruling: BP10-T01's Last Words deal none).
+     */
+    noDamage?: true;
   } | null;
 }
 
@@ -113,6 +125,11 @@ export type GameEvent =
   | { type: "leaderDefenseChanged"; player: PlayerId; defense: number; delta: number }
   /** CR 5.16 / 12.2.4. */
   | { type: "evolved"; card: CardId; evolveCard: CardId; superEvolved: boolean }
+  /**
+   * The card gained attack and/or defense: an effect gave it +X (CR 5.27), or a super-evolution
+   * its +1/+1 (12.2.4.1). E.g. BP11-082 "Whenever this follower gains attack or defense".
+   */
+  | { type: "statsGained"; card: CardId; attack: number; defense: number }
   /**
    * CR 5.11 — `player` looked at these cards (nothing moved). Private to that player: a GUI or
    * network layer must not show it to the opponent.

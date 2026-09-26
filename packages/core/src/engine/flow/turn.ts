@@ -1,9 +1,10 @@
-import { opponentOf } from "../../model/ids";
+import { opponentOf, type CardId } from "../../model/ids";
 import { drawCards, setEngaged } from "../actions/cards";
 import { setMaxPlayPoints, setPlayPoints } from "../actions/points";
 import { confirmationTiming } from "../abilities/confirmation";
 import type { G } from "../runtime/context";
 import type { Proc } from "../runtime/proc";
+import { activeScript, isBoxed } from "../state/characteristics";
 import { restricted } from "../state/restrictions";
 import { endPhase } from "./end-phase";
 import { mainPhaseLoop } from "./main-phase";
@@ -23,12 +24,14 @@ export function* startPhase(g: G): Proc<void> {
   if (!restricted(state, player, "noStartPhaseMaxPlayPoints")) setMaxPlayPoints(g, player, ps.maxPlayPoints + 1);
   setPlayPoints(g, player, ps.maxPlayPoints); // 7.2.2
   // 7.2.3 refresh all cards on the field, except those that "don't refresh during their
-  // controller's next start phase" (BP06-056): that effect is then over.
+  // controller's next start phase" (BP06-056): that effect is then over. Boxed cards (CR 5.31.3)
+  // and "this card doesn't refresh during your start phase" (BP11-092) stay engaged too.
   const stay = new Set(
     state.effects.filter((e) => e.change.kind === "skipNextRefresh" && e.createdTurn < state.turn && ps.zones.field.includes(e.target)).map((e) => e.id),
   );
   const staying = state.effects.filter((e) => stay.has(e.id)).map((e) => e.target);
-  setEngaged(g, ps.zones.field.filter((id) => !staying.includes(id)), false);
+  const refreshes = (id: CardId) => !staying.includes(id) && !isBoxed(state, id) && !activeScript(g, id)?.noStartPhaseRefresh;
+  setEngaged(g, ps.zones.field.filter(refreshes), false);
   if (stay.size > 0) state.effects = state.effects.filter((e) => !stay.has(e.id));
   const firstTurnOfFirstPlayer = player === state.firstPlayer && ps.turnsPassed === 1;
   // 7.2.4 / 7.2.4.1, unless prohibited (BP05-006, CR 1.3.3)

@@ -38,6 +38,8 @@ if (!existsSync(assetsDir)) {
 const supported = new Set<string>(SUPPORTED_SETS);
 const warnings: string[] = [];
 const skipped: { printing: string; reason: string }[] = [];
+/** Evolution point / super-evolution point cards: markers for the points (CR 3.2), not game cards. */
+const markers: string[] = [];
 const raws = new Map<string, RawCardJson>();
 const printings: NormalizedPrinting[] = [];
 
@@ -46,6 +48,10 @@ for (const folder of readdirSync(assetsDir).sort()) {
   if (!existsSync(file)) continue;
   const raw = applyDataFixes(JSON.parse(readFileSync(file, "utf8")) as RawCardJson);
   if (raw.card_no !== folder) throw new Error(`${file}: card_no ${raw.card_no} does not match folder`);
+  if (raw.card_type.some((t) => t === "Evolution Point" || t === "Super-Evolution Point")) {
+    markers.push(folder);
+    continue;
+  }
   raws.set(folder, raw);
   try {
     printings.push(normalizePrinting(raw));
@@ -99,7 +105,7 @@ const report = [
   "",
   "由 `npm run build:cards` 生成，勿手改。",
   "",
-  `- 读取印刷版本：${raws.size}；已支持的卡包：${SUPPORTED_SETS.join("、")}`,
+  `- 读取印刷版本：${raws.size}（另有 ${markers.length} 张进化点 / 超进化点标记卡，不是游戏用卡，已跳过）；已支持的卡包：${SUPPORTED_SETS.join("、")}`,
   ...summary.map((s) => `- ${s}`),
   `- 数据修正表（\`data/fixes.ts\`）：${Object.keys(DATA_FIXES).length} 条`,
   "",

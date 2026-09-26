@@ -10,6 +10,8 @@ import { BP07_CARDS, BP07_SCRIPTS } from "./bp07";
 import { BP08_CARDS, BP08_SCRIPTS } from "./bp08";
 import { BP09_CARDS, BP09_SCRIPTS } from "./bp09";
 import { BP10_CARDS, BP10_SCRIPTS } from "./bp10";
+import { BP11_CARDS, BP11_SCRIPTS } from "./bp11";
+import { BP12_CARDS, BP12_SCRIPTS } from "./bp12";
 import type { SupportedSet } from "./supported";
 
 export { SUPPORTED_SETS, type SupportedSet } from "./supported";
@@ -30,6 +32,8 @@ export const SETS: Readonly<Record<SupportedSet, { cards: readonly CardDefinitio
   BP08: { cards: BP08_CARDS, scripts: BP08_SCRIPTS },
   BP09: { cards: BP09_CARDS, scripts: BP09_SCRIPTS },
   BP10: { cards: BP10_CARDS, scripts: BP10_SCRIPTS },
+  BP11: { cards: BP11_CARDS, scripts: BP11_SCRIPTS },
+  BP12: { cards: BP12_CARDS, scripts: BP12_SCRIPTS },
 };
 
 export const ALL_CARDS: readonly CardDefinition[] = Object.values(SETS).flatMap((s) => s.cards);

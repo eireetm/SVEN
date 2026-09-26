@@ -4,7 +4,7 @@ import type { CardId, PlayerId } from "../model/ids";
 import type { Keyword } from "../model/keyword";
 import type { AttackState, GameResult, Phase, PlayerZone } from "../model/state";
 import type { Env } from "../engine/state/access";
-import { characteristics } from "../engine/state/characteristics";
+import { characteristics, isBoxed } from "../engine/state/characteristics";
 import { cardVisibleTo } from "./visibility";
 
 /** A card whose information the viewer may see. */
@@ -29,6 +29,8 @@ export interface CardView {
   /** Linked evolve-zone card, if evolved (CR 5.16.1). */
   evolvedWith: CardId | null;
   superEvolved: boolean;
+  /** CR 5.31 — it is Boxed (lost its abilities, doesn't refresh in its controller's start phase). */
+  boxed: boolean;
   /** CR 15.1 */
   counters: Readonly<Record<string, number>>;
 }
@@ -97,6 +99,7 @@ function cardView(env: Env, id: CardId): CardView {
     keywords: ch.keywords,
     evolvedWith: c.evolvedWith,
     superEvolved: c.superEvolved,
+    boxed: isBoxed(env.state, id),
     counters: { ...c.counters },
   };
 }

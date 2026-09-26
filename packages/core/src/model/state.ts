@@ -146,6 +146,12 @@ export interface TurnCounts {
    * "the number of times your leader has lost defense this turn", rulings; CR 5.27.1).
    */
   leaderDefenseLost: number;
+  /**
+   * This player's cards that gained attack or defense this turn (an effect giving +X, or the +1/+1
+   * of a super-evolution, CR 12.2.4.1), e.g. BP11-035 "if this follower has gained attack or
+   * defense this turn" (ruling: also after it took damage).
+   */
+  statsGained: CardId[];
 }
 
 /** A persistent effect (CR 10.2.1.2) applied to one card object. */
@@ -229,6 +235,18 @@ export type EffectChange =
   | { kind: "skipNextRefresh" }
   /** "Its Fanfare abilities can't be performed" (BP04-038/039): its pending Fanfares are not played. */
   | { kind: "noFanfare" }
+  /**
+   * CR 5.32 "Maneuver" (BP11-T01/T02): for the rest of the turn the amulet is a follower with the
+   * attack and defense printed on it (5.32.1). Numbers changed before it doesn't carry over: a
+   * second maneuver starts again from the printed values (rulings); abilities it was given stay.
+   */
+  | { kind: "maneuver" }
+  /**
+   * CR 5.31 "Boxed" (BP11-018): it loses the abilities it had (5.31.2; abilities given later work,
+   * 5.31.2.1) and doesn't refresh during its controller's start phase (5.31.3; effects can still
+   * refresh it, 5.31.3.1).
+   */
+  | { kind: "boxed" }
   /** "It can't attack enemies" (CR 8.4.3.2.1), e.g. BP03-013 for the controller's next turn. */
   | { kind: "cannotAttack" }
   /**
@@ -252,7 +270,9 @@ export type GrantedAbilityId =
   | "activateBury2"
   | "strikeRefreshOnce"
   | "lastWordsBanishSelf"
-  | "returnToHandAtEnd";
+  | "returnToHandAtEnd"
+  | "strikePlus2"
+  | "activateEngageDamage3";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {

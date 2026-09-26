@@ -18,6 +18,12 @@ import type { EffectContext } from "../engine/effects/context";
 export interface CardScript {
   /** Keyword abilities printed on the card (CR 12, 13). */
   keywords?: readonly Keyword[];
+  /**
+   * Keywords the card has under a condition, in every zone (e.g. BP12-058 "While Overflow is
+   * active for you, this card has Quick", which matters in the hand). Like `keywordsFor`, it
+   * must not call `game.info()` (that would recurse).
+   */
+  selfKeywords?(game: GameReader, self: CardId): readonly Keyword[];
   abilities?: readonly AbilityDef[];
   /**
    * Passive change of this card's own play cost (e.g. "Spellchain (5): This card costs 3 less
@@ -26,6 +32,11 @@ export interface CardScript {
   playCost?(game: GameReader, self: CardId, controller: PlayerId): number;
   /** CR 10.4.7.3 "When playing this card, [process]: [effect]" — optional ways to play it. */
   playOptions?: readonly PlayOption[];
+  /**
+   * The card can only be played with one of its `playOptions`: "As an additional cost to play
+   * this card, [process]" (e.g. BP11-007 "bury 4 Pixie tokens"; it can't be played without).
+   */
+  playOptionsRequired?: boolean;
   /** Passive abilities that work while this card is on the field (CR 10.1.1.3, 10.3.5). */
   field?: FieldPassives;
   /**
@@ -70,6 +81,8 @@ export interface CardScript {
   evolveCostChange?(game: GameReader, self: CardId): number;
   /** "This card is put onto the field engaged." */
   entersEngaged?: boolean;
+  /** "This card doesn't refresh during your start phase" (CR 7.2.3, e.g. BP11-092). */
+  noStartPhaseRefresh?: boolean;
   /**
    * "This follower ignores Ward" (BP04-006, これは【守護】を無視して攻撃できる): when it attacks,
    * the Ward requirement (CR 12.8.2 iii) does not apply to its attack target. A function is the

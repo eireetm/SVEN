@@ -25,7 +25,8 @@ import {
   transformCards,
 } from "../actions/cards";
 import { addCounters, removeCounters } from "../actions/counters";
-import { dealDamage } from "../actions/damage";
+import { recordStatsGained } from "../actions/stats";
+import { dealDamage, type DamageInstance } from "../actions/damage";
 import { changeLeaderDefense, setLeaderDefense } from "../actions/leader";
 import { gainEvolutionPoints, payPlayPoints, recoverPlayPoints, setMaxPlayPoints } from "../actions/points";
 import { selectableBy } from "../abilities/targets";
@@ -37,7 +38,7 @@ import { playCard } from "../flow/play-card";
 import type { G } from "../runtime/context";
 import { cardRefs, chooseOptions, confirm, orderCards, selectCards } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
-import { getCard, nextSeq } from "../state/access";
+import { getCard, nextSeq, recordUse } from "../state/access";
 import { characteristics } from "../state/characteristics";
 import { exAreaLimit } from "../state/limits";
 import { moveCards } from "../state/zones";
@@ -140,9 +141,13 @@ export interface EffectContext {
   /**
    * CR 5.8 "Search your deck for an A, a B and a C" (BP04-086): up to one card for each filter,
    * in order (a card found for one filter is not offered again), revealed, moved together, and
-   * the deck shuffled once.
+   * the deck shuffled once. `to` may give each filter its own destination (BP12-041 "summon the
+   * follower, put the spell into your EX area").
    */
-  searchEach(filters: readonly ((card: CardId) => boolean)[], opts?: { to?: SearchDestination }): Proc<CardId[]>;
+  searchEach(
+    filters: readonly ((card: CardId) => boolean)[],
+    opts?: { to?: SearchDestination | readonly SearchDestination[] },
+  ): Proc<CardId[]>;
   /**
    * "You may summon a [card] from your evolve deck" / "put ... from your evolve deck into your EX
    * area" (BP10 advanced cards, CR 9.2): the player looks at their evolve deck (4.6.2) and picks up
@@ -303,10 +308,26 @@ export interface EffectContext {
   skipNextRefresh(card: CardId): Proc<void>;
   /** CR 5.20 roll a six-sided die (the game's seeded random source); returns 1–6. */
   rollDie(player?: PlayerId): Proc<number>;
+  /** CR 5.32 — maneuver an amulet on the field: for the rest of the turn it is a follower (BP11-T01). */
+  maneuver(card: CardId): Proc<void>;
+  /** CR 5.31 — the card becomes Boxed for the duration (BP11-018 "until the end of its controller's next turn"). */
+  box(card: CardId, until: Until): Proc<void>;
+  /**
+   * CR 5.33 — the controller declares a card name (any card or token, not an alternative name,
+   * 5.33.1.1): one of the pool's names, or null for a name no card in this game can have.
+   */
+  declareCardName(): Proc<string | null>;
+  /** `count` cards picked at random from `cards` with the game's random numbers (BP11-112 "2 random cards from your hand"). */
+  randomCards(cards: readonly CardId[], count: number): CardId[];
+  /** Count one use of `key` for this card this turn (BP11-092 "an option you haven't chosen this turn"); see GameReader.usesThisTurn. */
+  recordUse(key: string): void;
 }
 
 /** Where a search puts the cards it finds. */
-export type SearchDestination = "hand" | "field" | "ex" | "banish";
+export type SearchDestination = "hand" | "field" | "ex" | "banish" | "cemetery";
+
+/** The option id of declareCardName for a name that no card in the pool has. */
+const OTHER_NAME = "(other name)";
 
 export interface EffectInit {
   controller: PlayerId;
@@ -321,6 +342,11 @@ export interface EffectInit {
   memory?: Record<string, string | number | boolean | null>;
   /** See EffectContext.playOption. */
   playOption?: string | null;
+  /**
+   * An ability triggered by its source leaving the field, where "it doesn't deal damage" applied
+   * to that card: the damage it deals is 0 (CR 10.7.4.1.2; BP12-109 ruling).
+   */
+  lookBackNoDamage?: boolean;
 }
 
 export function makeEffectContext(g: G, init: EffectInit): EffectContext {
@@ -328,6 +354,15 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
   init.memory ??= {};
   const memory = init.memory;
   const selfIfPresent = () => (g.state.cards[init.self] ? init.self : null);
+  /** An instance of this ability's damage (CR 5.14.3.3). */
+  const abilityDamage = (target: CardId, amount: number): DamageInstance => ({
+    source: selfIfPresent(),
+    controller: ctrl,
+    target,
+    amount,
+    kind: "ability",
+    ...(init.lookBackNoDamage ? { sourceDealsNoDamage: true } : {}),
+  });
   const token = (name: string): DefId => {
     const d = g.db.tokenNamed(name);
     if (!d) throw new EngineError(`no token named "${name}" (CR 9.1.2.3)`);
@@ -347,6 +382,8 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     if (groups.field.length > 0) moved.push(...(yield* putOntoField(g, groups.field, player, "effect", { chooser: ctrl, engaged })));
     if (groups.ex.length > 0) moved.push(...(yield* putIntoEx(g, groups.ex, ctrl)));
     if (groups.banish.length > 0) moved.push(...banishCards(g, groups.banish));
+    // "Search your deck for [a card], bury it" (BP11-035): into its owner's cemetery (CR 5.34.1).
+    if (groups.cemetery.length > 0) moved.push(...moveCards(g, groups.cemetery.map((card) => ({ card, to: "cemetery" as const })), "effect"));
     return moved;
   }
 
@@ -365,16 +402,13 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       return drawCards(g, player, count);
     },
     *dealDamage(target, amount) {
-      yield* dealDamage(g, [{ source: selfIfPresent(), controller: ctrl, target, amount, kind: "ability" }]);
+      yield* dealDamage(g, [abilityDamage(target, amount)]);
     },
     *dealDamageEach(targets, amount) {
-      yield* dealDamage(g, targets.map((target) => ({ source: selfIfPresent(), controller: ctrl, target, amount, kind: "ability" as const })));
+      yield* dealDamage(g, targets.map((target) => abilityDamage(target, amount)));
     },
     *dealDamages(instances) {
-      yield* dealDamage(
-        g,
-        instances.map((i) => ({ source: selfIfPresent(), controller: ctrl, target: i.target, amount: i.amount, kind: "ability" as const })),
-      );
+      yield* dealDamage(g, instances.map((i) => abilityDamage(i.target, i.amount)));
     },
     *destroy(cards) {
       return destroyCards(g, cards);
@@ -441,7 +475,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
         chosen = yield* selectCards(g, player, "search", matching, min, max, selfIfPresent(), deck);
       }
       if (opts.reveal ?? true) revealCards(g, player, chosen);
-      const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [] };
+      const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [], cemetery: [] };
       for (const card of chosen) groups[opts.destination ? yield* opts.destination(card) : (opts.to ?? "hand")].push(card);
       const moved = yield* moveFound(groups, player, opts.engaged ?? false);
       shuffleDeck(g, player); // CR 5.8.2
@@ -449,16 +483,18 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *searchEach(filters, opts = {}) {
       const deck = [...g.state.players[ctrl].zones.deck];
+      const destinationOf = (i: number): SearchDestination => (typeof opts.to === "string" ? opts.to : (opts.to?.[i] ?? "hand"));
       const chosen: CardId[] = [];
-      for (const filter of filters) {
+      const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [], cemetery: [] };
+      for (const [i, filter] of filters.entries()) {
         const matching = deck.filter((id) => !chosen.includes(id) && filter(id));
         // CR 4.1.2.2 — a card in the deck need not be found (BP04-086 ruling).
         const [card] = yield* selectCards(g, ctrl, "search", matching, 0, Math.min(1, matching.length), selfIfPresent(), deck);
-        if (card !== undefined) chosen.push(card);
+        if (card === undefined) continue;
+        chosen.push(card);
+        groups[destinationOf(i)].push(card);
       }
       revealCards(g, ctrl, chosen); // CR 5.8.1.2
-      const groups: Record<SearchDestination, CardId[]> = { hand: [], field: [], ex: [], banish: [] };
-      groups[opts.to ?? "hand"].push(...chosen);
       const moved = yield* moveFound(groups, ctrl);
       shuffleDeck(g, ctrl); // CR 5.8.2
       return moved;
@@ -530,6 +566,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
 
     *giveStats(target, attack, defense, until = null) {
       addEffect(target, until, { kind: "stats", attack, defense });
+      recordStatsGained(g, target, attack, defense);
     },
     *giveKeyword(target, keyword, until = null) {
       if (!IMPLEMENTED_KEYWORDS.includes(keyword)) {
@@ -701,13 +738,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       amounts.push(left);
       yield* dealDamage(
         g,
-        present.map((target, i) => ({
-          source: selfIfPresent(),
-          controller: ctrl,
-          target,
-          amount: amounts[i]!,
-          kind: "ability" as const,
-        })),
+        present.map((target, i) => abilityDamage(target, amounts[i]!)),
       );
     },
     *shuffleToBottom(cards) {
@@ -745,6 +776,32 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       const result = randomInt(g.state.rng, 6) + 1;
       g.emit({ type: "dieRolled", player, result });
       return result;
+    },
+    *maneuver(card) {
+      // CR 5.32.1 — an amulet with both attack and defense values; otherwise nothing (5.32.1.1).
+      if (g.state.cards[card]?.zone !== "field") return;
+      const info = characteristics(g, card);
+      if (info.type !== "amulet" || info.def.attack === null || info.def.defense === null) return;
+      addEffect(card, "endOfTurn", { kind: "maneuver" });
+    },
+    *box(card, until) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "boxed" });
+    },
+    *declareCardName() {
+      const names = [...new Set(g.db.all().filter((d) => d.type !== "leader" && d.frontFace === undefined).map((d) => d.name))].sort();
+      const options = [...names.map((name) => ({ id: name, label: name })), { id: OTHER_NAME, label: "Another card name" }];
+      const [id] = yield* chooseOptions(g, ctrl, "effect", options, 1, 1, selfIfPresent());
+      return id === undefined || id === OTHER_NAME ? null : id;
+    },
+    randomCards(cards, count) {
+      const pool = [...cards];
+      const picked: CardId[] = [];
+      while (picked.length < count && pool.length > 0) picked.push(pool.splice(randomInt(g.state.rng, pool.length), 1)[0]!);
+      return picked;
+    },
+    recordUse(key) {
+      const card = g.state.cards[init.self];
+      if (card) recordUse(g.state, card, key);
     },
     *optionalCost(cost) {
       if (!cost.canPay(fx.game, ctrl, init.self)) return false;

@@ -98,6 +98,11 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
     mode: null,
     earthRitePaid: earthRite,
   };
+  // Triggered by its source leaving the field: the card's information there (CR 10.7.4.1.2).
+  const ev = pending.event;
+  if (ev.type === "cardsMoved" && ev.moves.some((m) => (m.newCard ?? m.card) === self && m.before?.noDamage === true)) {
+    init.lookBackNoDamage = true;
+  }
   // 10.6.2.5 costs
   if (ability.cost) yield* ability.cost.pay(makeEffectContext(g, init));
   if (earthRite) yield* payEarthRite(g, ctrl, ability.earthRite?.count ?? 1, self);

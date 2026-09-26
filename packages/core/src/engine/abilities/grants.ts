@@ -96,4 +96,27 @@ export const GRANT_ABILITIES: Record<GrantedAbilityId, AbilityDef> = {
       yield* fx.dealDamage(target, fx.game.info(fx.self).attack ?? 0);
     },
   },
+  // BP12-029/030 (given by Lilje, Butler of the Mists to each Azord, Duke of the Mists on its
+  // field): "Strike - Give this follower +2/+2."
+  strikePlus2: {
+    kind: "automatic",
+    timing: "strike",
+    trigger: (e, me) => !me.lookBack && e.type === "attackDeclared" && e.attacker === me.card,
+    *resolve(fx) {
+      if (fx.game.card(fx.self)?.zone === "field") yield* fx.giveStats(fx.self, 2, 2);
+    },
+  },
+  // BP11-011 (given to Pixie tokens for the rest of the turn): "Activate {[engage]}: Select an
+  // enemy follower on the field. Deal 3 damage to it and 1 damage to its leader."
+  activateEngageDamage3: {
+    kind: "activated",
+    cost: { engageSelf: true },
+    targets: [enemyFollower()],
+    *resolve(fx) {
+      const target = fx.targets[0]![0]!;
+      const leader = fx.game.leader(fx.game.controller(target));
+      yield* fx.dealDamage(target, 3);
+      yield* fx.dealDamage(leader, 1);
+    },
+  },
 };
