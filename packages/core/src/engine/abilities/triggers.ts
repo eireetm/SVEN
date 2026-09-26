@@ -24,6 +24,18 @@ interface Candidate {
 /** Zones scanned for automatic abilities that declare `validIn` other than the field. */
 const OTHER_ZONES: readonly PlayerZone[] = ["hand", "ex", "cemetery", "banished", "leader"];
 
+/**
+ * BP19-092 "Your abilities that activate at the start of the end phase activate 1 additional time":
+ * how many times an automatic ability of `controller` triggering on this event becomes pending
+ * (either player's end phase; each card with it adds its number — rulings).
+ */
+function instances(g: G, event: GameEvent, controller: PlayerId): number {
+  if (event.type !== "phaseStarted" || event.phase !== "end") return 1;
+  let n = 1;
+  for (const id of g.state.players[controller].zones.field) n += activeScript(g, id)?.field?.extraEndPhaseTriggers ?? 0;
+  return n;
+}
+
 function matches(ability: AutomaticAbility, event: GameEvent, subject: TriggerSubject, reader: GameReader): TriggerData[] {
   const r = ability.trigger(event, subject, reader);
   if (r === true) return [{}];
@@ -109,8 +121,10 @@ export function collectTriggers(g: G, event: GameEvent): void {
         // "During your turn, whenever ..." (triggerIf); an "if" in the effect (condition) is only
         // checked when the ability is played (play-ability.ts, BP10-109 ruling).
         if (ability.triggerIf && !ability.triggerIf(reader, c.subject.controller, c.source)) continue;
-        if (!withinPerTurnLimit(g, ability, c.source, abilityKey(c.abilityDef, index))) continue;
-        addPending(g, c.subject.controller, c.source, c.abilityDef, index, event, data);
+        for (let k = instances(g, event, c.subject.controller); k > 0; k--) {
+          if (!withinPerTurnLimit(g, ability, c.source, abilityKey(c.abilityDef, index))) break;
+          addPending(g, c.subject.controller, c.source, c.abilityDef, index, event, data);
+        }
       }
     });
   }
@@ -145,8 +159,10 @@ export function collectTriggers(g: G, event: GameEvent): void {
     const subject: TriggerSubject = { card, controller, zone: "field", lookBack: false };
     for (const data of matches(ability, event, subject, reader)) {
       if (ability.triggerIf && !ability.triggerIf(reader, controller, card)) continue;
-      if (!withinPerTurnLimit(g, ability, card, abilityKey(`${GRANT_PREFIX}${grant}`, 0))) continue;
-      addPending(g, controller, card, `${GRANT_PREFIX}${grant}`, 0, event, data);
+      for (let k = instances(g, event, controller); k > 0; k--) {
+        if (!withinPerTurnLimit(g, ability, card, abilityKey(`${GRANT_PREFIX}${grant}`, 0))) break;
+        addPending(g, controller, card, `${GRANT_PREFIX}${grant}`, 0, event, data);
+      }
     }
   }
 
@@ -190,12 +206,13 @@ export function collectTriggers(g: G, event: GameEvent): void {
     if (d.data) subject.delayedData = d.data; // what it watches (BP15-001)
     const hits = matches(ability, event, subject, reader);
     if (hits.length === 0) continue;
+    const times = instances(g, event, d.controller);
     if (d.repeat) {
       // "For the rest of this turn, whenever ..." — a time frame is specified (CR 10.7.5.1).
-      for (const hit of hits) addPending(g, d.controller, d.source ?? "", d.sourceDef, d.ability, event, hit);
+      for (const hit of hits) for (let k = 0; k < times; k++) addPending(g, d.controller, d.source ?? "", d.sourceDef, d.ability, event, hit);
       continue;
     }
     state.delayed = state.delayed.filter((x) => x.id !== d.id); // CR 10.7.5.1
-    addPending(g, d.controller, d.source ?? "", d.sourceDef, d.ability, event, hits[0]!);
+    for (let k = 0; k < times; k++) addPending(g, d.controller, d.source ?? "", d.sourceDef, d.ability, event, hits[0]!);
   }
 }

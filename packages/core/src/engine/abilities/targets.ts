@@ -62,12 +62,28 @@ export function* chooseTargets(
   for (const spec of specs) {
     if (spec.count < 0) throw new EngineError("negative target count");
     if (spec.max && !spec.upTo) throw new EngineError("a target maximum is only for \"up to\" selections");
-    const candidates = candidatesOf(g, spec, controller, self);
+    if ((spec.distinct || spec.distinctNames) && !spec.upTo) throw new EngineError("distinct targets are only for \"up to\" selections");
+    const earlier = chosen.flat();
+    const candidates = candidatesOf(g, spec, controller, self).filter((id) => !(spec.distinct && earlier.includes(id)));
     const cap = spec.max ? Math.max(0, spec.max(makeReader(g), controller, self)) : spec.count;
     const max = Math.min(spec.count, cap, candidates.length);
     const min = required(g, spec, controller, self);
     // Selecting does not change the state, so targetsAvailable() above guarantees this.
     if (min > max) throw new EngineError("target selection became impossible after playing started");
+    if (spec.distinctNames) {
+      // "... with different names": one at a time, only names not selected yet (CR 10.6.2.3.2 "up to").
+      const picked: CardId[] = [];
+      const reader = makeReader(g);
+      const names = (id: CardId) => reader.info(id).names;
+      while (picked.length < max) {
+        const left = candidates.filter((id) => !picked.includes(id) && !picked.some((p) => names(p).some((n) => names(id).includes(n))));
+        const [one] = yield* selectCards(g, controller, "target", left, 0, Math.min(1, left.length), self);
+        if (one === undefined) break;
+        picked.push(one);
+      }
+      chosen.push(picked);
+      continue;
+    }
     chosen.push(yield* selectCards(g, controller, "target", candidates, min, max, self));
   }
   return chosen;

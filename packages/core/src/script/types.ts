@@ -87,6 +87,19 @@ export interface CardScript {
    */
   playableIf?(game: GameReader, self: CardId, player: PlayerId): boolean;
   /**
+   * "You may play this from the cemetery if ..." (BP18-007): valid in the cemetery (CR 10.3.5), a
+   * card effect allowing what CR 8.2.1 does not (1.3.1). The card is played as usual (10.6.2): its
+   * cost is paid (ruling).
+   */
+  playableFromCemetery?(game: GameReader, self: CardId, player: PlayerId): boolean;
+  /**
+   * CR 6.1.2 — a deck-construction passive restricting the other cards while this card is in the
+   * main deck (BP19-110 "Your main deck and evolve deck cannot contain more than 1 of any card,
+   * except those with 'Cutthroat' in their name"): `copies` of each other card, in each deck. A
+   * prohibition, so it also caps cards that allow more copies of themselves (CR 1.3.3; rulings).
+   */
+  restrictsDeck?: { copies: number; exempt(def: import("../model/card").CardDefinition): boolean };
+  /**
    * Change to the play points of this card's evolve abilities, e.g. BP06-019 "This card's Evolve
    * costs 1 less for every other follower on your field" (negative = cheaper; never below 0 —
    * its ruling).
@@ -196,6 +209,24 @@ export interface FieldPassives {
    * receiving card's abilities: it is their source (CR 10.9.1.2). One instance per giving card.
    */
   grantsFor?(game: GameReader, self: CardId, card: CardId): readonly GrantedAbilityId[];
+  /**
+   * CR 8.3.2.2 — "You may play any number of Evolve per turn" (BP18-001): its controller's evolve
+   * abilities are not limited to one per turn (8.3.2.1). Only evolve abilities: an advanced
+   * activated ability is still not playable after an evolve ability (BP18-001 rulings).
+   */
+  unlimitedEvolve?: boolean;
+  /**
+   * CR 10.10.1 — "If an enemy follower would be put from the field into the cemetery, banish it
+   * instead" (BP18-061). Its Last Words don't trigger; a follower that can't be banished by
+   * abilities goes to the cemetery (CR 1.3.3; rulings).
+   */
+  banishesEnemyFollowersInsteadOfCemetery?: boolean;
+  /**
+   * "Your abilities that activate at the start of the end phase activate 1 additional time"
+   * (BP19-092): extra instances of each of its controller's automatic abilities that trigger when
+   * an end phase starts (either player's; two of these: 2 more — rulings).
+   */
+  extraEndPhaseTriggers?: number;
 }
 
 /** A cost the engine cannot express with the standard parts (select and move cards, counters...). */
@@ -254,6 +285,17 @@ export interface TargetSpec {
   max?(game: GameReader, controller: PlayerId, self: CardId): number;
   /** The selection is only part of the effect when this holds (e.g. "Combo (3): Select ..."). */
   when?(game: GameReader, controller: PlayerId, self: CardId): boolean;
+  /**
+   * Not a card selected by an earlier selection of the same card or ability (BP19-080 "Select a
+   * 5-cost or lower Condemned follower and a 3-cost or lower Condemned follower from your
+   * cemetery"). Only for "up to" selections.
+   */
+  distinct?: boolean;
+  /**
+   * "... with different names" (BP18-050, BP18-T07): selected one at a time, each time only among
+   * cards whose name differs from those selected. Only for "up to" selections.
+   */
+  distinctNames?: boolean;
 }
 
 /** CR 5.18 — one option of a "choose" ability. */

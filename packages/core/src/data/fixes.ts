@@ -116,6 +116,12 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   // "Mechanical Analyzer  (Evolved)" has two spaces, so the name did not match its base card
   // BP15-119 "Mechanical Analyzer" (same Japanese name メカニカルアナライザー, CR 5.16.1.1.1).
   "BP15-120": { name_en: "Mechanical Analyzer (Evolved)" },
+  // The English names of these evolved cards lack " (Evolved)"; their Japanese names, traits and class are those of
+  // the base cards BP19-005 / P01 "Verdant Lieutenant" (葉脈の舎弟頭) and BP19-082 "Underworld Lieutenant" (冥府の中尉),
+  // and their card type is Evolved (CR 5.16.1.1.1).
+  "BP19-006": { name_en: "Verdant Lieutenant (Evolved)" },
+  "BP19-P02": { name_en: "Verdant Lieutenant (Evolved)" },
+  "BP19-083": { name_en: "Underworld Lieutenant (Evolved)" },
   // Back faces of double-faced cards (see above).
   "BP09-005": { back: BP09_005_BACK },
   "BP09-P02": { back: BP09_005_BACK },

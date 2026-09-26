@@ -126,6 +126,12 @@ export type GameEvent =
   /** CR 5.16 / 12.2.4. */
   | { type: "evolved"; card: CardId; evolveCard: CardId; superEvolved: boolean }
   /**
+   * CR 12.18.4 — `card` (now in the EX area) underwent fusion by its Fuse ability; `fused` are the
+   * cards fused in the process (12.18.4.1), now in the cemetery. E.g. BP19-048 "When this card is
+   * fused by your Condemned follower's ability".
+   */
+  | { type: "cardsFused"; player: PlayerId; card: CardId; fused: CardId[] }
+  /**
    * The card gained attack and/or defense: an effect gave it +X (CR 5.27), or a super-evolution
    * its +1/+1 (12.2.4.1). E.g. BP11-082 "Whenever this follower gains attack or defense".
    */

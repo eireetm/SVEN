@@ -14,6 +14,8 @@ export function changeLeaderDefense(g: G, player: PlayerId, delta: number): void
   if (delta < 0) {
     ps.leaderDefenseLostTurn = g.state.turn;
     thisTurn(g.state, player).leaderDefenseLost += 1; // BP05-069/081
+  } else {
+    thisTurn(g.state, player).leaderDefenseGained += 1; // BP18-111
   }
   g.emit({ type: "leaderDefenseChanged", player, defense: ps.leaderDefense, delta });
 }

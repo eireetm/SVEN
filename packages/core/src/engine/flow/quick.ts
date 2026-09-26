@@ -6,13 +6,12 @@ import type { G } from "../runtime/context";
 import { chooseQuickAction } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { characteristics } from "../state/characteristics";
-import { canPlayCard, playCard } from "./play-card";
+import { canPlayCard, cardsToPlayFrom, playCard } from "./play-card";
 
 /** CR 7.4.5 / 8.4.7 — Quick cards and Quick activated abilities the player can play now. */
 export function quickActions(g: G, player: PlayerId): QuickAction[] {
-  const ps = g.state.players[player];
   const actions: QuickAction[] = [];
-  for (const card of [...ps.zones.hand, ...ps.zones.ex]) {
+  for (const card of cardsToPlayFrom(g, player)) {
     if (canPlayCard(g, player, card, "quick")) actions.push({ type: "play", card });
   }
   for (const card of cardsWithActivatedAbilities(g, player)) {

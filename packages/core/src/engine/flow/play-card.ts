@@ -14,7 +14,7 @@ import { getCard, type Env } from "../state/access";
 import { characteristics } from "../state/characteristics";
 import { fieldLimit } from "../state/limits";
 import { moveCards } from "../state/zones";
-import { thisTurn } from "../state/turn-counts";
+import { countsThisTurn, thisTurn } from "../state/turn-counts";
 import { restricted } from "../state/restrictions";
 import { makeReader } from "../query";
 
@@ -23,6 +23,28 @@ export interface PlayCardOptions {
   setCost?: number | undefined;
   /** Played by an effect: the card may be in any zone and Quick timing does not apply. */
   byEffect?: boolean;
+}
+
+/**
+ * CR 8.2.1 — cards are played from the hand or the EX area. Card effects add (CR 1.3.1) the cemetery
+ * for a card that says so (BP18-007 "You may play this from the cemetery if ...", valid there, 10.3.5)
+ * and the banished zone for the rest of a turn (BP18-T03).
+ */
+function playableFrom(g: Env, player: PlayerId, card: CardId): boolean {
+  const c = g.state.cards[card];
+  if (!c || c.controller !== player) return false;
+  if (c.zone === "hand" || c.zone === "ex") return true;
+  if (c.zone === "cemetery") return g.scripts[c.def]?.playableFromCemetery?.(makeReader(g), card, player) ?? false;
+  if (c.zone === "banished") return countsThisTurn(g.state, player).playFromBanished;
+  return false;
+}
+
+/** The cards a player may try to play now (CR 8.2.1, 7.4.5), in zone order. */
+export function cardsToPlayFrom(g: Env, player: PlayerId): CardId[] {
+  const z = g.state.players[player].zones;
+  const fromCemetery = z.cemetery.filter((id) => g.scripts[g.state.cards[id]!.def]?.playableFromCemetery !== undefined);
+  const fromBanished = countsThisTurn(g.state, player).playFromBanished ? z.banished : [];
+  return [...z.hand, ...z.ex, ...fromCemetery, ...fromBanished];
 }
 
 function spellAbilityOf(g: Env, card: CardId): SpellAbility | undefined {
@@ -74,7 +96,7 @@ export function playVariants(
 ): (PlayOption | null)[] {
   const c = g.state.cards[card];
   if (!c) return [];
-  if (timing !== "effect" && (c.controller !== player || (c.zone !== "hand" && c.zone !== "ex"))) return [];
+  if (timing !== "effect" && !playableFrom(g, player, card)) return [];
   const ch = characteristics(g, card);
   if (ch.type === "leader" || ch.evolved || ch.cost === null) return [];
   if (timing === "quick" && !ch.keywords.includes("quick")) return [];

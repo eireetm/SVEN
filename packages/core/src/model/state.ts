@@ -171,6 +171,13 @@ export interface TurnCounts {
    * leaving the field.
    */
   leftField: ReturnedCard[];
+  /** Times this player's leader gained defense (CR 5.27, e.g. BP18-111 "if your leader has gained defense this turn"). */
+  leaderDefenseGained: number;
+  /**
+   * "For the rest of this turn, you may play cards from your banished zone" (BP18-T03): a card effect
+   * allowing what CR 8.2.1 does not (CR 1.3.1).
+   */
+  playFromBanished: boolean;
 }
 
 /** A persistent effect (CR 10.2.1.2) applied to one card object. */
@@ -296,7 +303,14 @@ export type EffectChange =
    * `engine/abilities/grants.ts`. Ends when the card changes zones (CR 10.9.2) unless `until` says sooner.
    * (Abilities a card on the field gives while it is there use `FieldPassives.grantsFor`.)
    */
-  | { kind: "grantedAbility"; grant: GrantedAbilityId };
+  | { kind: "grantedAbility"; grant: GrantedAbilityId }
+  /**
+   * The card gained a quoted text that its own script implements and checks with
+   * `GameReader.hasGainedText` (BP18-081 On Super-Evolve: give this "Each Forest Bat on your field has
+   * Storm and Bane."). Like other gained abilities it ends when the card changes zones (CR 10.9.2),
+   * and its script's passives are inactive while it has lost its abilities.
+   */
+  | { kind: "gainedText"; text: string };
 
 /** Abilities an effect can give a card. Each one is defined in engine/abilities/grants.ts. */
 export type GrantedAbilityId =
@@ -319,6 +333,8 @@ export type GrantedAbilityId =
 export interface TriggerData {
   card?: CardId;
   player?: PlayerId;
+  /** A number the trigger records, e.g. which evolution of the turn it was (BP18-003). */
+  count?: number;
 }
 
 /** CR 10.7.2 — an automatic ability waiting to be played in Confirmation Timing. */

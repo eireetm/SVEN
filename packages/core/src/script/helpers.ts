@@ -171,14 +171,17 @@ export function whenFollowerEntersYourField(
 }
 
 /**
- * "Whenever one of your followers evolves" / "Whenever a follower on your field evolves"
+ * "Whenever one of your [matching] followers evolves" / "Whenever a [matching] follower on your field evolves"
  * (CR 5.16.1.3; super-evolving is evolving, 12.2.4). Data: the evolved follower.
  */
-export function whenYourFollowerEvolves(spec: TimingSpec): AutomaticAbility {
+export function whenYourFollowerEvolves(spec: TimingSpec, filter?: (game: GameReader, card: CardId) => boolean): AutomaticAbility {
   return automatic(
     "other",
     (e, me, game) =>
-      !me.lookBack && e.type === "evolved" && game.card(e.card)?.controller === me.controller ? [{ card: e.card }] : false,
+      !me.lookBack && e.type === "evolved" && game.card(e.card)?.controller === me.controller && (filter?.(game, e.card) ?? true)
+        ? // `count`: which evolution on this field this turn it was (BP18-003 "If it's the 1st time ...").
+          [{ card: e.card, count: game.evolutionsThisTurn(me.controller) }]
+        : false,
     spec,
   );
 }
@@ -316,6 +319,40 @@ export function whenEnemyFollowerToCemetery(spec: TimingSpec, opts: { onlyYourTu
         .map((m) => ({ card: m.newCard ?? m.card! }));
     },
     spec,
+  );
+}
+
+/**
+ * "Whenever a follower is put from the field into the cemetery" — anyone's (BP18-095): once per
+ * follower, destroyed or buried or as a cost (rulings), during either player's turn. Also when this
+ * card leaves at the same time (look-back, CR 10.7.4.2). Data: the card.
+ */
+export function whenFollowerToCemetery(spec: TimingSpec): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game) => {
+      if (me.zone !== "field") return false;
+      return moves(e)
+        .filter((m) => m.from?.zone === "field" && m.to.zone === "cemetery" && m.before !== null && game.db.get(m.before.abilityDef).type === "follower")
+        .map((m) => ({ card: m.newCard ?? m.card! }));
+    },
+    spec,
+  );
+}
+
+/**
+ * "When this card is fused by your [matching] card's ability" (CR 12.18.4.1, BP19-048): valid in the
+ * cemetery, where a fused card is put. Data: the card that underwent fusion (in the EX area).
+ */
+export function whenThisIsFused(spec: TimingSpec, by: (game: GameReader, card: CardId) => boolean): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game) =>
+      !me.lookBack && e.type === "cardsFused" && e.player === me.controller && e.fused.includes(me.card) && by(game, e.card)
+        ? [{ card: e.card }]
+        : false,
+    spec,
+    { validIn: ["cemetery"] },
   );
 }
 

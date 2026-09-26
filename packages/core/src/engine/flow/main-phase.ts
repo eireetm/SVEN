@@ -8,14 +8,14 @@ import { anchor, chooseMainAction } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { characteristics } from "../state/characteristics";
 import { attackTargets, canAttackWith, performAttack } from "./attack";
-import { canPlayCard, playCard } from "./play-card";
+import { canPlayCard, cardsToPlayFrom, playCard } from "./play-card";
 
 /** CR 7.3.3 — every legal main phase action for the active player (8.1.2: only complete ones). */
 export function mainPhaseActions(g: G, player: PlayerId): MainAction[] {
   const ps = g.state.players[player];
   const actions: MainAction[] = [];
-  // 8.2 play a card from the hand or EX area
-  for (const card of [...ps.zones.hand, ...ps.zones.ex]) {
+  // 8.2 play a card from the hand or EX area (or where a card effect allows it, CR 1.3.1)
+  for (const card of cardsToPlayFrom(g, player)) {
     if (canPlayCard(g, player, card, "main")) actions.push({ type: "play", card });
   }
   // 8.3 evolve abilities (12.2)

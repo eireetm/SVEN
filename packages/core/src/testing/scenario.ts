@@ -54,6 +54,8 @@ export interface ScenarioSide {
   stackRemovedByEarthRite?: number;
   /** Cards that already left this player's field this turn (BP16-011 "unless a follower you control has left the field"). */
   leftFieldThisTurn?: PrintingId[];
+  /** Followers on this player's field already evolved this turn (BP18-014 "if a follower on your field has evolved this turn"). */
+  evolvedThisTurn?: number;
 }
 
 export interface ScenarioSpec {
@@ -132,6 +134,7 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
     if (side.returnedToHand) ps.thisTurn = { ...ps.thisTurn, turn, returnedToHand: side.returnedToHand };
     if (side.playedThisTurn) ps.cardsPlayed = { turn, count: side.playedThisTurn };
     if (side.stackRemovedByEarthRite) ps.thisTurn = { ...ps.thisTurn, turn, stackRemovedByEarthRite: side.stackRemovedByEarthRite };
+    if (side.evolvedThisTurn) ps.thisTurn = { ...ps.thisTurn, turn, evolved: side.evolvedThisTurn };
     if (side.leftFieldThisTurn) {
       const left = side.leftFieldThisTurn.map((printing) => {
         const def = engine.db.has(printing) ? engine.db.get(printing) : engine.db.ofPrinting(printing);

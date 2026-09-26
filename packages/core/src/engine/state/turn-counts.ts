@@ -17,6 +17,8 @@ export function emptyTurnCounts(turn: number): TurnCounts {
     statsGained: [],
     evolved: 0,
     leftField: [],
+    leaderDefenseGained: 0,
+    playFromBanished: false,
   };
 }
 

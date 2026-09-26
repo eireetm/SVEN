@@ -6,10 +6,11 @@ import type { Keyword } from "../model/keyword";
 import type { CardInstance, GameState, PlayerZone, ReturnedCard, ZoneName } from "../model/state";
 import type { Env } from "./state/access";
 import { leaderOf, usesThisTurn } from "./state/access";
-import { activeScript, characteristics, currentStats, isBoxed, isFollowerOnField, namesOf, typeAndTraits, type Characteristics } from "./state/characteristics";
+import { activeScript, characteristics, currentStats, infoDefId, isBoxed, isFollowerOnField, namesOf, typeAndTraits, type Characteristics } from "./state/characteristics";
 import { exAreaLimit, fieldLimit } from "./state/limits";
 import { playVariants } from "./flow/play-card";
 import { countsThisTurn } from "./state/turn-counts";
+import { effectInForce } from "./state/effects";
 
 /**
  * Read-only access to a game for card scripts, bots and views. Scripts must go through this
@@ -78,6 +79,12 @@ export interface GameReader {
    */
   statsOf(id: CardId): { attack: number | null; defense: number | null };
   /**
+   * CR 5.24.1 — the card's original attack and defense: printed on the card whose information it
+   * has (an evolved follower's evolve card, 5.16.1.2; the visible face, 2.14.3.1), e.g. BP19-107
+   * "change its defense to its original value".
+   */
+  originalStats(id: CardId): { attack: number | null; defense: number | null };
+  /**
    * Every name the card has (with "its name is also X" on the field). Like `typeAndTraits`, safe to
    * use in `FieldPassives.keywordsFor` (BP08-003_back).
    */
@@ -113,6 +120,27 @@ export interface GameReader {
   followerEvolvedThisTurn(player: PlayerId): boolean;
   /** Cards that left this player's field this turn, as they were there (BP16-011, BP17-061). */
   cardsLeftFieldThisTurn(player: PlayerId): readonly ReturnedCard[];
+  /**
+   * Evolutions of followers on this player's field this turn (CR 5.16, super-evolving too, 12.2.4),
+   * e.g. BP18-003 "If it's the 1st time a follower on your field has evolved this turn".
+   */
+  evolutionsThisTurn(player: PlayerId): number;
+  /** Times this player's leader gained defense this turn (CR 5.27; BP18-111). */
+  leaderDefenseGainedThisTurn(player: PlayerId): number;
+  /** CR 3.3 — the player's turns passed, this turn included (BP19-116 "your 8th turn or later"). */
+  turnsPassed(player: PlayerId): number;
+  /** "For the rest of this turn, you may play cards from your banished zone" (BP18-T03). */
+  canPlayFromBanished(player: PlayerId): boolean;
+  /**
+   * Has this card gained the quoted text `text` its own script implements (EffectChange "gainedText",
+   * BP18-081)? Safe in passives: it does not compute card information.
+   */
+  hasGainedText(id: CardId, text: string): boolean;
+  /**
+   * Can an ability banish this card (CR 1.3.3: not a card on the field that "can't be banished by
+   * abilities", BP06-022)? A cost that banishes it can't be paid with it (BP18-040 ruling).
+   */
+  banishableByAbilities(id: CardId): boolean;
   /**
    * The zone a card is being played from: its zone, or the zone it was played from once it is in
    * the resolution zone (CR 5.5.3), e.g. for "costs 3 less to play from the EX area" (BP05-106),
@@ -189,6 +217,10 @@ export function makeReader(env: Env): GameReader {
     followersToCemeteryThisTurn: (p) => countsThisTurn(state(), p).followersToCemetery,
     typeAndTraits: (id) => typeAndTraits(env, id),
     statsOf: (id) => currentStats(env, id),
+    originalStats: (id) => {
+      const d = env.db.get(infoDefId(env, id));
+      return { attack: d.attack, defense: d.defense };
+    },
     namesOf: (id) => namesOf(env, id),
     exAreaLimit: (p) => exAreaLimit(env, p),
     fieldLimit: (p) => fieldLimit(env, p),
@@ -204,6 +236,16 @@ export function makeReader(env: Env): GameReader {
     stackRemovedByEarthRiteThisTurn: (p) => countsThisTurn(state(), p).stackRemovedByEarthRite,
     followerEvolvedThisTurn: (p) => countsThisTurn(state(), p).evolved > 0,
     cardsLeftFieldThisTurn: (p) => countsThisTurn(state(), p).leftField,
+    evolutionsThisTurn: (p) => countsThisTurn(state(), p).evolved,
+    leaderDefenseGainedThisTurn: (p) => countsThisTurn(state(), p).leaderDefenseGained,
+    turnsPassed: (p) => ps(p).turnsPassed,
+    canPlayFromBanished: (p) => countsThisTurn(state(), p).playFromBanished,
+    banishableByAbilities: (id) => {
+      const c = state().cards[id];
+      return c !== undefined && !(c.zone === "field" && activeScript(env, id)?.cannotBeBanishedByAbilities === true);
+    },
+    hasGainedText: (id, text) =>
+      state().effects.some((e) => e.target === id && e.change.kind === "gainedText" && e.change.text === text && effectInForce(state(), e)),
     playZone: (id) => {
       const c = state().cards[id];
       if (!c) return null;

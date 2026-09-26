@@ -150,12 +150,14 @@ export function banishFromYourEx(filter: Filter, n = 1): CustomCost {
 }
 
 /**
- * "Banish N [matching] cards from your [field / EX area / cemetery]", e.g. BP07-013 "Banish a
+ * "Banish N [matching] cards from your [field / EX area / cemetery / hand]", e.g. BP07-013 "Banish a
  * Naterran Great Tree from your field", BP07-104 "... from your field or EX area", BP07-069
- * "Banish 2 Machina cards from your cemetery". All at once.
+ * "Banish 2 Machina cards from your cemetery", BP18-118 "Banish a card from your hand". All at once;
+ * not a card that can't be banished by abilities (CR 1.3.3, BP18-040 ruling).
  */
-export function banishFromYour(zones: readonly ("field" | "ex" | "cemetery")[], filter: Filter, n = 1): CustomCost {
-  const cards = (g: GameReader, c: PlayerId) => zones.flatMap((z) => g.cards(c, z)).filter((id) => filter(g, id));
+export function banishFromYour(zones: readonly ("field" | "ex" | "cemetery" | "hand")[], filter: Filter, n = 1): CustomCost {
+  const cards = (g: GameReader, c: PlayerId) =>
+    zones.flatMap((z) => g.cards(c, z)).filter((id) => filter(g, id) && g.banishableByAbilities(id));
   return {
     canPay: (g, c) => cards(g, c).length >= n,
     *pay(fx) {
@@ -232,6 +234,64 @@ export function leaderDefenseCost(x: number): CustomCost {
     canPay: (g, c) => g.state.players[c].leaderDefense >= x,
     *pay(fx) {
       yield* fx.giveLeaderDefense(fx.controller, -x);
+    },
+  };
+}
+
+/**
+ * CR 12.18 Fuse — "Fuse [n matching cards]: [text]" means "Discard or bury from your EX area [n matching cards]
+ * other than this, put this from your hand into your EX area: [text]" (12.18.2), an activated ability valid in
+ * the hand (BP19-038 rulings). The cards may come from both places (12.18.2.1); this card needs room in the EX
+ * area once the buried cards have left it (CR 4.8.3.2), so only choices that can be completed are offered. For
+ * the text, `fx.memory.fusion` is this card's id in the EX area and `fx.memory.fused` the fused cards' ids in
+ * the cemetery, comma-separated (12.18.4).
+ */
+export function fuse(filter: Filter, n = 1): CustomCost {
+  const inZone = (g: GameReader, c: PlayerId, self: CardId, zone: "hand" | "ex") =>
+    g.cards(c, zone).filter((id) => id !== self && filter(g, id));
+  // Cards that must come from the EX area so that this card fits there.
+  const mustBury = (g: GameReader, c: PlayerId) => Math.max(0, g.cards(c, "ex").length + 1 - g.exAreaLimit(c));
+  // Can `need` more cards be fused from `hand` + `ex` candidates, `bury` of them at least from the EX area?
+  const feasible = (hand: number, ex: number, need: number, bury: number) => Math.max(bury, need - hand) <= Math.min(ex, need);
+  return {
+    canPay: (g, c, self) =>
+      g.card(self)?.zone === "hand" && feasible(inZone(g, c, self, "hand").length, inZone(g, c, self, "ex").length, n, mustBury(g, c)),
+    *pay(fx) {
+      const g = fx.game;
+      const chosen: CardId[] = [];
+      for (let i = 0; i < n; i++) {
+        const hand = inZone(g, fx.controller, fx.self, "hand").filter((id) => !chosen.includes(id));
+        const ex = inZone(g, fx.controller, fx.self, "ex").filter((id) => !chosen.includes(id));
+        const buried = chosen.filter((id) => g.card(id)?.zone === "ex").length;
+        const bury = Math.max(0, mustBury(g, fx.controller) - buried);
+        const need = n - i - 1;
+        const options = [
+          ...(feasible(hand.length - 1, ex.length, need, bury) ? hand : []),
+          ...(feasible(hand.length, ex.length - 1, need, Math.max(0, bury - 1)) ? ex : []),
+        ];
+        const [pick] = yield* fx.chooseCards(options, 1, 1);
+        if (pick === undefined) break;
+        chosen.push(pick);
+      }
+      const done = yield* fx.fuse(fx.self, chosen);
+      fx.memory.fusion = done.card;
+      fx.memory.fused = done.fused.join(",");
+    },
+  };
+}
+
+/** The cards fused by a Fuse cost (`fuse`), as ids in the cemetery (CR 12.18.4.1). */
+export function fusedCards(memory: Readonly<Record<string, string | number | boolean | null>>): CardId[] {
+  const s = memory.fused;
+  return typeof s === "string" && s.length > 0 ? s.split(",") : [];
+}
+
+/** "Remove N [name] counters from this" as a cost, e.g. BP19-038 "Remove a fusion counter from this". */
+export function removeCountersFromThis(counter: string, n = 1): CustomCost {
+  return {
+    canPay: (g, _c, self) => g.counters(self, counter) >= n,
+    *pay(fx) {
+      yield* fx.removeCounters(fx.self, counter, n);
     },
   };
 }

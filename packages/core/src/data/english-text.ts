@@ -80,6 +80,8 @@ export function englishText(raw: RawCardJson): EnglishText {
   const official = raw.effect_en_official?.trim() ?? "";
   // Japan-only printings repeat the Japanese text in the English fields: no English text then.
   if (text === "" || isMostlyJapanese(text)) return { text: "", source: "none", officialMismatch: false };
+  // "(None.)" stands for no card text (BP18-122 / 125: evolved cards whose Japanese text is empty).
+  if (text === "(None.)") return { text: "", source: "effect_en", officialMismatch: false };
   // PR official texts are known to belong to other cards; they are not even compared.
   const officialMismatch = raw.set !== "PR" && official !== "" && !sameCardText(official, text);
   return { text, source: "effect_en", officialMismatch };

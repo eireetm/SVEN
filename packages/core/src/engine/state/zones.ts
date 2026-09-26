@@ -1,12 +1,12 @@
 import type { CardDatabase } from "../../data/database";
 import type { DefId, PrintingId } from "../../model/card";
-import type { CardId, PlayerId } from "../../model/ids";
+import { opponentOf, type CardId, type PlayerId } from "../../model/ids";
 import type { CardInstance, GameState, PlayerZone, ZoneName } from "../../model/state";
 import type { CardMove, MoveReason } from "../../events/types";
 import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import { getCard, nextSeq } from "./access";
-import { characteristics, grantedAbilitiesOf } from "./characteristics";
+import { activeScript, characteristics, grantedAbilitiesOf } from "./characteristics";
 import { effectInForce } from "./effects";
 import { thisTurn } from "./turn-counts";
 
@@ -151,6 +151,23 @@ function stackReplacesLeaving(g: G, card: CardInstance, to: ZoneName): boolean {
 }
 
 /**
+ * CR 10.10.1 — "If an enemy follower would be put from the field into the cemetery, banish it
+ * instead" (BP18-061, while a card with it is on the other side's field): the move goes to the
+ * banished zone, so it is not a destruction or a burial (10.10.1.1) and Last Words don't trigger
+ * (ruling). A follower that can't be banished by abilities goes to the cemetery (CR 1.3.3; ruling).
+ */
+function banishInsteadOfCemetery(g: G, spec: MoveSpec): MoveSpec {
+  if (spec.to !== "cemetery") return spec;
+  const c = getCard(g.state, spec.card);
+  if (c.zone !== "field" || characteristics(g, c.id).type !== "follower") return spec;
+  if (activeScript(g, c.id)?.cannotBeBanishedByAbilities) return spec;
+  const replacing = g.state.players[opponentOf(c.controller)].zones.field.some(
+    (id) => activeScript(g, id)?.field?.banishesEnemyFollowersInsteadOfCemetery === true,
+  );
+  return replacing ? { ...spec, to: "banished", reason: "banish" } : spec;
+}
+
+/**
  * Move cards simultaneously. Each moved card becomes a new card object with a new id
  * (CR 4.1.4). Emits one `cardsMoved` event, so automatic abilities see all moves of the
  * batch together (CR 10.7.4.2). Tokens that land in a zone where they cannot exist are
@@ -160,7 +177,7 @@ function stackReplacesLeaving(g: G, card: CardInstance, to: ZoneName): boolean {
  */
 export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReason): CardId[] {
   const { state } = g;
-  const specs = allSpecs.filter((s) => !stackReplacesLeaving(g, getCard(state, s.card), s.to));
+  const specs = allSpecs.filter((s) => !stackReplacesLeaving(g, getCard(state, s.card), s.to)).map((s) => banishInsteadOfCemetery(g, s));
   if (specs.length === 0) return [];
   // Look-back information is captured before anything moves (CR 10.7.4.1).
   const olds = specs.map((s) => getCard(state, s.card));

@@ -42,6 +42,7 @@ import { getCard, nextSeq, recordUse } from "../state/access";
 import { characteristics } from "../state/characteristics";
 import { exAreaLimit } from "../state/limits";
 import { moveCards } from "../state/zones";
+import { thisTurn } from "../state/turn-counts";
 import { makeReader, type GameReader } from "../query";
 
 type Until = EffectDuration;
@@ -298,6 +299,19 @@ export interface EffectContext {
   cantActivate(card: CardId, exceptEvolve: boolean, until?: Until): Proc<void>;
   /** Give a card an ability defined in engine/abilities/grants.ts (BP03-062, 083, 112). */
   grant(card: CardId, id: GrantedAbilityId, until?: Until | null): Proc<void>;
+  /**
+   * The card on the field gains a quoted text its own script implements (EffectChange "gainedText",
+   * BP18-081 "Give this 'Each Forest Bat on your field has Storm and Bane.'").
+   */
+  gainText(card: CardId, text: string, until?: Until | null): Proc<void>;
+  /** "For the rest of this turn, you may play cards from your banished zone" (BP18-T03, CR 1.3.1). */
+  allowPlayFromBanishedThisTurn(): Proc<void>;
+  /**
+   * CR 12.18.2 — the process of Fuse: discard the hand cards and bury the EX-area cards among `fused`
+   * (together), then put `card` from the hand into the EX area, and emit "cardsFused" (12.18.4).
+   * Returns the card's new id (null if it couldn't move) and the fused cards' new ids.
+   */
+  fuse(card: CardId, fused: readonly CardId[]): Proc<{ card: CardId | null; fused: CardId[] }>;
   /**
    * "The next [matching] card you play this turn costs `amount` less" (BP03-038). Which cards
    * match is `CardScript.nextPlay[key]` of this ability's definition.
@@ -750,6 +764,22 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *grant(card, id, until = null) {
       if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "grantedAbility", grant: id });
+    },
+    *gainText(card, text, until = null) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "gainedText", text });
+    },
+    *allowPlayFromBanishedThisTurn() {
+      thisTurn(g.state, ctrl).playFromBanished = true;
+    },
+    *fuse(card, fused) {
+      // 12.18.2.1 — each fused card is discarded from the hand (5.12) or buried from the EX area.
+      const specs = fused
+        .filter((id) => g.state.cards[id] !== undefined)
+        .map((id) => ({ card: id, to: "cemetery" as const, reason: g.state.cards[id]!.zone === "hand" ? ("discard" as const) : ("effect" as const) }));
+      const moved = specs.length > 0 ? moveCards(g, specs, "effect") : [];
+      const [self] = g.state.cards[card]?.zone === "hand" ? yield* putIntoEx(g, [card], ctrl) : [];
+      if (self !== undefined) g.emit({ type: "cardsFused", player: ctrl, card: self, fused: moved });
+      return { card: self ?? null, fused: moved };
     },
     *nextPlayCostsLess(key, amount) {
       if (!g.scripts[init.sourceDef]?.nextPlay?.[key]) throw new EngineError(`${init.sourceDef} has no nextPlay "${key}"`);

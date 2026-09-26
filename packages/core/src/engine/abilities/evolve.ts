@@ -23,6 +23,15 @@ export function evolveAbilityUsedThisTurn(g: G, p: PlayerId): boolean {
   return g.state.players[p].evolveAbilityTurn === g.state.turn;
 }
 
+/**
+ * CR 8.3.2.2 — may this player play evolve abilities any number of times per turn (BP18-001 "You may
+ * play any number of Evolve per turn" on their field)? Advanced activated abilities and other
+ * equivalent abilities keep the limit of 8.3.2.1 (BP18-001 rulings).
+ */
+export function unlimitedEvolve(g: G, p: PlayerId): boolean {
+  return g.state.players[p].zones.field.some((id) => activeScript(g, id)?.field?.unlimitedEvolve === true);
+}
+
 /** CR 12.2.4 — may this player pay a super-evolution point right now? */
 export function canSuperEvolve(g: G, p: PlayerId): boolean {
   const ps = g.state.players[p];
@@ -138,7 +147,7 @@ export function evolvePayment(
 
 /** Legal evolve actions for the main phase (CR 8.3, 12.2). */
 export function evolveActions(g: G, p: PlayerId): EvolveAction[] {
-  if (evolveAbilityUsedThisTurn(g, p)) return [];
+  if (evolveAbilityUsedThisTurn(g, p) && !unlimitedEvolve(g, p)) return [];
   const out: EvolveAction[] = [];
   for (const card of g.state.players[p].zones.field) {
     const ch = characteristics(g, card);
