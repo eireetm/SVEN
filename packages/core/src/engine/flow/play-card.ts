@@ -209,7 +209,12 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
   if (ch.type === "follower" || ch.type === "amulet") {
     // 10.6.2.8.1 onto the field if under the limit; effects and counters from the resolution
     // zone carry over (10.6.2.8.1.1)
-    yield* putOntoField(g, [played], player, "resolve", { keepEffects: true, keepCounters: true });
+    const [onField] = yield* putOntoField(g, [played], player, "resolve", { keepEffects: true, keepCounters: true });
+    // The play option and what its process recorded stay with the card for its own abilities (CP03-084 "If you buried a Blaster
+    // Dark as the additional cost to play this card, evolve this follower").
+    if (onField !== undefined && (option !== null || Object.keys(memory).length > 0)) {
+      g.state.cards[onField]!.playedWith = { option: option?.id ?? null, memory: { ...memory } };
+    }
   } else if (spell) {
     // 10.6.2.8.2 perform the spell's text in order (the chosen options in listed order, 5.18.1;
     // an option's "[process]:" is asked for when it resolves, 10.4.7.5)

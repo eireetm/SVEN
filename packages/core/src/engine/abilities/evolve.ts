@@ -247,14 +247,15 @@ export function evolveCard(g: G, fieldCard: CardId, evolveDeckCard: CardId, supe
  * card controller's evolve deck; they can't look at another player's evolve deck (CR 4.6.2), so
  * an effect of another player can't evolve it (BP07-104 ruling).
  */
-export function* effectEvolve(g: G, card: CardId, by?: PlayerId): Proc<boolean> {
+export function* effectEvolve(g: G, card: CardId, by?: PlayerId, spec: EvolveSpec = {}): Proc<boolean> {
   const c = g.state.cards[card];
   if (!c || c.zone !== "field" || characteristics(g, card).evolved) return false; // 5.16.4
   if (by !== undefined && by !== c.controller) return false;
   // CR 5.16.1.1 — a card with the same name as the evolving card (a face of it, CR 4.6.4). The
   // faces of a double-faced card have names of their own, so e.g. Paula, Icy Warmth (BP09-004)
   // can't be evolved by an effect: only its evolve ability names its evolved cards.
-  const options = correspondingEvolveCards(g, card);
+  // "Evolve this follower into X" (CP03-001): the evolved cards with that name instead (5.16.1.1.1).
+  const options = correspondingEvolveCards(g, card, spec);
   if (options.length === 0) return false;
   if (!(yield* confirm(g, c.controller, "effect", card))) return false;
   let chosen = options[0]!;

@@ -13,6 +13,7 @@ import { choosesAnyNumberOfOptions } from "./abilities/modes";
 import { countsThisTurn } from "./state/turn-counts";
 import { effectInForce } from "./state/effects";
 import { carrotsToServe, canServe } from "./actions/race";
+import { canRide, drivePointsToRide } from "./actions/drive";
 import { isRacing, linkedCards } from "./state/links";
 import { MAGICAL_ITEM } from "../data/universes";
 
@@ -129,6 +130,16 @@ export interface GameReader {
   magicalItemsInEx(player: PlayerId): CardId[];
   /** Cards named Magical Item banished from the player's EX area this turn (CP02-007). */
   magicalItemsBanishedThisTurn(player: PlayerId): number;
+  /** CR 14.4.7.3.1 — has this follower been given Drive? */
+  givenDrive(id: CardId): boolean;
+  /** The play option a card on the field was played with and what its process recorded (CP03-084), or null. */
+  playedWith(id: CardId): { option: string | null; memory: Readonly<Record<string, string | number | boolean | null>> } | null;
+  /** Facedown Drive Point cards in the player's evolve deck, which a Ride uses (CR 14.4.9.2). */
+  drivePointsToRide(player: PlayerId): CardId[];
+  /** CR 14.4.9.2 — can this card pay the fixed part of a Ride cost? */
+  canRide(id: CardId): boolean;
+  /** Attacks this turn by the player's followers that had this trait when they attacked (CP03-005 "the 3rd time ..."). */
+  attacksThisTurnWith(player: PlayerId, trait: string): number;
   /** Cards returned from this player's field to a hand this turn (BP03-005). */
   returnedToHandThisTurn(player: PlayerId): number;
   /** The cards returned from this player's field to a hand this turn, as they were on the field (BP10-009). */
@@ -277,6 +288,11 @@ export function makeReader(env: Env): GameReader {
     linkedCards: (id, zone) => linkedCards(env, id, zone),
     magicalItemsInEx: (p) => ps(p).zones.ex.filter((id) => env.db.get(state().cards[id]!.def).name === MAGICAL_ITEM),
     magicalItemsBanishedThisTurn: (p) => countsThisTurn(state(), p).magicalItemsBanished,
+    givenDrive: (id) => state().cards[id]?.givenDrive === true,
+    playedWith: (id) => state().cards[id]?.playedWith ?? null,
+    drivePointsToRide: (p) => drivePointsToRide(env, p),
+    canRide: (id) => canRide(env, id),
+    attacksThisTurnWith: (p, trait) => countsThisTurn(state(), p).attackerTraits.filter((traits) => traits.includes(trait)).length,
     gainedDefenseThisTurn: (id) => {
       const c = state().cards[id];
       return c !== undefined && countsThisTurn(state(), c.controller).defenseGained.includes(id);

@@ -25,6 +25,11 @@ export function activationBlocked(state: Readonly<GameState>, card: string, evol
   );
 }
 
+/** CR 8.4.3 — an effect says this follower can't attack enemy leaders (a Stand Trigger, CR 14.4.5.1.3.3). */
+export function effectPreventsLeaderAttack(state: Readonly<GameState>, card: string): boolean {
+  return state.effects.some((e) => e.target === card && effectInForce(state, e) && e.change.kind === "cannotAttackLeader");
+}
+
 /** CR 8.4.3.2.1 — an effect says this follower can't attack enemies. */
 export function effectPreventsAttack(state: Readonly<GameState>, card: string): boolean {
   return state.effects.some((e) => e.target === card && effectInForce(state, e) && e.change.kind === "cannotAttack");

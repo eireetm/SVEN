@@ -106,3 +106,105 @@ describe("CR 14.3 — Magical Items and Lesson (THE IDOLM@STER CINDERELLA GIRLS)
     expect(t.decision).toMatchObject({ type: "selectCards", candidateDefs: [ITEM, ITEM], min: 1, max: 1 });
   });
 });
+
+describe("CR 14.4 — Cardfight!! Vanguard: Triggers, drive checks, Ride and Drive, Starting Amulets", () => {
+  // CP03-086 Blaster Dark (3c 3/3, Single Drive), CP03-106 CEO Amaterasu (4c 4/4, Twin Drive), CP03-114 White Hare of
+  // Inaba (1c 1/1; Ride (1); On Drive: +1/+1, leader +1), CP03-127 Drive Point. Triggers: CP03-015 Critical, CP03-016 Draw,
+  // CP03-017 Stand, CP03-018 Heal. Starting Amulets: CP03-103 Fullbau, CP03-082 Lizard Soldier, Conroe.
+  const VG = { universe: "vanguard" as const };
+  const DRIVE_POINT = "CP03-127";
+
+  it("14.4.1 — a card's Trigger icon is read from its reminder text", () => {
+    expect(["CP03-015", "CP03-016", "CP03-017", "CP03-018", "CP03-001"].map((id) => E.db.get(id).trigger)).toEqual([
+      "critical",
+      "draw",
+      "stand",
+      "heal",
+      undefined,
+    ]);
+  });
+
+  it("14.4.6.2 / 14.4.5 — Single Drive: a drive check when it attacks; a resolved Heal Trigger goes to the cemetery", () => {
+    const t = d({ me: { ...VG, field: ["CP03-086"], deck: ["CP03-018", "V1"], leaderDefense: 10 } }).attack("CP03-086", "opp:leader");
+    expect(t.decision).toMatchObject({ type: "confirm", reason: "driveTrigger" });
+    t.yes();
+    expect([t.leader(), t.cemetery(), t.zone("me", "deck"), t.zone("me", "triggerZone"), t.leader("opp")]).toEqual([13, ["CP03-018"], ["V1"], [], 17]);
+  });
+
+  it("14.4.5.1.5 — a card without a Trigger, or one not resolved, goes to the bottom of the deck", () => {
+    expect(d({ me: { ...VG, field: ["CP03-086"], deck: ["V1", "V3"] } }).attack("CP03-086", "opp:leader").zone("me", "deck")).toEqual(["V3", "V1"]);
+    const no = d({ me: { ...VG, field: ["CP03-086"], deck: ["CP03-018", "V1"], leaderDefense: 10 } }).attack("CP03-086", "opp:leader").no();
+    expect([no.leader(), no.zone("me", "deck")]).toEqual([10, ["V1", "CP03-018"]]);
+  });
+
+  it("14.4.5.1.2 — with a deck not based on the universe the card goes to the bottom, no Trigger", () => {
+    const t = d({ me: { field: ["CP03-086"], deck: ["CP03-018", "V1"], leaderDefense: 10 } }).attack("CP03-086", "opp:leader");
+    expect([t.leader(), t.zone("me", "deck")]).toEqual([10, ["V1", "CP03-018"]]);
+  });
+
+  it("14.4.5.1.3 — Critical: a follower +2 attack; Stand: a follower refreshed that can't attack enemy leaders this turn", () => {
+    const c = d({ me: { ...VG, field: ["CP03-086", "V1"], deck: ["CP03-015"] } }).attack("CP03-086", "opp:leader").yes().pick("V1");
+    expect([c.stats("V1"), c.cemetery()]).toEqual([[4, 2], ["CP03-015"]]);
+    const s = d({ me: { ...VG, field: ["CP03-086", { card: "V1", engaged: true }], deck: ["CP03-017"] } }).attack("CP03-086", "opp:leader").yes().pick("V1");
+    expect([s.engaged("V1"), s.attackTargets("V1")]).toEqual([false, []]);
+  });
+
+  it("14.4.6.3 — Twin Drive: two drive checks, the first one's Trigger resolved before the second (rulings)", () => {
+    const t = d({ me: { ...VG, field: ["CP03-106"], deck: ["CP03-016", "V1", "CP03-018"] } }).attack("CP03-106", "opp:leader");
+    t.yes().yes();
+    expect([t.hand(), t.cemetery(), t.leader()]).toEqual([["V1"], ["CP03-016", "CP03-018"], 23]);
+  });
+
+  it("14.4.9 — Ride: a Drive Point linked in the drive zone, Drive (Drive, Single Drive, Rush) and On Drive; once per card per game", () => {
+    const t = d({ me: { ...VG, field: ["CP03-114"], evolveDeck: [DRIVE_POINT, DRIVE_POINT], playPoints: 1 } }).activate("CP03-114");
+    const drive = t.game.state.players[0].zones.driveZone;
+    expect([t.keywords("CP03-114"), t.stats("CP03-114"), t.leader(), drive.length, t.game.state.cards[drive[0]!]!.linkedTo]).toEqual([
+      ["drive", "singleDrive", "rush"],
+      [2, 2],
+      21,
+      1,
+      t.id("CP03-114"),
+    ]);
+    expect(t.game.reader().givenDrive(t.id("CP03-114"))).toBe(true);
+    // A follower that rode can't ride again, even in a later turn.
+    const later = d({ me: { ...VG, field: [{ card: "CP03-114", rode: true }], evolveDeck: [DRIVE_POINT], playPoints: 1 } });
+    expect(later.canActivate("CP03-114")).toBe(false);
+  });
+
+  it("14.4.9.2 / 14.4.9.5 — a Ride may use an evolution point for 1 play point and counts as the turn's evolve ability", () => {
+    const t = d({ me: { ...VG, field: ["CP03-114", "CP03-086"], evolveDeck: [DRIVE_POINT, "CP03-087"], playPoints: 0, evolutionPoints: 1 } });
+    t.activate("CP03-114", 0, { ep: true });
+    expect([t.game.state.players[0].evolutionPoints, t.keywords("CP03-114"), t.canEvolve("CP03-086")]).toEqual([0, ["drive", "singleDrive", "rush"], false]);
+    expect(d({ me: { ...VG, field: ["CP03-114"], evolveDeck: [], playPoints: 1 } }).canActivate("CP03-114")).toBe(false);
+  });
+
+  it("11.10.1 — when the follower leaves the field its Drive Point goes faceup to the evolve deck area", () => {
+    const t = d({ me: { ...VG, field: [{ card: "CP03-114", rode: true }, "V1"], hand: ["QUICK-SAC"] } }).play("QUICK-SAC").pick("CP03-114");
+    const deck = t.game.state.players[0].zones.evolveDeck;
+    expect([t.zone("me", "driveZone"), deck.length, t.game.state.cards[deck[0]!]!.faceUp]).toEqual([[], 1, true]);
+  });
+
+  it("14.4.3 — a Starting Amulet starts on the field facedown (hidden from the opponent) and is turned faceup after the redraws", () => {
+    const vg = { leader: "CP03-LD05", main: [...Array<string>(39).fill("CP03-093"), "CP03-103"], evolve: [] };
+    const other = { main: Array<string>(40).fill("BP01-001"), evolve: [] };
+    const game = E.newGame({ seed: 2, players: [vg, other], config: { deckRestrictions: false, firstPlayer: 0 } });
+    const [amulet] = game.state.players[0].zones.field;
+    expect([game.decision?.type, game.state.cards[amulet!]!.def, game.state.cards[amulet!]!.faceUp]).toEqual(["mulligan", "CP03-103", false]);
+    expect([game.view(1).players[0].field[0]!.hidden, game.view(0).players[0].field[0]!.hidden]).toEqual([true, false]);
+    game.act({ type: "mulligan", redraw: false });
+    game.act({ type: "mulligan", redraw: false });
+    expect(game.state.cards[amulet!]!.faceUp).toBe(true);
+  });
+
+  it("14.4.2 / 14.4.4 — deck construction: a Starting Amulet, one name for them all, Triggers of the leader's class", () => {
+    const deck = (main: string[]) => ({ leader: "CP03-LD05", main, evolve: [] });
+    const problems = (main: string[]) => E.validateDeck(deck(main)).filter((p) => p.includes("14.4"));
+    const base = [...Array<string>(3).fill("CP03-093"), ...Array<string>(3).fill("CP03-086"), "CP03-103"];
+    expect(problems(base)).toEqual([]);
+    expect(problems(base.slice(0, 6)).some((p) => p.includes("14.4.2.1.1"))).toBe(true);
+    expect(problems([...base, "CP03-082"]).some((p) => p.includes("14.4.4.1.1"))).toBe(true);
+    // All of them are Vanguard cards, so the deck is based on the universe: a Forestcraft Trigger breaks 14.4.2.1.2.
+    expect(problems([...base, "CP03-015"]).some((p) => p.includes("14.4.2.1.2"))).toBe(true);
+    expect(problems([...base, "CP03-097"])).toEqual([]);
+  });
+});

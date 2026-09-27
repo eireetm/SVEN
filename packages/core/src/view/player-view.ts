@@ -55,7 +55,8 @@ export interface PlayerSideView {
   /** CR 4.1.2.1 — card counts are always public. Deck contents / order never are. */
   deckCount: number;
   hand: (CardView | HiddenCardView)[];
-  field: CardView[];
+  /** Faceup cards; a facedown one (a Starting Amulet before the redraws, CR 14.4.3) is hidden from the opponent (4.2.3.2). */
+  field: (CardView | HiddenCardView)[];
   ex: CardView[];
   cemetery: CardView[];
   banished: (CardView | HiddenCardView)[];
@@ -136,7 +137,7 @@ function sideView(env: Env, viewer: PlayerId, p: PlayerId): PlayerSideView {
     turnsPassed: ps.turnsPassed,
     deckCount: ps.zones.deck.length,
     hand: some("hand"),
-    field: all("field"),
+    field: some("field"),
     ex: all("ex"),
     cemetery: all("cemetery"),
     banished: some("banished"),

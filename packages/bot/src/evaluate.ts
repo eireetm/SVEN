@@ -71,7 +71,8 @@ export function evaluate(view: PlayerView, me: PlayerId, w: EvalWeights = DEFAUL
 
 function sideValue(s: PlayerSideView, w: EvalWeights): number {
   let v = s.leaderDefense * w.leader - Math.max(0, w.dangerLine - s.leaderDefense) * w.leaderDanger;
-  for (const card of s.field) v += fieldCardValue(card, w);
+  // A facedown card (a Starting Amulet before the redraws, CR 14.4.3) counts as an amulet.
+  for (const card of s.field) v += card.hidden ? w.amulet : fieldCardValue(card, w);
   v += Math.min(s.hand.length, w.handCap) * w.hand;
   for (const card of s.ex) v += card.type === "crest" ? w.crest + Object.values(card.counters).reduce((a, b) => a + b, 0) * w.counter : w.ex;
   v += s.evolutionPoints * w.evolutionPoint + s.superEvolutionPoints * w.superEvolutionPoint;

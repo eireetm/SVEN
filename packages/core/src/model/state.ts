@@ -89,6 +89,22 @@ export interface CardInstance {
    */
   enteredByAbility?: boolean;
   /**
+   * A follower or amulet played with a play option (CR 10.4.7.3): which one, and what its process recorded (`fx.memory`), for the
+   * card's own abilities, e.g. CP03-084 "If you buried a Blaster Dark as the additional cost to play this card". Only on the
+   * object put onto the field by that play.
+   */
+  playedWith?: { option: string | null; memory: Record<string, string | number | boolean | null> };
+  /**
+   * CR 14.4.7.3.1 — this follower has been given Drive (it can't be given Drive again, even after losing it). An object's
+   * state: a card put onto the field again is a new follower.
+   */
+  givenDrive?: boolean;
+  /**
+   * CR 14.4.9.2 — this card's Ride ability has been activated this game: kept when the card changes zones, as the rule
+   * speaks of the card and the game.
+   */
+  rideUsed?: boolean;
+  /**
    * A card in the race zone, drive zone or equipment zone: the card on the field it is linked to (CR 14.2.1.1,
    * 14.4.9.2, 14.5.2.2.2). The link is lost when that card leaves the field (14.2.1.3, 14.4.9.4, 14.5.2.4): its id
    * then no longer exists, and rules handling (11.8, 11.10, 11.11) moves this card.
@@ -216,6 +232,12 @@ export interface TurnCounts {
    */
   diceRolled: number[];
   /**
+   * The traits of each follower of this player that attacked this turn, as it was when it attacked (CR 8.4.5), e.g. CP03-005
+   * "if it's the 3rd time an Aqua Force follower on your field has attacked this turn" (it counts even if the attacker was
+   * destroyed afterwards — ruling).
+   */
+  attackerTraits: string[][];
+  /**
    * Cards named Magical Item banished from this player's EX area this turn (CR 14.3.2.1 Lesson, or any effect), e.g.
    * CP02-007 "if a Magical Item was banished from your EX area this turn". Playing one as a spell is not banishing it
    * (ruling: it goes to the cemetery and the token then ceases to exist).
@@ -341,6 +363,8 @@ export type EffectChange =
   | { kind: "boxed" }
   /** "It can't attack enemies" (CR 8.4.3.2.1), e.g. BP03-013 for the controller's next turn. */
   | { kind: "cannotAttack" }
+  /** "It can't attack enemy leaders" for the duration (CR 8.4.3), e.g. a Stand Trigger (14.4.5.1.3.3), CP03-058. */
+  | { kind: "cannotAttackLeader" }
   /**
    * "This card's activated abilities can't be activated" for the duration (BP03-039/040).
    * `exceptEvolve` keeps evolve abilities playable (the unevolved Mystic King).

@@ -26,6 +26,7 @@ import {
 } from "../actions/cards";
 import { addCounters, removeCounters } from "../actions/counters";
 import { race as raceCard, serve as serveCard } from "../actions/race";
+import { driveCheck, ride as rideCard } from "../actions/drive";
 import { recordStatsGained } from "../actions/stats";
 import { dealDamage, type DamageInstance } from "../actions/damage";
 import { changeLeaderDefense, setLeaderDefense } from "../actions/leader";
@@ -293,9 +294,11 @@ export interface EffectContext {
    * CR 5.16.1.1 — evolve a follower by this effect. The controller may decline. A follower of
    * another player can't be evolved (BP07-104 ruling, CR 4.6.2).
    */
-  evolve(card: CardId): Proc<boolean>;
+  evolve(card: CardId, opts?: { into?: readonly string[] }): Proc<boolean>;
   /** "It can't attack enemies" (CR 8.4.3.2.1). */
   cannotAttack(card: CardId, until: Until): Proc<void>;
+  /** "It can't attack enemy leaders" (CR 8.4.3), e.g. a Stand Trigger (14.4.5.1.3.3), CP03-058. */
+  cannotAttackLeader(card: CardId, until: Until): Proc<void>;
   /** "This card's activated abilities can't be activated" (BP03-039/040). */
   cantActivate(card: CardId, exceptEvolve: boolean, until?: Until): Proc<void>;
   /** Give a card an ability defined in engine/abilities/grants.ts (BP03-062, 083, 112). */
@@ -360,6 +363,15 @@ export interface EffectContext {
   serve(card: CardId, times: number): Proc<boolean>;
   /** CR 14.2.3 — race this card `times` times (while linked to a race-zone card). */
   race(card: CardId, times: number): Proc<void>;
+  /** CR 14.4.5 — perform a drive check, for `follower` (by default this card). */
+  driveCheck(follower?: CardId | null): Proc<void>;
+  /**
+   * CR 14.4.7.3 — give a follower Drive: a follower given Drive before (even if it lost it) is not given it again; it gets
+   * Drive, Single Drive and Rush, and its On Drive triggers (14.4.8). Returns whether it was given Drive.
+   */
+  giveDrive(card: CardId): Proc<boolean>;
+  /** CR 14.4.9.2 — the part of a Ride cost every Ride has: a Drive Point from the evolve deck into the drive zone, linked. */
+  ride(card: CardId): Proc<boolean>;
   /** CR 5.32 — maneuver an amulet on the field: for the rest of the turn it is a follower (BP11-T01). */
   maneuver(card: CardId): Proc<void>;
   /** CR 5.31 — the card becomes Boxed for the duration (BP11-018 "until the end of its controller's next turn"). */
@@ -774,8 +786,11 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     *steal(card) {
       return stealCard(g, card, ctrl);
     },
-    *evolve(card) {
-      return yield* effectEvolve(g, card, ctrl);
+    *evolve(card, opts = {}) {
+      return yield* effectEvolve(g, card, ctrl, opts.into !== undefined ? { into: opts.into } : {});
+    },
+    *cannotAttackLeader(card, until) {
+      if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "cannotAttackLeader" });
     },
     *cannotAttack(card, until) {
       if (g.state.cards[card]?.zone === "field") addEffect(card, until, { kind: "cannotAttack" });
@@ -885,6 +900,21 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *race(card, times) {
       raceCard(g, card, times);
+    },
+    *driveCheck(follower = selfIfPresent()) {
+      yield* driveCheck(g, fx, follower);
+    },
+    *giveDrive(card) {
+      const c = g.state.cards[card];
+      // 14.4.7.3.1 — once per follower (object), even if it has lost Drive since.
+      if (!c || c.zone !== "field" || characteristics(g, card).type !== "follower" || c.givenDrive === true) return false;
+      c.givenDrive = true;
+      for (const keyword of ["drive", "singleDrive", "rush"] as const) addEffect(card, null, { kind: "keyword", keyword }); // 14.4.7.3.2
+      g.emit({ type: "givenDrive", card, player: c.controller });
+      return true;
+    },
+    *ride(card) {
+      return rideCard(g, card);
     },
     *rollDie(player = ctrl) {
       const result = randomInt(g.state.rng, 6) + 1;

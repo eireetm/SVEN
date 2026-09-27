@@ -45,6 +45,30 @@ export const KEYWORD_ABILITIES: Partial<Record<Keyword, readonly AbilityDef[]>> 
       },
     },
   ],
+  // CR 14.4.6.2 Single Drive: "Strike - Perform a drive check."
+  singleDrive: [
+    {
+      kind: "automatic",
+      timing: "strike",
+      trigger: (e, me) => !me.lookBack && e.type === "attackDeclared" && e.attacker === me.card,
+      *resolve(fx) {
+        yield* fx.driveCheck(fx.self);
+      },
+    },
+  ],
+  // CR 14.4.6.3 Twin Drive: "Strike - Perform 2 drive checks." One after the other: the first one's Trigger is resolved
+  // and its card moved before the second (rulings).
+  twinDrive: [
+    {
+      kind: "automatic",
+      timing: "strike",
+      trigger: (e, me) => !me.lookBack && e.type === "attackDeclared" && e.attacker === me.card,
+      *resolve(fx) {
+        yield* fx.driveCheck(fx.self);
+        yield* fx.driveCheck(fx.self);
+      },
+    },
+  ],
 };
 
 /** Keywords that stand for automatic abilities: checked after every event (triggers.ts). */

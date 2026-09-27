@@ -5,6 +5,7 @@ import type { Engine, GameConfigInput } from "../engine/engine";
 import { resolveConfig } from "../engine/engine";
 import type { GameSession, SessionOptions } from "../engine/session";
 import { placeInitialCard } from "../engine/state/zones";
+import { nextSeq } from "../engine/state/access";
 
 /**
  * Build a game positioned at the active player's main phase decision (the "mainPhase"
@@ -31,6 +32,11 @@ export interface FieldCardSpec {
   gainedDefenseThisTurn?: boolean;
   /** It raced this many times: as many Carrots (CP01-085) are put into the race zone linked to it (CR 14.2). */
   racing?: number;
+  /**
+   * It used its Ride (CR 14.4.9): a Drive Point (CP03-127) is in the drive zone linked to it, and it was given Drive (Drive,
+   * Single Drive and Rush, 14.4.7.3).
+   */
+  rode?: boolean;
 }
 
 export interface ScenarioSide {
@@ -129,6 +135,15 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
         for (let i = 0; i < f.racing; i++) state.cards[placeInitialCard(state, engine.db, "CP01-085", p, "raceZone")]!.linkedTo = id;
         c.raced = f.racing;
         c.raceSeq = 0;
+      }
+      if (f.rode) {
+        state.cards[placeInitialCard(state, engine.db, "CP03-127", p, "driveZone")]!.linkedTo = id;
+        c.rideUsed = true;
+        c.givenDrive = true;
+        for (const keyword of ["drive", "singleDrive", "rush"] as const) {
+          const seq = nextSeq(state);
+          state.effects.push({ id: `e${seq}`, seq, target: id, source: id, controller: p, until: null, createdTurn: turn - 1, change: { kind: "keyword", keyword } });
+        }
       }
       c.enteredFieldTurn = f.enteredThisTurn ? turn : turn - 1;
       c.damage = f.damage ?? 0;

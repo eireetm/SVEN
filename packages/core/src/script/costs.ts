@@ -107,6 +107,17 @@ export function serveCost(times: number): CustomCost {
   };
 }
 
+/**
+ * CR 14.4.9.2 — the part every Ride cost has: a Drive Point from your evolve deck into your drive zone, linked to this card;
+ * and it can be activated only if it hasn't been activated for this card this game.
+ */
+export const rideCost: CustomCost = {
+  canPay: (g, _c, self) => g.canRide(self),
+  *pay(fx) {
+    yield* fx.ride(fx.self);
+  },
+};
+
 /** "Discard this card" — a cost of an ability valid in the hand (BP08-037, 105; CR 10.3.5, 5.12). */
 export const discardThis: CustomCost = {
   canPay: (g, _c, self) => g.card(self)?.zone === "hand",

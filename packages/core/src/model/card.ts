@@ -29,6 +29,10 @@ export type CardClass = (typeof CARD_CLASSES)[number];
  * CINDERELLA GIRLS, Cardfight!! Vanguard, Princess Connect! Re: Dive. A deck is based on a universe when its
  * leader and all its cards share it (6.1.1.5.2); its rules (Magical Items, drive checks, Union Burst …) then apply.
  */
+/** CR 14.4.1.1 — the Trigger icons of Cardfight!! Vanguard cards (their abilities: 14.4.5.1.3). */
+export const TRIGGER_ICONS = ["critical", "draw", "stand", "heal"] as const;
+export type TriggerIcon = (typeof TRIGGER_ICONS)[number];
+
 export const UNIVERSES = ["umamusume", "cinderellaGirls", "vanguard", "princessConnect"] as const;
 export type Universe = (typeof UNIVERSES)[number];
 
@@ -71,6 +75,8 @@ export interface CardDefinition {
    * build takes it from the set (data/universes.ts). Absent for class-only cards.
    */
   universe?: Universe;
+  /** CR 14.4.1 — the Trigger icon of a Cardfight!! Vanguard card (the data build reads it from its reminder text). */
+  trigger?: TriggerIcon;
   /**
    * Traits (CR 2.4) in Japanese, exactly as printed on the Japanese card (e.g. "妖精").
    * The only trait identity: English trait names are translations and are not used.

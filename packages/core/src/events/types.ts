@@ -1,4 +1,4 @@
-import type { CardType, DefId, PrintingId } from "../model/card";
+import type { CardType, DefId, PrintingId, TriggerIcon } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import type { Keyword } from "../model/keyword";
 import type { GameResult, GrantedAbilityId, ZoneName } from "../model/state";
@@ -122,6 +122,12 @@ export type GameEvent =
   | { type: "turnSkipped"; player: PlayerId }
   /** CR 14.2.3 — a card raced `times` times (each is a race for On Race, 14.2.4). */
   | { type: "raced"; card: CardId; player: PlayerId; times: number }
+  /** CR 14.4.5 — a player performed a drive check for `follower` (CP03-039 "whenever a follower on your field performs a drive check"). */
+  | { type: "driveChecked"; player: PlayerId; follower: CardId | null }
+  /** CR 14.4.5.1.4 — a player resolved the Trigger of a card their drive check revealed ("when you drive check a Trigger"). */
+  | { type: "driveTriggered"; player: PlayerId; card: CardId; trigger: TriggerIcon }
+  /** CR 14.4.7.3 — a follower was given Drive (On Drive, 14.4.8). */
+  | { type: "givenDrive"; card: CardId; player: PlayerId }
   /** CR 5.20 a player rolled a six-sided die. */
   | { type: "dieRolled"; player: PlayerId; result: number }
   /**

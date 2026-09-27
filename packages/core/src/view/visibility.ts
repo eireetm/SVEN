@@ -3,6 +3,7 @@ import type { CardInstance, ZoneName } from "../model/state";
 
 /**
  * CR 4.1.2 — who may look at a card's information.
+ *  - a facedown card on the field (a Starting Amulet before the redraws, CR 14.4.3): its controller only (4.2.3.2);
  *  - public zones: field (4.4.2), EX area (4.8.2), cemetery (4.9.2), evolve zone (4.12.2),
  *    leader area (4.3.2), resolution zone (4.11.2), race zone (4.13.2), drive zone (4.14.2),
  *    Trigger zone (4.15.2), equipment zone (4.16.2);
@@ -14,6 +15,7 @@ import type { CardInstance, ZoneName } from "../model/state";
 export function zoneVisibleTo(zone: ZoneName, zonePlayer: PlayerId, viewer: PlayerId, faceUp: boolean): boolean {
   switch (zone) {
     case "field":
+      return faceUp || viewer === zonePlayer;
     case "ex":
     case "cemetery":
     case "evolveZone":

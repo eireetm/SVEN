@@ -120,6 +120,22 @@ export function validateDeck(
         if (n > limit) problems.push(`${label}: ${n} copies of "${name}", at most ${limit} (6.1.1.4)`);
       }
     }
+    // CR 14.4.4.1.1 — Starting Amulet: all the Starting Amulet cards used in the main and evolve decks share one name (a
+    // deck-construction passive, 6.1.2).
+    const startingAmulets = new Set(
+      [...main, ...evolve].filter((d) => scripts[d.id]?.keywords?.includes("startingAmulet")).map((d) => d.name),
+    );
+    if (startingAmulets.size > 1) problems.push(`Starting Amulet cards with different names: ${[...startingAmulets].join(", ")} (14.4.4.1.1)`);
+    // CR 14.4.2.1 — a deck based on Cardfight!! Vanguard has a Starting Amulet card, and its cards with a Trigger are of the
+    // leader's class.
+    if (deckUniverse(db, deck) === "vanguard") {
+      if (startingAmulets.size === 0) problems.push("a Cardfight!! Vanguard deck needs a Starting Amulet card (14.4.2.1.1)");
+      for (const d of [...main, ...evolve]) {
+        if (leader && d.trigger !== undefined && d.class !== leader.class) {
+          problems.push(`${d.id} ${d.name} has a Trigger and is not of the leader's class ${leader.class} (14.4.2.1.2)`);
+        }
+      }
+    }
     // CR 6.1.1.5 — based on a universe (6.1.1.5.2, by construction of deckUniverse) or on the leader's class.
     if (leader && deckUniverse(db, deck) === null) {
       for (const d of [...main, ...evolve]) {

@@ -5,7 +5,7 @@ import type { CardMove, GameEvent, MoveCause } from "../events/types";
 import type { EffectContext } from "../engine/effects/context";
 import type { Proc } from "../engine/runtime/proc";
 import type { GameReader } from "../engine/query";
-import { serveCost } from "./costs";
+import { rideCost, serveCost } from "./costs";
 import { costAtMost, isCrest } from "./targets";
 import type {
   ActivatedAbility,
@@ -920,6 +920,46 @@ export function whenYourFollowerRaces(spec: TimingSpec, opts: { another?: boolea
 }
 
 /** An activated ability. */
+/**
+ * CR 14.4.9 — "{[ride]} {[costN]}: Give this follower Drive." (a Cardfight!! Vanguard card). A Drive Point from the evolve
+ * deck goes into the drive zone, linked (the cost, `rideCost`); 1 evolution point may pay 1 play point, and it is
+ * equivalent to an evolve ability (14.4.9.5 → 8.3.2.1), so it is written as an advanced activated ability (`advanced`).
+ */
+export function rideAbility(playPoints: number, spec: Omit<ActivatedAbility, "kind" | "cost" | "advanced"> = {}): ActivatedAbility {
+  return activated(
+    { playPoints, custom: rideCost },
+    {
+      advanced: true,
+      *resolve(fx) {
+        yield* fx.giveDrive(fx.self);
+      },
+      ...spec,
+    },
+  );
+}
+
+/** CR 14.4.8 — "On Drive": when this card is given Drive. */
+export const onDrive = (spec: TimingSpec) =>
+  automatic("onDrive", (e, me) => !me.lookBack && e.type === "givenDrive" && e.card === me.card, spec);
+
+/**
+ * CR 14.4.5.1.4 — "When you drive check a Trigger": a Trigger of your drive check resolved (not one left unresolved);
+ * Twin Drive may trigger it twice (CP03-072 / 107 rulings). Data: `card`, the Trigger card.
+ */
+export const whenYouDriveCheckTrigger = (spec: TimingSpec) =>
+  automatic("other", (e, me) => (!me.lookBack && e.type === "driveTriggered" && e.player === me.controller ? [{ card: e.card }] : false), spec);
+
+/**
+ * "Whenever a follower on your field performs a drive check" (CR 14.4.5): once per drive check, so twice for Twin Drive; it
+ * resolves after the drive check (CP03-039 / 065 rulings). Data: `card`, the follower.
+ */
+export const whenYourFollowerDriveChecks = (spec: TimingSpec) =>
+  automatic(
+    "other",
+    (e, me) => (!me.lookBack && e.type === "driveChecked" && e.player === me.controller && e.follower !== null ? [{ card: e.follower }] : false),
+    spec,
+  );
+
 export function activated(cost: CostSpec, spec: Omit<ActivatedAbility, "kind" | "cost"> = {}): ActivatedAbility {
   return { kind: "activated", cost, ...spec };
 }

@@ -277,6 +277,7 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
       card.counters = { ...card.counters, ...old.counters };
     }
     if (spec.linkTo !== undefined) card.linkedTo = spec.linkTo;
+    if (old.rideUsed) card.rideUsed = true; // CR 14.4.9.2 "this card this game"
     if (spec.keepState) {
       // CR 14.2.1.3 / 14.4.9.4 / 14.5.2.4 — links are lost only when it leaves the field, not on a change of control.
       for (const p of [0, 1] as const) {
@@ -286,6 +287,7 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
       }
       card.raced = old.raced;
       card.raceSeq = old.raceSeq;
+      if (old.givenDrive) card.givenDrive = true;
       // CR 5.22 — a stolen card is not newly put onto the field and keeps its state.
       card.damage = old.damage;
       card.counters = { ...old.counters };

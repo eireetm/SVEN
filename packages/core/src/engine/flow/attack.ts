@@ -7,7 +7,7 @@ import type { Proc } from "../runtime/proc";
 import { isOnField, leaderOf } from "../state/access";
 import { activeScript, characteristics, hasKeyword, isFollowerOnField, passiveSources } from "../state/characteristics";
 import { makeReader } from "../query";
-import { effectPreventsAttack } from "../state/effects";
+import { effectPreventsAttack, effectPreventsLeaderAttack } from "../state/effects";
 import { thisTurn } from "../state/turn-counts";
 import { quickWindow } from "./quick";
 
@@ -32,7 +32,7 @@ function onFieldSinceTurnStart(g: G, id: CardId): boolean {
  *    Assail attacker (confirmed, docs/open-questions.md Q4).
  * Storm: that it also lifts the leader restriction of 8.4.3.1 is confirmed by the project
  * owner and by the official play guide (docs/open-questions.md Q1).
- * A card's "can't attack enemy leaders" (e.g. BP02-107) removes the leader; "ignores Ward"
+ * A card's "can't attack enemy leaders" (e.g. BP02-107), or an effect saying so (a Stand Trigger), removes the leader; "ignores Ward"
  * (BP04-006) lifts the Ward requirement.
  */
 export function attackTargets(g: G, attacker: CardId): CardId[] {
@@ -52,7 +52,8 @@ export function attackTargets(g: G, attacker: CardId): CardId[] {
   const leaderAllowed =
     (onFieldSinceTurnStart(g, attacker) || hasKeyword(g, attacker, "storm")) &&
     !followersFirst &&
-    !activeScript(g, attacker)?.cannotAttackLeader?.(makeReader(g), attacker);
+    !activeScript(g, attacker)?.cannotAttackLeader?.(makeReader(g), attacker) &&
+    !effectPreventsLeaderAttack(g.state, attacker);
   return leaderAllowed ? [...followers, leaderOf(g.state, opp)] : followers;
 }
 
@@ -114,6 +115,7 @@ export function* performAttack(g: G, attacker: CardId, target: CardId): Proc<voi
   const targetIsLeader = g.state.cards[target]!.zone === "leader";
   g.state.attack = { attacker, target, targetIsLeader };
   thisTurn(g.state, player).followerAttacks += 1;
+  thisTurn(g.state, player).attackerTraits.push([...characteristics(g, attacker).traits]); // CP03-005 "the 3rd time ..."
   g.emit({ type: "attackDeclared", player, attacker, target });
   // 8.4.6
   yield* confirmationTiming(g);

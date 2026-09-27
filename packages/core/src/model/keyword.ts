@@ -13,7 +13,11 @@ export type Keyword =
   | "drain" // CR 12.13
   | "bane" // CR 12.14
   | "aura" // CR 12.15
-  | "stack"; // CR 13.3.2
+  | "stack" // CR 13.3.2
+  | "singleDrive" // CR 14.4.6.2 "Strike - Perform a drive check."
+  | "twinDrive" // CR 14.4.6.3 "Strike - Perform 2 drive checks."
+  | "drive" // CR 14.4.7 — no effect on its own (14.4.7.2)
+  | "startingAmulet"; // CR 14.4.4 — a deck-construction passive (all Starting Amulet cards share a name)
 
 /**
  * Keywords the engine implements. Scripts may only use these (checked when an engine is
@@ -32,4 +36,8 @@ export const IMPLEMENTED_KEYWORDS: readonly Keyword[] = [
   "aura",
   "stack",
   "drain",
+  "singleDrive",
+  "twinDrive",
+  "drive",
+  "startingAmulet",
 ];

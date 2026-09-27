@@ -23,6 +23,7 @@ export function emptyTurnCounts(turn: number): TurnCounts {
     playFromBanished: false,
     diceRolled: [],
     magicalItemsBanished: 0,
+    attackerTraits: [],
   };
 }
 

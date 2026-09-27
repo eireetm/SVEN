@@ -1,4 +1,4 @@
-import { backFaceId, CARD_CLASSES, type CardClass, type CardDefinition, type CardType, type LocalizedText } from "../model/card";
+import { backFaceId, CARD_CLASSES, type CardClass, type CardDefinition, type CardType, type LocalizedText, type TriggerIcon } from "../model/card";
 import { englishText, japaneseKey, treatedAs, withoutReminders, withoutTreatedAs, wordDice, type TextSource } from "./english-text";
 import type { RawCardJson } from "./raw";
 import { MAGICAL_ITEM, UNIVERSE_OF_SET } from "./universes";
@@ -187,6 +187,32 @@ function checkStats(
  * (CP02-T01 ruling Q3: Cute Earrings, Cool Pendant, … are all the card named Magical Item). Every one of them carries the
  * reminder of 14.3.1.2, which is how they are recognized.
  */
+/**
+ * CR 14.4.1 — a Trigger icon is printed in the card's corner, and the data has no field for it. Every card with one explains
+ * it in a reminder, "(If this card is revealed by a drive check, [its ability])" (14.4.5.1.3), which tells the icon. The
+ * English and the Japanese reminders must agree.
+ */
+const TRIGGER_REMINDERS: readonly { icon: TriggerIcon; en: string; ja: string }[] = [
+  { icon: "critical", en: "giveafolloweronyourfield{[attack]}+2", ja: "{[attack]}+2" },
+  { icon: "draw", en: "drawacard", ja: "1枚引く" },
+  { icon: "stand", en: "refreshafolloweronyourfield", ja: "スタンドする" },
+  { icon: "heal", en: "giveyourleader{[defense]}+3", ja: "{[defense]}+3" },
+];
+
+function triggerIcon(cardNo: string, en: string | null, ja: string | null): TriggerIcon | undefined {
+  const squash = (s: string) => s.replace(/\s+/g, "");
+  const enReminder = /\(If this card is revealed by a drive check, ([^)]*)\)/.exec(en ?? "")?.[1];
+  const jaReminder = /（ドライブチェックによってこれが捲れたなら、([^）]*)）/.exec(ja ?? "")?.[1];
+  if (enReminder === undefined && jaReminder === undefined) return undefined;
+  const fromEn = enReminder === undefined ? undefined : TRIGGER_REMINDERS.find((r) => squash(enReminder).includes(r.en))?.icon;
+  const fromJa = jaReminder === undefined ? undefined : TRIGGER_REMINDERS.find((r) => squash(jaReminder).includes(r.ja))?.icon;
+  const icon = fromJa ?? fromEn;
+  if (!icon || (fromEn !== undefined && fromJa !== undefined && fromEn !== fromJa)) {
+    throw new CardDataError(`${cardNo}: Trigger reminders don't tell one icon (en ${fromEn ?? "?"}, ja ${fromJa ?? "?"})`);
+  }
+  return icon;
+}
+
 const MAGICAL_ITEM_NAMES: LocalizedText = { en: MAGICAL_ITEM, ja: "魔法のアイテム", cn: "魔法道具" };
 const isMagicalItem = (token: boolean, text: string | null): boolean => token && (text ?? "").includes("put 5 Magical Item tokens into your EX area");
 
@@ -206,6 +232,7 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   const name = alias === null ? printedName : stripEvolvedSuffix(cardNo, alias, false);
   if (name === "") throw new CardDataError(`${cardNo}: empty English name`);
   const universe = UNIVERSE_OF_SET[raw.set];
+  const trigger = triggerIcon(cardNo, raw.effect_en, raw.effect_ja);
 
   return {
     printing: cardNo,
@@ -219,6 +246,7 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
       token,
       ...(advanced ? { advanced: true as const } : {}),
       ...(universe ? { universe } : {}),
+      ...(trigger ? { trigger } : {}),
       cost: raw.cost,
       attack: raw.atk,
       defense: raw.def,

@@ -1,4 +1,4 @@
-import { opponentOf, type PlayerId } from "../../model/ids";
+import { opponentOf, type CardId, type PlayerId } from "../../model/ids";
 import { randomInt } from "../../rng/rng";
 import { drawCards, shuffleDeck } from "../actions/cards";
 import { EngineError } from "../errors";
@@ -49,6 +49,31 @@ function placeMagicalItems(g: G): void {
   }
 }
 
+/** CR 14.4.4 — a card with Starting Amulet (a keyword of its script). */
+function hasStartingAmulet(g: G, card: CardId): boolean {
+  return g.scripts[g.state.cards[card]!.def]?.keywords?.includes("startingAmulet") === true;
+}
+
+/**
+ * CR 14.4.3.1 — before the decks are put into the deck areas and shuffled (6.2.1.4), a player whose deck is based on
+ * Cardfight!! Vanguard puts a Starting Amulet card from their deck onto their field facedown (hidden, CR 4.2.3.2). All of
+ * them share one name (14.4.4.1.1), so any one will do.
+ */
+function placeStartingAmulets(g: G): void {
+  for (const p of [0, 1] as PlayerId[]) {
+    if (g.state.players[p].universe !== "vanguard") continue;
+    const amulet = g.state.players[p].zones.deck.find((id) => hasStartingAmulet(g, id));
+    if (amulet !== undefined) moveCards(g, [{ card: amulet, to: "field", faceUp: false }], "setup");
+  }
+}
+
+/** CR 14.4.3.2 — after the redraws, each player turns the facedown Starting Amulets on their field faceup. */
+function turnStartingAmuletsFaceUp(g: G): void {
+  for (const p of [0, 1] as PlayerId[]) {
+    for (const id of g.state.players[p].zones.field) g.state.cards[id]!.faceUp = true;
+  }
+}
+
 /**
  * CR 6.2 — before starting a game. Steps 6.2.1.1–6.2.1.3 and 6.2.1.5 (presenting decks,
  * placing leaders and evolve decks) happen when the initial state is built.
@@ -59,6 +84,7 @@ export function* setupGame(g: G): Proc<void> {
   const rules = state.config.rules;
   state.phase = "setup";
 
+  placeStartingAmulets(g); // 14.4.3.1
   for (const p of [0, 1] as PlayerId[]) shuffleDeck(g, p); // 6.2.1.4
   placeMagicalItems(g); // 14.3.1.2
   const first = yield* decideTurnOrder(g); // 6.2.1.6
@@ -84,7 +110,8 @@ export function* setupGame(g: G): Proc<void> {
     });
     g.emit({ type: "leaderDefenseChanged", player: p, defense: ps.leaderDefense, delta: 0 }); // initial value, not a gain
   }
-  // 6.2.1.13 abilities that apply "after redrawing": none in the supported sets.
+  // 6.2.1.13 what applies "after redrawing": the Starting Amulets are turned faceup (14.4.3.2).
+  turnStartingAmuletsFaceUp(g);
   state.activePlayer = first; // 6.2.1.14
   g.emit({ type: "gameStarted", firstPlayer: first });
 }

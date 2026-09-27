@@ -415,7 +415,7 @@ export interface TriggerSubject {
 export interface AutomaticAbility {
   kind: "automatic";
   /** The keyword this ability is written with, for UI / docs (CR 12.4–12.7, 12.17). */
-  timing: "fanfare" | "lastWords" | "onEvolve" | "onSuperEvolve" | "strike" | "onRace" | "other";
+  timing: "fanfare" | "lastWords" | "onEvolve" | "onSuperEvolve" | "strike" | "onRace" | "onDrive" | "other";
   /** Zones where the ability is valid (CR 10.3.5 default: field). */
   validIn?: readonly ZoneName[];
   /**

@@ -95,7 +95,9 @@ export type ConfirmReason =
   /** CR 13.3.3.2 pay Earth Rite as an optional additional cost. */
   | "earthRite"
   /** A yes/no choice made while an effect resolves ("you may ..."). */
-  | "effect";
+  | "effect"
+  /** CR 14.4.5.1.5 — resolve the Trigger of the card a drive check revealed, or put it on the bottom of the deck. */
+  | "driveTrigger";
 
 /** A card together with its definition, for cards the deciding player is allowed to see. */
 export interface CardRef {
