@@ -1,0 +1,3733 @@
+{
+ "format": 1,
+ "set": "CP02",
+ "printings": 309,
+ "cards": [
+  {
+   "id": "CP02-001",
+   "printings": [
+    "CP02-001",
+    "CP02-SL01"
+   ],
+   "name": "Aiko Takamori",
+   "names": {
+    "en": "Aiko Takamori",
+    "cn": "高森蓝子",
+    "ja": "高森藍子"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} Look at the top 3 cards of your deck. You may reveal a Passion card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》查看自己的牌堆顶3张卡。从那之中，可以将1张Passion类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分のデッキの上3枚を見る。その中から、パッション・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-002",
+   "printings": [
+    "CP02-002",
+    "CP02-SL02"
+   ],
+   "name": "Aiko Takamori",
+   "names": {
+    "en": "Aiko Takamori",
+    "cn": "高森蓝子",
+    "ja": "高森藍子"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - You may summon a Passion follower that costs 3 or less from your hand.",
+    "cn": "【进化时】可以将自己的手牌中的原始消费为3及以下的1张Passion类型·从者卡召唤到场上。",
+    "ja": "【進化時】自分の手札の元のコスト3以下のパッション・フォロワー1枚を場に出してよい。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-003",
+   "printings": [
+    "CP02-003",
+    "CP02-SL03",
+    "CP02-SP01a",
+    "CP02-SP01b",
+    "CP02-U01a",
+    "CP02-U01b",
+    "PR-152"
+   ],
+   "name": "Miku Maekawa",
+   "names": {
+    "en": "Miku Maekawa",
+    "cn": "前川未来",
+    "ja": "前川みく"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 3,
+   "defense": 1,
+   "text": {
+    "en": "Strike - Select an enemy follower on the field and deal it 2 damage.\n{[act]} {[cost01]}, Lesson (1): Give this follower Storm.",
+    "cn": "【攻击时】选择敌方场上的1个从者。给予其2点伤害。\n《起动》《消费1》【课程_1】：使这张卡获得【疾驰】能力。",
+    "ja": "【攻撃時】相手の場のフォロワー1体を選ぶ。それに2ダメージ。\n起動コスト1【レッスン_1】：これは【疾走】を持つ。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ],
+   "alternateNames": {
+    "CP02-SP01a": {
+     "en": "* (Asterisk)",
+     "cn": "*(Asterisk)",
+     "ja": "*（Asterisk）"
+    },
+    "CP02-SP01b": {
+     "en": "* (Asterisk)",
+     "cn": "*(Asterisk)",
+     "ja": "*（Asterisk）"
+    },
+    "CP02-U01a": {
+     "en": "* (Asterisk)",
+     "cn": "*(Asterisk)",
+     "ja": "*（Asterisk）"
+    },
+    "CP02-U01b": {
+     "en": "* (Asterisk)",
+     "cn": "*(Asterisk)",
+     "ja": "*（Asterisk）"
+    }
+   }
+  },
+  {
+   "id": "CP02-004",
+   "printings": [
+    "CP02-004",
+    "CP02-P01"
+   ],
+   "name": "Yuzu Kitami",
+   "names": {
+    "en": "Yuzu Kitami",
+    "cn": "喜多见柚",
+    "ja": "喜多見柚"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.\nWard.\nActivate, Lesson (1): Select another card that costs 1 or less on your field and return it to its owner's hand. For the rest of this turn, this card's Activate abilities except Evolve can't be activated.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n【守护】\n《起动》【课程_1】：选择原始消费为1及以下的自己场上的其他的1张卡片。将其放回手牌。这个回合，这张卡的《进化》能力以外的《起动》能力将不能使用。（放回到手牌的衍生物会从游戏中移出）",
+    "ja": "進化コスト2：これは進化する。\n【守護】\n起動【レッスン_1】：元のコスト1以下の自分の場の他のカード1枚を選ぶ。それを手札に戻す。このターン、これの進化を除く起動能力を使えない。（手札に戻ったトークンはゲームから取り除く）"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-005",
+   "printings": [
+    "CP02-005",
+    "CP02-P02"
+   ],
+   "name": "Yuzu Kitami",
+   "names": {
+    "en": "Yuzu Kitami",
+    "cn": "喜多见柚",
+    "ja": "喜多見柚"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "Ward.\nOn Evolve - Select an enemy follower that costs 2 or less on the field and return it to its owner's hand.\nActivate, Lesson (1): Select another card that costs 1 or less on your field and return it to its owner's hand. For the rest of this turn, this card's Activate abilities can't be activated.",
+    "cn": "【守护】\n【进化时】选择原始消费为2及以下的敌方场上的1个从者。将其放回手牌。\n《起动》【课程_1】：选择原始消费为1及以下的自己场上的其他的1张卡片。将其放回手牌。这个回合，这张卡的《起动》能力将不能使用。",
+    "ja": "【守護】\n【進化時】元のコスト2以下の相手の場のフォロワー1体を選ぶ。それを手札に戻す。\n起動【レッスン_1】：元のコスト1以下の自分の場の他のカード1枚を選ぶ。それを手札に戻す。このターン、これの起動能力を使えない。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-006",
+   "printings": [
+    "CP02-006",
+    "CP02-P03",
+    "CP02-SP02",
+    "CP02-U02"
+   ],
+   "name": "Anastasia",
+   "names": {
+    "en": "Anastasia",
+    "cn": "安娜斯塔西娅",
+    "ja": "アナスタシア"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 5,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Recover 2 play points.\nWhenever you play a card during your turn, if it's the 3rd you've played this turn, recover 2 play points. If it's the 5th, give each follower on your field {[attack]}+1/{[defense]}+1.",
+    "cn": "自己的回合中，当自己将卡片使用时，如果为这个回合中第3张的卡片的话，将自己的PP回复2点。如果为这个回合中第5张的卡片的话，使自己场上的全体从者各《攻击力》+1/《生命值》+1。\n《入场曲》将自己的PP回复2点。",
+    "ja": "自分のターン中、自分がカードをプレイしたとき、このターン中に3枚目のカードなら、自分のPPを2回復する。このターン中に5枚目のカードなら、自分の場のフォロワーすべては攻撃力+1/体力+1する。\nファンファーレ自分のPPを2回復する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-007",
+   "printings": [
+    "CP02-007",
+    "CP02-P04"
+   ],
+   "name": "Brand New Beat",
+   "names": {
+    "en": "Brand New Beat",
+    "cn": "Brand New Beat",
+    "ja": "ブランニュー・ビート"
+   },
+   "class": "Forestcraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "When this card leaves the field, if a Magical Item was banished from your EX area this turn, draw a card..\nActivate {[engage]}, bury this card: Select a follower on your field and give it {[attack]}+1/{[defense]}+1.",
+    "cn": "当这张卡离开场上时，这个回合，如果已有自己EX区域的『魔法道具』卡被消失的话，抽取1张卡。\n《起动》将这张卡《横置》置于墓场：选择自己场上的1个从者。使其《攻击力》+1/《生命值》+1。",
+    "ja": "これが場を離れたとき、このターン、自分のEXエリアの『魔法のアイテム』が消滅していたなら、1枚引く。\n起動これをアクト墓場に置く：自分の場のフォロワー1体を選ぶ。それは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-008",
+   "printings": [
+    "CP02-008",
+    "CP02-P05",
+    "PR-143"
+   ],
+   "name": "Shinobu Kudo",
+   "names": {
+    "en": "Shinobu Kudo",
+    "cn": "工藤忍",
+    "ja": "工藤忍"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]}  Search your deck for up to two 1-cost iM@S CG followers and/or 1-cost iM@S CG amulets with different names, summon them, then shuffle your deck.",
+    "cn": "《入场曲》从自己的牌堆之中搜寻卡片名各不相同的「原始消费为1的IMC类型·从者卡」或「原始消费为1的IMC类型·护符卡」最多2张，并召唤到场上。",
+    "ja": "ファンファーレ自分のデッキから元のコスト1のデレマス・フォロワーや元のコスト1のデレマス・アミュレットをカード名が異なるように2枚まで探し、場に出す。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-009",
+   "printings": [
+    "CP02-009",
+    "CP02-P06"
+   ],
+   "name": "Yumi Aiba",
+   "names": {
+    "en": "Yumi Aiba",
+    "cn": "相叶夕美",
+    "ja": "相葉夕美"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} If there are at least 3 Passion followers on your field, select an enemy follower on the field and deal it 2 damage.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》如果自己场上的Passion类型·从者为3个及以上的话，选择敌方场上的1个从者。给予其2点伤害。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分の場のパッション・フォロワーが3体以上なら、相手の場のフォロワー1体を選ぶ。それに2ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-010",
+   "printings": [
+    "CP02-010",
+    "CP02-P07"
+   ],
+   "name": "Yumi Aiba",
+   "names": {
+    "en": "Yumi Aiba",
+    "cn": "相叶夕美",
+    "ja": "相葉夕美"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Select an enemy follower with 3 defense or less on the field and put it on the bottom of its owner's deck.",
+    "cn": "【进化时】选择生命值为3及以下的敌方场上的1个从者。其玩家将其置于牌堆底。（置于到牌堆的衍生物会从游戏中移出）",
+    "ja": "【進化時】体力3以下の相手の場のフォロワー1体を選ぶ。それのプレイヤーはそれをデッキの下に置く。（デッキに置いたトークンはゲームから取り除く）"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-011",
+   "printings": [
+    "CP02-011",
+    "CP02-P08"
+   ],
+   "name": "Goddess by the Sunlit Sea",
+   "names": {
+    "en": "Goddess by the Sunlit Sea",
+    "cn": "女神于朝霞之海上",
+    "ja": "女神は朝焼けの海に"
+   },
+   "class": "Forestcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Draw a card. If there's a follower that costs 5 or more on your field, recover 1 play point.",
+    "cn": "抽取1张卡。如果自己的场上有原始消费为5及以上的从者的话，将自己的PP回复1点。",
+    "ja": "1枚引く。自分の場に元のコスト5以上のフォロワーがいるなら、自分のPPを1回復する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-012",
+   "printings": [
+    "CP02-012",
+    "CP02-P09",
+    "CSD02b-012"
+   ],
+   "name": "Honoka Ayase",
+   "names": {
+    "en": "Honoka Ayase",
+    "cn": "绫濑穗乃香",
+    "ja": "綾瀬穂乃香"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "{[fanfare]} Select another iM@S CG follower on your field and give it Rush.",
+    "cn": "《入场曲》选择自己场上的其他的1个IMC类型·从者。使其获得【突进】能力。",
+    "ja": "ファンファーレ自分の場の他のデレマス・フォロワー1体を選ぶ。それは【突進】を持つ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-013",
+   "printings": [
+    "CP02-013",
+    "CP02-P10"
+   ],
+   "name": "Azuki Momoi",
+   "names": {
+    "en": "Azuki Momoi",
+    "cn": "桃井小豆",
+    "ja": "桃井あずき"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 3,
+   "defense": 5,
+   "text": {
+    "en": "This card costs 3 less to play if there are at least 3 iM@S CG followers on your field.\n----------\nWard.",
+    "cn": "将这张卡使用之际，如果自己的场上的IMC类型·从者为3个及以上的话，将消费-3。\n【守护】",
+    "ja": "これをプレイする際、自分の場のデレマス・フォロワーが3体以上なら、コストを-3する。\n【守護】"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-014",
+   "printings": [
+    "CP02-014",
+    "CP02-P11",
+    "CSD02a-012"
+   ],
+   "name": "Kana Imai",
+   "names": {
+    "en": "Kana Imai",
+    "cn": "今井加奈",
+    "ja": "今井加奈"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-015",
+   "printings": [
+    "CP02-015",
+    "CP02-P12",
+    "CSD02a-013"
+   ],
+   "name": "Kana Imai",
+   "names": {
+    "en": "Kana Imai",
+    "cn": "今井加奈",
+    "ja": "今井加奈"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Look at the top card of your deck. You may reveal it and add it to your hand. If you revealed a Cute card, give your leader {[defense]}+2.",
+    "cn": "【进化时】查看自己的牌堆顶1张卡。从那之中，可以将1张卡公开并加入手牌。如果将Cute类型·卡片公开的话，使自己的主战者《生命值》+2。",
+    "ja": "【進化時】自分のデッキの上1枚を見る。その中から、1枚を公開して手札に加えてよい。キュート・カードを公開したなら、自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-016",
+   "printings": [
+    "CP02-016",
+    "CP02-P13",
+    "CSD02b-013"
+   ],
+   "name": "Otoha Umeki",
+   "names": {
+    "en": "Otoha Umeki",
+    "cn": "梅木音叶",
+    "ja": "梅木音葉"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "Whenever you play card, select an enemy follower on the field and deal it 1 damage.",
+    "cn": "当自己将卡片使用时，选择敌方场上的1个从者。给予其1点伤害。",
+    "ja": "自分がカードをプレイしたとき、相手の場のフォロワー1体を選ぶ。それに1ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-017",
+   "printings": [
+    "CP02-017",
+    "CP02-P14",
+    "CSD02b-014"
+   ],
+   "name": "A Single Vessel",
+   "names": {
+    "en": "A Single Vessel",
+    "cn": "唯一之器",
+    "ja": "ただひとつの器"
+   },
+   "class": "Forestcraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]}/{[lastwords]} Select an enemy follower on the field and deal it 3 damage.\n{[act]} {[cost02]}, {[engage]}, discard a card: Bury this card.",
+    "cn": "《入场曲》《谢幕曲》选择敌方场上的1个从者。给予其3点伤害。\n《起动》《消费2》将这张卡《横置》将1张手牌舍弃：将这张卡置于墓场。",
+    "ja": "ファンファーレラストワード相手の場のフォロワー1体を選ぶ。それに3ダメージ。\n起動コスト2これをアクト手札1枚を捨てる：これを墓場に置く。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-018",
+   "printings": [
+    "CP02-018",
+    "CP02-SL04"
+   ],
+   "name": "Kyoko Igarashi",
+   "names": {
+    "en": "Kyoko Igarashi",
+    "cn": "五十岚响子",
+    "ja": "五十嵐響子"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 7,
+   "attack": 6,
+   "defense": 7,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\nWard.\n{[fanfare]} Give your leader {[defense]}+3. Draw 2 cards.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】\n《入场曲》使自己的主战者《生命值》+3。抽取2张卡。",
+    "ja": "進化コスト1：これは進化する。\n【守護】\nファンファーレ自分のリーダーは体力+3する。2枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-019",
+   "printings": [
+    "CP02-019",
+    "CP02-SL05",
+    "CP02-SP03",
+    "CP02-U03"
+   ],
+   "name": "Kyoko Igarashi",
+   "names": {
+    "en": "Kyoko Igarashi",
+    "cn": "五十岚响子",
+    "ja": "五十嵐響子"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 7,
+   "defense": 8,
+   "text": {
+    "en": "Ward.\nOn Evolve - Select up to 1 enemy follower on the field and engage or refresh it.\nDuring your turn, this follower doesn't take damage.",
+    "cn": "【守护】\n自己的回合中，使这张卡不会受到伤害。\n【进化时】选择敌方场上的从者最多1个。将其横置或竖置。",
+    "ja": "【守護】\n自分のターン中、これはダメージを受けない。\n【進化時】相手の場のフォロワー1体まで選ぶ。それをアクトするかスタンドする。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-020",
+   "printings": [
+    "CP02-020",
+    "CP02-SL06",
+    "CP02-SP04a",
+    "CP02-SP04b",
+    "CP02-U04a",
+    "CP02-U04b",
+    "PR-153"
+   ],
+   "name": "Nagi Hisakawa",
+   "names": {
+    "en": "Nagi Hisakawa",
+    "cn": "久川凪",
+    "ja": "久川凪"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Banish two 1-cost cards from your cemetery: Choose up to 2 of the following. (1) Select an enemy follower on the field and destroy it. (2) Deal 2 damage to each enemy leader. (3) Draw a card. Discard a card.\n{[act]} {[cost01]}, Lesson (1): Give this follower Rush.",
+    "cn": "《入场曲》将墓场中的原始消费为1的2张卡片消失：从下述之中抉择2项。\n【1】选择敌方场上的1个从者。将其破坏。\n【2】给予敌方的全体主战者各2点伤害。\n【3】抽取1张卡。将自己的1张手牌舍弃。\n《起动》《消费1》【课程_1】：使这张卡获得【突进】能力。",
+    "ja": "ファンファーレ墓場の元のコスト1のカード2枚を消滅：下記から2つまでチョイスする。【1】相手の場のフォロワー1体を選ぶ。それを破壊する。【2】相手のリーダーすべてに2ダメージ。【3】1枚引く。自分の手札1枚を捨てる。\n起動コスト1【レッスン_1】：これは【突進】を持つ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ],
+   "alternateNames": {
+    "CP02-SP04a": {
+     "en": "miroir",
+     "cn": "miroir",
+     "ja": ""
+    },
+    "CP02-SP04b": {
+     "en": "miroir",
+     "cn": "miroir",
+     "ja": ""
+    },
+    "CP02-U04a": {
+     "en": "miroir",
+     "cn": "miroir",
+     "ja": ""
+    },
+    "CP02-U04b": {
+     "en": "miroir",
+     "cn": "miroir",
+     "ja": ""
+    }
+   }
+  },
+  {
+   "id": "CP02-021",
+   "printings": [
+    "CP02-021",
+    "CP02-P15"
+   ],
+   "name": "Rin Shibuya",
+   "names": {
+    "en": "Rin Shibuya",
+    "cn": "涩谷凛",
+    "ja": "渋谷凛"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\n{[fanfare]} If there's a follower with \"Uzuki Shimamura\" in its name on your field, select an enemy follower on the field and deal it 5 damage.\n{[fanfare]} If there's a follower with \"Mio Honda\" in its name on your field, deal 5 damage to each enemy leader.",
+    "cn": "【守护】\n《入场曲》如果自己场上有「卡片名包含『岛村卯月』的从者」的话，选择敌方场上的1个从者。给予其5点伤害。\n《入场曲》如果自己场上有「卡片名包含『本田未央』的从者」的话，给予敌方的全体主战者各5点伤害。",
+    "ja": "【守護】\nファンファーレ自分の場に「カード名に『島村卯月』を含むフォロワー」がいるなら、相手の場のフォロワー1体を選ぶ。それに5ダメージ。\nファンファーレ自分の場に「カード名に『本田未央』を含むフォロワー」がいるなら、相手のリーダーすべてに5ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-022",
+   "printings": [
+    "CP02-022",
+    "CP02-P16"
+   ],
+   "name": "Mio Honda",
+   "names": {
+    "en": "Mio Honda",
+    "cn": "本田未央",
+    "ja": "本田未央"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "Storm.\nStrike - If there's a follower with \"Uzuki Shimamura\" in its name on your field, give this follower {[defense]}+1.\nStrike - If there's a follower with \"Rin Shibuya\" in its name on your field, give this follower {[attack]}+1.",
+    "cn": "【疾驰】\n【攻击时】如果自己场上有「卡片名包含『岛村卯月』的从者」的话，使这张卡《生命值》+1。\n【攻击时】如果自己场上有「卡片名包含『涩谷凛』的从者」的话，使这张卡《攻击力》+1。",
+    "ja": "【疾走】\n【攻撃時】自分の場に「カード名に『島村卯月』を含むフォロワー」がいるなら、これは体力+1する。\n【攻撃時】自分の場に「カード名に『渋谷凛』を含むフォロワー」がいるなら、これは攻撃力+1する。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-023",
+   "printings": [
+    "CP02-023",
+    "CP02-P17"
+   ],
+   "name": "Uzuki Shimamura",
+   "names": {
+    "en": "Uzuki Shimamura",
+    "cn": "岛村卯月",
+    "ja": "島村卯月"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]}, Lesson (1): Give your leader {[defense]}+1.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》【课程_1】：使自己的主战者《生命值》+1。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ【レッスン_1】：自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-024",
+   "printings": [
+    "CP02-024",
+    "CP02-P18"
+   ],
+   "name": "Uzuki Shimamura",
+   "names": {
+    "en": "Uzuki Shimamura",
+    "cn": "岛村卯月",
+    "ja": "島村卯月"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Search your deck for a follower with \"Rin Shibuya\" or \"Mio Honda\" in its name, put it into your EX area, then shuffle your deck. It costs 2 less to play this turn.",
+    "cn": "【进化时】从自己的牌堆之中搜寻1张「卡片名包含『涩谷凛』或『本田未央』的从者卡」，并置于EX区域。这个回合，将其使用之际，将其消费-2。",
+    "ja": "【進化時】自分のデッキから「カード名に『渋谷凛』か『本田未央』を含むフォロワー」1枚を探し、EXエリアに置く。このターン、それをプレイする際、コストを-2する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-025",
+   "printings": [
+    "CP02-025",
+    "CP02-P19",
+    "PR-144"
+   ],
+   "name": "Anzu Futaba",
+   "names": {
+    "en": "Anzu Futaba",
+    "cn": "双叶杏",
+    "ja": "双葉杏"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} If there are 2 iM@S CG followers or less on your field, {[engage]}.\nThis card doesn't refresh during your start phase.\nAt the start of your main phase, {[cost02]}: Refresh this card.",
+    "cn": "这张卡在自己的开始阶段不会竖置。\n当自己的主要阶段到来时，《消费2》：将这张卡竖置。\n《入场曲》如果自己场上的IMC类型·从者为2个及以下的话，将这张卡横置。",
+    "ja": "これは自分のスタートフェイズにスタンドしない。\n自分のメインフェイズが来たとき、コスト2：これをスタンドする。\nファンファーレ自分の場のデレマス・フォロワーが2体以下なら、これをアクトする。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-026",
+   "printings": [
+    "CP02-026",
+    "CP02-P20"
+   ],
+   "name": "Karen Hojo",
+   "names": {
+    "en": "Karen Hojo",
+    "cn": "北条加莲",
+    "ja": "北条加蓮"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} If there are at least 3 iM@S CG followers on your field, give this follower {[defense]}+2.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》如果自己场上的IMC类型·从者为3个及以上的话，使这张卡《生命值》+2。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分の場のデレマス・フォロワーが3体以上なら、これは体力+2する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-027",
+   "printings": [
+    "CP02-027",
+    "CP02-P21"
+   ],
+   "name": "Karen Hojo",
+   "names": {
+    "en": "Karen Hojo",
+    "cn": "北条加莲",
+    "ja": "北条加蓮"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field. Deal it and this follower 3 damage.",
+    "cn": "【进化时】选择敌方场上的1个从者。给予其与这张卡各3点伤害。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それとこれに3ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-028",
+   "printings": [
+    "CP02-028",
+    "CP02-P22",
+    "PR-145"
+   ],
+   "name": "Sparkling☆Days",
+   "names": {
+    "en": "Sparkling☆Days",
+    "cn": "心动☆无限",
+    "ja": "トキメキ☆ホーダイ"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Look at the top 2 cards of your deck. You may reveal a Cool or Passion card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "查看自己的牌堆顶2张卡。从那之中，可以将1张Cool类型·卡片或Passion类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "自分のデッキの上2枚を見る。その中から、クール・カードかパッション・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-029",
+   "printings": [
+    "CP02-029",
+    "CP02-P23"
+   ],
+   "name": "Nao Kamiya",
+   "names": {
+    "en": "Nao Kamiya",
+    "cn": "神谷奈绪",
+    "ja": "神谷奈緒"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} If there are at least 3 iM@S CG followers on your field, select an enemy follower on the field and deal it 2 damage.",
+    "cn": "《入场曲》如果自己场上的IMC类型·从者为3个及以上的话，选择敌方的1个从者。给予其2点伤害。",
+    "ja": "ファンファーレ自分の場のデレマス・フォロワーが3体以上なら、相手の場のフォロワー1体を選ぶ。それに2ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-030",
+   "printings": [
+    "CP02-030",
+    "CP02-P24"
+   ],
+   "name": "Mayu Sakuma",
+   "names": {
+    "en": "Mayu Sakuma",
+    "cn": "佐久间麻由",
+    "ja": "佐久間まゆ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "Assail. Bane. Drain.",
+    "cn": "【指定攻击】【必杀】【吸血】",
+    "ja": "【指定攻撃】【必殺】【ドレイン】"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-031",
+   "printings": [
+    "CP02-031",
+    "CP02-P25",
+    "CSD02c-012"
+   ],
+   "name": "Kirari Moroboshi",
+   "names": {
+    "en": "Kirari Moroboshi",
+    "cn": "诸星琪拉莉",
+    "ja": "諸星きらり"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 9,
+   "attack": 9,
+   "defense": 9,
+   "text": {
+    "en": "This card costs 3 less to play if there's a 1-cost follower on your field.\n----------\nWard.\n{[fanfare]} Refresh each follower on your field.",
+    "cn": "将这张卡使用之际，如果自己的场上有原始消费为1的从者的话，将消费-3。\n【守护】\n《入场曲》将自己场上的全体从者竖置。",
+    "ja": "これをプレイする際、自分の場に元のコスト1のフォロワーがいるなら、コストを-3する。\n【守護】\nファンファーレ自分の場のフォロワーすべてをスタンドする。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-032",
+   "printings": [
+    "CP02-032",
+    "CP02-P26"
+   ],
+   "name": "Miho Kohinata",
+   "names": {
+    "en": "Miho Kohinata",
+    "cn": "小日向美穗",
+    "ja": "小日向美穂"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-033",
+   "printings": [
+    "CP02-033",
+    "CP02-P27"
+   ],
+   "name": "Miho Kohinata",
+   "names": {
+    "en": "Miho Kohinata",
+    "cn": "小日向美穗",
+    "ja": "小日向美穂"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field and deal it 2 damage. If there are at least 5 Cute cards in your cemetery, deal 3 damage instead.",
+    "cn": "【进化时】选择敌方场上的1个从者。给予其2点伤害。如果自己的墓场中的Cute类型·卡片为5张及以上的话，转变为3点伤害。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それに2ダメージ。自分の墓場のキュート・カードが5枚以上なら、代わりに3ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-034",
+   "printings": [
+    "CP02-034",
+    "CP02-P28"
+   ],
+   "name": "Angelic Maid",
+   "names": {
+    "en": "Angelic Maid",
+    "cn": "天使般的女仆",
+    "ja": "アンジェリックメイド"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect a follower on your field. Give it {[attack]}+1/{[defense]}+3 and your leader {[defense]}+3.",
+    "cn": "《快速》\n选择自己场上的1个从者。使其《攻击力》+1/《生命值+》+3。使自己的主战者《生命值》+3。",
+    "ja": "クイック\n自分の場のフォロワー1体を選ぶ。それは攻撃力+1/体力+3する。自分のリーダーは体力+3する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-035",
+   "printings": [
+    "CP02-035",
+    "CP02-SL07"
+   ],
+   "name": "Mizuki Kawashima",
+   "names": {
+    "en": "Mizuki Kawashima",
+    "cn": "川岛瑞树",
+    "ja": "川島瑞樹"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 7,
+   "attack": 7,
+   "defense": 7,
+   "text": {
+    "en": "Activate {[engage]}: Deal 3 damage to each enemy leader and enemy follower on the field. If there are at least 9 cards with different base costs in your cemetery, deal 7 damage instead.",
+    "cn": "《起动》将这张卡《横置》：给予敌方的全体主战者与敌方场上的全体从者各3点伤害。如果自己的墓场中的卡片的原始消费的种类数量为9种类及以上的话，转变为7点伤害。",
+    "ja": "起動これをアクト：相手のリーダーすべてと相手の場のフォロワーすべてに3ダメージ。自分の墓場にあるカードの元のコストの種類数が9種類以上なら、代わりに7ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-036",
+   "printings": [
+    "CP02-036",
+    "CP02-SL08"
+   ],
+   "name": "Shiki Ichinose",
+   "names": {
+    "en": "Shiki Ichinose",
+    "cn": "一之濑志希",
+    "ja": "一ノ瀬志希"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 5,
+   "attack": 2,
+   "defense": 5,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.\n{[fanfare]} Look at the top 3 cards of your deck. You may put one of them into your EX area. Bury the rest.\nActivate {[engage]}, discard a card: Select an enemy follower on the field and deal it 5 damage.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《入场曲》查看自己的牌堆顶3张卡。从那之中，可以将1张卡置于EX区域。将剩余的卡置于墓场。\n《起动》将这张卡《横置》将1张手牌舍弃：选择敌方场上的1个从者。给予其5点伤害。",
+    "ja": "進化コスト2：これは進化する。\nファンファーレ自分のデッキの上3枚を見る。その中から、1枚をEXエリアに置いてよい。残りを墓場に置く。\n起動これをアクト手札1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに5ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-037",
+   "printings": [
+    "CP02-037",
+    "CP02-SL09",
+    "CP02-SP05",
+    "CP02-U05"
+   ],
+   "name": "Shiki Ichinose",
+   "names": {
+    "en": "Shiki Ichinose",
+    "cn": "一之濑志希",
+    "ja": "一ノ瀬志希"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 4,
+   "defense": 7,
+   "text": {
+    "en": "On Evolve - Select up to 1 card in your EX area and deal damage equal to its cost to your leader. It costs 0 play points to play this turn.\nActivate {[engage]}, discard a card: Select an enemy follower on the field and deal it 5 damage.",
+    "cn": "【进化时】选择自己EX区域的卡片最多1张。给予自己的主战者与「其原始消费」等量的伤害。这个回合，将其使用之际，将其消费变为0。\n《起动》将这张卡《横置》将1张手牌舍弃：选择敌方场上的1个从者。给予其5点伤害。",
+    "ja": "【進化時】自分のEXエリアのカード1枚まで選ぶ。自分のリーダーに「それの元のコスト」と同じダメージ。このターン、それをプレイする際、コストを0にする。\n起動これをアクト手札1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに5ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-038",
+   "printings": [
+    "CP02-038",
+    "CP02-P29",
+    "CP02-SP06a",
+    "CP02-SP06b",
+    "CP02-U06a",
+    "CP02-U06b"
+   ],
+   "name": "Syuko Shiomi",
+   "names": {
+    "en": "Syuko Shiomi",
+    "cn": "盐见周子",
+    "ja": "塩見周子"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 9,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "When playing this card, discard 3 iM@S CG cards: This card costs 6 less to play.\n----------\n{[fanfare]} Select an enemy follower on the field. Deal it 4 damage and draw 2 cards.",
+    "cn": "将这张卡使用之际，将手牌中的3张IMC类型·卡片舍弃：将消费-6。\n《入场曲》选择敌方场上的1个从者。给予其4点伤害。抽取2张卡。",
+    "ja": "これをプレイする際、手札のデレマス・カード3枚を捨てる：コストを-6する。\nファンファーレ相手の場のフォロワー1体を選ぶ。それに4ダメージ。2枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ],
+   "alternateNames": {
+    "CP02-SP06a": {
+     "en": "Hagoromo Komachi",
+     "cn": "羽衣小町",
+     "ja": "羽衣小町"
+    },
+    "CP02-SP06b": {
+     "en": "Hagoromo Komachi",
+     "cn": "羽衣小町",
+     "ja": "羽衣小町"
+    },
+    "CP02-U06a": {
+     "en": "Hagoromo Komachi",
+     "cn": "羽衣小町",
+     "ja": "羽衣小町"
+    },
+    "CP02-U06b": {
+     "en": "Hagoromo Komachi",
+     "cn": "羽衣小町",
+     "ja": "羽衣小町"
+    }
+   }
+  },
+  {
+   "id": "CP02-039",
+   "printings": [
+    "CP02-039",
+    "CP02-P30"
+   ],
+   "name": "Kanade Hayami",
+   "names": {
+    "en": "Kanade Hayami",
+    "cn": "速水奏",
+    "ja": "速水奏"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-040",
+   "printings": [
+    "CP02-040",
+    "CP02-P31"
+   ],
+   "name": "Kanade Hayami",
+   "names": {
+    "en": "Kanade Hayami",
+    "cn": "速水奏",
+    "ja": "速水奏"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Lesson (2): Select an enemy follower on the field and deal it 4 damage.",
+    "cn": "【进化时】【课程_2】：选择敌方场上的1个从者。给予其4点伤害。",
+    "ja": "【進化時】【レッスン_2】：相手の場のフォロワー1体を選ぶ。それに4ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-041",
+   "printings": [
+    "CP02-041",
+    "CP02-P32"
+   ],
+   "name": "Center Street",
+   "names": {
+    "en": "Center Street",
+    "cn": "Center of Street",
+    "ja": "センター・オブ・ストリート"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field. Deal it 5 damage and, if there's a Passion follower on your field, draw a card.",
+    "cn": "《快速》\n选择敌方场上的1个从者。给予其5点伤害。如果自己的场上有Passion类型·从者的话，抽取1张卡。",
+    "ja": "クイック\n相手の場のフォロワー1体を選ぶ。それに5ダメージ。自分の場にパッション・フォロワーがいるなら、1枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-042",
+   "printings": [
+    "CP02-042",
+    "CP02-P33"
+   ],
+   "name": "Hina Araki",
+   "names": {
+    "en": "Hina Araki",
+    "cn": "荒木比奈",
+    "ja": "荒木比奈"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-043",
+   "printings": [
+    "CP02-043",
+    "CP02-P34"
+   ],
+   "name": "Hina Araki",
+   "names": {
+    "en": "Hina Araki",
+    "cn": "荒木比奈",
+    "ja": "荒木比奈"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Select an iM@S CG spell that costs 2 or less in your cemetery and play it for 0 play points.",
+    "cn": "【进化时】选择自己的墓场中的原始消费为2及以下的1张IMC类型·法术卡。将其以「消费变为0」使用。",
+    "ja": "【進化時】自分の墓場の元のコスト2以下のデレマス・スペル1枚を選ぶ。それのコストを0にしてプレイする。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-044",
+   "printings": [
+    "CP02-044",
+    "CP02-P35"
+   ],
+   "name": "Frederica Miyamoto",
+   "names": {
+    "en": "Frederica Miyamoto",
+    "cn": "宫本芙蕾德莉卡",
+    "ja": "宮本フレデリカ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "Once per turn, when you play a card that originally costs 5 or more, select an enemy leader or enemy follower on the field. Deal it 3 damage and draw a card.",
+    "cn": "每个回合1次，当自己将原始消费为5及以上的卡片使用时，选择敌方的1位主战者或敌方场上的1个从者。给予其3点伤害。抽取1张卡。",
+    "ja": "ターンごとに1回、自分が元のコスト5以上のカードをプレイしたとき、相手のリーダー1人か相手の場のフォロワー1体を選ぶ。それに3ダメージ。1枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-045",
+   "printings": [
+    "CP02-045",
+    "CP02-P36",
+    "PR-147"
+   ],
+   "name": "Precocious Little Devil",
+   "names": {
+    "en": "Precocious Little Devil",
+    "cn": "早熟小恶魔",
+    "ja": "おしゃまなコアクマ"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field and deal it 2 damage. If there are at least 3 iM@S CG followers on your field, deal 3 damage instead.",
+    "cn": "《快速》\n选择敌方场上的1个从者。给予其2点伤害。如果自己场上的IMC类型·从者为3个及以上的话，转变为3点伤害。",
+    "ja": "クイック\n相手の場のフォロワー1体を選ぶ。それに2ダメージ。自分の場のデレマス・フォロワーが3体以上なら、代わりに3ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-046",
+   "printings": [
+    "CP02-046",
+    "CP02-P37"
+   ],
+   "name": "Sarina Matsumoto",
+   "names": {
+    "en": "Sarina Matsumoto",
+    "cn": "松本沙理奈",
+    "ja": "松本沙理奈"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 1,
+   "defense": 5,
+   "text": {
+    "en": "Whenever you play a spell, select an enemy follower on the field and deal it 2 damage.",
+    "cn": "自己将法术卡使用之际，选择敌方场上的1个从者。给予其2点伤害。",
+    "ja": "自分がスペルをプレイしたとき、相手の場のフォロワー1体を選ぶ。それに2ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-047",
+   "printings": [
+    "CP02-047",
+    "CP02-P38"
+   ],
+   "name": "Rika Jougasaki",
+   "names": {
+    "en": "Rika Jougasaki",
+    "cn": "城崎莉嘉",
+    "ja": "城ヶ崎莉嘉"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.",
+    "cn": "《进化》《消费2》：使这张卡进化。",
+    "ja": "進化コスト2：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-048",
+   "printings": [
+    "CP02-048",
+    "CP02-P39"
+   ],
+   "name": "Rika Jougasaki",
+   "names": {
+    "en": "Rika Jougasaki",
+    "cn": "城崎莉嘉",
+    "ja": "城ヶ崎莉嘉"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve - Search your deck for a spell that costs 3 or less, reveal it, add it to your hand, then shuffle your deck.",
+    "cn": "【进化时】从自己的牌堆之中搜寻1张原始消费为3及以下的法术卡，并加入手牌。",
+    "ja": "【進化時】自分のデッキから元のコスト3以下のスペル1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-049",
+   "printings": [
+    "CP02-049",
+    "CP02-P40",
+    "CSD02a-014",
+    "PR-146"
+   ],
+   "name": "Sae Kobayakawa",
+   "names": {
+    "en": "Sae Kobayakawa",
+    "cn": "小早川纱枝",
+    "ja": "小早川紗枝"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Select another iM@S CG follower on your field and give it {[attack]}+1/{[defense]}+1.",
+    "cn": "《入场曲》选择自己场上的其他的1个IMC类型·从者。使其《攻击力》+1/《生命值》+1。",
+    "ja": "ファンファーレ自分の場の他のデレマス・フォロワー1体を選ぶ。それは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-050",
+   "printings": [
+    "CP02-050",
+    "CP02-P41"
+   ],
+   "name": "Tomoe Murakami",
+   "names": {
+    "en": "Tomoe Murakami",
+    "cn": "村上巴",
+    "ja": "村上巴"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 6,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "When playing this card, discard a card: This card costs 2 less to play.\n----------\n{[fanfare]} Search your deck for up to 2 spells with different names, reveal them, add them to your hand, then shuffle your deck.",
+    "cn": "将这张卡使用之际，将1张手牌舍弃：将消费-2。\n《入场曲》从自己的牌堆之中搜寻卡片名各不相同的法术卡最多2张，并加入手牌。",
+    "ja": "これをプレイする際、手札1枚を捨てる：コストを-2する。\nファンファーレ自分のデッキからスペルをカード名が異なるように2枚まで探し、手札に加える。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-051",
+   "printings": [
+    "CP02-051",
+    "CP02-P42",
+    "CSD02b-015"
+   ],
+   "name": "Full Bloom Panorama",
+   "names": {
+    "en": "Full Bloom Panorama",
+    "cn": "满开的全景",
+    "ja": "満開のパノラマ"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 5,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect up to 2 enemy followers on the field and destroy them.",
+    "cn": "《快速》\n选择敌方场上的从者最多2个。将其破坏。",
+    "ja": "クイック\n相手の場のフォロワー2体まで選ぶ。それを破壊する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-052",
+   "printings": [
+    "CP02-052",
+    "CP02-SL10"
+   ],
+   "name": "Akari Tsujino",
+   "names": {
+    "en": "Akari Tsujino",
+    "cn": "辻野朱里",
+    "ja": "辻野あかり"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 4,
+   "defense": 5,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Give your leader {[defense]}+3. If you have 10 max play points, deal 3 damage to each enemy leader.\nWhenever this follower takes at least 5 damage, increase your max play points by 1.",
+    "cn": "【守护】\n当这张卡受到伤害时，如果那伤害为5点及以上的话，将自己的PP最大值+1点。\n《入场曲》使自己的主战者《生命值》+3。如果自己的PP最大值为10点的话，给予敌方的全体主战者各3点伤害。",
+    "ja": "【守護】\nこれがダメージを受けたとき、そのダメージが5以上なら、自分のPP最大値を+1する。\nファンファーレ自分のリーダーは体力+3する。自分のPP最大値が10なら、相手のリーダーすべてに3ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-053",
+   "printings": [
+    "CP02-053",
+    "CP02-SL11"
+   ],
+   "name": "Yui Ohtsuki",
+   "names": {
+    "en": "Yui Ohtsuki",
+    "cn": "大槻唯",
+    "ja": "大槻唯"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.\n{[fanfare]}, Lesson (1): Select an enemy follower on the field and deal it 4 damage.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《入场曲》【课程_1】：选择敌方场上的1个从者。给予其4点伤害。",
+    "ja": "進化コスト2：これは進化する。\nファンファーレ【レッスン_1】：相手の場のフォロワー1体を選ぶ。それに4ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-054",
+   "printings": [
+    "CP02-054",
+    "CP02-SL12",
+    "CP02-SP07",
+    "CP02-U07"
+   ],
+   "name": "Yui Ohtsuki",
+   "names": {
+    "en": "Yui Ohtsuki",
+    "cn": "大槻唯",
+    "ja": "大槻唯"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "On Evolve - Search your deck for a spell that costs 3 or less or amulet that costs 3 or less, put it into your EX area, then shuffle your deck. It costs 3 less to play this turn.",
+    "cn": "【进化时】从自己的牌堆之中搜寻1张原始消费为3及以下的法术卡或原始消费为3及以下的护符卡，并置于EX区域。这个回合，将其使用之际，将其消费-3。",
+    "ja": "【進化時】自分のデッキから元のコスト3以下のスペルか元のコスト3以下のアミュレット1枚を探し、EXエリアに置く。このターン、それをプレイする際、コストを-3する。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-055",
+   "printings": [
+    "CP02-055",
+    "CP02-P43",
+    "CP02-SP08a",
+    "CP02-SP08b",
+    "CP02-U08a",
+    "CP02-U08b",
+    "PR-154"
+   ],
+   "name": "Fumika Sagisawa",
+   "names": {
+    "en": "Fumika Sagisawa",
+    "cn": "鹭泽文香",
+    "ja": "鷺沢文香"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 7,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Search your deck for a 3-cost follower and 1-cost follower, summon them, then shuffle your deck.\nWhenever another iM@S CG follower is put onto your field, select an enemy follower on the field and deal it 2 damage.",
+    "cn": "当其他的IMC类型·从者召唤到自己的场上时，选择敌方场上的1个从者。给予其2点伤害。\n《入场曲》从自己的牌堆之中搜寻1张原始消费为3的从者卡与1张原始消费为1的从者卡，并召唤到场上。",
+    "ja": "自分の場に他のデレマス・フォロワーが出たとき、相手の場のフォロワー1体を選ぶ。それに2ダメージ。\nファンファーレ自分のデッキから元のコスト3のフォロワー1枚と元のコスト1のフォロワー1枚を探し、場に出す。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ],
+   "alternateNames": {
+    "CP02-SP08a": {
+     "en": "BRIGHT:LIGHTS",
+     "cn": "BRIGHT:LIGHTS",
+     "ja": ""
+    },
+    "CP02-SP08b": {
+     "en": "BRIGHT:LIGHTS",
+     "cn": "BRIGHT:LIGHTS",
+     "ja": ""
+    },
+    "CP02-U08a": {
+     "en": "BRIGHT:LIGHTS",
+     "cn": "BRIGHT:LIGHTS",
+     "ja": ""
+    },
+    "CP02-U08b": {
+     "en": "BRIGHT:LIGHTS",
+     "cn": "BRIGHT:LIGHTS",
+     "ja": ""
+    }
+   }
+  },
+  {
+   "id": "CP02-056",
+   "printings": [
+    "CP02-056",
+    "CP02-P44"
+   ],
+   "name": "Akira Sunazuka",
+   "names": {
+    "en": "Akira Sunazuka",
+    "cn": "砂冢明",
+    "ja": "砂塚あきら"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Discard up to 3 cards: If you discarded at least 1 Cute card, give your leader {[defense]}+2. If you discarded at least 1 Cool card, draw a card. If you discarded at least 1 Passion card, deal 2 damage to each enemy leader.\n{[fanfare]} If you have 10 max play points, draw 2 cards.",
+    "cn": "《入场曲》将手牌最多3张舍弃：如果将Cute类型·卡片舍弃的话，使自己的主战者《生命值》+2。如果将Cool类型·卡片舍弃的话，抽取1张卡。如果将Passion类型·卡片舍弃的话，给予敌方的全体主战者各2点伤害。\n《入场曲》如果自己的PP最大值为10点的话，抽取2张卡。",
+    "ja": "ファンファーレ手札3枚まで捨てる：キュート・カードを捨てたなら、自分のリーダーは体力+2する。クール・カードを捨てたなら、1枚引く。パッション・カードを捨てたなら、相手のリーダーすべてに2ダメージ。\nファンファーレ自分のPP最大値が10なら、2枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-057",
+   "printings": [
+    "CP02-057",
+    "CP02-P45"
+   ],
+   "name": "Tsukasa Kiryu",
+   "names": {
+    "en": "Tsukasa Kiryu",
+    "cn": "桐生司",
+    "ja": "桐生つかさ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 6,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.\n{[evolve]}, Lesson (3): {[evolve]} this follower.\n{[fanfare]} Increase your max play points by 1.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《进化》【课程_3】：使这张卡进化。\n《入场曲》使自己的PP最大值+1点。",
+    "ja": "進化コスト2：これは進化する。\n進化【レッスン_3】：これは進化する。\nファンファーレ自分のPP最大値を+1する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-058",
+   "printings": [
+    "CP02-058",
+    "CP02-P46"
+   ],
+   "name": "Tsukasa Kiryu",
+   "names": {
+    "en": "Tsukasa Kiryu",
+    "cn": "桐生司",
+    "ja": "桐生つかさ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 6,
+   "defense": 6,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field and destroy it. If you have 10 max play points, deal 3 damage to its leader.",
+    "cn": "【进化时】选择敌方场上的1个从者。将其破坏。如果自己的PP最大值为10点的话，给予其主战者3点伤害。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それを破壊する。自分のPP最大値が10なら、それのリーダーに3ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-059",
+   "printings": [
+    "CP02-059",
+    "CP02-P47"
+   ],
+   "name": "Arisu Tachibana",
+   "names": {
+    "en": "Arisu Tachibana",
+    "cn": "橘爱丽丝",
+    "ja": "橘ありす"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[fanfare]} If there are at least 3 iM@S CG followers on your field, search your deck for a 1-cost spell or 1-cost amulet, reveal it, add it to your hand, then shuffle your deck.",
+    "cn": "《入场曲》如果自己场上的IMC类型·从者为3个及以上的话，从自己的牌堆之中搜寻1张原始消费为1的法术卡或原始消费为1的护符卡，并加入手牌。",
+    "ja": "ファンファーレ自分の場のデレマス・フォロワーが3体以上なら、自分のデッキから元のコスト1のスペルか元のコスト1のアミュレット1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-060",
+   "printings": [
+    "CP02-060",
+    "CP02-P48"
+   ],
+   "name": "Yuka Nakano",
+   "names": {
+    "en": "Yuka Nakano",
+    "cn": "中野有香",
+    "ja": "中野有香"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.",
+    "cn": "《进化》《消费2》：使这张卡进化。",
+    "ja": "進化コスト2：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-061",
+   "printings": [
+    "CP02-061",
+    "CP02-P49"
+   ],
+   "name": "Yuka Nakano",
+   "names": {
+    "en": "Yuka Nakano",
+    "cn": "中野有香",
+    "ja": "中野有香"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Deal 1 damage to each enemy follower on the field. If you have 10 max play points, deal 4 damage instead.",
+    "cn": "【进化时】给予敌方场上的全体从者各1点伤害。如果自己的PP最大值为10点的话，转变为4点伤害。",
+    "ja": "【進化時】相手の場のフォロワーすべてに1ダメージ。自分のPP最大値が10なら、代わりに4ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-062",
+   "printings": [
+    "CP02-062",
+    "CP02-P50"
+   ],
+   "name": "Unbound Emotion",
+   "names": {
+    "en": "Unbound Emotion",
+    "cn": "狂热的感情",
+    "ja": "ぶちあがれ感情"
+   },
+   "class": "Dragoncraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "This card costs 1 more to play for every follower on the field.\n----------\nDeal 7 damage to each follower on the field.",
+    "cn": "将这张卡使用之际，将消费+X。X为「场上的从者的数量」。\n给予场上的全体从者各7点伤害。",
+    "ja": "これをプレイする際、コストを+Xする。Xは「場のフォロワーの数」である。\n場のフォロワーすべてに7ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-063",
+   "printings": [
+    "CP02-063",
+    "CP02-P51",
+    "CSD02c-013"
+   ],
+   "name": "Tokiko Zaizen",
+   "names": {
+    "en": "Tokiko Zaizen",
+    "cn": "财前时子",
+    "ja": "財前時子"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 4,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Deal each enemy leader damage equal to the number of other iM@S CG followers on your field.",
+    "cn": "《入场曲》给予敌方的全体主战者与「自己场上的其他的IMC类型·从者的数量」等量的伤害。",
+    "ja": "ファンファーレ相手のリーダーすべてに「自分の場の他のデレマス・フォロワーの数」と同じダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-064",
+   "printings": [
+    "CP02-064",
+    "CP02-P52",
+    "CSD02a-015"
+   ],
+   "name": "Noriko Shiina",
+   "names": {
+    "en": "Noriko Shiina",
+    "cn": "椎名法子",
+    "ja": "椎名法子"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} If there are at least 3 iM@S CG followers on your field, give this follower {[attack]}+1 and Rush.\nStrike - Give your leader {[defense]}+2.",
+    "cn": "【攻击时】使自己的主战者《生命值》+2。\n《入场曲》如果自己场上的IMC类型·从者为3个及以上的话，使这张卡《攻击力》+1，并获得【突进】能力。",
+    "ja": "【攻撃時】自分のリーダーは体力+2する。\nファンファーレ自分の場のデレマス・フォロワーが3体以上なら、これは攻撃力+1して、【突進】を持つ。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-065",
+   "printings": [
+    "CP02-065",
+    "CP02-P53",
+    "CSD02a-016"
+   ],
+   "name": "Yukari Mizumoto",
+   "names": {
+    "en": "Yukari Mizumoto",
+    "cn": "水本紫",
+    "ja": "水本ゆかり"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Choose one of the following. (1) Select an enemy amulet on the field and destroy it. (2) Draw a card.",
+    "cn": "《入场曲》从下述之中抉择1项。\n【1】选择敌方场上的1个护符。将其破坏。\n【2】抽取1张卡。",
+    "ja": "ファンファーレ下記から1つチョイスする。【1】相手の場のアミュレット1つを選ぶ。それを破壊する。【2】1枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-066",
+   "printings": [
+    "CP02-066",
+    "CP02-P54",
+    "CSD02b-016"
+   ],
+   "name": "Noa Takamine",
+   "names": {
+    "en": "Noa Takamine",
+    "cn": "高峰诺亚",
+    "ja": "高峯のあ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-067",
+   "printings": [
+    "CP02-067",
+    "CP02-P55",
+    "CSD02b-017"
+   ],
+   "name": "Noa Takamine",
+   "names": {
+    "en": "Noa Takamine",
+    "cn": "高峰诺亚",
+    "ja": "高峯のあ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field and deal it damage equal to your max play points.",
+    "cn": "【进化时】选择敌方场上的1个从者。给予其与「自己的PP最大值」等量的伤害。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それに「自分のPP最大値」と同じダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-068",
+   "printings": [
+    "CP02-068",
+    "CP02-P56"
+   ],
+   "name": "Mode Estivale",
+   "names": {
+    "en": "Mode Estivale",
+    "cn": "Mode Estival",
+    "ja": "モードエスティバル"
+   },
+   "class": "Dragoncraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Draw 3 cards.",
+    "cn": "抽取3张卡。",
+    "ja": "3枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-069",
+   "printings": [
+    "CP02-069",
+    "CP02-SL13"
+   ],
+   "name": "Ranko Kanzaki",
+   "names": {
+    "en": "Ranko Kanzaki",
+    "cn": "神崎兰子",
+    "ja": "神崎蘭子"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} Select an enemy follower on the field and deal it 2 damage.\nActivat {[cost01]}, Lesson (2): Select up to 2 enemy followers on the field and deal them 2 damage.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》选择敌方场上的1个从者。给予其2点伤害。\n《起动》《消费1》【课程_2】:选择敌方场上的从者最多2个。给予其各2点伤害。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ相手の場のフォロワー1体を選ぶ。それに2ダメージ。\n起動コスト1【レッスン_2】：相手の場のフォロワー2体まで選ぶ。それに2ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-070",
+   "printings": [
+    "CP02-070",
+    "CP02-SL14",
+    "CP02-SP09a",
+    "CP02-SP09b",
+    "CP02-U09a",
+    "CP02-U09b"
+   ],
+   "name": "Ranko Kanzaki",
+   "names": {
+    "en": "Ranko Kanzaki",
+    "cn": "神崎兰子",
+    "ja": "神崎蘭子"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Look at the top 4 cards of your deck. You may put one of them into your EX area. Bury the rest.\n{[act]} {[cost01]}, Lesson (2): Select up to 2 enemy followers on the field and deal them 2 damage.",
+    "cn": "【进化时】查看自己的牌堆顶4张卡。从那之中，可以将1张卡置于EX区域。将剩余的卡置于墓场。\n《起动》《消费1》【课程_2】:选择敌方场上的从者最多2个。给予其各2点伤害。",
+    "ja": "【進化時】自分のデッキの上4枚を見る。その中から、1枚をEXエリアに置いてよい。残りを墓場に置く。\n起動コスト1【レッスン_2】：相手の場のフォロワー2体まで選ぶ。それに2ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ],
+   "alternateNames": {
+    "CP02-SP09a": {
+     "en": "Fortuna Regina",
+     "cn": "Fortuna Regina",
+     "ja": "フォルトゥナ・レジーナ"
+    },
+    "CP02-SP09b": {
+     "en": "Fortuna Regina",
+     "cn": "Fortuna Regina",
+     "ja": "フォルトゥナ・レジーナ"
+    },
+    "CP02-U09a": {
+     "en": "Fortuna Regina",
+     "cn": "Fortuna Regina",
+     "ja": "フォルトゥナ・レジーナ"
+    },
+    "CP02-U09b": {
+     "en": "Fortuna Regina",
+     "cn": "Fortuna Regina",
+     "ja": "フォルトゥナ・レジーナ"
+    }
+   }
+  },
+  {
+   "id": "CP02-071",
+   "printings": [
+    "CP02-071",
+    "CP02-SL15",
+    "CP02-SP10",
+    "CP02-U10"
+   ],
+   "name": "Sachiko Koshimizu",
+   "names": {
+    "en": "Sachiko Koshimizu",
+    "cn": "舆水幸子",
+    "ja": "輿水幸子"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Deal 2 damage to your leader.\nWhile your leader's defense is 10 or less, this follower has Storm and Bane.",
+    "cn": "只要自己的主战者的《生命值》为10及以下，使这张卡获得【疾驰】【必杀】能力。\n【入场曲】给予自己的主战者2点伤害。",
+    "ja": "自分のリーダーの体力10以下である限り、これは【疾走】【必殺】を持つ。\nファンファーレ自分のリーダーに2ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-072",
+   "printings": [
+    "CP02-072",
+    "CP02-P57"
+   ],
+   "name": "Takumi Mukai",
+   "names": {
+    "en": "Takumi Mukai",
+    "cn": "向井拓海",
+    "ja": "向井拓海"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-073",
+   "printings": [
+    "CP02-073",
+    "CP02-P58"
+   ],
+   "name": "Takumi Mukai",
+   "names": {
+    "en": "Takumi Mukai",
+    "cn": "向井拓海",
+    "ja": "向井拓海"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field. Destroy it and deal 3 damage to your leader.",
+    "cn": "【进化时】选择敌方场上的1个从者。将其破坏。给予自己的主战者3点伤害。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それを破壊する。自分のリーダーに3ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-074",
+   "printings": [
+    "CP02-074",
+    "CP02-P59"
+   ],
+   "name": "Chitose Kurosaki",
+   "names": {
+    "en": "Chitose Kurosaki",
+    "cn": "黑崎千岁",
+    "ja": "黒埼ちとせ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "While this card is on your field, your leader and each other follower on your field don't take ability damage during your turn.\n{[act]} {[cost01]}, Lesson (1): Select an enemy follower on the field and deal it 3 damage. Activate only once per turn.",
+    "cn": "只要有这张卡存在，自己的回合中，使自己的主战者与自己场上的其他的全体从者不会受到由能力给予的伤害。\n《起动》《消费1》【课程_1】：选择敌方场上的1个从者。给予其3点伤害。这个能力在1回合可以使用1次。",
+    "ja": "これがいる限り、自分のターン中、自分のリーダーと自分の場の他のフォロワーすべては能力によるダメージを受けない。\n起動コスト1【レッスン_1】：相手の場のフォロワー1体を選ぶ。それに3ダメージ。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-075",
+   "printings": [
+    "CP02-075",
+    "CP02-P60"
+   ],
+   "name": "Whispers of a Dream",
+   "names": {
+    "en": "Whispers of a Dream",
+    "cn": "梦的耳语",
+    "ja": "夢のささやき"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower that costs 3 or less on the field. Destroy it and bury the top card of your deck.",
+    "cn": "《快速》\n选择原始消费为3及以下的敌方场上的1个从者。将其破坏。将自己的牌堆顶1张卡置于墓场。",
+    "ja": "クイック\n元のコスト3以下の相手の場のフォロワー1体を選ぶ。それを破壊する。自分のデッキの上1枚を墓場に置く。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-076",
+   "printings": [
+    "CP02-076",
+    "CP02-P61"
+   ],
+   "name": "Chiyo Shirayuki",
+   "names": {
+    "en": "Chiyo Shirayuki",
+    "cn": "白雪千夜",
+    "ja": "白雪千夜"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Deal 2 damage to your leader. Draw 2 cards.",
+    "cn": "《入场曲》给予自己的主战者2点伤害。抽取2张卡。",
+    "ja": "ファンファーレ自分のリーダーに2ダメージ。2枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-077",
+   "printings": [
+    "CP02-077",
+    "CP02-P62"
+   ],
+   "name": "Aki Yamato",
+   "names": {
+    "en": "Aki Yamato",
+    "cn": "大和亚季",
+    "ja": "大和亜季"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 7,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} Select an enemy follower on the field and deal it 5 damage.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》选择敌方场上的1个从者。给予其5点伤害。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ相手の場のフォロワー1体を選ぶ。それに5ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-078",
+   "printings": [
+    "CP02-078",
+    "CP02-P63"
+   ],
+   "name": "Aki Yamato",
+   "names": {
+    "en": "Aki Yamato",
+    "cn": "大和亚季",
+    "ja": "大和亜季"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 6,
+   "defense": 6,
+   "text": {
+    "en": "On Evolve - Select up to 2 enemy followers on the field and deal them 5 damage.",
+    "cn": "【进化时】选择敌方场上的从者最多2个。给予其各5点伤害。",
+    "ja": "【進化時】相手の場のフォロワー2体まで選ぶ。それに5ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-079",
+   "printings": [
+    "CP02-079",
+    "CP02-P64"
+   ],
+   "name": "My Life, My Sounds",
+   "names": {
+    "en": "My Life, My Sounds",
+    "cn": "My Life, My Sounds",
+    "ja": "My Life，My Sounds"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select an enemy follower on the field. Destroy it and, if Sanguine is active for you, deal 2 damage to its leader.",
+    "cn": "选择敌方场上的1个从者。将其破坏。如果处于【真红】状态的话，给予其主战者2点伤害。（自己的回合中，如果自己的主战者的生命值已有减少的话，就会处于【真红】状态）",
+    "ja": "相手の場のフォロワー1体を選ぶ。それを破壊する。【真紅】状態なら、それのリーダーに2ダメージ。（自分のターン中、自分のリーダーの体力が減少していたなら、【真紅】状態になる）"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-080",
+   "printings": [
+    "CP02-080",
+    "CP02-P65"
+   ],
+   "name": "Ryo Matsunaga",
+   "names": {
+    "en": "Ryo Matsunaga",
+    "cn": "松永凉",
+    "ja": "松永涼"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\n{[lastwords]} Select an iM@S CG spell in your cemetery and add it to your hand.",
+    "cn": "【守护】\n《谢幕曲》选择自己的墓场中的1张IMC类型·法术卡。将其加入手牌。",
+    "ja": "【守護】\nラストワード自分の墓場のデレマス・スペル1枚を選ぶ。それを手札に加える。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-081",
+   "printings": [
+    "CP02-081",
+    "CP02-P66",
+    "CSD02a-017"
+   ],
+   "name": "Mirei Hayasaka",
+   "names": {
+    "en": "Mirei Hayasaka",
+    "cn": "早坂美玲",
+    "ja": "早坂美玲"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 4,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Look at the top 3 cards of your deck. Put one of them on the top of your deck. Bury the rest.\nWhile there are at least 5 iM@S CG cards in your cemetery, this follower has Rush.",
+    "cn": "只要自己的墓场中的IMC类型·卡片有5张及以上存在，使这张卡获得【突进】能力。\n《入场曲》查看自己的牌堆顶3张卡。从那之中，将1张卡置于牌堆顶。将剩余的卡置于墓场。",
+    "ja": "自分の墓場にデレマス・カードが5枚以上ある限り、これは【突進】を持つ。\nファンファーレ自分のデッキの上3枚を見る。その中から、1枚をデッキの上に置く。残りを墓場に置く。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-082",
+   "printings": [
+    "CP02-082",
+    "CP02-P67"
+   ],
+   "name": "Rina Fujimoto",
+   "names": {
+    "en": "Rina Fujimoto",
+    "cn": "藤本里奈",
+    "ja": "藤本里奈"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 3,
+   "defense": 1,
+   "text": {
+    "en": "This card costs 1 less to play if a follower on your field evolved this turn.\n----------\n{[fanfare]} If Sanguine is active for you, select an enemy follower on the field and deal it 3 damage.",
+    "cn": "将这张卡使用之际，这个回合，如果已有自己场上的从者进化的话，将消费-1。\n《入场曲》如果处于【真红】状态的话，选择敌方场上的1个从者。给予其3点伤害。（自己的回合中，如果自己的主战者的生命值已有减少的话，就会处于【真红】状态）",
+    "ja": "これをプレイする際、このターン、自分の場のフォロワーが進化していたなら、コストを-1する。\nファンファーレ【真紅】状態なら、相手の場のフォロワー1体を選ぶ。それに3ダメージ。（自分のターン中、自分のリーダーの体力が減少していたなら、【真紅】状態になる）"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-083",
+   "printings": [
+    "CP02-083",
+    "CP02-P68",
+    "CSD02c-014"
+   ],
+   "name": "Syoko Hoshi",
+   "names": {
+    "en": "Syoko Hoshi",
+    "cn": "星辉子",
+    "ja": "星輝子"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\nThis follower can't attack enemies.\nAt the start of your end phase, give your leader {[defense]}+1.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n这张卡不能对敌方进行攻击。\n当自己的结束阶段到来时，使自己的主战者《生命值》+1。",
+    "ja": "進化コスト1：これは進化する。\nこれは相手を攻撃できない。\n自分のエンドフェイズが来たとき、自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-084",
+   "printings": [
+    "CP02-084",
+    "CP02-P69",
+    "CSD02c-015"
+   ],
+   "name": "Syoko Hoshi",
+   "names": {
+    "en": "Syoko Hoshi",
+    "cn": "星辉子",
+    "ja": "星輝子"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "At the start of your end phase, deal 1 damage to each enemy leader.\n{[lastwords]} Deal 1 damage to each enemy leader.",
+    "cn": "当自己的结束阶段到来时，给予敌方的全体主战者各1点伤害。\n《谢幕曲》给予敌方的全体主战者各1点伤害。",
+    "ja": "自分のエンドフェイズが来たとき、相手のリーダーすべてに1ダメージ。\nラストワード相手のリーダーすべてに1ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-085",
+   "printings": [
+    "CP02-085",
+    "CP02-P70"
+   ],
+   "name": "Last Daylight",
+   "names": {
+    "en": "Last Daylight",
+    "cn": "Last Daylight",
+    "ja": "ラストデイライト"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select an enemy follower on the field. Deal it 3 damage and give {[attack]}+1 to each follower that costs 1 or less on your field.",
+    "cn": "选择敌方场上的1个从者。给予其3点伤害。使原始消费为1及以下的自己场上的全体从者各《攻击力》+1。",
+    "ja": "相手の場のフォロワー1体を選ぶ。それに3ダメージ。元のコスト1以下の自分の場のフォロワーすべては攻撃力+1する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-086",
+   "printings": [
+    "CP02-086",
+    "CP02-SL16",
+    "CP02-SP11",
+    "CP02-U11"
+   ],
+   "name": "Kaede Takagaki",
+   "names": {
+    "en": "Kaede Takagaki",
+    "cn": "高垣枫",
+    "ja": "高垣楓"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 5,
+   "attack": 3,
+   "defense": 5,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Select an enemy follower on the field and banish it.\nAt the start of your end phase, if your leader's defense is 5 or less, give it {[defense]}+5 and draw a card.\n{[act]} {[cost01]}, Lesson (1): Give this follower Aura.",
+    "cn": "【守护】\n当自己的结束阶段到来时，如果自己的主战者的《生命值》为5及以下的话，使自己的主战者《生命值》+5。抽取1张卡。\n《入场曲》选择敌方场上的1个从者。将其消失。\n《起动》《消费1》【课程_1】：使这张卡获得【灵气】能力。",
+    "ja": "【守護】\n自分のエンドフェイズが来たとき、自分のリーダーの体力5以下なら、自分のリーダーは体力+5する。1枚引く。\nファンファーレ相手の場のフォロワー1体を選ぶ。それを消滅させる。\n起動コスト1【レッスン_1】：これは【オーラ】を持つ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-087",
+   "printings": [
+    "CP02-087",
+    "CP02-SL17"
+   ],
+   "name": "Shin Sato",
+   "names": {
+    "en": "Shin Sato",
+    "cn": "佐藤心",
+    "ja": "佐藤心"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost06]}: Evolve this follower.\n{[fanfare]} Draw a card.",
+    "cn": "《进化》《消费6》：使这张卡进化。\n《入场曲》抽取1张卡。",
+    "ja": "進化コスト6：これは進化する。\nファンファーレ1枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-088",
+   "printings": [
+    "CP02-088",
+    "CP02-SL18",
+    "CP02-SP12a",
+    "CP02-SP12b",
+    "CP02-U12a",
+    "CP02-U12b"
+   ],
+   "name": "Shin Sato",
+   "names": {
+    "en": "Shin Sato",
+    "cn": "佐藤心",
+    "ja": "佐藤心"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "On Evolve - Select a follower that costs 8 or less in your cemetery and summon it.",
+    "cn": "【进化时】选择自己的墓场中的原始消费为8及以下的1张从者卡。将其召唤到场上。",
+    "ja": "【進化時】自分の墓場の元のコスト8以下のフォロワー1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ],
+   "alternateNames": {
+    "CP02-SP12a": {
+     "en": "SugarSugar☆Mi〜n",
+     "cn": "Sugar Sugar☆兔",
+     "ja": "しゅがしゅが☆み〜ん"
+    },
+    "CP02-SP12b": {
+     "en": "SugarSugar☆Mi〜n",
+     "cn": "Sugar Sugar☆兔",
+     "ja": "しゅがしゅが☆み〜ん"
+    },
+    "CP02-U12a": {
+     "en": "SugarSugar☆Mi〜n",
+     "cn": "Sugar Sugar☆兔",
+     "ja": "しゅがしゅが☆み〜ん"
+    },
+    "CP02-U12b": {
+     "en": "SugarSugar☆Mi〜n",
+     "cn": "Sugar Sugar☆兔",
+     "ja": "しゅがしゅが☆み〜ん"
+    }
+   }
+  },
+  {
+   "id": "CP02-089",
+   "printings": [
+    "CP02-089",
+    "CP02-P71"
+   ],
+   "name": "Nana Abe",
+   "names": {
+    "en": "Nana Abe",
+    "cn": "安部菜菜",
+    "ja": "安部菜々"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} Look at the top 5 cards of your deck. You may reveal an amulet from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》查看自己的牌堆顶5张卡。从那之中，可以将1张护符卡公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分のデッキの上5枚を見る。その中から、アミュレット1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-090",
+   "printings": [
+    "CP02-090",
+    "CP02-P72"
+   ],
+   "name": "Nana Abe",
+   "names": {
+    "en": "Nana Abe",
+    "cn": "安部菜菜",
+    "ja": "安部菜々"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 4,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - You may summon an amulet that costs 3 or less from your hand.",
+    "cn": "【进化时】可以将自己的手牌中的原始消费为3及以下的1张护符卡召唤到场上。",
+    "ja": "【進化時】自分の手札の元のコスト3以下のアミュレット1枚を場に出してよい。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-091",
+   "printings": [
+    "CP02-091",
+    "CP02-P73"
+   ],
+   "name": "Akane Hino",
+   "names": {
+    "en": "Akane Hino",
+    "cn": "日野茜",
+    "ja": "日野茜"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 5,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Rush. Assail.\nStrike - Deal 2 damage to each enemy leader.\n{[act]} {[cost02]}, Lesson (1): Give this follower Storm.",
+    "cn": "【突进】【指定攻击】\n【攻击时】给予敌方的全体主战者各2点伤害。\n《起动》《消费2》【课程_1】：使这张卡获得【疾驰】能力。",
+    "ja": "【突進】【指定攻撃】\n【攻撃時】相手のリーダーすべてに2ダメージ。\n起動コスト2【レッスン_1】：これは【疾走】を持つ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-092",
+   "printings": [
+    "CP02-092",
+    "CP02-P74"
+   ],
+   "name": "Classroom Lily",
+   "names": {
+    "en": "Classroom Lily",
+    "cn": "教室的白百合",
+    "ja": "教室の白百合"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Give your leader {[defense]}+2. Draw a card.\n{[q]}Activate {[cost02]}, {[engage]}, bury this card: Select an iM@S CG follower in your cemetery and add it to your hand.",
+    "cn": "《入场曲》使自己的主战者《生命值》+2。抽取1张卡。\n《快速》《起动》《消费2》将这张卡《横置》置于墓场：选择自己的墓场中的1张IMC类型·从者卡。将其加入手牌。",
+    "ja": "ファンファーレ自分のリーダーは体力+2する。1枚引く。\nQ起動コスト2これをアクト墓場に置く：自分の墓場のデレマス・フォロワー1枚を選ぶ。それを手札に加える。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-093",
+   "printings": [
+    "CP02-093",
+    "CP02-P75",
+    "PR-150"
+   ],
+   "name": "Risa Matoba",
+   "names": {
+    "en": "Risa Matoba",
+    "cn": "的场梨沙",
+    "ja": "的場梨沙"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Look at the top 3 cards of your deck. You may summon an iM@S CG follower that costs 2 or less from among them. Put the rest on the bottom of your deck in any order.",
+    "cn": "《入场曲》查看自己的牌堆顶3张卡。从那之中，可以将原始消费为2及以下的1张IMC类型·从者卡召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "ファンファーレ自分のデッキの上3枚を見る。その中から、元のコスト2以下のデレマス・フォロワー1枚を場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-094",
+   "printings": [
+    "CP02-094",
+    "CP02-P76"
+   ],
+   "name": "Haru Yuuki",
+   "names": {
+    "en": "Haru Yuuki",
+    "cn": "结城晴",
+    "ja": "結城晴"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} If Risa Matoba is on your field, give this follower {[attack]}+1/{[defense]}+1 and Storm.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》如果自己的场上有『的场梨沙』的话，使这张卡《攻击力》+1/《生命值》+1，并获得【疾驰】能力。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分の場に『的場梨沙』がいるなら、これは攻撃力+1/体力+1して、【疾走】を持つ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-095",
+   "printings": [
+    "CP02-095",
+    "CP02-P77"
+   ],
+   "name": "Haru Yuuki",
+   "names": {
+    "en": "Haru Yuuki",
+    "cn": "结城晴",
+    "ja": "結城晴"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Give your leader {[defense]}+2.",
+    "cn": "【进化时】使自己的主战者《生命值》+2。",
+    "ja": "【進化時】自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-096",
+   "printings": [
+    "CP02-096",
+    "CP02-P78"
+   ],
+   "name": "Psychic☆Maiden",
+   "names": {
+    "en": "Psychic☆Maiden",
+    "cn": "彩☆chic少女",
+    "ja": "彩☆きっく乙女"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Select an enemy follower with 4 defense or less on the field and banish it.\n{[act]} {[cost05]}, {[engage]}, bury this card: Select an enemy follower on the field and banish it.",
+    "cn": "《入场曲》选择生命值为4及以下的敌方场上的1个从者。将其消失。\n《起动》《消费5》将这张卡《横置》置于墓场：选择敌方场上的1个从者。将其消失。",
+    "ja": "ファンファーレ体力4以下の相手の場のフォロワー1体を選ぶ。それを消滅させる。\n起動コスト5これをアクト墓場に置く：相手の場のフォロワー1体を選ぶ。それを消滅させる。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-097",
+   "printings": [
+    "CP02-097",
+    "CP02-P79",
+    "CSD02c-016",
+    "PR-151"
+   ],
+   "name": "Natalia",
+   "names": {
+    "en": "Natalia",
+    "cn": "娜塔莉亚",
+    "ja": "ナターリア"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "Storm.\n{[fanfare]} Select an enemy follower on the field and deal it damage equal to the number of other Passion followers on your field.",
+    "cn": "【疾驰】\n《入场曲》选择敌方场上的1个从者。给予其与「自己场上的其他的Passion类型·从者的数量」等量的伤害。",
+    "ja": "【疾走】\nファンファーレ相手の場のフォロワー1体を選ぶ。それに「自分の場の他のパッション・フォロワーの数」と同じダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-098",
+   "printings": [
+    "CP02-098",
+    "CP02-P80",
+    "CSD02c-017"
+   ],
+   "name": "Shizuku Oikawa",
+   "names": {
+    "en": "Shizuku Oikawa",
+    "cn": "及川雫",
+    "ja": "及川雫"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 2,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} Give your leader {[defense]}+2. If there are at least 5 Passion cards in your cemetery, give {[defense]}+4 instead.",
+    "cn": "《入场曲》使自己的主战者《生命值》+2。如果自己的墓场中的Passion类型·卡片为5张及以上的话，转变为《生命值》+4。",
+    "ja": "ファンファーレ自分のリーダーは体力+2する。自分の墓場のパッション・カードが5枚以上なら、代わりに体力+4する。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-099",
+   "printings": [
+    "CP02-099",
+    "CP02-P81"
+   ],
+   "name": "Layla",
+   "names": {
+    "en": "Layla",
+    "cn": "莱拉",
+    "ja": "ライラ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-100",
+   "printings": [
+    "CP02-100",
+    "CP02-P82"
+   ],
+   "name": "Layla",
+   "names": {
+    "en": "Layla",
+    "cn": "莱拉",
+    "ja": "ライラ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "On Evolve - Search your deck for a Cool follower and Passion follower, reveal them, add them to your hand, then shuffle your deck.",
+    "cn": "【进化时】从自己的牌堆之中搜寻1张Cool类型·从者卡与1张Passion类型·从者卡，并加入手牌。",
+    "ja": "【進化時】自分のデッキからクール・フォロワー1枚とパッション・フォロワー1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CP02-101",
+   "printings": [
+    "CP02-101",
+    "CP02-P83",
+    "CSD02c-018"
+   ],
+   "name": "Sanae Katagiri",
+   "names": {
+    "en": "Sanae Katagiri",
+    "cn": "片桐早苗",
+    "ja": "片桐早苗"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 7,
+   "attack": 7,
+   "defense": 7,
+   "text": {
+    "en": "Rush. Ward.\nIf this follower would take more than 3 damage, it takes 3 instead.",
+    "cn": "【突进】【守护】\n这张卡受到的4点及以上的伤害变为3点。",
+    "ja": "【突進】【守護】\nこれが受ける4以上のダメージを3にする。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-102",
+   "printings": [
+    "CP02-102",
+    "CP02-P84",
+    "CSD02a-018"
+   ],
+   "name": "Winter Night Prayer",
+   "names": {
+    "en": "Winter Night Prayer",
+    "cn": "对寒夜献上祈祷",
+    "ja": "寒夜に祈りを"
+   },
+   "class": "Havencraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field. Banish it and, if there's a Cute follower on your field, give your leader {[defense]}+3.",
+    "cn": "《快速》\n选择敌方场上的1个从者。将其消失。如果自己的场上有Cute类型·从者的话，使自己的主战者《生命值》+3。",
+    "ja": "クイック\n相手の場のフォロワー1体を選ぶ。それを消滅させる。自分の場にキュート・フォロワーがいるなら、自分のリーダーは体力+3する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CP02-103",
+   "printings": [
+    "CP02-103",
+    "CP02-SL19a",
+    "CP02-SL19b",
+    "CP02-SL19c",
+    "CP02-SP13",
+    "CP02-U13a",
+    "CP02-U13b",
+    "CP02-U13c"
+   ],
+   "name": "New Generations",
+   "names": {
+    "en": "New Generations",
+    "cn": "New Generations",
+    "ja": "ニュージェネレーションズ"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 10,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "When playing this card, banish 3 Cute cards, 3 Cool cards, and 3 Passion cards from your cemetery: This card costs 9 less to play.\n----------\nStorm. Bane. Ward.",
+    "cn": "将这张卡使用之际，将墓场中的3张Cute类型·卡片与3张Cool类型·卡片与3张Passion类型·卡片消失：将消费-9。\n【疾驰】【必杀】【守护】",
+    "ja": "これをプレイする際、墓場のキュート・カード3枚とクール・カード3枚とパッション・カード3枚を消滅：コストを-9する。\n【疾走】【必殺】【守護】"
+   },
+   "traits": [
+    "デレマス",
+    "キュート",
+    "クール",
+    "パッション"
+   ],
+   "alternateNames": {
+    "CP02-SP13": {
+     "en": "#UNICUS",
+     "cn": "#UNICUS",
+     "ja": "#UNICUS"
+    },
+    "CP02-U13a": {
+     "en": "#UNICUS",
+     "cn": "#UNICUS",
+     "ja": "#UNICUS"
+    },
+    "CP02-U13b": {
+     "en": "#UNICUS",
+     "cn": "#UNICUS",
+     "ja": "#UNICUS"
+    },
+    "CP02-U13c": {
+     "en": "#UNICUS",
+     "cn": "#UNICUS",
+     "ja": "#UNICUS"
+    }
+   }
+  },
+  {
+   "id": "CP02-104",
+   "printings": [
+    "CP02-104",
+    "CP02-SL20a",
+    "CP02-SL20b",
+    "CP02-SL20c"
+   ],
+   "name": "New Wave",
+   "names": {
+    "en": "New Wave",
+    "cn": "New Wave",
+    "ja": "ニューウェーブ"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 6,
+   "attack": 7,
+   "defense": 7,
+   "text": {
+    "en": "{[fanfare]}, Lesson (5): Destroy each enemy card on the field.",
+    "cn": "《入场曲》【课程_5】：将敌方场上的全体卡片破坏。",
+    "ja": "ファンファーレ【レッスン_5】：相手の場のカードすべてを破壊する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート",
+    "クール",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CP02-105",
+   "printings": [
+    "CP02-105",
+    "CP02-P85"
+   ],
+   "name": "Master Trainer",
+   "names": {
+    "en": "Master Trainer",
+    "cn": "大师训练员",
+    "ja": "マスタートレーナー"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 8,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Put 5 Magical Item tokens into your EX area. Recover 4 play points.",
+    "cn": "《入场曲》将5张『魔法道具』卡置于EX区域。将自己的PP回复4点。\n―――――――――――――――\n『魔法道具』《中立职业》IMC类型·法术《消费4》使自己的主战者《生命值》+1。抽取1张卡。",
+    "ja": "ファンファーレ『魔法のアイテム』5枚をEXエリアに置く。自分のPPを4回復する。\n―――――――――――――――\n『魔法のアイテム』ニュートラルデレマス・スペルコスト4自分のリーダーは体力+1する。1枚引く。"
+   },
+   "traits": [
+    "デレマス"
+   ]
+  },
+  {
+   "id": "CP02-106",
+   "printings": [
+    "CP02-106",
+    "CP02-P86"
+   ],
+   "name": "Expert Trainer",
+   "names": {
+    "en": "Expert Trainer",
+    "cn": "高手训练员",
+    "ja": "ベテラントレーナー"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Put 2 Magical Item tokens into your EX area.",
+    "cn": "《入场曲》将2张『魔法道具』卡置于EX区域。\n―――――――――――――――\n『魔法道具』《中立职业》IMC类型·法术《消费4》使自己的主战者《生命值》+1。抽取1张卡。",
+    "ja": "ファンファーレ『魔法のアイテム』2枚をEXエリアに置く。\n―――――――――――――――\n『魔法のアイテム』ニュートラルデレマス・スペルコスト4自分のリーダーは体力+1する。1枚引く。"
+   },
+   "traits": [
+    "デレマス"
+   ]
+  },
+  {
+   "id": "CP02-107",
+   "printings": [
+    "CP02-107",
+    "CP02-P87"
+   ],
+   "name": "Trainer",
+   "names": {
+    "en": "Trainer",
+    "cn": "训练员",
+    "ja": "トレーナー"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Select another iM@S CG follower on your field and give it Bane or Drain.",
+    "cn": "《入场曲》选择自己场上的其他的1个IMC类型·从者。使其获得【必杀】或【吸血】能力。",
+    "ja": "ファンファーレ自分の場の他のデレマス・フォロワー1体を選ぶ。それは【必殺】か【ドレイン】を持つ。"
+   },
+   "traits": [
+    "デレマス"
+   ]
+  },
+  {
+   "id": "CP02-108",
+   "printings": [
+    "CP02-108",
+    "CP02-P88",
+    "CSD02b-018"
+   ],
+   "name": "Rookie Trainer",
+   "names": {
+    "en": "Rookie Trainer",
+    "cn": "新手训练员",
+    "ja": "ルーキートレーナー"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "Activate {[engage]}: Select another iM@S CG follower on your field and give it {[attack]}+1.",
+    "cn": "《起动》将这张卡《横置》：选择自己场上的其他的1个IMC类型·从者。使其《攻击力》+1。",
+    "ja": "起動これをアクト：自分の場の他のデレマス・フォロワー1体を選ぶ。それは攻撃力+1する。"
+   },
+   "traits": [
+    "デレマス"
+   ]
+  },
+  {
+   "id": "CP02-LD01",
+   "printings": [
+    "CP02-LD01"
+   ],
+   "name": "Aiko Takamori [Vow of Love]",
+   "names": {
+    "en": "Aiko Takamori [Vow of Love]",
+    "cn": "[爱的誓言]高森蓝子",
+    "ja": "〔あいの誓い〕高森藍子"
+   },
+   "class": "Forestcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP02-LD02",
+   "printings": [
+    "CP02-LD02"
+   ],
+   "name": "Airi Totoki [Private Maid]",
+   "names": {
+    "en": "Airi Totoki [Private Maid]",
+    "cn": "[Private Maid]十时爱梨",
+    "ja": "〔プライベート・メイド〕十時愛梨"
+   },
+   "class": "Swordcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP02-LD03",
+   "printings": [
+    "CP02-LD03"
+   ],
+   "name": "Mizuki Kawashima [Ambivalent Act]",
+   "names": {
+    "en": "Mizuki Kawashima [Ambivalent Act]",
+    "cn": "[Ambivalent Act]川岛瑞树",
+    "ja": "〔アンビバレント・アクト〕川島瑞樹"
+   },
+   "class": "Runecraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP02-LD04",
+   "printings": [
+    "CP02-LD04"
+   ],
+   "name": "Akari Tsujino [Shining Summer Apple]",
+   "names": {
+    "en": "Akari Tsujino [Shining Summer Apple]",
+    "cn": "[爆裂的夏日苹果]辻野朱里",
+    "ja": "〔はじけてサマーアップル〕辻野あかり"
+   },
+   "class": "Dragoncraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP02-LD05",
+   "printings": [
+    "CP02-LD05"
+   ],
+   "name": "Asuka Ninomiya [Fragments of an Idol]",
+   "names": {
+    "en": "Asuka Ninomiya [Fragments of an Idol]",
+    "cn": "[《偶像》的碎片]二宫飞鸟",
+    "ja": "〔《偶像》のフラグメント〕二宮飛鳥"
+   },
+   "class": "Abysscraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP02-LD06",
+   "printings": [
+    "CP02-LD06"
+   ],
+   "name": "Yoshino Yorita [Ocean's Beckoning]",
+   "names": {
+    "en": "Yoshino Yorita [Ocean's Beckoning]",
+    "cn": "[海神的指引者]依田芳乃",
+    "ja": "〔わだつみの導き手〕依田芳乃"
+   },
+   "class": "Havencraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP02-T01",
+   "printings": [
+    "CP02-T01",
+    "CP02-T02",
+    "CP02-T03",
+    "CP02-T04",
+    "CP02-T05",
+    "CP02-T06",
+    "CP02-T07",
+    "CP02-T08",
+    "CP02-T09",
+    "CSD02a-T01",
+    "CSD02b-T01",
+    "CSD02c-T01"
+   ],
+   "name": "Magical Item",
+   "names": {
+    "en": "Magical Item",
+    "ja": "魔法のアイテム",
+    "cn": "魔法道具"
+   },
+   "class": "Neutral",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Give your leader {[defense]}+1. Draw a card.\n----------\n(At the start of the game, if your deck is based on the THE IDOLM@STER CINDERELLA GIRLS universe, put 5 Magical Item tokens into your EX area.)",
+    "cn": "使自己的主战者《生命值》+1。抽取1张卡。\n----------\n（※在对战开始时，如果自己的牌组构筑为「偶像大师 灰姑娘女孩」主题构筑的话，将5张『魔法道具』卡置于EX区域）",
+    "ja": "自分のリーダーは体力+1する。1枚引く。\n----------\n（※バトル開始時、自分のデッキ構築が「アイドルマスター シンデレラガールズ」タイトル構築なら、『魔法のアイテム』5枚をEXエリアに置く）"
+   },
+   "traits": [
+    "デレマス"
+   ],
+   "alternateNames": {
+    "CP02-T01": {
+     "en": "Cute Earrings",
+     "cn": "Cute耳环",
+     "ja": "キュートイヤリング"
+    },
+    "CP02-T02": {
+     "en": "Cute Pendant",
+     "cn": "Cute项链",
+     "ja": "キュートペンダント"
+    },
+    "CP02-T03": {
+     "en": "Cute Tiara",
+     "cn": "Cute头冠",
+     "ja": "キュートティアラ"
+    },
+    "CP02-T04": {
+     "en": "Cool Earrings",
+     "cn": "Cool耳环",
+     "ja": "クールイヤリング"
+    },
+    "CP02-T05": {
+     "en": "Cool Pendant",
+     "cn": "Cool项链",
+     "ja": "クールペンダント"
+    },
+    "CP02-T06": {
+     "en": "Cool Tiara",
+     "cn": "Cool头冠",
+     "ja": "クールティアラ"
+    },
+    "CP02-T07": {
+     "en": "Passion Earrings",
+     "cn": "Passion耳环",
+     "ja": "パッションイヤリング"
+    },
+    "CP02-T08": {
+     "en": "Passion Pendant",
+     "cn": "Passion项链",
+     "ja": "パッションペンダント"
+    },
+    "CP02-T09": {
+     "en": "Passion Tiara",
+     "cn": "Passion头冠",
+     "ja": "パッションティアラ"
+    },
+    "CSD02a-T01": {
+     "en": "Cute Earrings",
+     "cn": "Cute耳环",
+     "ja": "キュートイヤリング"
+    },
+    "CSD02b-T01": {
+     "en": "Cool Earrings",
+     "cn": "Cool耳环",
+     "ja": "クールイヤリング"
+    },
+    "CSD02c-T01": {
+     "en": "Passion Earrings",
+     "cn": "Passion耳环",
+     "ja": "パッションイヤリング"
+    }
+   }
+  }
+ ]
+}

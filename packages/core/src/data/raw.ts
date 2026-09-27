@@ -35,6 +35,11 @@ export interface RawCardJson {
   image: string;
   /** CR 2.14 — the back face of a double-faced card. */
   back?: RawCardBack;
+  /**
+   * Set only by data/fixes.ts: the card name of a printing whose big printed name is an alternate name (CR 2.13), e.g.
+   * CP02's unit printings (the card name is the small type above the unit name).
+   */
+  treated_as?: string;
 }
 
 /**

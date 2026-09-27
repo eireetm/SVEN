@@ -29,6 +29,7 @@
     "./sets/bp20": "./src/sets/bp20.ts",
     "./sets/bp21": "./src/sets/bp21.ts",
     "./sets/cp01": "./src/sets/cp01.ts",
+    "./sets/cp02": "./src/sets/cp02.ts",
     "./testing": "./src/testing/index.ts"
   }
 }

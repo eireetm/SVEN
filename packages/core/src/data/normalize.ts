@@ -1,7 +1,7 @@
 import { backFaceId, CARD_CLASSES, type CardClass, type CardDefinition, type CardType, type LocalizedText } from "../model/card";
 import { englishText, japaneseKey, treatedAs, withoutReminders, withoutTreatedAs, wordDice, type TextSource } from "./english-text";
 import type { RawCardJson } from "./raw";
-import { UNIVERSE_OF_SET } from "./universes";
+import { MAGICAL_ITEM, UNIVERSE_OF_SET } from "./universes";
 
 /**
  * Raw scraped JSON -> CardDefinition.
@@ -182,6 +182,14 @@ function checkStats(
   if (cost === null) fail(`${type} needs a cost`);
 }
 
+/**
+ * CR 14.3.1.1 — Magical Item tokens have alternate names (2.13): whatever name is printed, the card name is "Magical Item"
+ * (CP02-T01 ruling Q3: Cute Earrings, Cool Pendant, … are all the card named Magical Item). Every one of them carries the
+ * reminder of 14.3.1.2, which is how they are recognized.
+ */
+const MAGICAL_ITEM_NAMES: LocalizedText = { en: MAGICAL_ITEM, ja: "魔法のアイテム", cn: "魔法道具" };
+const isMagicalItem = (token: boolean, text: string | null): boolean => token && (text ?? "").includes("put 5 Magical Item tokens into your EX area");
+
 export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   const cardNo = raw.card_no;
   const { type, evolved, token, advanced } = parseCardType(cardNo, raw.card_type);
@@ -193,7 +201,8 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   const printedName = ownEvolvedName ? rawName : stripEvolvedSuffix(cardNo, rawName, evolved, doubleFaced);
   const en = englishText(raw);
   // CR 2.13: "(This card is treated as X.)" — X is the card name, the printed name an alternate name.
-  const alias = treatedAs(en.text);
+  const magicalItem = isMagicalItem(token, en.text);
+  const alias = magicalItem ? MAGICAL_ITEM : (raw.treated_as ?? treatedAs(en.text));
   const name = alias === null ? printedName : stripEvolvedSuffix(cardNo, alias, false);
   if (name === "") throw new CardDataError(`${cardNo}: empty English name`);
   const universe = UNIVERSE_OF_SET[raw.set];
@@ -203,7 +212,7 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
     set: raw.set,
     def: {
       name,
-      names: alias === null ? { en: name, cn: raw.name_cn, ja: raw.name_ja } : { en: name, cn: null, ja: null },
+      names: magicalItem ? MAGICAL_ITEM_NAMES : alias === null ? { en: name, cn: raw.name_cn, ja: raw.name_ja } : { en: name, cn: null, ja: null },
       class: parseClass(cardNo, raw.class),
       type,
       evolved,

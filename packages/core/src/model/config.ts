@@ -24,6 +24,8 @@ export interface RuleParameters {
   superEvolutionPoints: number;
   /** CR 12.2.4 — turns passed required to super-evolve, [went first, went second]. */
   superEvolveTurnsPassed: readonly [number, number];
+  /** CR 14.3.1.2 — Magical Item tokens put into the EX area of a THE IDOLM@STER CINDERELLA GIRLS deck at the start. */
+  magicalItemsAtStart: number;
   /** CR 6.1.1.2–6.1.1.4 — deck construction numbers. */
   deck: {
     mainMin: number;
@@ -43,6 +45,7 @@ export const DEFAULT_RULES: RuleParameters = {
   evolutionPoints: [0, 3],
   superEvolutionPoints: 1,
   superEvolveTurnsPassed: [7, 6],
+  magicalItemsAtStart: 5,
   deck: { mainMin: 40, mainMax: 50, evolveMax: 10, copiesPerName: 3 },
 };
 

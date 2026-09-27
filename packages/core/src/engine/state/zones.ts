@@ -1,4 +1,5 @@
 import type { CardDatabase } from "../../data/database";
+import { MAGICAL_ITEM } from "../../data/universes";
 import type { CardType, DefId, PrintingId } from "../../model/card";
 import { opponentOf, type CardId, type PlayerId } from "../../model/ids";
 import type { CardInstance, GameState, PlayerZone, ZoneName } from "../../model/state";
@@ -341,6 +342,10 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
     }
     if (why === "destroy" && old.zone === "field" && g.db.get(befores[i]!.abilityDef).type === "follower") {
       thisTurn(state, old.controller).followersDestroyed += 1; // CR 5.6
+    }
+    // CR 14.3.2.1 — a Magical Item banished from the EX area (CP02-007).
+    if (old.zone === "ex" && spec.to === "banished" && g.db.get(old.def).name === MAGICAL_ITEM) {
+      thisTurn(state, old.controller).magicalItemsBanished += 1;
     }
     // A follower on the field (its current type, BP07-005 ruling) put into the cemetery.
     if (old.zone === "field" && spec.to === "cemetery" && fieldTypes[i] === "follower") {

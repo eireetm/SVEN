@@ -76,3 +76,33 @@ describe("CR 14.2 — serving and racing (Umamusume)", () => {
     expect([t.zone("me", "raceZone"), deck.length, t.game.state.cards[deck[0]!]!.faceUp, t.game.reader().carrotsToServe(0)]).toEqual([[], 1, true, []]);
   });
 });
+
+describe("CR 14.3 — Magical Items and Lesson (THE IDOLM@STER CINDERELLA GIRLS)", () => {
+  const ITEM = "CP02-T01";
+  // CP02-003 Miku Maekawa: act (1), Lesson (1): Storm. CP02-LD01 is a THE IDOLM@STER CINDERELLA GIRLS leader.
+  const cinderella = { leader: "CP02-LD01", main: Array<string>(40).fill("CP02-003"), evolve: [] };
+  const vanilla = { main: Array<string>(40).fill("BP01-001"), evolve: [] };
+
+  it("14.3.1.2 — a deck based on the universe has five Magical Items in its EX area before the first player is decided", () => {
+    const game = E.newGame({ seed: 1, players: [vanilla, cinderella], config: { deckRestrictions: false } });
+    const ex = (p: 0 | 1) => game.state.players[p].zones.ex.map((id) => game.state.cards[id]!.def);
+    expect([game.decision?.type, ex(0), ex(1)]).toEqual(["chooseTurnOrder", [], Array<string>(5).fill(ITEM)]);
+  });
+
+  it("14.3.1.1 — every Magical Item printing is the card named Magical Item", () => {
+    expect(["CP02-T01", "CP02-T05", "CSD02a-T01"].map((p) => [E.db.ofPrinting(p).id, E.db.ofPrinting(p).name])).toEqual(
+      Array.from({ length: 3 }, () => [ITEM, "Magical Item"]),
+    );
+  });
+
+  it("14.3.2.1 — Lesson (X) banishes X Magical Items from the EX area as a cost; the turn records it", () => {
+    const t = d({ me: { field: ["CP02-003"], ex: [ITEM, ITEM], playPoints: 1 } }).activate("CP02-003");
+    expect([t.ex(), t.keywords("CP02-003"), t.game.reader().magicalItemsBanishedThisTurn(0)]).toEqual([[ITEM], ["storm"], 1]);
+    expect(d({ me: { field: ["CP02-003"], ex: ["V1"], playPoints: 1 } }).canActivate("CP02-003")).toBe(false);
+  });
+
+  it("identical Magical Items are banished without a question; the player chooses when one differs", () => {
+    const t = d({ me: { field: ["CP02-003"], ex: [ITEM, { card: ITEM, counters: { spell: 1 } }], playPoints: 1 } }).activate("CP02-003");
+    expect(t.decision).toMatchObject({ type: "selectCards", candidateDefs: [ITEM, ITEM], min: 1, max: 1 });
+  });
+});

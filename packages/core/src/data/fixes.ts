@@ -129,6 +129,45 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   // "Lilium, the Wyrmwitch" — the same Japanese name 竜の魔女・リリウム and Chinese name 龙之魔女·莉莉尤姆 (CR 5.16.1.1.1).
   "BP21-056": { name_en: "Lilium, the Wyrmwitch (Evolved)" },
   "BP21-SL14": { name_en: "Lilium, the Wyrmwitch (Evolved)" },
+  // CP02's unit printings (SP / U): the big printed name is the idol unit's name, and the card name is printed in small type
+  // above it (assets/CP02-SP01a/CP02-SP01a.webp: 前川みく above *(Asterisk); CP02-SP09a: 神崎蘭子 above フォルトゥナ・レジーナ).
+  // Their texts, class, stats and rulings are those of the named card, which an evolved one needs to evolve from its
+  // base (CR 5.16.1.1.1). The unit name stays as an alternate name (CR 2.13), shown only.
+  // 前川みく (CP02-003) under the unit name *(Asterisk).
+  "CP02-SP01a": { treated_as: "Miku Maekawa" },
+  "CP02-SP01b": { treated_as: "Miku Maekawa" },
+  "CP02-U01a": { treated_as: "Miku Maekawa" },
+  "CP02-U01b": { treated_as: "Miku Maekawa" },
+  // 久川凪 (CP02-020) under the unit name miroir.
+  "CP02-SP04a": { treated_as: "Nagi Hisakawa" },
+  "CP02-SP04b": { treated_as: "Nagi Hisakawa" },
+  "CP02-U04a": { treated_as: "Nagi Hisakawa" },
+  "CP02-U04b": { treated_as: "Nagi Hisakawa" },
+  // 塩見周子 (CP02-038) under the unit name 羽衣小町.
+  "CP02-SP06a": { treated_as: "Syuko Shiomi" },
+  "CP02-SP06b": { treated_as: "Syuko Shiomi" },
+  "CP02-U06a": { treated_as: "Syuko Shiomi" },
+  "CP02-U06b": { treated_as: "Syuko Shiomi" },
+  // 鷺沢文香 (CP02-055) under the unit name BRIGHT:LIGHTS.
+  "CP02-SP08a": { treated_as: "Fumika Sagisawa" },
+  "CP02-SP08b": { treated_as: "Fumika Sagisawa" },
+  "CP02-U08a": { treated_as: "Fumika Sagisawa" },
+  "CP02-U08b": { treated_as: "Fumika Sagisawa" },
+  // 神崎蘭子 (CP02-070) under the unit name フォルトゥナ・レジーナ.
+  "CP02-SP09a": { treated_as: "Ranko Kanzaki" },
+  "CP02-SP09b": { treated_as: "Ranko Kanzaki" },
+  "CP02-U09a": { treated_as: "Ranko Kanzaki" },
+  "CP02-U09b": { treated_as: "Ranko Kanzaki" },
+  // 佐藤心 (CP02-088) under the unit name しゅがしゅが☆み〜ん.
+  "CP02-SP12a": { treated_as: "Shin Sato" },
+  "CP02-SP12b": { treated_as: "Shin Sato" },
+  "CP02-U12a": { treated_as: "Shin Sato" },
+  "CP02-U12b": { treated_as: "Shin Sato" },
+  // ニュージェネレーションズ (CP02-103) under the unit name #UNICUS.
+  "CP02-SP13": { treated_as: "New Generations" },
+  "CP02-U13a": { treated_as: "New Generations" },
+  "CP02-U13b": { treated_as: "New Generations" },
+  "CP02-U13c": { treated_as: "New Generations" },
   // Back faces of double-faced cards (see above).
   "BP09-005": { back: BP09_005_BACK },
   "BP09-P02": { back: BP09_005_BACK },

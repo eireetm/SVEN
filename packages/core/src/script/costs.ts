@@ -180,6 +180,24 @@ export function banishFromYour(zones: readonly ("field" | "ex" | "cemetery" | "h
 }
 
 /**
+ * CR 14.3.2.1 — "Lesson (X)": banish X cards named Magical Item from your EX area (a cost, CR 10.4). Magical Items that
+ * nothing tells apart (no effect or counter on them) are interchangeable, so the player chooses only when one differs
+ * (e.g. one that CP02-037 made cost 0 this turn).
+ */
+export function lesson(x: number): CustomCost {
+  const items = (g: GameReader, c: PlayerId) => g.magicalItemsInEx(c).filter((id) => g.banishableByAbilities(id));
+  const plain = (g: GameReader, id: CardId) =>
+    !g.state.effects.some((e) => e.target === id) && Object.values(g.card(id)?.counters ?? {}).every((n) => n === 0);
+  return {
+    canPay: (g, c) => items(g, c).length >= x,
+    *pay(fx) {
+      const all = items(fx.game, fx.controller);
+      yield* fx.banish(all.every((id) => plain(fx.game, id)) ? all.slice(0, x) : yield* fx.chooseCards(all, x, x));
+    },
+  };
+}
+
+/**
  * "{[engage]} N [matching] cards on your field" (CR 10.4.6: reserved ones), e.g. BP07-020 "2
  * cards named Naterran Great Tree", BP06-017 "2 Hunter followers".
  */

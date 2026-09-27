@@ -5,7 +5,8 @@ import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import { anchor, decide } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
-import { moveCards } from "../state/zones";
+import { createCards, moveCards } from "../state/zones";
+import { MAGICAL_ITEM } from "../../data/universes";
 
 /** CR 6.2.1.6 — a random player decides who goes first (unless fixed by the game config). */
 function* decideTurnOrder(g: G): Proc<PlayerId> {
@@ -35,6 +36,20 @@ function* mulligan(g: G, player: PlayerId): Proc<void> {
 }
 
 /**
+ * CR 14.3.1.2 — before the first player is decided (6.2.1.6), a player whose deck is based on the THE IDOLM@STER
+ * CINDERELLA GIRLS universe puts five Magical Item tokens into their EX area. Not optional (CP02-T01 ruling).
+ */
+function placeMagicalItems(g: G): void {
+  for (const p of [0, 1] as PlayerId[]) {
+    if (g.state.players[p].universe !== "cinderellaGirls") continue;
+    const item = g.db.tokenNamed(MAGICAL_ITEM);
+    if (!item) throw new EngineError(`no token named "${MAGICAL_ITEM}" (CR 14.3.1.2)`);
+    const n = g.state.config.rules.magicalItemsAtStart;
+    createCards(g, Array.from({ length: n }, () => ({ def: item.id, player: p, to: "ex" as const })), "setup");
+  }
+}
+
+/**
  * CR 6.2 — before starting a game. Steps 6.2.1.1–6.2.1.3 and 6.2.1.5 (presenting decks,
  * placing leaders and evolve decks) happen when the initial state is built.
  */
@@ -45,6 +60,7 @@ export function* setupGame(g: G): Proc<void> {
   state.phase = "setup";
 
   for (const p of [0, 1] as PlayerId[]) shuffleDeck(g, p); // 6.2.1.4
+  placeMagicalItems(g); // 14.3.1.2
   const first = yield* decideTurnOrder(g); // 6.2.1.6
   state.firstPlayer = first;
   const order: PlayerId[] = [first, opponentOf(first)];

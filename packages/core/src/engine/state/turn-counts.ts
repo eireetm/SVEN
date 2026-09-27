@@ -22,6 +22,7 @@ export function emptyTurnCounts(turn: number): TurnCounts {
     leaderDefenseGained: 0,
     playFromBanished: false,
     diceRolled: [],
+    magicalItemsBanished: 0,
   };
 }
 

@@ -215,6 +215,12 @@ export interface TurnCounts {
    * 6-sided die this turn", BP21-081 "if you rolled a 6 when rolling a die this turn".
    */
   diceRolled: number[];
+  /**
+   * Cards named Magical Item banished from this player's EX area this turn (CR 14.3.2.1 Lesson, or any effect), e.g.
+   * CP02-007 "if a Magical Item was banished from your EX area this turn". Playing one as a spell is not banishing it
+   * (ruling: it goes to the cemetery and the token then ceases to exist).
+   */
+  magicalItemsBanished: number;
 }
 
 /** A persistent effect (CR 10.2.1.2) applied to one card object. */

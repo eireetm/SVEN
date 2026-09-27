@@ -14,6 +14,7 @@ import { countsThisTurn } from "./state/turn-counts";
 import { effectInForce } from "./state/effects";
 import { carrotsToServe, canServe } from "./actions/race";
 import { isRacing, linkedCards } from "./state/links";
+import { MAGICAL_ITEM } from "../data/universes";
 
 /**
  * Read-only access to a game for card scripts, bots and views. Scripts must go through this
@@ -124,6 +125,10 @@ export interface GameReader {
   canServe(id: CardId, times: number): boolean;
   /** The race-zone / drive-zone / equipment cards linked to this card (CR 14.2.1.1, 14.4.9.2, 14.5.2.2). */
   linkedCards(id: CardId, zone: "raceZone" | "driveZone" | "equipmentZone"): CardId[];
+  /** CR 14.3.1 — the cards named Magical Item in the player's EX area (what Lesson (X) banishes, 14.3.2.1). */
+  magicalItemsInEx(player: PlayerId): CardId[];
+  /** Cards named Magical Item banished from the player's EX area this turn (CP02-007). */
+  magicalItemsBanishedThisTurn(player: PlayerId): number;
   /** Cards returned from this player's field to a hand this turn (BP03-005). */
   returnedToHandThisTurn(player: PlayerId): number;
   /** The cards returned from this player's field to a hand this turn, as they were on the field (BP10-009). */
@@ -270,6 +275,8 @@ export function makeReader(env: Env): GameReader {
     carrotsToServe: (p) => carrotsToServe(env, p),
     canServe: (id, times) => canServe(env, id, times),
     linkedCards: (id, zone) => linkedCards(env, id, zone),
+    magicalItemsInEx: (p) => ps(p).zones.ex.filter((id) => env.db.get(state().cards[id]!.def).name === MAGICAL_ITEM),
+    magicalItemsBanishedThisTurn: (p) => countsThisTurn(state(), p).magicalItemsBanished,
     gainedDefenseThisTurn: (id) => {
       const c = state().cards[id];
       return c !== undefined && countsThisTurn(state(), c.controller).defenseGained.includes(id);

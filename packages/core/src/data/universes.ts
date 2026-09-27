@@ -5,6 +5,12 @@ import type { Universe } from "../model/card";
  * ヴァンガード"); the scraped data has no field for it, so it comes from the set. A card printed in several sets has
  * the universe of its printings in these sets (promotional reprints, e.g. PR-052 Carrot, carry no set universe).
  */
+/**
+ * CR 14.3.1 — the card name of every Magical Item token (Cute Earrings, Cool Pendant, … are alternate names, 14.3.1.1;
+ * CP02-T01 ruling Q3). Lesson (X) banishes cards with this name from the EX area (14.3.2.1).
+ */
+export const MAGICAL_ITEM = "Magical Item";
+
 export const UNIVERSE_OF_SET: Readonly<Record<string, Universe>> = {
   // CR 14.2 Umamusume: Pretty Derby
   CP01: "umamusume",

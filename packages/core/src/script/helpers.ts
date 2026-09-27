@@ -215,6 +215,7 @@ export const whenThisLeavesField = (spec: TimingSpec) =>
  * "Whenever this follower takes [ability] damage" (CR 5.14). Damage of 0 or less is not dealt, so
  * it does not trigger (BP04-077 ruling); damage that destroys it does (BP04-087, BP05-053
  * rulings). Ability damage is any damage but attack and combat damage (BP05-052 ruling, CR 5.14.3).
+ * Data: `count`, the damage taken (CP02-052 "if that damage is 5 or more").
  */
 export const whenThisTakesDamage = (spec: TimingSpec, opts: { onlyYourTurn?: boolean; ability?: boolean } = {}) =>
   automatic(
@@ -225,7 +226,9 @@ export const whenThisTakesDamage = (spec: TimingSpec, opts: { onlyYourTurn?: boo
       e.target === me.card &&
       e.amount > 0 &&
       (!opts.ability || e.kind === "ability") &&
-      (!opts.onlyYourTurn || game.activePlayer === me.controller),
+      (!opts.onlyYourTurn || game.activePlayer === me.controller)
+        ? [{ count: e.amount }]
+        : false,
     spec,
   );
 
