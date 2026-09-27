@@ -88,6 +88,8 @@ export type ChooseReason =
   | "damageOrder"
   /** CR 14.5.1.4 — which Union Burst ability of `subject` to execute without paying its cost (CP04-114). */
   | "unionBurst"
+  /** CR 5.20.2 — keep the die's result (the option's label shows it) or reroll it (ECP02-065 / 066). */
+  | "dieReroll"
   /** Any other choice made while an effect resolves. */
   | "effect";
 

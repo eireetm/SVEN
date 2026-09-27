@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "CP01",
- "printings": 236,
+ "printings": 246,
  "cards": [
   {
    "id": "CP01-001",
@@ -2509,6 +2509,16 @@
    "id": "CP01-085",
    "printings": [
     "CP01-085",
+    "ECP01-058",
+    "ECP01-059",
+    "ECP01-060",
+    "ECP01-061",
+    "ECP01-062",
+    "ECP01-SL27",
+    "ECP01-SL28",
+    "ECP01-SL29",
+    "ECP01-SL30",
+    "ECP01-SL31",
     "CSD01-032",
     "PR-052"
    ],
@@ -2531,7 +2541,59 @@
     "cn": "通过吃饭，来使那个赛马娘类型·从者起跑。（使其获得【突进】能力）\n----------\n在进化牌组中，这张卡可以放入最多10张。",
     "ja": "食事することで、そのウマ娘・フォロワーは出走する。（それは【突進】を持つ）\n----------\nこれはエボルヴデッキに10枚まで入れることができる。"
    },
-   "traits": []
+   "traits": [],
+   "alternateNames": {
+    "ECP01-058": {
+     "en": "A Super Successful Event!",
+     "cn": "举办大成功！",
+     "ja": "開催大成功！"
+    },
+    "ECP01-059": {
+     "en": "Hungry for a Miracle",
+     "cn": "奇迹交织的圣诞夜",
+     "ja": "聖なる夜に重なるキセキ"
+    },
+    "ECP01-060": {
+     "en": "At the End of the Day",
+     "cn": "一天结束的时候",
+     "ja": "1日の終わりに"
+    },
+    "ECP01-061": {
+     "en": "Forth! Into the Great Age of Agriculture!",
+     "cn": "开幕！大农耕时代！",
+     "ja": "開幕ッ！大農耕時代ッ！"
+    },
+    "ECP01-062": {
+     "en": "Workshop! Farmers for a Day!",
+     "cn": "合宿！农家体验！",
+     "ja": "合宿ッ！農家体験ッ！"
+    },
+    "ECP01-SL27": {
+     "en": "A Super Successful Event!",
+     "cn": "举办大成功！",
+     "ja": "開催大成功！"
+    },
+    "ECP01-SL28": {
+     "en": "Hungry for a Miracle",
+     "cn": "奇迹交织的圣诞夜",
+     "ja": "聖なる夜に重なるキセキ"
+    },
+    "ECP01-SL29": {
+     "en": "At the End of the Day",
+     "cn": "一天结束的时候",
+     "ja": "1日の終わりに"
+    },
+    "ECP01-SL30": {
+     "en": "Forth! Into the Great Age of Agriculture!",
+     "cn": "开幕！大农耕时代！",
+     "ja": "開幕ッ！大農耕時代ッ！"
+    },
+    "ECP01-SL31": {
+     "en": "Workshop! Farmers for a Day!",
+     "cn": "合宿！农家体验！",
+     "ja": "合宿ッ！農家体験ッ！"
+    }
+   }
   },
   {
    "id": "CP01-LD01",

@@ -1,7 +1,7 @@
 import type { CardType } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import type { TriggerData } from "../model/state";
-import type { CardMove, GameEvent, MoveCause } from "../events/types";
+import type { CardMove, DamageSource, GameEvent, MoveCause } from "../events/types";
 import type { EffectContext } from "../engine/effects/context";
 import type { Proc } from "../engine/runtime/proc";
 import type { GameReader } from "../engine/query";
@@ -443,7 +443,8 @@ export function whenOpponentDeckCardToCemetery(spec: TimingSpec, opts: { onlyYou
  * cemetery]" — once per follower (BP06-074 ruling), tokens too, and a follower put there as a
  * cost (BP05-076 rulings). Moving to the other field is not leaving it (CR 10.7.4.3).
  * `includeSelf`: this card leaving counts too (look-back, CR 10.7.4.2; BP06-090 ruling); the
- * information is what the card had on the field (`m.before`, 10.7.4.1.2). Data: the card.
+ * information is what the card had on the field (`m.before`, 10.7.4.1.2). `another`: other followers only, also when they
+ * leave together with this card (look-back; ECP01-039 rulings). Data: the card.
  */
 export function whenYourFollowerLeaves(
   spec: TimingSpec,
@@ -451,13 +452,14 @@ export function whenYourFollowerLeaves(
     to?: "cemetery";
     onlyYourTurn?: boolean;
     includeSelf?: boolean;
+    another?: boolean;
     filter?: (m: CardMove, game: GameReader) => boolean;
   } = {},
 ): AutomaticAbility {
   return automatic(
     "other",
     (e, me, game): readonly TriggerData[] => {
-      if (me.zone !== "field" || (me.lookBack && !opts.includeSelf)) return [];
+      if (me.zone !== "field" || (me.lookBack && !opts.includeSelf && !opts.another)) return [];
       if (opts.onlyYourTurn && game.activePlayer !== me.controller) return [];
       return moves(e)
         .filter(
@@ -468,6 +470,7 @@ export function whenYourFollowerLeaves(
             m.before !== null &&
             m.before.controller === me.controller &&
             game.db.get(m.before.abilityDef).type === "follower" &&
+            !(opts.another && m.card === me.card) &&
             (opts.filter?.(m, game) ?? true),
         )
         .map((m) => ({ card: m.newCard ?? m.card! }));
@@ -518,6 +521,64 @@ export function enteredByAbility(fx: EffectContext): boolean {
   const m = e.moves.find((x) => x.newCard === fx.self && x.to.zone === "field");
   return m !== undefined && m.reason !== "resolve";
 }
+
+/**
+ * "If this card was put onto the field by a [matching] card's ability" (ECP01-006): the card whose ability put it there, as it
+ * was then (CardInstance.enteredBy), matches — a spell's too (ECP01-006 ruling: Teio-Oo-Oo!!!). Also readable when the
+ * ability is played, e.g. for its number of options.
+ */
+export function enteredByCardThat(g: GameReader, self: CardId, match: (by: MoveCause) => boolean): boolean {
+  const by = g.card(self)?.enteredBy;
+  return by !== undefined && match(by);
+}
+
+/**
+ * "When an enemy follower that took damage this turn from a [matching] card you control is put from the field into the
+ * cemetery" (ECP01-020): once per such follower, however it gets there (destroyed afterwards by another card's ability —
+ * ruling). `from` sees the card that dealt the damage as it was then (DamageSource). Data: the card.
+ */
+export function whenDamagedEnemyFollowerToCemetery(spec: TimingSpec, from: (by: DamageSource) => boolean): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game) => {
+      if (me.zone !== "field") return false;
+      return moves(e)
+        .filter(
+          (m) =>
+            m.from?.zone === "field" &&
+            m.to.zone === "cemetery" &&
+            m.card !== null &&
+            m.before !== null &&
+            m.before.controller !== me.controller &&
+            game.db.get(m.before.abilityDef).type === "follower" &&
+            game.damageSourcesThisTurn(m.card).some((by) => by.controller === me.controller && from(by)),
+        )
+        .map((m) => ({ card: m.newCard ?? m.card! }));
+    },
+    spec,
+  );
+}
+
+/**
+ * "Whenever a [matching] card on your field deals damage to 1 or more enemy followers on the field" (ECP02-057): once for the
+ * damage dealt at the same time (ruling Q4), per such card; combat damage too (Q3), and an ability's damage dealt after its card
+ * left the field (Q1, by its last-known information: DamageSource.onField). A follower with 0 or less attack deals none (Q2).
+ */
+export const whenYourCardDamagesEnemyFollowers = (spec: TimingSpec, match: (by: DamageSource) => boolean) =>
+  automatic(
+    "other",
+    (e, me, game) => {
+      if (me.lookBack || e.type !== "damageDealt" || e.batch === undefined) return false;
+      const sources = new Set<CardId>();
+      for (const d of e.batch) {
+        const t = game.card(d.target);
+        if (d.by === undefined || !d.by.onField || d.by.controller !== me.controller || !match(d.by)) continue;
+        if (t?.zone === "field" && t.controller !== me.controller) sources.add(d.by.card);
+      }
+      return [...sources].map((card) => ({ card }));
+    },
+    spec,
+  );
 
 /**
  * "When your leader's defense becomes 0 or less" (BP05-092): it goes from more than 0 to 0 or

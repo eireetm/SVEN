@@ -52,10 +52,13 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
   // (CR 2.14) are not cards by themselves.
   const evolvedCards = defs.filter((c) => (c.evolved || c.advanced) && c.frontFace === undefined);
   // Collaboration sets (CR 14): decks of the set's cards with one of its leaders are based on its universe (6.1.1.5.2), so
-  // its rules apply; its evolve-deck resources (Carrot, Drive Point: evolved spells) are used by serving and riding.
+  // its rules apply; its evolve-deck resources (Carrot, Drive Point: evolved spells) are used by serving and riding. An
+  // extra set (ECP01, ECP02) has no leader nor resource of its own: the universe's from the pool (CP01's Carrot, whose
+  // ECP01 printings it merged).
   const universe = playable.find((c) => c.universe !== undefined)?.universe;
-  const universeLeader = universe ? defs.find((c) => c.type === "leader" && c.universe === universe) : undefined;
-  const resources = evolvedCards.filter((c) => c.type === "spell");
+  const inUniverse = (c: CardDefinition) => universe !== undefined && c.universe === universe;
+  const universeLeader = defs.find((c) => c.type === "leader" && inUniverse(c)) ?? ALL_CARDS.find((c) => c.type === "leader" && inUniverse(c));
+  const resources = ALL_CARDS.filter((c) => c.evolved && c.type === "spell" && inUniverse(c));
 
   const assertOk = (g: GameSession) => {
     const errors = checkInvariants(g.state as never, engine.db, g.decision);

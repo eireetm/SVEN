@@ -41,7 +41,7 @@ import type { G } from "../runtime/context";
 import { cardRefs, chooseOptions, confirm, orderCards, selectCards } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { getCard, nextSeq, recordUse } from "../state/access";
-import { characteristics, isFollowerOnField } from "../state/characteristics";
+import { activeScript, characteristics, isFollowerOnField, passiveSources } from "../state/characteristics";
 import { exAreaLimit } from "../state/limits";
 import { createCards, moveCards } from "../state/zones";
 import { executeUnionBurst } from "../abilities/play-ability";
@@ -425,6 +425,8 @@ export interface EffectInit {
    * to that card: the damage it deals is 0 (CR 10.7.4.1.2; BP12-109 ruling).
    */
   lookBackNoDamage?: boolean;
+  /** The ability works on the field (CR 10.3.5): the damage it deals is dealt from the field (DamageSource.onField). */
+  fieldAbility?: boolean;
 }
 
 export function makeEffectContext(g: G, init: EffectInit): EffectContext {
@@ -432,17 +434,20 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
   init.memory ??= {};
   const memory = init.memory;
   const selfIfPresent = () => (g.state.cards[init.self] ? init.self : null);
-  /** This ability's card as it is now (or as printed, once it is gone), for cards it moves. */
+  /**
+   * This ability's card as it is now (or as printed, once it is gone), for the cards it moves and the damage it deals. A given
+   * ability (a pseudo definition such as "grant:…") has no printed card: once its card is gone, it counts as a follower
+   * without traits.
+   */
   const cause = (): MoveCause => {
-    const reader = makeReader(g);
-    const now = g.state.cards[init.self] ? reader.typeAndTraits(init.self) : null;
-    const printed = g.db.get(init.sourceDef);
+    const now = g.state.cards[init.self] ? makeReader(g).typeAndTraits(init.self) : null;
+    const printed = now === null && g.db.has(init.sourceDef) ? g.db.get(init.sourceDef) : null;
     return {
       card: init.self,
       def: init.sourceDef,
       controller: ctrl,
-      type: now?.type ?? printed.type,
-      traits: [...(now?.traits ?? printed.traits)],
+      type: now?.type ?? printed?.type ?? "follower",
+      traits: [...(now?.traits ?? printed?.traits ?? [])],
     };
   };
   /** An instance of this ability's damage (CR 5.14.3.3). */
@@ -453,6 +458,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     amount,
     kind: "ability",
     ...(init.lookBackNoDamage ? { sourceDealsNoDamage: true } : {}),
+    by: { ...cause(), onField: init.fieldAbility ?? false },
   });
   const token = (name: string): DefId => {
     const d = g.db.tokenNamed(name);
@@ -470,7 +476,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
   function* moveFound(groups: Record<SearchDestination, CardId[]>, player: PlayerId, engaged = false): Proc<CardId[]> {
     const moved: CardId[] = [];
     if (groups.hand.length > 0) moved.push(...moveCards(g, groups.hand.map((card) => ({ card, to: "hand" as const, player })), "effect"));
-    if (groups.field.length > 0) moved.push(...(yield* putOntoField(g, groups.field, player, "effect", { chooser: ctrl, engaged })));
+    if (groups.field.length > 0) moved.push(...(yield* putOntoField(g, groups.field, player, "effect", { chooser: ctrl, engaged, cause: cause() })));
     if (groups.ex.length > 0) moved.push(...(yield* putIntoEx(g, groups.ex, ctrl)));
     if (groups.banish.length > 0) moved.push(...banishCards(g, groups.banish));
     // "Search your deck for [a card], bury it" (BP11-035): into its owner's cemetery (CR 5.34.1).
@@ -517,7 +523,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       return yield* putIntoEx(g, cards, ctrl, player);
     },
     *putOntoField(cards, player = ctrl, opts = {}) {
-      return yield* putOntoField(g, cards, player, "effect", { chooser: ctrl, engaged: opts.engaged ?? false });
+      return yield* putOntoField(g, cards, player, "effect", { chooser: ctrl, engaged: opts.engaged ?? false, cause: cause() });
     },
     *engage(cards) {
       setEngaged(g, cards, true);
@@ -600,7 +606,7 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       const chosen = yield* selectCards(g, ctrl, "pick", matching, 0, Math.min(opts.max ?? 1, matching.length), selfIfPresent(), evolveDeck);
       if (chosen.length === 0) return [];
       if (opts.to === "ex") return yield* putIntoEx(g, chosen, ctrl);
-      return yield* putOntoField(g, chosen, ctrl, "effect", { chooser: ctrl, engaged: opts.engaged ?? false });
+      return yield* putOntoField(g, chosen, ctrl, "effect", { chooser: ctrl, engaged: opts.engaged ?? false, cause: cause() });
     },
     *lookAt(cards, player = ctrl) {
       const present = cards.filter((id) => g.state.cards[id] !== undefined);
@@ -940,7 +946,20 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
       return yield* executeUnionBurst(g, ctrl, follower, selfIfPresent());
     },
     *rollDie(player = ctrl) {
-      const result = randomInt(g.state.rng, 6) + 1;
+      let result = randomInt(g.state.rng, 6) + 1;
+      // CR 5.20.2 — rerolls the player's cards allow (ECP02-065): the most recent result is disregarded and the new one used,
+      // right after the roll; only the final result is the die's (a rerolled one can't be referred to — ruling).
+      let rerolls = 0;
+      for (const id of passiveSources(g, player)) rerolls += activeScript(g, id)?.field?.dieRerolls ?? 0;
+      for (; rerolls > 0; rerolls--) {
+        const options = [
+          { id: "keep", label: `Keep ${result}` },
+          { id: "reroll", label: `Reroll ${result}` },
+        ];
+        const [pick] = yield* chooseOptions(g, player, "dieReroll", options, 1, 1, selfIfPresent());
+        if (pick !== "reroll") break;
+        result = randomInt(g.state.rng, 6) + 1;
+      }
       thisTurn(g.state, player).diceRolled.push(result); // BP21-076, 081
       g.emit({ type: "dieRolled", player, result });
       return result;

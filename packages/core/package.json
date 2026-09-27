@@ -32,6 +32,8 @@
     "./sets/cp02": "./src/sets/cp02.ts",
     "./sets/cp03": "./src/sets/cp03.ts",
     "./sets/cp04": "./src/sets/cp04.ts",
+    "./sets/ecp01": "./src/sets/ecp01.ts",
+    "./sets/ecp02": "./src/sets/ecp02.ts",
     "./testing": "./src/testing/index.ts"
   }
 }

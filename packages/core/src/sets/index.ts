@@ -25,6 +25,8 @@ import { CP01_CARDS, CP01_SCRIPTS } from "./cp01";
 import { CP02_CARDS, CP02_SCRIPTS } from "./cp02";
 import { CP03_CARDS, CP03_SCRIPTS } from "./cp03";
 import { CP04_CARDS, CP04_SCRIPTS } from "./cp04";
+import { ECP01_CARDS, ECP01_SCRIPTS } from "./ecp01";
+import { ECP02_CARDS, ECP02_SCRIPTS } from "./ecp02";
 import type { SupportedSet } from "./supported";
 
 export { SUPPORTED_SETS, type SupportedSet } from "./supported";
@@ -60,6 +62,8 @@ export const SETS: Readonly<Record<SupportedSet, { cards: readonly CardDefinitio
   CP02: { cards: CP02_CARDS, scripts: CP02_SCRIPTS },
   CP03: { cards: CP03_CARDS, scripts: CP03_SCRIPTS },
   CP04: { cards: CP04_CARDS, scripts: CP04_SCRIPTS },
+  ECP01: { cards: ECP01_CARDS, scripts: ECP01_SCRIPTS },
+  ECP02: { cards: ECP02_CARDS, scripts: ECP02_SCRIPTS },
 };
 
 export const ALL_CARDS: readonly CardDefinition[] = Object.values(SETS).flatMap((s) => s.cards);

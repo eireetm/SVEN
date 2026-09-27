@@ -1,0 +1,1713 @@
+{
+ "format": 1,
+ "set": "ECP01",
+ "printings": 162,
+ "cards": [
+  {
+   "id": "ECP01-001",
+   "printings": [
+    "ECP01-001",
+    "ECP01-SL01",
+    "ECP01-SP01",
+    "ECP01-SSP01"
+   ],
+   "name": "Hokko Tarumae",
+   "names": {
+    "en": "Hokko Tarumae",
+    "cn": "北港火山",
+    "ja": "ホッコータルマエ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 4,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "This card costs X less to play. X equals the number of Umamusume cards on your field.\n----------\n{[evolve]} {[cost01]}:  Evolve this follower.\n{[feed]} {[cost01]}: Race this follower.",
+    "cn": "将这张卡使用之际，将消费-X。X为「自己场上的赛马娘类型·卡片的张数」。\n《进化》《消费1》：使这张卡进化。\n《吃饭》《消费1》：使这张卡起跑。",
+    "ja": "これをプレイする際、コストを-Xする。Xは「自分の場のウマ娘・カードの枚数」である。\n進化コスト1：これは進化する。\n食事コスト1：これは出走する。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-002",
+   "printings": [
+    "ECP01-002",
+    "ECP01-SL02",
+    "ECP01-SP02",
+    "ECP01-SSP02"
+   ],
+   "name": "Hokko Tarumae",
+   "names": {
+    "en": "Hokko Tarumae",
+    "cn": "北港火山",
+    "ja": "ホッコータルマエ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "umamusume",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Draw a card.",
+    "cn": "【进化时】抽取1张卡。",
+    "ja": "【進化時】1枚引く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-003",
+   "printings": [
+    "ECP01-003",
+    "ECP01-SL03",
+    "ECP01-SP03",
+    "ECP01-SSP03"
+   ],
+   "name": "Sakura Laurel",
+   "names": {
+    "en": "Sakura Laurel",
+    "cn": "樱花桂冠",
+    "ja": "サクラローレル"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Select an enemy follower on the field and, if there's another Umamusume card on your field, deal it 4 damage.\nActivate {[engage]}: Give this follower {[attack]}+2/{[defense]}+2 and Ward. Give your leader {[defense]}+2. Activate only if there are 5 Umamusume cards on your field.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n《入场曲》选择敌方场上的1个从者。如果自己的场上有其他的赛马娘类型·卡片的话，给予其4点伤害。\n《起动》将这张卡《横置》：使这张卡《攻击力》+2/《生命值》+2，并获得【守护】能力。使自己的主战者《生命值》+2。这个能力在自己场上的赛马娘类型·卡片为5张的话才可使用。",
+    "ja": "食事コスト1：これは出走する。\nファンファーレ相手の場のフォロワー1体を選ぶ。自分の場に他のウマ娘・カードがあるなら、それに4ダメージ。\n起動これをアクト：これは攻撃力+2/体力+2して、【守護】を持つ。自分のリーダーは体力+2する。この能力は自分の場のウマ娘・カードが5枚なら使える。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-004",
+   "printings": [
+    "ECP01-004",
+    "ECP01-SL04",
+    "ECP01-SP04",
+    "ECP01-SSP04"
+   ],
+   "name": "Sounds of Earth",
+   "names": {
+    "en": "Sounds of Earth",
+    "cn": "万籁争鸣",
+    "ja": "サウンズオブアース"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 9,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "This card costs X less to play. X equals 2 times the number of Umamusume cards on your field.\n----------\n{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Return an Umamusume card not named Sounds of Earth from your field to its owner's hand: Select an enemy follower on the field and deal it 5 damage.",
+    "cn": "将这张卡使用之际，将消费-X。X为「自己场上的赛马娘类型·卡片的张数的2倍」。\n《吃饭》《消费1》：使这张卡起跑。\n《入场曲》将场上的1张「与这张卡不同名的赛马娘类型·卡片」放回手牌：选择敌方场上的1个从者。给予其5点伤害。",
+    "ja": "これをプレイする際、コストを-Xする。Xは「自分の場のウマ娘・カードの枚数の2倍」である。\n食事コスト1：これは出走する。\nファンファーレ場の「これと同名を除くウマ娘・カード」1枚を手札に戻す：相手の場のフォロワー1体を選ぶ。それに5ダメージ。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-005",
+   "printings": [
+    "ECP01-005",
+    "ECP01-P01"
+   ],
+   "name": "Haru Urara [Sunny Passion ♪]",
+   "names": {
+    "en": "Haru Urara [Sunny Passion ♪]",
+    "cn": "[乌拉拉之歌・Passion♪]春乌拉拉",
+    "ja": "〔うららか・ぱっしょん♪〕ハルウララ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nOn Race - Give this follower {[attack]} +1/ {[defense]} +1. Look at the top 5 cards of your deck. You may summon an Umamusume follower that costs 2 or less from among them. Put the rest on the bottom of your deck in any order.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【起跑时】使这张卡《攻击力》+1/《生命值》+1。查看自己的牌堆顶5张卡。从那之中，可以将原始消费为2及以下的1张赛马娘类型·从者卡召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "食事コスト1：これは出走する。\n【出走時】これは攻撃力+1/体力+1する。自分のデッキの上5枚を見る。その中から、元のコスト2以下のウマ娘・フォロワー1枚を場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-006",
+   "printings": [
+    "ECP01-006",
+    "ECP01-P02"
+   ],
+   "name": "Yamamin Zephyr",
+   "names": {
+    "en": "Yamamin Zephyr",
+    "cn": "也文摄辉",
+    "ja": "ヤマニンゼファー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 4,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nWard.\n{[fanfare]} Choose one. If this card was put onto the field by an Umamusume card's ability, choose up to 2 instead. (1) Select an enemy follower on the field and return it to its owner's hand. (2) Search your deck for an Umamusume follower that costs 2 or less, summon it, then shuffle.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【守护】\n《入场曲》从下述之中抉择1项。如果这张卡以赛马娘类型·卡片的能力召唤到场上的话，转变为最多2项。\n【1】选择敌方场上的1个从者。将其放回手牌。（放回到手牌的衍生物会从游戏中移出）\n【2】从自己的牌堆之中搜寻原始消费为2及以下的1张赛马娘类型·从者卡，并召唤到场上。",
+    "ja": "食事コスト1：これは出走する。\n【守護】\nファンファーレ下記から1つチョイスする。これがウマ娘・カードの能力によって場に出ていたなら、代わりに2つまで。\n【1】相手の場のフォロワー1体を選ぶ。それを手札に戻す。（手札に戻ったトークンはゲームから取り除く）【2】自分のデッキから元のコスト2以下のウマ娘・フォロワー1枚を探し、場に出す。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-007",
+   "printings": [
+    "ECP01-007",
+    "ECP01-P03"
+   ],
+   "name": "Sakura Bakushin O",
+   "names": {
+    "en": "Sakura Bakushin O",
+    "cn": "樱花进王",
+    "ja": "サクラバクシンオー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nStorm.\nStrike - If there are 3 or 4 Umamusume cards on your field, draw a card, then discard a card. If there are 5, draw a card.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【疾驰】\n【攻击时】如果自己场上的赛马娘类型·卡片为3张或4张的话，抽取1张卡。将自己的1张手牌舍弃。如果自己场上的赛马娘类型·卡片为5张的话，抽取1张卡。",
+    "ja": "食事コスト1：これは出走する。\n【疾走】\n【攻撃時】自分の場のウマ娘・カードが3枚か4枚なら、1枚引く。自分の手札1枚を捨てる。自分の場のウマ娘・カードが5枚なら、1枚引く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-008",
+   "printings": [
+    "ECP01-008",
+    "ECP01-P04"
+   ],
+   "name": "Mihono Bourbon",
+   "names": {
+    "en": "Mihono Bourbon",
+    "cn": "美浦波旁",
+    "ja": "ミホノブルボン"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\n{[feed]} {[cost02]}: Race this follower 2 times.\n{[feed]} {[cost03]}: Race this follower 3 times.\nOn Race - Select up to 1 enemy follower on the field and deal it 3 damage. Give this follower {[attack]}+1/{[defense]}+1.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n《吃饭》《吃饭》《消费2》：使这张卡起跑2次。\n《吃饭》《吃饭》《吃饭》《消费3》：使这张卡起跑3次。\n【起跑时】选择敌方场上的从者最多1个。给予其3点伤害。使这张卡《攻击力》+1/《生命值》+1。",
+    "ja": "食事コスト1：これは出走する。\n食事食事コスト2：これは2回出走する。\n食事食事食事コスト3：これは3回出走する。\n【出走時】相手の場のフォロワー1体まで選ぶ。それに3ダメージ。これは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-009",
+   "printings": [
+    "ECP01-009",
+    "ECP01-P05"
+   ],
+   "name": "A MORE MARVELOUS WORLD! ☆",
+   "names": {
+    "en": "A MORE MARVELOUS WORLD! ☆",
+    "cn": "世界上更多的☆Marvelous",
+    "ja": "世界にもっと☆マーベラス"
+   },
+   "class": "Forestcraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Look at the top card of your deck. If it’s an Umamusume card, you may reveal it and add it to your hand.\n{[act]} {[cost02]}, {[engage]}, bury this card: Give your leader {[defense]}+2.",
+    "cn": "《入场曲》查看自己的牌堆顶1张卡。从那之中，可以将1张赛马娘类型·卡片公开并加入手牌。\n《起动》《消费2》将这张卡《横置》置于墓场：使自己的主战者《生命值》+2。",
+    "ja": "ファンファーレ自分のデッキの上1枚を見る。その中から、ウマ娘・カード1枚を公開して手札に加えてよい。\n起動コスト2これをアクト墓場に置く：自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-010",
+   "printings": [
+    "ECP01-010",
+    "ECP01-SL05",
+    "ECP01-SP05",
+    "ECP01-SSP05"
+   ],
+   "name": "Gentildonna",
+   "names": {
+    "en": "Gentildonna",
+    "cn": "贵妇人",
+    "ja": "ジェンティルドンナ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 7,
+   "attack": 6,
+   "defense": 6,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[feed]} {[cost01]}: Race this follower.\nYour opponents' {[fanfare]} and On Evolve abilities don't trigger.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《吃饭》《消费1》：使这张卡起跑。\n只要有这张卡在场上存在，使敌方的全体玩家的《入场曲》能力与【进化时】能力各不能触发。",
+    "ja": "進化コスト1：これは進化する。\n食事コスト1：これは出走する。\nこれが場にいる限り、相手プレイヤーすべてのファンファーレ能力と【進化時】能力は誘発しない。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-011",
+   "printings": [
+    "ECP01-011",
+    "ECP01-SL06",
+    "ECP01-SP06",
+    "ECP01-SSP06"
+   ],
+   "name": "Gentildonna",
+   "names": {
+    "en": "Gentildonna",
+    "cn": "贵妇人",
+    "ja": "ジェンティルドンナ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "umamusume",
+   "cost": null,
+   "attack": 7,
+   "defense": 7,
+   "text": {
+    "en": "Your opponents' {[fanfare]} and On Evolve abilities don't trigger.\nOn Evolve - Deal 7 damage to each other follower on the field.",
+    "cn": "只要有这张卡在场上存在，使敌方的全体玩家的《入场曲》能力与【进化时】能力各不能触发。\n【进化时】给予场上的其他的全体从者各7点伤害。",
+    "ja": "これが場にいる限り、相手プレイヤーすべてのファンファーレ能力と【進化時】能力は誘発しない。\n【進化時】場の他のフォロワーすべてに7ダメージ。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-012",
+   "printings": [
+    "ECP01-012",
+    "ECP01-SL07",
+    "ECP01-SP07",
+    "ECP01-SSP07"
+   ],
+   "name": "Symboli Rudolf [Enchaînement]",
+   "names": {
+    "en": "Symboli Rudolf [Enchaînement]",
+    "cn": "[Enchaínement]鲁道夫象征",
+    "ja": "〔Enchaínement〕シンボリルドルフ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 4,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\n{[feed]} {[cost02]}: Race this follower 2 times.\n{[feed]} {[cost03]}: Race this follower 3 times.\nOn Race - Give this follower {[attack]}+1/{[defense]}+1. Look at the top 3 cards of your deck. You may summon an Umamusume follower that costs 3 or less from among them. Put the rest on the bottom of your deck in any order.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n《吃饭》《吃饭》《消费2》：使这张卡起跑2次。\n《吃饭》《吃饭》《吃饭》《消费3》：使这张卡起跑3次。\n【起跑时】使这张卡《攻击力》+1/《生命值》+1。查看自己的牌堆顶3张卡。从那之中，可以将原始消费为3及以下的1张赛马娘类型·从者卡召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "食事コスト1：これは出走する。\n食事食事コスト2：これは2回出走する。\n食事食事食事コスト3：これは3回出走する。\n【出走時】これは攻撃力+1/体力+1する。自分のデッキの上3枚を見る。その中から、元のコスト3以下のウマ娘・フォロワー1枚を場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-013",
+   "printings": [
+    "ECP01-013",
+    "ECP01-SL08",
+    "ECP01-SP08",
+    "ECP01-SSP08"
+   ],
+   "name": "Sirius Symboli [Escorte Étoile]",
+   "names": {
+    "en": "Sirius Symboli [Escorte Étoile]",
+    "cn": "[Escorte étoile]天狼星象征",
+    "ja": "〔Escorte étoile〕シリウスシンボリ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nStorm. Intimidate.\n{[fanfare]} If there are at least 3 Umamusume cards on your field, give this follower {[defense]}+1 and \"Strike - Draw a card, then discard a card.\"",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【疾驰】【威压】\n《入场曲》如果自己场上的赛马娘类型·卡片为3张及以上的话，使这张卡《生命值》+1，并获得「【攻击时】抽取1张卡。将自己的1张手牌舍弃」能力。",
+    "ja": "食事コスト1：これは出走する。\n【疾走】【威圧】\nファンファーレ自分の場のウマ娘・カードが3枚以上なら、これは体力+1して、「【攻撃時】1枚引く。自分の手札1枚を捨てる」を持つ。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-014",
+   "printings": [
+    "ECP01-014",
+    "ECP01-P06"
+   ],
+   "name": "Aston Machan",
+   "names": {
+    "en": "Aston Machan",
+    "cn": "真弓快车",
+    "ja": "アストンマーチャン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nOn Race - Select up to 1 enemy follower on the field and deal it 4 damage. Give this follower {[attack]}+1/{[defense]}+1 and deal it 2 damage.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【起跑时】选择敌方场上的从者最多1个。给予其4点伤害。使这张卡《攻击力》+1/《生命值》+1。给予这张卡2点伤害。",
+    "ja": "食事コスト1：これは出走する。\n【出走時】相手の場のフォロワー1体まで選ぶ。それに4ダメージ。これは攻撃力+1/体力+1する。これに2ダメージ。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-015",
+   "printings": [
+    "ECP01-015",
+    "ECP01-P07"
+   ],
+   "name": "Symboli Kris S",
+   "names": {
+    "en": "Symboli Kris S",
+    "cn": "吉兆",
+    "ja": "シンボリクリスエス"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nStorm.\nActivate {[engage]} 4 other Umamusume cards on your field: Give this follower {[attack]}+5.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【疾驰】\n《起动》将场上的其他的4张赛马娘类型·卡片《横置》：使这张卡《攻击力》+5。",
+    "ja": "食事コスト1：これは出走する。\n【疾走】\n起動場の他のウマ娘・カード4枚をアクト：これは攻撃力+5する。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-016",
+   "printings": [
+    "ECP01-016",
+    "ECP01-P08"
+   ],
+   "name": "Tap Dance City",
+   "names": {
+    "en": "Tap Dance City",
+    "cn": "跳舞城",
+    "ja": "タップダンスシチー"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Search your deck for a 1-cost Umamusume follower, summon it, then shuffle.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n《入场曲》从自己的牌堆之中搜寻原始消费为1的1张赛马娘类型·从者卡，并召唤到场上。",
+    "ja": "食事コスト1：これは出走する。\nファンファーレ自分のデッキから元のコスト1のウマ娘・フォロワー1枚を探し、場に出す。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-017",
+   "printings": [
+    "ECP01-017",
+    "ECP01-P09"
+   ],
+   "name": "Biwa Hayahide",
+   "names": {
+    "en": "Biwa Hayahide",
+    "cn": "琵琶晨光",
+    "ja": "ビワハヤヒデ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nWard.\nOn Race - Give this follower {[attack]}+1/{[defense]}+1. Search your deck for up to 3 BNW cards with different names, put them into your EX area, then shuffle. They cost 3 less to play this turn.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【守护】\n【起跑时】使这张卡《攻击力》+1/《生命值》+1。从自己的牌堆之中搜寻卡片名各不相同的BNW类型·卡片最多3张，并置于EX区域。这个回合，将其使用之际，将其消费-3。",
+    "ja": "食事コスト1：これは出走する。\n【守護】\n【出走時】これは攻撃力+1/体力+1する。自分のデッキからBNW・カードをカード名が異なるように3枚まで探し、EXエリアに置く。このターン、それをプレイする際、コストを-3する。"
+   },
+   "traits": [
+    "ウマ娘",
+    "BNW"
+   ]
+  },
+  {
+   "id": "ECP01-018",
+   "printings": [
+    "ECP01-018",
+    "ECP01-P10"
+   ],
+   "name": "Teio-Oo-Oo!!!",
+   "names": {
+    "en": "Teio-Oo-Oo!!!",
+    "cn": "TEIO·O·O！！！",
+    "ja": "テイオー･オー･オー！！！"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 5,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Look at the top 7 cards of your deck. You may summon an Umamusume follower that costs 5 or less from among them. Put the rest on the bottom of your deck in any order. If you summoned a Tokai Teio, look at the top 7 cards of your deck. You may summon an Umamusume follower that costs 4 or less from among them. Put the rest on the bottom of your deck in any order.",
+    "cn": "查看自己的牌堆顶7张卡。从那之中，可以将原始消费为5及以下的1张赛马娘类型·从者卡召唤到场上。将剩余的卡以任意顺序置于牌堆底。如果其为『东海帝皇』的话，查看自己的牌堆顶7张卡。从那之中，可以将原始消费为4及以下的1张赛马娘类型·从者卡召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "自分のデッキの上7枚を見る。その中から、元のコスト5以下のウマ娘・フォロワー1枚を場に出してよい。残りを好きな順にデッキの下に置く。それが『トウカイテイオー』なら、自分のデッキの上7枚を見る。その中から、元のコスト4以下のウマ娘・フォロワー1枚を場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-019",
+   "printings": [
+    "ECP01-019",
+    "ECP01-SL09",
+    "ECP01-SP09",
+    "ECP01-SSP09"
+   ],
+   "name": "Cheval Grand",
+   "names": {
+    "en": "Cheval Grand",
+    "cn": "高尚骏逸",
+    "ja": "シュヴァルグラン"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Select a faceup Carrot in your evolve deck and, if there are at least 10 Umamusume cards in your cemetery, turn it facedown.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《吃饭》《消费1》：使这张卡起跑。\n《入场曲》选择自己的进化牌组中的正面放置的1张『胡萝卜』卡。如果自己的墓场中的赛马娘类型·卡片为10张及以上的话，将其变为反面放置。",
+    "ja": "進化コスト1：これは進化する。\n食事コスト1：これは出走する。\nファンファーレ自分のエボルヴデッキの表向きの『にんじん』1枚を選ぶ。自分の墓場のウマ娘・カードが10枚以上なら、それを裏向きにする。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-020",
+   "printings": [
+    "ECP01-020",
+    "ECP01-SL10",
+    "ECP01-SP10",
+    "ECP01-SSP10"
+   ],
+   "name": "Cheval Grand",
+   "names": {
+    "en": "Cheval Grand",
+    "cn": "高尚骏逸",
+    "ja": "シュヴァルグラン"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "umamusume",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field and deal it 2 damage. If there are at least 10 Umamusume cards in your cemetery, deal 4 damage instead.\nTwice on each of your turns, when an enemy follower that took damage this turn from an Umamusume card you control is put from the field into the cemetery, draw a card, then discard a card.",
+    "cn": "每个自己的回合2次，当「这个回合中因自己的赛马娘类型·卡片而受到伤害的敌方的从者」从场上置于墓场时，抽取1张卡。将自己的1张手牌舍弃。\n【进化时】选择敌方场上的1个从者。给予其2点伤害。如果自己的墓场中的赛马娘类型·卡片为10张及以上的话，转变为4点伤害。",
+    "ja": "自分のターンごとに2回、「このターン中に自分のウマ娘・カードからダメージを受けた相手のフォロワー」が場から墓場に置かれたとき、1枚引く。自分の手札1枚を捨てる。\n【進化時】相手の場のフォロワー1体を選ぶ。それに2ダメージ。自分の墓場のウマ娘・カードが10枚以上なら、代わりに4ダメージ。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-021",
+   "printings": [
+    "ECP01-021",
+    "ECP01-SL11",
+    "ECP01-SP11",
+    "ECP01-SSP11"
+   ],
+   "name": "Tanino Gimlet",
+   "names": {
+    "en": "Tanino Gimlet",
+    "cn": "谷水琴蕾",
+    "ja": "タニノギムレット"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 4,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nOn Race - Select up to 1 enemy follower on the field and deal it 4 damage. Give this follower {[attack]}+1/{[defense]}+1.\n{[fanfare]} Search your deck for a Vodka and 1-cost Umamusume spell, reveal them, add them to your hand, then shuffle.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【起跑时】选择敌方场上的从者最多1个。给予其4点伤害。使这张卡《攻击力》+1/《生命值》+1。\n《入场曲》从自己的牌堆之中搜寻1张『伏特加』卡与原始消费为1的1张赛马娘类型·法术卡，并加入手牌。",
+    "ja": "食事コスト1：これは出走する。\n【出走時】相手の場のフォロワー1体まで選ぶ。それに4ダメージ。これは攻撃力+1/体力+1する。\nファンファーレ自分のデッキから『ウオッカ』1枚と元のコスト1のウマ娘・スペル1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-022",
+   "printings": [
+    "ECP01-022",
+    "ECP01-SL12",
+    "ECP01-SP12",
+    "ECP01-SSP12"
+   ],
+   "name": "Narita Top Road [Peachy Silhouette]",
+   "names": {
+    "en": "Narita Top Road [Peachy Silhouette]",
+    "cn": "[桃色的背面照]成田路",
+    "ja": "〔桃色のバックショット〕ナリタトップロード"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nStorm.\nOn Race - Give this follower {[attack]}+1/{[defense]}+1.\nStrike - Banish 3 Umamusume followers with Storm from your cemetery: Deal each enemy follower on the field damage equal to this follower's attack.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【疾驰】\n【起跑时】使这张卡《攻击力》+1/《生命值》+1。\n【攻击时】将墓场中的持有【疾驰】能力的3张赛马娘类型·从者卡消失：给予敌方场上的全体从者各与「这张卡的攻击力」等量的伤害。",
+    "ja": "食事コスト1：これは出走する。\n【疾走】\n【出走時】これは攻撃力+1/体力+1する。\n【攻撃時】墓場の【疾走】を持つウマ娘・フォロワー3枚を消滅：相手の場のフォロワーすべてに「これの攻撃力」と同じダメージ。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-023",
+   "printings": [
+    "ECP01-023",
+    "ECP01-P11"
+   ],
+   "name": "Verxina",
+   "names": {
+    "en": "Verxina",
+    "cn": "极峰",
+    "ja": "ヴィルシーナ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nWard.\n{[fanfare]} Discard an Umamusume card: Deal 2 damage to each enemy leader. Give your leader {[defense]}+2. Draw 2 cards.\nWhenever a Cheval Grand or Vivlos is put onto your field, select an enemy follower on the field and deal it 2 damage.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【守护】\n当『高尚骏逸』或『强击』召唤到自己的场上时，选择敌方场上的1个从者。给予其2点伤害。\n《入场曲》将手牌中的1张赛马娘类型·卡片舍弃：给予敌方的全体主战者各2点伤害。使自己的主战者《生命值》+2。抽取2张卡。",
+    "ja": "食事コスト1：これは出走する。\n【守護】\n自分の場に『シュヴァルグラン』か『ヴィブロス』が出たとき、相手の場のフォロワー1体を選ぶ。それに2ダメージ。\nファンファーレ手札のウマ娘・カード1枚を捨てる：相手のリーダーすべてに2ダメージ。自分のリーダーは体力+2する。2枚引く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-024",
+   "printings": [
+    "ECP01-024",
+    "ECP01-P12"
+   ],
+   "name": "Vivlos",
+   "names": {
+    "en": "Vivlos",
+    "cn": "强击",
+    "ja": "ヴィブロス"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 5,
+   "defense": 2,
+   "text": {
+    "en": "This card costs 2 less to play if there's a Cheval Grand or Verxina on your field.\n----------\n{[feed]} {[cost01]}: Race this follower.\nRush. Assail.",
+    "cn": "将这张卡使用之际，如果自己的场上有『高尚骏逸』或『极峰』的话，将消费-2。\n《吃饭》《消费1》：使这张卡起跑。\n【突进】【指定攻击】",
+    "ja": "これをプレイする際、自分の場に『シュヴァルグラン』か『ヴィルシーナ』がいるなら、コストを-2する。\n食事コスト1：これは出走する。\n【突進】【指定攻撃】"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-025",
+   "printings": [
+    "ECP01-025",
+    "ECP01-P13"
+   ],
+   "name": "Daitaku Helios",
+   "names": {
+    "en": "Daitaku Helios",
+    "cn": "大拓太阳神",
+    "ja": "ダイタクヘリオス"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Select an enemy follower on the field and deal it 1 damage. If there's an Umamusume card that costs 4 or more on your field, deal 3 damage instead.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n《入场曲》选择敌方场上的1个从者。给予其1点伤害。如果自己的场上有原始消费为4及以上的赛马娘类型·卡片的话，转变为3点伤害。",
+    "ja": "食事コスト1：これは出走する。\nファンファーレ相手の場のフォロワー1体を選ぶ。それに1ダメージ。自分の場に元のコスト4以上のウマ娘・カードがあるなら、代わりに3ダメージ。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-026",
+   "printings": [
+    "ECP01-026",
+    "ECP01-P14"
+   ],
+   "name": "Sweep Tosho",
+   "names": {
+    "en": "Sweep Tosho",
+    "cn": "东商变革",
+    "ja": "スイープトウショウ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": 0,
+   "defense": 1,
+   "text": {
+    "en": "This card costs 2 less to play if there are at least 5 Umamusume spells in your cemetery.\n----------\n{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Select a 1-cost Umamusume spell in your cemetery and put it into your EX area. It costs 1 less to play this turn.",
+    "cn": "将这张卡使用之际，如果自己的墓场中的赛马娘类型·法术卡为5张及以上的话，将消费-2。\n《吃饭》《消费1》：使这张卡起跑。\n《入场曲》选择自己的墓场中的原始消费为1的1张赛马娘类型·法术卡。将其置于EX区域。这个回合，将其使用之际，将其消费-1。",
+    "ja": "これをプレイする際、自分の墓場のウマ娘・スペルが5枚以上なら、コストを-2する。\n食事コスト1：これは出走する。\nファンファーレ自分の墓場の元のコスト1のウマ娘・スペル1枚を選ぶ。それをEXエリアに置く。このターン、それをプレイする際、コストを-1する。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-027",
+   "printings": [
+    "ECP01-027",
+    "ECP01-P15"
+   ],
+   "name": "Lucky Star in the Sky",
+   "names": {
+    "en": "Lucky Star in the Sky",
+    "cn": "夜之拂晓、空之瑞星",
+    "ja": "夜に暁、空に瑞星"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nLook at the top card of your deck. If it's an Umamusume card, you may reveal it and add it to your hand. If there are at least 5 Umamusume spells in your cemetery, give your leader {[defense]}+2.",
+    "cn": "《快速》\n查看自己的牌堆顶1张卡。从那之中，可以将1张赛马娘类型·卡片公开并加入手牌。如果自己的墓场中的赛马娘类型·法术卡为5张及以上的话，使自己的主战者《生命值》+2。",
+    "ja": "クイック\n自分のデッキの上1枚を見る。その中から、ウマ娘・カード1枚を公開して手札に加えてよい。自分の墓場のウマ娘・スペルが5枚以上なら、自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-028",
+   "printings": [
+    "ECP01-028",
+    "ECP01-SL13",
+    "ECP01-SP13",
+    "ECP01-SSP13"
+   ],
+   "name": "Neo Universe",
+   "names": {
+    "en": "Neo Universe",
+    "cn": "新宇宙",
+    "ja": "ネオユニヴァース"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.\n{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Select an enemy follower on the field. If Overflow is active for you, deal it 4 damage and draw a card.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《吃饭》《消费1》：使这张卡起跑。\n《入场曲》选择敌方场上的1个从者。如果处于【觉醒】状态的话，给予其4点伤害。抽取1张卡。（如果自己的PP最大值为7点及以上的话，就会处于【觉醒】状态）",
+    "ja": "進化コスト2：これは進化する。\n食事コスト1：これは出走する。\nファンファーレ相手の場のフォロワー1体を選ぶ。【覚醒】状態なら、それに4ダメージ。1枚引く。（自分のPP最大値が7以上なら、【覚醒】状態になる）"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-029",
+   "printings": [
+    "ECP01-029",
+    "ECP01-SL14",
+    "ECP01-SP14",
+    "ECP01-SSP14"
+   ],
+   "name": "Neo Universe",
+   "names": {
+    "en": "Neo Universe",
+    "cn": "新宇宙",
+    "ja": "ネオユニヴァース"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "umamusume",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Choose one. (1) Discard an Umamusume card: Increase your max play points by 1. (2) Discard 3 Umamusume cards: Increase your max play points by 2.\nAt the start of your end phase, select an enemy follower on the field and deal it 2 damage.",
+    "cn": "当自己的结束阶段到来时，选择敌方场上的1个从者。给予其2点伤害。\n【进化时】从下述之中抉择1项。\n【1】将手牌中的1张赛马娘类型·卡片舍弃：将自己的PP最大值+1点。\n【2】将手牌中的3张赛马娘类型·卡片舍弃：将自己的PP最大值+2点。",
+    "ja": "自分のエンドフェイズが来たとき、相手の場のフォロワー1体を選ぶ。それに2ダメージ。\n【進化時】下記から1つチョイスする。【1】手札のウマ娘・カード1枚を捨てる：自分のPP最大値を+1する。【2】手札のウマ娘・カード3枚を捨てる：自分のPP最大値を+2する。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-030",
+   "printings": [
+    "ECP01-030",
+    "ECP01-SL15",
+    "ECP01-SP15",
+    "ECP01-SSP15"
+   ],
+   "name": "Mr. C.B.",
+   "names": {
+    "en": "Mr. C.B.",
+    "cn": "千明代表",
+    "ja": "ミスターシービー"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nOn Race - Give this follower {[attack]}+1/{[defense]}+1. Refresh it. Draw a card.\nActivate {[engage]}, discard an Umamusume card: Select an enemy follower on the field. Deal it 5 damage and, if you discarded an Umamusume card that costs 7 or more, draw a card.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【起跑时】使这张卡《攻击力》+1/《生命值》+1。将这张卡竖置。抽取1张卡。\n《起动》将这张卡《横置》将手牌中的1张赛马娘类型·卡片舍弃：选择敌方场上的1个从者。给予其5点伤害。如果将原始消费为7及以上的赛马娘类型·卡片舍弃的话，抽取1张卡。",
+    "ja": "食事コスト1：これは出走する。\n【出走時】これは攻撃力+1/体力+1する。これをスタンドする。1枚引く。\n起動これをアクト手札のウマ娘・カード1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに5ダメージ。元のコスト7以上のウマ娘・カードを捨てたなら、1枚引く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-031",
+   "printings": [
+    "ECP01-031",
+    "ECP01-SL16",
+    "ECP01-SP16",
+    "ECP01-SSP16"
+   ],
+   "name": "Katsuragi Ace",
+   "names": {
+    "en": "Katsuragi Ace",
+    "cn": "葛城王牌",
+    "ja": "カツラギエース"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 7,
+   "attack": 5,
+   "defense": 4,
+   "text": {
+    "en": "When this card is discarded by the ability of an Umamusume card you control, if Overflow is active for you, {[cost03]}: Summon this card.\n----------\n{[feed]} {[cost01]}: Race this follower.\nStorm.\n{[fanfare]} Select an enemy follower on the field and destroy it.",
+    "cn": "当以自己的赛马娘类型·卡片的能力将这张卡从自己的手牌中舍弃时，如果处于【觉醒】状态的话，《消费3》：将这张卡召唤到场上。（如果自己的PP最大值为7点及以上的话，就会处于【觉醒】状态）\n《吃饭》《消费1》：使这张卡起跑。\n【疾驰】\n《入场曲》选择敌方场上的1个从者。将其破坏。",
+    "ja": "自分のウマ娘・カードの能力によってこれを自分の手札から捨てたとき、【覚醒】状態なら、コスト3：これを場に出す。（自分のPP最大値が7以上なら、【覚醒】状態になる）\n食事コスト1：これは出走する。\n【疾走】\nファンファーレ相手の場のフォロワー1体を選ぶ。それを破壊する。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-032",
+   "printings": [
+    "ECP01-032",
+    "ECP01-P16"
+   ],
+   "name": "Super Creek [Piece of Mind]",
+   "names": {
+    "en": "Super Creek [Piece of Mind]",
+    "cn": "[一粒的安宁]超级小海湾",
+    "ja": "〔一粒の安らぎ〕スーパークリーク"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 4,
+   "attack": 4,
+   "defense": 5,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nWard.\n{[fanfare]} Give your leader {[defense]}+3. If Overflow is active for you, increase your max play points by 1.\nActivate {[engage]}: Select an Umamusume card that costs 7 or more in your cemetery and add it to your hand. Activate only if Overflow is active for you.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【守护】\n《入场曲》使自己的主战者《生命值》+3。如果处于【觉醒】状态的话，将自己的PP最大值+1点。（如果自己的PP最大值为7点及以上的话，就会处于【觉醒】状态）\n《起动》将这张卡《横置》：选择自己的墓场中的原始消费为7及以上的1张赛马娘类型·卡片。将其加入手牌。这个能力在处于【觉醒】状态的话才可使用。",
+    "ja": "食事コスト1：これは出走する。\n【守護】\nファンファーレ自分のリーダーは体力+3する。【覚醒】状態なら、自分のPP最大値を+1する。（自分のPP最大値が7以上なら、【覚醒】状態になる）\n起動これをアクト：自分の墓場の元のコスト7以上のウマ娘・カード1枚を選ぶ。それを手札に加える。この能力は【覚醒】状態なら使える。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-033",
+   "printings": [
+    "ECP01-033",
+    "ECP01-P17"
+   ],
+   "name": "Tsurumaru Tsuyoshi",
+   "names": {
+    "en": "Tsurumaru Tsuyoshi",
+    "cn": "鹤丸刚志",
+    "ja": "ツルマルツヨシ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Select an enemy follower on the field and deal it damage equal to the number of faceup cards named Carrot in your evolve deck.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n《入场曲》选择敌方场上的1个从者。给予其与「自己的进化牌组中的正面放置的『胡萝卜』卡的张数」等量的伤害。",
+    "ja": "食事コスト1：これは出走する。\nファンファーレ相手の場のフォロワー1体を選ぶ。それに「自分のエボルヴデッキの表向きの『にんじん』の枚数」と同じダメージ。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-034",
+   "printings": [
+    "ECP01-034",
+    "ECP01-P18"
+   ],
+   "name": "El Condor Pasa",
+   "names": {
+    "en": "El Condor Pasa",
+    "cn": "神鹰",
+    "ja": "エルコンドルパサー"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 7,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nStorm.\n{[fanfare]} Search your deck for a Champion's Passion, summon it, then shuffle.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【疾驰】\n《入场曲》从自己的牌堆之中搜寻1张『热情卫冕者！』卡，并召唤到场上。",
+    "ja": "食事コスト1：これは出走する。\n【疾走】\nファンファーレ自分のデッキから『パッションチャンピオーナ！』1枚を探し、場に出す。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-035",
+   "printings": [
+    "ECP01-035",
+    "ECP01-P19"
+   ],
+   "name": "Nishino Flower",
+   "names": {
+    "en": "Nishino Flower",
+    "cn": "西野花",
+    "ja": "ニシノフラワー"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nOn Race - Give this follower {[attack]} +1/ {[defense]} +1. Search your deck for a Seiun Sky, summon it, then shuffle.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【起跑时】使这张卡《攻击力》+1/《生命值》+1。从自己的牌堆之中搜寻1张『青云天空』卡，并召唤到场上。",
+    "ja": "食事コスト1：これは出走する。\n【出走時】これは攻撃力+1/体力+1する。自分のデッキから『セイウンスカイ』1枚を探し、場に出す。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-036",
+   "printings": [
+    "ECP01-036",
+    "ECP01-P20"
+   ],
+   "name": "Pious Flame, Heaven's Scorcher",
+   "names": {
+    "en": "Pious Flame, Heaven's Scorcher",
+    "cn": "烧焦天空的祈祷之火",
+    "ja": "天まで焦がせ祈りの火"
+   },
+   "class": "Dragoncraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "When playing this card, discard an Umamusume card: This card costs 2 less to play.\n----------\nSelect an enemy follower on the field. Deal it 5 damage and, if you discarded an Umamusume card that costs 7 or more when playing this card, draw a card.",
+    "cn": "将这张卡使用之际，将手牌中的1张赛马娘类型·卡片舍弃：将消费-2。\n选择敌方场上的1个从者。给予其5点伤害。如果将这张卡使用之际将原始消费为7及以上的赛马娘类型·卡片舍弃的话，抽取1张卡。",
+    "ja": "これをプレイする際、手札のウマ娘・カード1枚を捨てる：コストを-2する。\n相手の場のフォロワー1体を選ぶ。それに5ダメージ。これをプレイする際に元のコスト7以上のウマ娘・カードを捨てていたなら、1枚引く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-037",
+   "printings": [
+    "ECP01-037",
+    "ECP01-SL17",
+    "ECP01-SP17",
+    "ECP01-SSP17"
+   ],
+   "name": "Hishi Miracle",
+   "names": {
+    "en": "Hishi Miracle",
+    "cn": "菱钻奇宝",
+    "ja": "ヒシミラクル"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Bury the top 2 cards of your deck. If their base costs are the same, draw a card.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《吃饭》《消费1》：使这张卡起跑。\n《入场曲》将自己的牌堆顶2张卡置于墓场。如果以这个能力置于墓场的卡片的原始消费值全部相同的话，抽取1张卡。",
+    "ja": "進化コスト1：これは進化する。\n食事コスト1：これは出走する。\nファンファーレ自分のデッキの上2枚を墓場に置く。これによって墓場に置いたカードの元のコストがすべて同じなら、1枚引く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-038",
+   "printings": [
+    "ECP01-038",
+    "ECP01-SL18",
+    "ECP01-SP18",
+    "ECP01-SSP18"
+   ],
+   "name": "Hishi Miracle",
+   "names": {
+    "en": "Hishi Miracle",
+    "cn": "菱钻奇宝",
+    "ja": "ヒシミラクル"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "umamusume",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "At the start of your end phase, if there are at least 9 faceup cards named Carrot in your evolve deck, each opponent buries the top 20 cards of their deck.\nOn Evolve - Discard 2 Umamusume cards: Draw 2 cards.",
+    "cn": "当自己的结束阶段到来时，如果自己的进化牌组中的正面放置的『胡萝卜』卡为9张及以上的话，将敌方的全体玩家的牌堆顶各20张卡置于墓场。\n【进化时】将手牌中的2张赛马娘类型·卡片舍弃：抽取2张卡。",
+    "ja": "自分のエンドフェイズが来たとき、自分のエボルヴデッキの表向きの『にんじん』が9枚以上なら、相手プレイヤーすべてのデッキの上20枚を墓場に置く。\n【進化時】手札のウマ娘・カード2枚を捨てる：2枚引く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-039",
+   "printings": [
+    "ECP01-039",
+    "ECP01-SL19",
+    "ECP01-SP19",
+    "ECP01-SSP19"
+   ],
+   "name": "Daiichi Ruby",
+   "names": {
+    "en": "Daiichi Ruby",
+    "cn": "第一红宝石",
+    "ja": "ダイイチルビー"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 6,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Select up to 1 Umamusume follower that costs 4 or less and up to 1 Umamusume follower that costs 2 or less in your cemetery and summon them engaged.\nWhenever another Umamusume follower is put from your field into the cemetery, deal 1 damage to each enemy leader and give your leader {[defense]}+1.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n当自己的其他的赛马娘类型·从者从场上置于墓场时，给予敌方的全体主战者各1点伤害。使自己的主战者《生命值》+1。\n《入场曲》选择自己的墓场中的原始消费为4及以下的赛马娘类型·从者卡与原始消费为2及以下的赛马娘类型·从者卡各最多1张。将其以横置状态召唤到场上。",
+    "ja": "食事コスト1：これは出走する。\n自分の他のウマ娘・フォロワーが場から墓場に置かれたとき、相手のリーダーすべてに1ダメージ。自分のリーダーは体力+1する。\nファンファーレ自分の墓場の元のコスト4以下のウマ娘・フォロワーと元のコスト2以下のウマ娘・フォロワーそれぞれ1枚まで選ぶ。それをアクト状態で場に出す。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-040",
+   "printings": [
+    "ECP01-040",
+    "ECP01-SL20",
+    "ECP01-SP20",
+    "ECP01-SSP20"
+   ],
+   "name": "Duramente",
+   "names": {
+    "en": "Duramente",
+    "cn": "大鸣大放",
+    "ja": "ドゥラメンテ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nOn Race - Give this follower {[attack]}+1/{[defense]}+1. If there are at least 10 Umamusume cards in your cemetery, recover 3 play points.\n{[fanfare]} Select an enemy follower on the field. Destroy it, deal 2 damage to its leader, give your leader {[defense]}+2, and bury the top 2 cards of your deck.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【起跑时】使这张卡《攻击力》+1/《生命值》+1。如果自己的墓场中的赛马娘类型·卡片为10张及以上的话，将自己的PP回复3点。\n《入场曲》选择敌方场上的1个从者。将其破坏。给予其主战者2点伤害。使自己的主战者《生命值》+2。将自己的牌堆顶2张卡置于墓场。",
+    "ja": "食事コスト1：これは出走する。\n【出走時】これは攻撃力+1/体力+1する。自分の墓場のウマ娘・カードが10枚以上なら、自分のPPを3回復する。\nファンファーレ相手の場のフォロワー1体を選ぶ。それを破壊する。それのリーダーに2ダメージ。自分のリーダーは体力+2する。自分のデッキの上2枚を墓場に置く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-041",
+   "printings": [
+    "ECP01-041",
+    "ECP01-P21"
+   ],
+   "name": "Machikanetannhauser [Machitan☆Adventure]",
+   "names": {
+    "en": "Machikanetannhauser [Machitan☆Adventure]",
+    "cn": "[诗歌剧碳☆adventure]待兼诗歌剧",
+    "ja": "〔マチタン☆アドベンチャー〕マチカネタンホイザ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nOn Race - Select up to 1 Umamusume follower that costs 3 or less in your cemetery and summon it. Give this follower {[attack]}+1/{[defense]}+1.\n{[fanfare]} Bury the top card of your deck.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【起跑时】选择自己的墓场中的原始消费为3及以下的赛马娘类型·从者卡最多1张。将其召唤到场上。使这张卡《攻击力》+1/《生命值》+1。\n《入场曲》将自己的牌堆顶1张卡置于墓场。",
+    "ja": "食事コスト1：これは出走する。\n【出走時】自分の墓場の元のコスト3以下のウマ娘・フォロワー1枚まで選ぶ。それを場に出す。これは攻撃力+1/体力+1する。\nファンファーレ自分のデッキの上1枚を墓場に置く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-042",
+   "printings": [
+    "ECP01-042",
+    "ECP01-P22"
+   ],
+   "name": "K.S. Miracle",
+   "names": {
+    "en": "K.S. Miracle",
+    "cn": "凯斯奇迹",
+    "ja": "ケイエスミラクル"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nWard.\nAt the start of your main phase, destroy this card.\n{[lastwords]} Discard an Umamusume card: Draw a card.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【守护】\n当自己的主要阶段到来时，将这张卡破坏。\n《谢幕曲》将手牌中的1张赛马娘类型·卡片舍弃：抽取1张卡。",
+    "ja": "食事コスト1：これは出走する。\n【守護】\n自分のメインフェイズが来たとき、これを破壊する。\nラストワード手札のウマ娘・カード1枚を捨てる：1枚引く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-043",
+   "printings": [
+    "ECP01-043",
+    "ECP01-P23"
+   ],
+   "name": "Air Shakur",
+   "names": {
+    "en": "Air Shakur",
+    "cn": "空中神宫",
+    "ja": "エアシャカール"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nWhile there are at least 20 Umamusume cards in your cemetery, this follower has Storm and \"Strike - Give this follower {[attack]}+3/{[defense]}+3.\"\nOn Race - Select up to 1 enemy follower on the field and deal it 3 damage. Give this follower {[attack]}+1/{[defense]}+1 and bury the top 2 cards of your deck.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n只要自己的墓场中的赛马娘类型·卡片有20张及以上存在，使这张卡获得【疾驰】与「【攻击时】使这张卡《攻击力》+3/《生命值》+3」能力。\n【起跑时】选择敌方场上的从者最多1个。给予其3点伤害。使这张卡《攻击力》+1/《生命值》+1。将自己的牌堆顶2张卡置于墓场。",
+    "ja": "食事コスト1：これは出走する。\n自分の墓場にウマ娘・カードが20枚以上ある限り、これは【疾走】と「【攻撃時】これは攻撃力+3/体力+3する」を持つ。\n【出走時】相手の場のフォロワー1体まで選ぶ。それに3ダメージ。これは攻撃力+1/体力+1する。自分のデッキの上2枚を墓場に置く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-044",
+   "printings": [
+    "ECP01-044",
+    "ECP01-P24"
+   ],
+   "name": "Manhattan Cafe",
+   "names": {
+    "en": "Manhattan Cafe",
+    "cn": "曼城茶座",
+    "ja": "マンハッタンカフェ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Put the top card of your deck into your cemetery.\nActivate {[engage]}, bury this card: Select a 2-cost Umamusume follower in your cemetery and summon it. Activate only if there are at least 10 Umamusume cards in your cemetery.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n《入场曲》将自己的牌堆顶1张卡置于墓场。\n《起动》将这张卡《横置》置于墓场：选择自己的墓场中的原始消费为2的1张赛马娘类型·从者卡。将其召唤到场上。这个能力在自己的墓场中的赛马娘类型·卡片为10张及以上的话才可使用。",
+    "ja": "食事コスト1：これは出走する。\nファンファーレ自分のデッキの上1枚を墓場に置く。\n起動これをアクト墓場に置く：自分の墓場の元のコスト2のウマ娘・フォロワー1枚を選ぶ。それを場に出す。この能力は自分の墓場のウマ娘・カードが10枚以上なら使える。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-045",
+   "printings": [
+    "ECP01-045",
+    "ECP01-P25"
+   ],
+   "name": "TT Ignition!",
+   "names": {
+    "en": "TT Ignition!",
+    "cn": "TT Ignition！",
+    "ja": "TT Ignition!"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 5,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Bury the top 4 cards of your deck. Deal damage to each follower on the field equal to the number of Umamusume cards buried this way.",
+    "cn": "将自己的牌堆顶4张卡置于墓场。给予场上的全体从者各与「以这个能力置于到墓场的赛马娘类型·卡片的张数」等量的伤害。",
+    "ja": "自分のデッキの上4枚を墓場に置く。場のフォロワーすべてに「これによって墓場に置いたウマ娘・カードの枚数」と同じダメージ。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-046",
+   "printings": [
+    "ECP01-046",
+    "ECP01-SL21",
+    "ECP01-SP21",
+    "ECP01-SSP21"
+   ],
+   "name": "Satono Crown",
+   "names": {
+    "en": "Satono Crown",
+    "cn": "里见皇冠",
+    "ja": "サトノクラウン"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Select an enemy leader. If your leader has less defense than it, give your leader{[defense]}+2.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《吃饭》《消费1》：使这张卡起跑。\n《入场曲》选择敌方的1位主战者。如果自己的主战者的生命值低于其的生命值的话，使自己的主战者《生命值》+2。",
+    "ja": "進化コスト1：これは進化する。\n食事コスト1：これは出走する。\nファンファーレ相手のリーダー1人を選ぶ。自分のリーダーの体力がそれの体力より少ないなら、自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-047",
+   "printings": [
+    "ECP01-047",
+    "ECP01-SL22",
+    "ECP01-SP22",
+    "ECP01-SSP22"
+   ],
+   "name": "Satono Crown",
+   "names": {
+    "en": "Satono Crown",
+    "cn": "里见皇冠",
+    "ja": "サトノクラウン"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "umamusume",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Look at the top 4 cards of your deck. You may put up to 2 Umamusume cards from among them into your EX area. Put the rest on the bottom of your deck in any order.",
+    "cn": "【进化时】查看自己的牌堆顶4张卡。从那之中，可以将赛马娘类型·卡片最多2张置于EX区域。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "【進化時】自分のデッキの上4枚を見る。その中から、ウマ娘・カード2枚までEXエリアに置いてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-048",
+   "printings": [
+    "ECP01-048",
+    "ECP01-SL23",
+    "ECP01-SP23",
+    "ECP01-SSP23"
+   ],
+   "name": "Mejiro Ramonu",
+   "names": {
+    "en": "Mejiro Ramonu",
+    "cn": "目白高峰",
+    "ja": "メジロラモーヌ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 5,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Choose up to X, where X equals the number of Mejiro Family cards on your field. (1) Select an enemy follower on the field and banish it. (2) Give this follower Storm. (3) Give your leader {[defense]}+2. Draw a card.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n《入场曲》从下述之中抉择最多X项。X为「自己场上的目白家类型·卡片的张数」。\n【1】选择敌方场上的1个从者。将其消失。\n【2】使这张卡获得【疾驰】能力。\n【3】使自己的主战者《生命值》+2。抽取1张卡。",
+    "ja": "食事コスト1：これは出走する。\nファンファーレ下記からX個までチョイスする。Xは「自分の場のメジロ家・カードの枚数」である。【1】相手の場のフォロワー1体を選ぶ。それを消滅させる。【2】これは【疾走】を持つ。【3】自分のリーダーは体力+2する。1枚引く。"
+   },
+   "traits": [
+    "ウマ娘",
+    "メジロ家"
+   ]
+  },
+  {
+   "id": "ECP01-049",
+   "printings": [
+    "ECP01-049",
+    "ECP01-SL24",
+    "ECP01-SP24",
+    "ECP01-SSP24"
+   ],
+   "name": "Jungle Pocket",
+   "names": {
+    "en": "Jungle Pocket",
+    "cn": "森林宝穴",
+    "ja": "ジャングルポケット"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\n{[fanfare]} Discard an Umamusume card: Draw a card. If you discarded an Umamusume card that costs 7 or more, draw 2 instead.\nActivate {[engage]}: Select an enemy follower on the field and, if there are at least 3 Umamusume cards on your field, deal it 2 damage. If there are 5, deal 2 damage to its leader.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n《入场曲》将手牌中的1张赛马娘类型·卡片舍弃：抽取1张卡。如果将原始消费为7及以上的赛马娘类型·卡片舍弃的话，转变为2张卡。\n《起动》将这张卡《横置》：选择敌方场上的1个从者。如果自己场上的赛马娘类型·卡片为3张及以上的话，给予其2点伤害。如果自己场上的赛马娘类型·卡片为5张的话，给予其主战者2点伤害。",
+    "ja": "食事コスト1：これは出走する。\nファンファーレ手札のウマ娘・カード1枚を捨てる：1枚引く。元のコスト7以上のウマ娘・カードを捨てたなら、代わりに2枚。\n起動これをアクト：相手の場のフォロワー1体を選ぶ。自分の場のウマ娘・カードが3枚以上なら、それに2ダメージ。自分の場のウマ娘・カードが5枚なら、それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-050",
+   "printings": [
+    "ECP01-050",
+    "ECP01-P26"
+   ],
+   "name": "Wonder Acute",
+   "names": {
+    "en": "Wonder Acute",
+    "cn": "奇锐骏",
+    "ja": "ワンダーアキュート"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nOn Race - Give this follower {[attack]}+1/{[defense]}+1. You may summon an Umamusume follower that costs 2 or less or Umamusume amulet that costs 2 or less from your hand.\n{[fanfare]} Draw a card.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【起跑时】使这张卡《攻击力》+1/《生命值》+1。可以将自己的手牌中的1张「原始消费为2及以下的赛马娘类型·从者卡或原始消费为2及以下的赛马娘类型·护符卡」召唤到场上。\n《入场曲》抽取1张卡。",
+    "ja": "食事コスト1：これは出走する。\n【出走時】これは攻撃力+1/体力+1する。自分の手札の元のコスト2以下のウマ娘・フォロワーか元のコスト2以下のウマ娘・アミュレット1枚を場に出してよい。\nファンファーレ1枚引く。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-051",
+   "printings": [
+    "ECP01-051",
+    "ECP01-P27"
+   ],
+   "name": "Mejiro Ardan [Hopeful Petals Dancing in the Night]",
+   "names": {
+    "en": "Mejiro Ardan [Hopeful Petals Dancing in the Night]",
+    "cn": "[夜风中飞舞的祈祷之花]目白阿尔丹",
+    "ja": "〔夜風に舞うは祈りの花〕メジロアルダン"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 6,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nOn Race - Give this follower {[attack]}+1/{[defense]}+1. Search your deck for up to 2 Mejiro Family followers and/or Mejiro Family amulets that cost a total of 6 or less, summon them, then shuffle.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【起跑时】使这张卡《攻击力》+1/《生命值》+1。直到原始消费的合计变为6及以下、从自己的牌堆之中搜寻「目白家类型·从者卡或目白家类型·护符卡」合计最多2张，并召唤到场上。",
+    "ja": "食事コスト1：これは出走する。\n【出走時】これは攻撃力+1/体力+1する。自分のデッキからメジロ家・フォロワーやメジロ家・アミュレットを元のコストの合計が6以下になるように2枚まで探し、場に出す。"
+   },
+   "traits": [
+    "ウマ娘",
+    "メジロ家"
+   ]
+  },
+  {
+   "id": "ECP01-052",
+   "printings": [
+    "ECP01-052",
+    "ECP01-P28"
+   ],
+   "name": "Matikanefukukitaru",
+   "names": {
+    "en": "Matikanefukukitaru",
+    "cn": "待兼福来",
+    "ja": "マチカネフクキタル"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 7,
+   "attack": 7,
+   "defense": 7,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nWhenever a Fate's Forecast is put onto your field, give your leader {[defense]}+7.\n{[fanfare]} Shuffle your cemetery into your deck, then look at the top 7 cards. You may summon any number of cards named Fate's Forecast from among them. Put the rest on the bottom of your deck in any order.\n{[lastwords]} Shuffle this card into its owner's deck.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n当『运气的去向』召唤到自己的场上时，使自己的主战者《生命值》+7。\n《入场曲》将自己的全部墓场放回牌堆，并洗切。查看自己的牌堆顶7张卡。从那之中，可以将『运气的去向』任意张数召唤到场上。将剩余的卡以任意顺序置于牌堆底。\n《谢幕曲》将这张卡放回牌堆，并洗切。",
+    "ja": "食事コスト1：これは出走する。\n自分の場に『運の行方』が出たとき、自分のリーダーは体力+7する。\nファンファーレ自分の墓場すべてをデッキに戻し、シャッフルする。自分のデッキの上7枚を見る。その中から、『運の行方』を好きな枚数場に出してよい。残りを好きな順にデッキの下に置く。\nラストワードこれをデッキに戻し、シャッフルする。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-053",
+   "printings": [
+    "ECP01-053",
+    "ECP01-P29"
+   ],
+   "name": "Mejiro Palmer [Moonlit Devil♪]",
+   "names": {
+    "en": "Mejiro Palmer [Moonlit Devil♪]",
+    "cn": "[月下恶魔酱♪]目白善信",
+    "ja": "〔月下の悪魔ちゃん♪〕メジロパーマー"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 1,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "{[feed]} {[cost01]}: Race this follower.\nStorm.\nThis card doesn't refresh during your start phase.\nAt the start of your main phase, {[cost01]}: Refresh this card.",
+    "cn": "《吃饭》《消费1》：使这张卡起跑。\n【疾驰】\n这张卡在自己的开始阶段中不能竖置。\n当自己的主要阶段到来时，《消费1》：将这张卡竖置。",
+    "ja": "食事コスト1：これは出走する。\n【疾走】\nこれは自分のスタートフェイズにスタンドしない。\n自分のメインフェイズが来たとき、コスト1：これをスタンドする。"
+   },
+   "traits": [
+    "ウマ娘",
+    "メジロ家"
+   ]
+  },
+  {
+   "id": "ECP01-054",
+   "printings": [
+    "ECP01-054",
+    "ECP01-P30"
+   ],
+   "name": "Bring 'Em Home, Please!",
+   "names": {
+    "en": "Bring 'Em Home, Please!",
+    "cn": "打飞他吧！的哇！？",
+    "ja": "かっとばせー！ですわ！？"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Select an enemy follower on the field and deal it damage equal to 2 times the number of Mejiro Family cards on your field.\nWhenever a Mejiro McQueen is put onto your field, select an enemy follower on the field and deal it 3 damage.\n{[lastwords]} Select an unevolved Mejiro McQueen on your field and evolve it.",
+    "cn": "当『目白麦昆』召唤到自己的场上时，选择敌方场上的1个从者。给予其3点伤害。\n《入场曲》选择敌方场上的1个从者。给予其与「自己场上的目白家类型·卡片的张数」的2倍等量的伤害。\n《谢幕曲》选择自己场上的未进化的1个『目白麦昆』。使其进化。",
+    "ja": "自分の場に『メジロマックイーン』が出たとき、相手の場のフォロワー1体を選ぶ。それに3ダメージ。\nファンファーレ相手の場のフォロワー1体を選ぶ。それに「自分の場のメジロ家・カードの枚数」の2倍のダメージ。\nラストワード自分の場の進化していない『メジロマックイーン』1体を選ぶ。それは進化する。"
+   },
+   "traits": [
+    "ウマ娘",
+    "メジロ家"
+   ]
+  },
+  {
+   "id": "ECP01-055",
+   "printings": [
+    "ECP01-055",
+    "ECP01-SL25"
+   ],
+   "name": "Progenitors and Guides",
+   "names": {
+    "en": "Progenitors and Guides",
+    "cn": "作为引导者的祖先",
+    "ja": "祖にして導く者"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 6,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Discard an Umamusume card: Recover 4 play points.\nActivate {[engage]}: Choose one. (1) Select an Umamusume follower that costs 5 or less in your cemetery and add it to your hand. (2) Select up to 2 faceup cards named Carrot in your evolve deck and turn them facedown. Gain 1 Evolution Point. (3) Give each other Umamusume follower on your field {[attack]}+1/{[defense]}+1.",
+    "cn": "《入场曲》将手牌中的1张赛马娘类型·卡片舍弃：将自己的PP回复4点。\n《起动》将这张卡《横置》：从下述之中抉择1项。\n【1】选择自己的墓场中的原始消费为5及以下的1张赛马娘类型·从者卡。将其加入手牌。\n【2】选择自己的进化牌组中的正面放置的2张『胡萝卜』卡。将其变为反面放置。将自己的EP+1。\n【3】使自己场上的其他的全体赛马娘类型·从者各《攻击力》+1/《生命值》+1。",
+    "ja": "ファンファーレ手札のウマ娘・カード1枚を捨てる：自分のPPを4回復する。\n起動これをアクト：下記から1つチョイスする。【1】自分の墓場の元のコスト5以下のウマ娘・フォロワー1枚を選ぶ。それを手札に加える。【2】自分のエボルヴデッキの表向きの『にんじん』2枚まで選ぶ。それを裏向きにする。自分のEPを+1する。【3】自分の場の他のウマ娘・フォロワーすべては攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-056",
+   "printings": [
+    "ECP01-056",
+    "ECP01-SL26"
+   ],
+   "name": "Balliamo?",
+   "names": {
+    "en": "Balliamo?",
+    "cn": "Balliamo?",
+    "ja": "Balliamo?"
+   },
+   "class": "Neutral",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Search your deck for an Umamusume follower, reveal it, add it to your hand, then shuffle.",
+    "cn": "从自己的牌堆之中搜寻1张赛马娘类型·从者卡，并加入手牌。",
+    "ja": "自分のデッキからウマ娘・フォロワー1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "ウマ娘"
+   ]
+  },
+  {
+   "id": "ECP01-057",
+   "printings": [
+    "ECP01-057",
+    "ECP01-P31"
+   ],
+   "name": "Ryoka Tsurugi",
+   "names": {
+    "en": "Ryoka Tsurugi",
+    "cn": "都留岐凉花",
+    "ja": "都留岐涼花"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 6,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} You may summon an Umamusume follower from your hand and give it \"At the start of your end phase, return this card to its owner's hand.\"\nAt the start of your end phase, select your leader or an Umamusume follower on your field and give it {[defense]}+2.",
+    "cn": "当自己的结束阶段到来时，选择自己的主战者或自己场上的1个赛马娘类型·从者。使其《生命值》+2。\n《入场曲》可以将自己的手牌中的1张赛马娘类型·从者卡召唤到场上。使其获得「当自己的结束阶段到来时，将这张卡放回手牌」能力。",
+    "ja": "自分のエンドフェイズが来たとき、自分のリーダーか自分の場のウマ娘・フォロワー1体を選ぶ。それは体力+2する。\nファンファーレ自分の手札のウマ娘・フォロワー1枚を場に出してよい。それは「自分のエンドフェイズが来たとき、これを手札に戻す」を持つ。"
+   },
+   "traits": [
+    "トレセン学園"
+   ]
+  }
+ ]
+}

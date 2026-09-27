@@ -226,7 +226,9 @@ function triggerIcon(cardNo: string, en: string | null, ja: string | null): Trig
 }
 
 const MAGICAL_ITEM_NAMES: LocalizedText = { en: MAGICAL_ITEM, ja: "魔法のアイテム", cn: "魔法道具" };
-const isMagicalItem = (token: boolean, text: string | null): boolean => token && (text ?? "").includes("put 5 Magical Item tokens into your EX area");
+/** CR 14.3.1.1 — a Magical Item token: its text has the starting reminder (CP02), or a fix names it (ECP02's tokens). */
+const isMagicalItem = (token: boolean, text: string | null, treatedAs: string | undefined): boolean =>
+  token && (treatedAs === MAGICAL_ITEM || (text ?? "").includes("put 5 Magical Item tokens into your EX area"));
 
 export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   const cardNo = raw.card_no;
@@ -239,7 +241,7 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   const printedName = ownEvolvedName ? rawName : stripEvolvedSuffix(cardNo, rawName, evolved, doubleFaced);
   const en = englishText(raw);
   // CR 2.13: "(This card is treated as X.)" — X is the card name, the printed name an alternate name.
-  const magicalItem = isMagicalItem(token, en.text);
+  const magicalItem = isMagicalItem(token, en.text, raw.treated_as);
   const alias = magicalItem ? MAGICAL_ITEM : (raw.treated_as ?? treatedAs(en.text));
   const name = alias === null ? printedName : stripEvolvedSuffix(cardNo, alias, false);
   if (name === "") throw new CardDataError(`${cardNo}: empty English name`);

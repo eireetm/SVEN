@@ -171,7 +171,7 @@ export function* putOntoField(
   cards: readonly CardId[],
   player: PlayerId,
   reason: MoveReason,
-  opts: { chooser?: PlayerId; keepEffects?: boolean; keepCounters?: boolean; engaged?: boolean } = {},
+  opts: { chooser?: PlayerId; keepEffects?: boolean; keepCounters?: boolean; engaged?: boolean; cause?: MoveCause } = {},
 ): Proc<CardId[]> {
   const room = fieldLimit(g, player) - g.state.players[player].zones.field.length;
   let chosen: readonly CardId[] = cards;
@@ -188,6 +188,7 @@ export function* putOntoField(
       keepEffects: opts.keepEffects ?? false,
       keepCounters: opts.keepCounters ?? false,
       engaged: opts.engaged || (g.scripts[getCard(g.state, card).def]?.entersEngaged ?? false),
+      ...(opts.cause ? { cause: opts.cause } : {}),
     })),
     reason,
   );

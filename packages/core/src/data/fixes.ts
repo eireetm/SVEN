@@ -1,4 +1,5 @@
 import type { RawCardBack, RawCardJson } from "./raw";
+import { MAGICAL_ITEM } from "./universes";
 
 /** A correction of one printing; `back` fields are merged into the scraped back face. */
 export type DataFix = Partial<Omit<RawCardJson, "back">> & { back?: Partial<RawCardBack> };
@@ -134,6 +135,10 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   "CP04-096": { name_en: "Yui (Evolved)" },
   "CP04-P72": { name_en: "Yui (Evolved)" },
   "PR-500": { name_en: "Yui (Evolved)" },
+  // A doubled space before " (Evolved)" leaves the evolved card of ECP02-006 "Riina Tada [Wannabe Legend]" without a base card
+  // of its name (CR 5.16.1.1.1); the Japanese names are the same 〔ワナビー・レジェンド〕多田李衣菜.
+  "ECP02-007": { name_en: "Riina Tada [Wannabe Legend] (Evolved)" },
+  "ECP02-P02": { name_en: "Riina Tada [Wannabe Legend] (Evolved)" },
   // CP02's unit printings (SP / U): the big printed name is the idol unit's name, and the card name is printed in small type
   // above it (assets/CP02-SP01a/CP02-SP01a.webp: 前川みく above *(Asterisk); CP02-SP09a: 神崎蘭子 above フォルトゥナ・レジーナ).
   // Their texts, class, stats and rulings are those of the named card, which an evolved one needs to evolve from its
@@ -193,6 +198,45 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   // The leader 〔プリンセスフォーム〕ペコリーヌ is listed as Forestcraft; its printed class icon is Swordcraft's crown
   // (assets/CP04-PR02/CP04-PR02.webp; Forestcraft's is the leaf of CP04-PR01), as for CP04-PR09 of the same name.
   "CP04-PR02": { class: "Swordcraft" },
+  // ECP01's scene printings of Carrot (CP01-085): the printed card shows the EVOLVE banner, the scene's title in big type
+  // and the card name にんじん in small type above it (assets/ECP01-058/ECP01-058.webp … ECP01-062), with Carrot's deck
+  // limit text. The scraped card type lacks "Evolved" (an evolve-deck card, CR 14.2.1.1).
+  ...Object.fromEntries(
+    ["ECP01-058", "ECP01-059", "ECP01-060", "ECP01-061", "ECP01-062", "ECP01-SL27", "ECP01-SL28", "ECP01-SL29", "ECP01-SL30", "ECP01-SL31"].map(
+      (p) => [p, { card_type: ["Spell", "Evolved"], treated_as: "Carrot" }],
+    ),
+  ),
+  // ECP02's SP / U printings: the big printed name is a new title or the idol unit's name, and the card name is printed in
+  // small type above it (assets/ECP02-SP01: 〔渚の花嫁〕新田美波 above 〔女神は朝焼けの海に〕新田美波; ECP02-U03a: 〔シンデレラガール〕
+  // 渋谷凛 above 凛＆未央; ECP02-SP09: 〔シンデレラガール〕神崎蘭子; ECP02-U05a: 〔アタシ★スタイル〕城ヶ崎美嘉; ECP02-U07b:
+  // 〔すく×2あかりんご〕辻野あかり), with that card's texts, class, stats and traits — the same case as CP02's unit printings.
+  ...Object.fromEntries(
+    (
+      [
+        ["Minami Nitta [Water's Edge Bride]", ["SP01", "U01"]],
+        ["Yuki Himekawa [Full Swing☆Cheer]", ["SP02", "U02"]],
+        ["Rin Shibuya [Cinderella Girl]", ["SP03a", "SP03b", "U03a", "U03b"]],
+        ["Uzuki Shimamura [Cinderella Girl]", ["SP04", "U04"]],
+        ["Mika Jougasaki [My★Style]", ["SP05a", "SP05b", "U05a", "U05b"]],
+        ["Yuuki Otokura [Together with Me]", ["SP06", "U06"]],
+        ["Akari Tsujino [Twice as Lovely]", ["SP07a", "SP07b", "U07a", "U07b"]],
+        ["Riamu Yumemi [Party Night]", ["SP08", "U08"]],
+        ["Ranko Kanzaki [Cinderella Girl]", ["SP09", "U09"]],
+        ["Asuka Ninomiya [Sweet & Charming]", ["SP10", "U10"]],
+        ["Eve Santaclaus [Cinderella Girl]", ["SP11", "U11"]],
+        ["Miyu Mifune [Rouge Couture]", ["SP12", "U12"]],
+      ] as const
+    ).flatMap(([name, printings]) => printings.map((p) => [`ECP02-${p}`, { treated_as: name }])),
+  ),
+  // ECP02's tokens T01–T14 (and SL34–SL47) are Magical Items: the card name 魔法のアイテム is printed in small type above the
+  // idol's name (assets/ECP02-T01: 魔法のアイテム above 〔ラブレター〕五十嵐響子), and ruling Q3 says so (CR 14.3.1.1). Their text
+  // lacks the reminder of the starting Magical Items.
+  ...Object.fromEntries(
+    Array.from({ length: 14 }, (_, i) => String(i + 1).padStart(2, "0")).flatMap((n) => [
+      [`ECP02-T${n}`, { treated_as: MAGICAL_ITEM }],
+      [`ECP02-SL${34 + Number(n) - 1}`, { treated_as: MAGICAL_ITEM }],
+    ]),
+  ),
   // Back faces of double-faced cards (see above).
   "BP09-005": { back: BP09_005_BACK },
   "BP09-P02": { back: BP09_005_BACK },

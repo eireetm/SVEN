@@ -305,6 +305,7 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
     } else if (spec.to === "field") {
       card.enteredFrom = old.zone === "resolution" ? (old.playedFrom ?? old.zone) : old.zone;
       if (old.zone !== "resolution" || (spec.reason ?? reason) !== "resolve") card.enteredByAbility = true; // BP21-023
+      if (spec.cause) card.enteredBy = spec.cause; // ECP01-006
     }
     attach(state, card, spec.position);
 

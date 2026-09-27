@@ -1,9 +1,10 @@
 import type { CardId, PlayerId } from "../../model/ids";
+import type { DamageSource } from "../../events/types";
 import type { DamageInfo } from "../../script/types";
 import type { G } from "../runtime/context";
 import { chooseOptions } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
-import { activeScript, characteristics, inAbilityZone, passiveSources } from "../state/characteristics";
+import { activeScript, characteristics, inAbilityZone, passiveSources, typeAndTraits } from "../state/characteristics";
 import { effectInForce } from "../state/effects";
 import { thisTurn } from "../state/turn-counts";
 import { makeReader } from "../query";
@@ -21,6 +22,15 @@ export interface DamageInstance {
    * it there (look-back, CR 10.7.4.1.2; BP12-109 ruling).
    */
   sourceDealsNoDamage?: boolean;
+  /** The card that deals it, as it is now (DamageSource). */
+  by?: DamageSource;
+}
+
+/** A follower on the field dealing attack or combat damage (CR 5.14.3.1 / 5.14.3.2), as it is now. */
+export function fieldDamageSource(g: G, card: CardId): DamageSource {
+  const c = g.state.cards[card]!;
+  const { type, traits } = typeAndTraits(g, card);
+  return { card, def: c.def, controller: c.controller, type, traits: [...traits], onField: true };
 }
 
 /** One replacement effect that changes an instance of damage (CR 5.14.2, 10.10). */
@@ -189,13 +199,14 @@ export function* dealDamage(g: G, instances: readonly DamageInstance[]): Proc<Da
       c.damage += d.amount;
     }
   }
-  const batch = dealt.map((d) => ({ source: d.source, target: d.target, amount: d.amount, kind: d.kind }));
+  const by = (d: DamageInstance) => (d.by ? { by: d.by } : {});
+  const batch = dealt.map((d) => ({ source: d.source, target: d.target, amount: d.amount, kind: d.kind, ...by(d) }));
   dealt.forEach((d, i) => {
     // The last instance carries all of them, for "whenever this deals damage to 1 or more ..." (CP04-T11: once for them).
     const all = i === dealt.length - 1 ? { batch } : {};
-    g.emit({ type: "damageDealt", source: d.source, target: d.target, amount: d.amount, kind: d.kind, combat: d.combat, ...all });
+    g.emit({ type: "damageDealt", source: d.source, target: d.target, amount: d.amount, kind: d.kind, combat: d.combat, ...by(d), ...all });
     const c = state.cards[d.target]!;
-    if (c.zone === "field") thisTurn(state, c.controller).followersDamagedBy.push({ source: d.source, target: d.target }); // BP20-025, 069
+    if (c.zone === "field") thisTurn(state, c.controller).followersDamagedBy.push({ source: d.source, target: d.target, ...by(d) }); // BP20-025, 069; ECP01-020
     if (c.zone === "leader") {
       const defense = state.players[c.controller].leaderDefense;
       g.emit({ type: "leaderDefenseChanged", player: c.controller, defense, delta: -d.amount });

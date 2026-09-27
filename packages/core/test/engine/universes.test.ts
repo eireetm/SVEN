@@ -310,3 +310,33 @@ describe("CR 14.5 — Princess Connect! Re: Dive: Union Burst and equipment", ()
     expect(t.stats("opp:CP04-058")).toEqual([2, 2]);
   });
 });
+
+describe("Extra collaboration sets (ECP01, ECP02): engine rules they rely on", () => {
+  it("10.7.2 — 'your opponents' Fanfare and On Evolve abilities don't trigger' (ECP01-010): On Super-Evolve abilities still do (ruling)", () => {
+    const t = d({
+      me: { field: ["ECP02-001", "CP02-014"], evolveDeck: ["ECP02-002"], playPoints: 1, superEvolutionPoints: 1, turnsPassed: 8 },
+      opp: { field: ["ECP01-010"] },
+    });
+    t.evolve("ECP02-001", { sep: true });
+    // Only the On Super-Evolve ability of Anastasia (Evolved) became pending: each other iM@S CG follower +1/+1.
+    expect([t.game.decision?.type, t.stats("CP02-014"), t.stats("ECP02-001")]).toEqual(["mainPhase", [3, 3], [3, 3]]);
+  });
+
+  it("5.5 — the card whose ability put a card onto the field is recorded: Ryoka Tsurugi is no Umamusume card (ECP01-006)", () => {
+    const t = d({ me: { hand: ["ECP01-057", "ECP01-006"], playPoints: 6 }, opp: { field: ["V5"] } }).play("ECP01-057").pick("ECP01-006").none();
+    expect(t.game.state.cards[t.id("ECP01-006")]!.enteredBy?.traits).toEqual(["トレセン学園"]);
+    expect(t.game.decision?.type === "choose" && t.game.decision.max).toBe(1);
+  });
+
+  it("5.14 — damage records the card that dealt it as it was: a spell's too (ECP01-020 'from an Umamusume card you control')", () => {
+    const cheval = { card: "ECP01-019", evolvedInto: "ECP01-020" };
+    // TT Ignition! (an Umamusume spell) buries one Umamusume card: 1 damage to each follower. Then KILL destroys V5.
+    const t = d({ me: { field: [cheval], hand: ["ECP01-045", "KILL"], deck: ["CP01-061", "V1", "V1", "V1", "V2"], playPoints: 6 }, opp: { field: ["V5"] } });
+    t.play("ECP01-045").play("KILL");
+    expect([t.hand(), t.cemetery().includes("V2")]).toEqual([[], true]);
+    // Damage from a card that is no Umamusume card: no trigger.
+    const n = d({ me: { field: [cheval], hand: ["PING-UPTO2", "KILL"], deck: ["V1"], playPoints: 1 }, opp: { field: ["V5"] } });
+    n.play("PING-UPTO2").pick("opp:V5").play("KILL");
+    expect([n.hand(), n.zone("me", "deck")]).toEqual([[], ["V1"]]);
+  });
+});

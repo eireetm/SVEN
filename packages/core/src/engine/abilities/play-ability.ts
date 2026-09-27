@@ -105,6 +105,8 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
     data: pending.data,
     mode: null,
     earthRitePaid: earthRite,
+    // A delayed trigger a spell created (CR 10.7.5) is not an ability of a card on the field.
+    fieldAbility: abilityZones(g, pending.sourceDef, ability).includes("field") && !(g.db.has(pending.sourceDef) && g.db.get(pending.sourceDef).type === "spell"),
   };
   // Triggered by its source leaving the field: the card's information there (CR 10.7.4.1.2).
   const ev = pending.event;
@@ -231,7 +233,15 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
   const targets = modes.length === 0 ? yield* chooseTargets(g, ability.targets, player, card) : [];
   const modeTargets = yield* chooseModeTargets(g, player, modes, card);
   if (targets === null || modeTargets === null) throw new EngineError("activated ability played without legal targets");
-  const init: EffectInit = { controller: player, self: card, sourceDef: def, targets, event: null, earthRitePaid: earthRite };
+  const init: EffectInit = {
+    controller: player,
+    self: card,
+    sourceDef: def,
+    targets,
+    event: null,
+    earthRitePaid: earthRite,
+    fieldAbility: abilityZones(g, def, ability).includes("field"),
+  };
   // 10.6.2.5 pay the cost in the listed order (10.4.2.1)
   const cost = ability.cost;
   const points = activationPoints(g, player, ability, useEvolutionPoint);
@@ -302,7 +312,7 @@ export function* executeUnionBurst(g: G, player: PlayerId, card: CardId, source:
   const targets = modes.length === 0 ? yield* chooseTargets(g, ability.targets, player, card, { free: true }) : [];
   const modeTargets = yield* chooseModeTargets(g, player, modes, card);
   if (targets === null || modeTargets === null) throw new EngineError("Union Burst ability executed without legal targets");
-  const init: EffectInit = { controller: player, self: card, sourceDef: def, targets, event: null, data: null, mode: null, memory: { x: 0 } };
+  const init: EffectInit = { controller: player, self: card, sourceDef: def, targets, event: null, data: null, mode: null, memory: { x: 0 }, fieldAbility: true };
   // 10.6.2.7
   g.emit({ type: "abilityPlayed", player, source: card, sourceDef: def, ability: index });
   recordUnionBurst(g, player, card, def, index); // CR 14.5.1.3

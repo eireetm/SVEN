@@ -41,7 +41,30 @@ function instances(g: G, event: GameEvent, controller: PlayerId): number {
   return n;
 }
 
-function matches(ability: AutomaticAbility, event: GameEvent, subject: TriggerSubject, reader: GameReader): TriggerData[] {
+/** Is an automatic ability of this timing that `controller` controls kept from triggering by an opponent's passive? (ECP01-010) */
+type TriggerBlock = (controller: PlayerId, timing: AutomaticAbility["timing"]) => boolean;
+
+/**
+ * ECP01-010 / 011 — `FieldPassives.opponentsAbilitiesDontTrigger` of the cards whose passives work (CR 10.3.5), read once per
+ * event and only when an ability of a blockable timing would trigger.
+ */
+function triggerBlock(g: G): TriggerBlock {
+  let blocked: (Set<AutomaticAbility["timing"]> | null)[] | null = null;
+  return (controller, timing) => {
+    if (timing !== "fanfare" && timing !== "onEvolve") return false;
+    blocked ??= ([0, 1] as PlayerId[]).map((p) => {
+      let set: Set<AutomaticAbility["timing"]> | null = null;
+      for (const id of passiveSources(g, p === 0 ? 1 : 0)) {
+        for (const t of activeScript(g, id)?.field?.opponentsAbilitiesDontTrigger ?? []) (set ??= new Set()).add(t);
+      }
+      return set;
+    });
+    return blocked[controller]?.has(timing) ?? false;
+  };
+}
+
+function matches(ability: AutomaticAbility, event: GameEvent, subject: TriggerSubject, reader: GameReader, blocked: TriggerBlock): TriggerData[] {
+  if (blocked(subject.controller, ability.timing)) return []; // ECP01-010: doesn't trigger
   const r = ability.trigger(event, subject, reader);
   if (r === true) return [{}];
   if (r === false) return [];
@@ -119,12 +142,13 @@ export function collectTriggers(g: G, event: GameEvent): void {
   }
 
   const reader = makeReader(g);
+  const blocked = triggerBlock(g);
   for (const c of candidates) {
     scripts[c.abilityDef]?.abilities?.forEach((ability, index) => {
       if (ability.kind !== "automatic" || ability.delayed) return;
       if (!abilityZones(g, c.abilityDef, ability).includes(c.subject.zone)) return; // CR 10.3.5 / 10.3.6
       if (ability.unionBurst && !unionBurstValid(g, c.source)) return; // CR 14.5.1.2
-      for (const data of matches(ability, event, c.subject, reader)) {
+      for (const data of matches(ability, event, c.subject, reader, blocked)) {
         // "During your turn, whenever ..." (triggerIf); an "if" in the effect (condition) is only
         // checked when the ability is played (play-ability.ts, BP10-109 ruling).
         if (ability.triggerIf && !ability.triggerIf(reader, c.subject.controller, c.source)) continue;
@@ -164,7 +188,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
     if (ability.kind !== "automatic") continue;
     const controller = state.cards[card]!.controller;
     const subject: TriggerSubject = { card, controller, zone: "field", lookBack: false };
-    for (const data of matches(ability, event, subject, reader)) {
+    for (const data of matches(ability, event, subject, reader, blocked)) {
       if (ability.triggerIf && !ability.triggerIf(reader, controller, card)) continue;
       for (let k = instances(g, event, controller); k > 0; k--) {
         if (!withinPerTurnLimit(g, ability, card, abilityKey(`${GRANT_PREFIX}${grant}`, 0))) break;
@@ -188,7 +212,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
       abilities.forEach((ability, index) => {
         if (ability.kind !== "automatic") return;
         if (ability.unionBurst && !unionBurstValid(g, follower)) return; // CR 14.5.1.2
-        for (const data of matches(ability, event, subject, reader)) {
+        for (const data of matches(ability, event, subject, reader, blocked)) {
           if (ability.triggerIf && !ability.triggerIf(reader, controller, follower)) continue;
           for (let k = instances(g, event, controller); k > 0; k--) {
             if (!withinPerTurnLimit(g, ability, follower, `${abilityKey(def, index)}@${token}`)) break;
@@ -208,7 +232,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
       for (const grant of m.before.grants) {
         const ability = GRANT_ABILITIES[grant];
         if (ability.kind !== "automatic") continue;
-        for (const data of matches(ability, event, subject, reader)) {
+        for (const data of matches(ability, event, subject, reader, blocked)) {
           if (ability.triggerIf && !ability.triggerIf(reader, m.before.controller, m.newCard ?? m.card)) continue;
           addPending(g, m.before.controller, m.newCard ?? m.card, `${GRANT_PREFIX}${grant}`, 0, event, data);
         }
@@ -225,7 +249,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
       const subject: TriggerSubject = { card, controller, zone: "field", lookBack: false };
       KEYWORD_ABILITIES[keyword]!.forEach((ability, index) => {
         if (ability.kind !== "automatic") return;
-        for (const data of matches(ability, event, subject, reader)) {
+        for (const data of matches(ability, event, subject, reader, blocked)) {
           addPending(g, controller, card, `${KEYWORD_DEF_PREFIX}${keyword}`, index, event, data);
         }
       });
@@ -237,7 +261,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
     if (ability.kind !== "automatic") continue;
     const subject: TriggerSubject = { card: d.source ?? "", controller: d.controller, zone: "field", lookBack: false };
     if (d.data) subject.delayedData = d.data; // what it watches (BP15-001)
-    const hits = matches(ability, event, subject, reader);
+    const hits = matches(ability, event, subject, reader, blocked);
     if (hits.length === 0) continue;
     const times = instances(g, event, d.controller);
     if (d.repeat) {

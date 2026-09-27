@@ -1,5 +1,6 @@
 import type { GrantedAbilityId } from "../../model/state";
 import type { AbilityDef } from "../../script/types";
+import { discardCardsCost } from "../../script/costs";
 import { enemyFollower, hasTrait } from "../../script/targets";
 
 /**
@@ -173,6 +174,34 @@ export const GRANT_ABILITIES: Record<GrantedAbilityId, AbilityDef> = {
       const leader = fx.game.leader(fx.game.controller(target));
       yield* fx.dealDamage(target, 3);
       yield* fx.dealDamage(leader, 1);
+    },
+  },
+  // ECP01-013 Sirius Symboli [Escorte Étoile] (its own Fanfare): "Strike - Draw a card, then discard a card."
+  strikeDrawDiscard: {
+    kind: "automatic",
+    timing: "strike",
+    trigger: (e, me) => !me.lookBack && e.type === "attackDeclared" && e.attacker === me.card,
+    *resolve(fx) {
+      yield* fx.draw(1);
+      yield* fx.discard(fx.controller, 1, 1);
+    },
+  },
+  // ECP02-061 Nana Abe [Cinderella Girl] (Evolved), given to the enemy follower it changes into an amulet: "At the start of
+  // your main phase, deal 2 damage to your leader" — the amulet's controller's (CR 3.1.2.3).
+  mainPhaseDamageYourLeader2: {
+    kind: "automatic",
+    timing: "other",
+    trigger: (e, me) => !me.lookBack && e.type === "phaseStarted" && e.phase === "main" && e.player === me.controller,
+    *resolve(fx) {
+      yield* fx.dealDamage(fx.game.leader(fx.controller), 2);
+    },
+  },
+  // ECP02-061, given with it: "{[act]} {[cost01]}, discard 2 cards: Bury this."
+  activateDiscard2Bury: {
+    kind: "activated",
+    cost: { playPoints: 1, custom: discardCardsCost(2) },
+    *resolve(fx) {
+      if (fx.game.card(fx.self)?.zone === "field") yield* fx.bury([fx.self]);
     },
   },
 };

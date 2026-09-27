@@ -246,6 +246,17 @@ export interface FieldPassives {
    * hasn't attacked this turn can attack (rulings; CR 1.3.2 — not if it can't).
    */
   forcesEnemyAttacks?(game: GameReader, self: CardId): boolean;
+  /**
+   * "Your opponents' {[fanfare]} and On Evolve abilities don't trigger" (ECP01-010 / 011): automatic abilities of these
+   * timings controlled by an opponent of this card's controller don't trigger (CR 10.7.2), though their trigger condition is
+   * met — so they can't be played; Union Burst Fanfares neither, while On Super-Evolve abilities still trigger (rulings).
+   */
+  opponentsAbilitiesDontTrigger?: readonly AutomaticAbility["timing"][];
+  /**
+   * "You may reroll each die you roll once" (ECP02-065 / 066): after each roll of a die by this card's controller, they may
+   * reroll it this many times (CR 5.20.2; two copies let them reroll twice, on either player's turn — rulings).
+   */
+  dieRerolls?: number;
 }
 
 /** A cost the engine cannot express with the standard parts (select and move cards, counters...). */

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "CP02",
- "printings": 309,
+ "printings": 337,
  "cards": [
   {
    "id": "CP02-001",
@@ -3640,6 +3640,34 @@
     "CP02-T07",
     "CP02-T08",
     "CP02-T09",
+    "ECP02-T01",
+    "ECP02-T02",
+    "ECP02-T03",
+    "ECP02-T04",
+    "ECP02-T05",
+    "ECP02-T06",
+    "ECP02-T07",
+    "ECP02-T08",
+    "ECP02-T09",
+    "ECP02-T10",
+    "ECP02-T11",
+    "ECP02-T12",
+    "ECP02-T13",
+    "ECP02-T14",
+    "ECP02-SL34",
+    "ECP02-SL35",
+    "ECP02-SL36",
+    "ECP02-SL37",
+    "ECP02-SL38",
+    "ECP02-SL39",
+    "ECP02-SL40",
+    "ECP02-SL41",
+    "ECP02-SL42",
+    "ECP02-SL43",
+    "ECP02-SL44",
+    "ECP02-SL45",
+    "ECP02-SL46",
+    "ECP02-SL47",
     "CSD02a-T01",
     "CSD02b-T01",
     "CSD02c-T01"
@@ -3711,6 +3739,146 @@
      "en": "Passion Tiara",
      "cn": "Passion头冠",
      "ja": "パッションティアラ"
+    },
+    "ECP02-T01": {
+     "en": "Kyoko Igarashi [Love Letter]",
+     "cn": "[Love Letter]五十岚响子",
+     "ja": "〔ラブレター〕五十嵐響子"
+    },
+    "ECP02-T02": {
+     "en": "Shiki Ichinose [Budding Flower]",
+     "cn": "[花蕾]一之濑志希",
+     "ja": "〔つぼみ〕一ノ瀬志希"
+    },
+    "ECP02-T03": {
+     "en": "Sachiko Koshimizu [Lunatic Show]",
+     "cn": "[Lunatic Show]舆水幸子",
+     "ja": "〔Lunatic Show〕輿水幸子"
+    },
+    "ECP02-T04": {
+     "en": "Kaede Takagaki [Nation Blue]",
+     "cn": "[Nation Blue]高垣枫",
+     "ja": "〔Nation Blue〕高垣楓"
+    },
+    "ECP02-T05": {
+     "en": "Riina Tada [Eight Beat Rocker]",
+     "cn": "[8 Beat Rocker]多田李衣菜",
+     "ja": "〔エイトビートロッカー〕多田李衣菜"
+    },
+    "ECP02-T06": {
+     "en": "Sae Kobayakawa [Pastel-Pink Love]",
+     "cn": "[浅粉色之恋]小早川纱枝",
+     "ja": "〔パステルピンクな恋〕小早川紗枝"
+    },
+    "ECP02-T07": {
+     "en": "Ranko Kanzaki [Nation Blue]",
+     "cn": "[Nation Blue]神崎兰子",
+     "ja": "〔Nation Blue〕神崎蘭子"
+    },
+    "ECP02-T08": {
+     "en": "Shin Sato [Gutsy☆Reporter]",
+     "cn": "[毅力满满记者]佐藤心",
+     "ja": "〔ド根性☆レポーター〕佐藤心"
+    },
+    "ECP02-T09": {
+     "en": "Akari Tsujino [Brand New!]",
+     "cn": "[Brand New！]辻野朱里",
+     "ja": "〔Brand new！〕辻野あかり"
+    },
+    "ECP02-T10": {
+     "en": "Asuka Ninomiya [Blossoming Jewel]",
+     "cn": "[盛开吧Jewel]二宫飞鸟",
+     "ja": "〔咲いてJewel〕二宮飛鳥"
+    },
+    "ECP02-T11": {
+     "en": "Yoshino Yorita [Way of the Warrior]",
+     "cn": "[兵之道]依田芳乃",
+     "ja": "〔つはものの道〕依田芳乃"
+    },
+    "ECP02-T12": {
+     "en": "Chie Sasaki [Step to the Future]",
+     "cn": "[Step to 未来]佐佐木千枝",
+     "ja": "〔ステップトゥーミライ〕佐々木千枝"
+    },
+    "ECP02-T13": {
+     "en": "Arisu Tachibana [Ikenai GO AHEAD]",
+     "cn": "[无法前行的GO AHEAD]橘爱丽丝",
+     "ja": "〔イケナイGO AHEAD〕橘ありす"
+    },
+    "ECP02-T14": {
+     "en": "Yukimi Sajo [Day by Day, Hand in Hand]",
+     "cn": "[手相叠的日子]佐城雪美",
+     "ja": "〔重ねた手と日々〕佐城雪美"
+    },
+    "ECP02-SL34": {
+     "en": "Kyoko Igarashi [Love Letter]",
+     "cn": "[Love Letter]五十岚响子",
+     "ja": "〔ラブレター〕五十嵐響子"
+    },
+    "ECP02-SL35": {
+     "en": "Shiki Ichinose [Budding Flower]",
+     "cn": "[花蕾]一之濑志希",
+     "ja": "〔つぼみ〕一ノ瀬志希"
+    },
+    "ECP02-SL36": {
+     "en": "Sachiko Koshimizu [Lunatic Show]",
+     "cn": "[Lunatic Show]舆水幸子",
+     "ja": "〔Lunatic Show〕輿水幸子"
+    },
+    "ECP02-SL37": {
+     "en": "Kaede Takagaki [Nation Blue]",
+     "cn": "[Nation Blue]高垣枫",
+     "ja": "〔Nation Blue〕高垣楓"
+    },
+    "ECP02-SL38": {
+     "en": "Riina Tada [Eight Beat Rocker]",
+     "cn": "[8 Beat Rocker]多田李衣菜",
+     "ja": "〔エイトビートロッカー〕多田李衣菜"
+    },
+    "ECP02-SL39": {
+     "en": "Sae Kobayakawa [Pastel-Pink Love]",
+     "cn": "[浅粉色之恋]小早川纱枝",
+     "ja": "〔パステルピンクな恋〕小早川紗枝"
+    },
+    "ECP02-SL40": {
+     "en": "Ranko Kanzaki [Nation Blue]",
+     "cn": "[Nation Blue]神崎兰子",
+     "ja": "〔Nation Blue〕神崎蘭子"
+    },
+    "ECP02-SL41": {
+     "en": "Shin Sato [Gutsy☆Reporter]",
+     "cn": "[毅力满满记者]佐藤心",
+     "ja": "〔ド根性☆レポーター〕佐藤心"
+    },
+    "ECP02-SL42": {
+     "en": "Akari Tsujino [Brand New!]",
+     "cn": "[Brand New！]辻野朱里",
+     "ja": "〔Brand new！〕辻野あかり"
+    },
+    "ECP02-SL43": {
+     "en": "Asuka Ninomiya [Blossoming Jewel]",
+     "cn": "[盛开吧Jewel]二宫飞鸟",
+     "ja": "〔咲いてJewel〕二宮飛鳥"
+    },
+    "ECP02-SL44": {
+     "en": "Yoshino Yorita [Way of the Warrior]",
+     "cn": "[兵之道]依田芳乃",
+     "ja": "〔つはものの道〕依田芳乃"
+    },
+    "ECP02-SL45": {
+     "en": "Chie Sasaki [Step to the Future]",
+     "cn": "[Step to 未来]佐佐木千枝",
+     "ja": "〔ステップトゥーミライ〕佐々木千枝"
+    },
+    "ECP02-SL46": {
+     "en": "Arisu Tachibana [Ikenai GO AHEAD]",
+     "cn": "[无法前行的GO AHEAD]橘爱丽丝",
+     "ja": "〔イケナイGO AHEAD〕橘ありす"
+    },
+    "ECP02-SL47": {
+     "en": "Yukimi Sajo [Day by Day, Hand in Hand]",
+     "cn": "[手相叠的日子]佐城雪美",
+     "ja": "〔重ねた手と日々〕佐城雪美"
     },
     "CSD02a-T01": {
      "en": "Cute Earrings",

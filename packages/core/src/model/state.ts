@@ -2,7 +2,7 @@ import type { CardType, DefId, PrintingId, Universe } from "./card";
 import type { GameConfig } from "./config";
 import type { CardId, PlayerId } from "./ids";
 import type { Keyword } from "./keyword";
-import type { GameEvent } from "../events/types";
+import type { DamageSource, GameEvent, MoveCause } from "../events/types";
 import type { RngState } from "../rng/rng";
 
 /**
@@ -89,6 +89,11 @@ export interface CardInstance {
    */
   enteredByAbility?: boolean;
   /**
+   * The card whose ability put it onto the field it is on, as that card was then (CardMove.cause), e.g. ECP01-006 "If this
+   * card was put onto the field by an Umamusume card's ability". Not recorded for a summoned token.
+   */
+  enteredBy?: MoveCause;
+  /**
    * A follower or amulet played with a play option (CR 10.4.7.3): which one, and what its process recorded (`fx.memory`), for the
    * card's own abilities, e.g. CP03-084 "If you buried a Blaster Dark as the additional cost to play this card". Only on the
    * object put onto the field by that play.
@@ -164,9 +169,10 @@ export interface TurnCounts {
   turn: number;
   /**
    * This player's followers that took damage (more than 0) this turn, with the card that dealt it (its
-   * id then; CR 5.14), e.g. BP20-025 "an enemy follower that took damage this turn from this", BP20-069.
+   * id then; CR 5.14), e.g. BP20-025 "an enemy follower that took damage this turn from this", BP20-069, and that card as
+   * it was then (ECP01-020 "from an Umamusume card you control").
    */
-  followersDamagedBy: { source: CardId | null; target: CardId }[];
+  followersDamagedBy: { source: CardId | null; target: CardId; by?: DamageSource }[];
   /** Cards this player discarded (CR 5.12). */
   discarded: number;
   /** This player's followers destroyed (CR 5.6, including rules handling 11.3). */
@@ -405,7 +411,10 @@ export type GrantedAbilityId =
   | "strikeDamageLeaders2"
   | "strikeLeaderLossDamage"
   | "machinaPlayPing"
-  | "buryAtEnd";
+  | "buryAtEnd"
+  | "strikeDrawDiscard"
+  | "mainPhaseDamageYourLeader2"
+  | "activateDiscard2Bury";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {

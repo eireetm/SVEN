@@ -1,6 +1,6 @@
 import { opponentOf, type CardId, type PlayerId } from "../../model/ids";
 import { setEngaged } from "../actions/cards";
-import { dealDamage, type DamageInstance } from "../actions/damage";
+import { dealDamage, fieldDamageSource, type DamageInstance } from "../actions/damage";
 import { confirmationTiming } from "../abilities/confirmation";
 import type { G } from "../runtime/context";
 import type { Proc } from "../runtime/proc";
@@ -127,11 +127,12 @@ export function* performAttack(g: G, attacker: CardId, target: CardId): Proc<voi
     const inCombat = !targetIsLeader && isOnField(g.state, target);
     const damage: DamageInstance[] = [
       // CR 5.14.3.1 attack damage (also combat damage when the target is a follower, 5.14.3.2)
-      { source: attacker, controller: player, target, amount: combatDamageOf(g, attacker), kind: "attack" },
+      { source: attacker, controller: player, target, amount: combatDamageOf(g, attacker), kind: "attack", by: fieldDamageSource(g, attacker) },
     ];
     if (inCombat) {
       // 8.4.9.1 the attack target simultaneously deals damage to the attacker
-      damage.push({ source: target, controller: g.state.cards[target]!.controller, target: attacker, amount: combatDamageOf(g, target), kind: "combat" });
+      const combat = { source: target, controller: g.state.cards[target]!.controller, target: attacker, amount: combatDamageOf(g, target) };
+      damage.push({ ...combat, kind: "combat", by: fieldDamageSource(g, target) });
     }
     yield* dealDamage(g, damage); // Drain (CR 12.13) triggers on the attack damage: keyword-abilities.ts
     // 8.4.9.2 still in combat -> they have fought

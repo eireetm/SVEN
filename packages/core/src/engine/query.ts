@@ -1,4 +1,5 @@
 import type { CardDatabase } from "../data/database";
+import type { DamageSource } from "../events/types";
 import type { CardType, DefId, Universe } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import { opponentOf } from "../model/ids";
@@ -177,6 +178,11 @@ export interface GameReader {
   /** Did this follower (as it is now on the field) take damage this turn (CR 5.14; BP20-069)? */
   tookDamageThisTurn(target: CardId): boolean;
   /**
+   * The cards that dealt damage to the follower `target` (the id it had on the field) this turn, as they were then (CR 5.14),
+   * e.g. ECP01-020 "an enemy follower that took damage this turn from an Umamusume card you control".
+   */
+  damageSourcesThisTurn(target: CardId): DamageSource[];
+  /**
    * CR 5.18 — does this player choose 1 to all performable options whenever they would choose 1 or
    * more (BP20-T06)? For scripts that let a player choose options themselves.
    */
@@ -325,6 +331,8 @@ export function makeReader(env: Env): GameReader {
     tookDamageThisTurnFrom: (target, source) =>
       ([0, 1] as const).some((p) => countsThisTurn(state(), p).followersDamagedBy.some((x) => x.target === target && x.source === source)),
     tookDamageThisTurn: (target) => ([0, 1] as const).some((p) => countsThisTurn(state(), p).followersDamagedBy.some((x) => x.target === target)),
+    damageSourcesThisTurn: (target) =>
+      ([0, 1] as const).flatMap((p) => countsThisTurn(state(), p).followersDamagedBy.flatMap((x) => (x.target === target && x.by ? [x.by] : []))),
     choosesAnyNumberOfOptions: (p) => choosesAnyNumberOfOptions(env, p),
     banishableByAbilities: (id) => {
       const c = state().cards[id];

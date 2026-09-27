@@ -42,6 +42,19 @@ export interface MoveCause {
   traits: string[];
 }
 
+/**
+ * The card that deals an instance of damage (CR 5.14), as it was then: for "an enemy follower that took damage this turn
+ * from an Umamusume card you control" (ECP01-020) and "an iM@S CG card on your field deals damage" (ECP02-057).
+ */
+export interface DamageSource extends MoveCause {
+  /**
+   * It deals it from the field: combat damage, or an ability that works there (CR 10.3.5) — also after the card left, by its
+   * last-known information (ECP02-057 ruling Q1: a Fanfare resolved after its follower was destroyed). Not a spell's
+   * damage, nor that of an ability used from the hand.
+   */
+  onField: boolean;
+}
+
 /** One card changing zones. CR 4.1.4: the card gets a new id in the new zone. */
 export interface CardMove {
   /**
@@ -153,7 +166,9 @@ export type GameEvent =
        * On the last of the instances dealt at the same time (also a single one): all of them (CR 5.14), for "whenever this deals
        * damage to 1 or more ..." (CP04-T11), which triggers once for them (rulings).
        */
-      batch?: { source: CardId | null; target: CardId; amount: number; kind: "attack" | "combat" | "ability" }[];
+      batch?: { source: CardId | null; target: CardId; amount: number; kind: "attack" | "combat" | "ability"; by?: DamageSource }[];
+      /** The card that dealt it, as it was then (see DamageSource). */
+      by?: DamageSource;
     }
   /** A leader's defense changed by `delta` (damage, CR 5.14; or "give +/-X", 5.27). */
   | { type: "leaderDefenseChanged"; player: PlayerId; defense: number; delta: number }
