@@ -1,0 +1,395 @@
+{
+ "format": 1,
+ "set": "CSD03a",
+ "printings": 27,
+ "cards": [
+  {
+   "id": "CSD03a-001",
+   "printings": [
+    "CSD03a-001",
+    "CSD03a-SL01"
+   ],
+   "name": "Alfred Early",
+   "names": {
+    "en": "Alfred Early",
+    "cn": "阿尔弗雷德·青年",
+    "ja": "アルフレッド・アーリー"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 4,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower into a King of Knights, Alfred.\nStorm. Twin Drive.",
+    "cn": "《进化》《消费2》：使这张卡进化为『骑士王 阿尔弗雷德』。\n【疾驰】【双重驱动】（持有【疾驰】能力的从者，在召唤到场上的当回合即可进行攻击）",
+    "ja": "進化コスト2：これは『騎士王 アルフレッド』に進化する。\n【疾走】【ツインドライブ】（【疾走】を持つフォロワーは、場に出たターンから攻撃できる）"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-002",
+   "printings": [
+    "CSD03a-002",
+    "CSD03a-SL02"
+   ],
+   "name": "King of Knights, Alfred",
+   "names": {
+    "en": "King of Knights, Alfred",
+    "cn": "骑士王 阿尔弗雷德",
+    "ja": "騎士王 アルフレッド"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "vanguard",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Storm. Twin Drive.\nOn Evolve - Search your deck for a Royal Paladin follower that costs 3 or less, summon it, then shuffle. If there are at least 15 Royal Paladin cards in your cemetery, give it and this follower  {[attack]}+1/{[defense]}+1.",
+    "cn": "【疾驰】【双重驱动】（持有【双重驱动】的从者，当攻击时，将进行2次驱动判定）\n【进化时】从自己的牌堆之中搜寻原始消费为3及以下的1张光辉骑士团类型·从者卡，并召唤到场上。如果自己的墓场中的光辉骑士团类型·卡片为15张及以上的话，使其与这张卡各《攻击力》+1/《生命值》+1。",
+    "ja": "【疾走】【ツインドライブ】（【ツインドライブ】を持つフォロワーは、攻撃したとき、ドライブチェックを2回する）\n【進化時】自分のデッキから元のコスト3以下のロイヤルパラディン・フォロワー1枚を探し、場に出す。自分の墓場のロイヤルパラディン・カードが15枚以上なら、それとこれは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-003",
+   "printings": [
+    "CSD03a-003",
+    "CSD03a-SL03"
+   ],
+   "name": "Blaster Blade",
+   "names": {
+    "en": "Blaster Blade",
+    "cn": "狂风剑刃",
+    "ja": "ブラスター・ブレード"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\nSingle Drive.\n{[fanfare]} If this card was put onto the field by an ability, evolve it.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【单次驱动】（持有【单次驱动】的从者，当攻击时，将进行1次驱动判定）\n《入场曲》如果这张卡以能力召唤到场上的话，使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。\n【シングルドライブ】（【シングルドライブ】を持つフォロワーは、攻撃したとき、ドライブチェックを1回する）\nファンファーレこれが能力によって場に出ていたなら、これは進化する。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-004",
+   "printings": [
+    "CSD03a-004",
+    "CSD03a-SL04",
+    "PR-287",
+    "PR-289"
+   ],
+   "name": "Blaster Blade",
+   "names": {
+    "en": "Blaster Blade",
+    "cn": "狂风剑刃",
+    "ja": "ブラスター・ブレード"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "vanguard",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Single Drive.\nOn Evolve - Select an enemy follower on the field and deal it damage equal to 2 times the number of Royal Paladin followers on your field.",
+    "cn": "【单次驱动】\n【进化时】选择敌方场上的1个从者。给予其与「自己场上的光辉骑士团类型·从者的数量」的2倍等量的伤害。",
+    "ja": "【シングルドライブ】\n【進化時】相手の場のフォロワー1体を選ぶ。それに「自分の場のロイヤルパラディン・フォロワーの数」の2倍のダメージ。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-005",
+   "printings": [
+    "CSD03a-005",
+    "CSD03a-P01"
+   ],
+   "name": "Wingal",
+   "names": {
+    "en": "Wingal",
+    "cn": "温加尔",
+    "ja": "ういんがる"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[act]} {[cost03]}, {[engage]}: Select a Blaster Blade in your cemetery and summon it.",
+    "cn": "《起动》《消费3》将这张卡《横置》：选择自己的墓场中的1张『狂风剑刃』卡。将其召唤到场上。",
+    "ja": "起動コスト3これをアクト：自分の墓場の『ブラスター・ブレード』1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-006",
+   "printings": [
+    "CSD03a-006",
+    "CSD03a-P02"
+   ],
+   "name": "Knight of Conviction, Bors",
+   "names": {
+    "en": "Knight of Conviction, Bors",
+    "cn": "断罪的骑士 鲍尔斯",
+    "ja": "断罪の騎士 ボールス"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ride]} {[cost01]}: Give this follower Drive.\nAssail.\nOn Drive - Give this follower {[attack]}+2/{[defense]}+2.",
+    "cn": "《凭依》《消费1》：使这张卡获得驱动能力。\n【指定攻击】（持有【指定攻击】能力的从者，可以对竖置状态的从者进行攻击）\n【驱动获得时】使这张卡《攻击力》+2/《生命值》+2。",
+    "ja": "憑依コスト1：これはドライブを持つ。\n【指定攻撃】（【指定攻撃】を持つフォロワーは、スタンド状態のフォロワーを攻撃できる）\n【ドライブ獲得時】これは攻撃力+2/体力+2する。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-007",
+   "printings": [
+    "CSD03a-007",
+    "CSD03a-P03"
+   ],
+   "name": "Flash Shield, Iseult",
+   "names": {
+    "en": "Flash Shield, Iseult",
+    "cn": "闪光之盾 伊索尔德",
+    "ja": "閃光の盾 イゾルデ"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nChoose one. (1) Select an enemy follower on the field and deal it 2 damage. (2) Discard a Royal Paladin card: Select an enemy follower on the field. Deal it 3 damage and give your leader {[defense]}+2.",
+    "cn": "《快速》\n从下述之中抉择1项。\n【1】选择敌方场上的1个从者。给予其2点伤害。\n【2】将手牌中的1张光辉骑士团类型·卡片舍弃：选择敌方场上的1个从者。给予其3点伤害。使自己的主战者《生命值》+2。",
+    "ja": "クイック\n下記から1つチョイスする。【1】相手の場のフォロワー1体を選ぶ。それに2ダメージ。【2】手札のロイヤルパラディン・カード1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに3ダメージ。自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-008",
+   "printings": [
+    "CSD03a-008",
+    "CSD03a-P04"
+   ],
+   "name": "Knight of Silence, Gallatin",
+   "names": {
+    "en": "Knight of Silence, Gallatin",
+    "cn": "沉默的骑士 加拉汀",
+    "ja": "沈黙の騎士 ギャラティン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 5,
+   "attack": 5,
+   "defense": 4,
+   "text": {
+    "en": "{[ride]} {[cost01]}: Give this follower Drive.\nOn Drive - Give this follower {[attack]}+1/{[defense]}+1. Deal 3 damage to each enemy leader.\n{[fanfare]} Select an enemy follower on the field and deal it 5 damage.",
+    "cn": "《凭依》《消费1》：使这张卡获得驱动能力。\n【驱动获得时】使这张卡《攻击力》+1/《生命值》+1。给予敌方的全体主战者各3点伤害。\n《入场曲》选择敌方场上的1个从者。给予其5点伤害。",
+    "ja": "憑依コスト1：これはドライブを持つ。\n【ドライブ獲得時】これは攻撃力+1/体力+1する。相手のリーダーすべてに3ダメージ。\nファンファーレ相手の場のフォロワー1体を選ぶ。それに5ダメージ。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-009",
+   "printings": [
+    "CSD03a-009",
+    "CSD03a-P05"
+   ],
+   "name": "Little Sage, Marron",
+   "names": {
+    "en": "Little Sage, Marron",
+    "cn": "年轻的贤者 马隆",
+    "ja": "小さな賢者 マロン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 3,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Look at the top 5 cards of your deck. You may reveal a Royal Paladin card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "【守护】\n《入场曲》查看自己的牌堆顶5张卡。从那之中，可以将1张光辉骑士团类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "【守護】\nファンファーレ自分のデッキの上5枚を見る。その中から、ロイヤルパラディン・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-010",
+   "printings": [
+    "CSD03a-010",
+    "CSD03a-P06"
+   ],
+   "name": "Lake Maiden, Lien",
+   "names": {
+    "en": "Lake Maiden, Lien",
+    "cn": "湖之巫女 莉恩",
+    "ja": "湖の巫女 リアン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Discard a Royal Paladin card: Select a Royal Paladin follower in your cemetery and add it to your hand.",
+    "cn": "【守护】（当这张卡召唤到场上时，或自己的结束阶段中、可以将这张卡横置。只要有「处于横置状态并持有【守护】能力的从者」存在，敌方不能攻击那以外的目标）\n《入场曲》将手牌中的1张光辉骑士团类型·卡片舍弃：选择自己的墓场中的1张光辉骑士团类型·从者卡。将其加入手牌。",
+    "ja": "【守護】（これが場に出たときか、自分のエンドフェイズにこれをアクトできる。相手は、アクト状態の【守護】を持つフォロワー以外を攻撃できない）\nファンファーレ手札のロイヤルパラディン・カード1枚を捨てる：自分の墓場のロイヤルパラディン・フォロワー1枚を選ぶ。それを手札に加える。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-011",
+   "printings": [
+    "CSD03a-011",
+    "CSD03a-P07"
+   ],
+   "name": "Knight of Rose, Morgana",
+   "names": {
+    "en": "Knight of Rose, Morgana",
+    "cn": "蔷薇的骑士 莫甘娜",
+    "ja": "薔薇の騎士 モルガーナ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ride]} {[cost01]}: Give this follower Drive.\nOn Drive - Select up to 1 enemy follower on the field. Deal it 2 damage and give this follower{[attack]}+1/{[defense]}+1.\nStrike - Discard a Royal Paladin card: Give this follower {[attack]}+1/{[defense]}+1.",
+    "cn": "《凭依》《消费1》：使这张卡获得驱动能力。\n【驱动获得时】选择敌方场上的从者最多1个。给予其2点伤害。使这张卡《攻击力》+1/《生命值》+1。\n【攻击时】将手牌中的1张光辉骑士团类型·卡片舍弃：使这张卡《攻击力》+1/《生命值》+1。",
+    "ja": "憑依コスト1：これはドライブを持つ。\n【ドライブ獲得時】相手の場のフォロワー1体まで選ぶ。それに2ダメージ。これは攻撃力+1/体力+1する。\n【攻撃時】手札のロイヤルパラディン・カード1枚を捨てる：これは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-016",
+   "printings": [
+    "CSD03a-016",
+    "CSD03a-P08"
+   ],
+   "name": "Stardust Trumpeter",
+   "names": {
+    "en": "Stardust Trumpeter",
+    "cn": "星尘号手",
+    "ja": "スターダスト・トランペッター"
+   },
+   "class": "Swordcraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Starting Amulet.\nActivate {[engage]}, bury this card: Select a Vanguard follower on your field and give it {[attack]}+1/{[defense]}+1.\n----------\n(At the start of the game, if your deck is based on the Cardfight!! Vanguard universe, put a card with Starting Amulet from your deck onto your field.)",
+    "cn": "【起始护符】\n《起动》将这张卡《横置》置于墓场：选择自己场上的1个先导者类型·从者。使其《攻击力》+1/《生命值》+1。\n----------\n（※如果自己的牌组构筑为「卡片战斗！！先导者」主题构筑的话，将以从自己的牌堆之中将1张持有【起始护符】能力的卡片召唤到场上的状态开始对战）",
+    "ja": "【スタートアミュレット】\n起動これをアクト墓場に置く：自分の場のヴァンガード・フォロワー1体を選ぶ。それは攻撃力+1/体力+1する。\n----------\n（※自分のデッキ構築が「カードファイト!! ヴァンガード」タイトル構築なら、自分のデッキから【スタートアミュレット】を持つカード1枚を場に出した状態でバトルを開始する）"
+   },
+   "traits": [
+    "ヴァンガード",
+    "ロイヤルパラディン"
+   ]
+  },
+  {
+   "id": "CSD03a-LD01",
+   "printings": [
+    "CSD03a-LD01"
+   ],
+   "name": "Aichi Sendou [Arise, My Avatar!!]",
+   "names": {
+    "en": "Aichi Sendou [Arise, My Avatar!!]",
+    "cn": "[站起来吧我的分身！！]先导爱知",
+    "ja": "〔立ち上がれ僕の分身!!〕先導アイチ"
+   },
+   "class": "Swordcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

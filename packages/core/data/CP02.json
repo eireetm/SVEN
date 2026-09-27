@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "CP02",
- "printings": 337,
+ "printings": 346,
  "cards": [
   {
    "id": "CP02-001",
@@ -72,7 +72,8 @@
     "CP02-SP01b",
     "CP02-U01a",
     "CP02-U01b",
-    "PR-152"
+    "PR-152",
+    "PR-436"
    ],
    "name": "Miku Maekawa",
    "names": {
@@ -117,6 +118,11 @@
      "en": "* (Asterisk)",
      "cn": "*(Asterisk)",
      "ja": "*（Asterisk）"
+    },
+    "PR-436": {
+     "en": "〔サマーキャット☆ランデブー〕前川みく",
+     "cn": null,
+     "ja": "〔サマーキャット☆ランデブー〕前川みく"
     }
    }
   },
@@ -186,7 +192,8 @@
     "CP02-006",
     "CP02-P03",
     "CP02-SP02",
-    "CP02-U02"
+    "CP02-U02",
+    "PR-435"
    ],
    "name": "Anastasia",
    "names": {
@@ -210,7 +217,14 @@
    "traits": [
     "デレマス",
     "クール"
-   ]
+   ],
+   "alternateNames": {
+    "PR-435": {
+     "en": "〔よくばりサニーバカンス〕アナスタシア",
+     "cn": null,
+     "ja": "〔よくばりサニーバカンス〕アナスタシア"
+    }
+   }
   },
   {
    "id": "CP02-007",
@@ -337,7 +351,8 @@
    "id": "CP02-011",
    "printings": [
     "CP02-011",
-    "CP02-P08"
+    "CP02-P08",
+    "PR-437"
    ],
    "name": "Goddess by the Sunlit Sea",
    "names": {
@@ -361,7 +376,14 @@
    "traits": [
     "デレマス",
     "クール"
-   ]
+   ],
+   "alternateNames": {
+    "PR-437": {
+     "en": "夏色の南風",
+     "cn": null,
+     "ja": "夏色の南風"
+    }
+   }
   },
   {
    "id": "CP02-012",
@@ -1302,7 +1324,8 @@
    "id": "CP02-041",
    "printings": [
     "CP02-041",
-    "CP02-P32"
+    "CP02-P32",
+    "PR-440"
    ],
    "name": "Center Street",
    "names": {
@@ -1326,7 +1349,14 @@
    "traits": [
     "デレマス",
     "パッション"
-   ]
+   ],
+   "alternateNames": {
+    "PR-440": {
+     "en": "メモリアル★ビーチサイド",
+     "cn": null,
+     "ja": "メモリアル★ビーチサイド"
+    }
+   }
   },
   {
    "id": "CP02-042",
@@ -1965,7 +1995,8 @@
    "id": "CP02-062",
    "printings": [
     "CP02-062",
-    "CP02-P50"
+    "CP02-P50",
+    "PR-148"
    ],
    "name": "Unbound Emotion",
    "names": {
@@ -1989,7 +2020,14 @@
    "traits": [
     "デレマス",
     "パッション"
-   ]
+   ],
+   "alternateNames": {
+    "PR-148": {
+     "en": "夢見りあむが見た夢",
+     "cn": null,
+     "ja": "夢見りあむが見た夢"
+    }
+   }
   },
   {
    "id": "CP02-063",
@@ -2388,7 +2426,8 @@
    "id": "CP02-075",
    "printings": [
     "CP02-075",
-    "CP02-P60"
+    "CP02-P60",
+    "PR-441"
    ],
    "name": "Whispers of a Dream",
    "names": {
@@ -2412,7 +2451,14 @@
    "traits": [
     "デレマス",
     "クール"
-   ]
+   ],
+   "alternateNames": {
+    "PR-441": {
+     "en": "めぐりあう夏",
+     "cn": null,
+     "ja": "めぐりあう夏"
+    }
+   }
   },
   {
    "id": "CP02-076",
@@ -2691,7 +2737,8 @@
    "id": "CP02-085",
    "printings": [
     "CP02-085",
-    "CP02-P70"
+    "CP02-P70",
+    "PR-149"
    ],
    "name": "Last Daylight",
    "names": {
@@ -2715,7 +2762,14 @@
    "traits": [
     "デレマス",
     "クール"
-   ]
+   ],
+   "alternateNames": {
+    "PR-149": {
+     "en": "美味しく､食べて……?",
+     "cn": null,
+     "ja": "美味しく､食べて……?"
+    }
+   }
   },
   {
    "id": "CP02-086",
@@ -3670,7 +3724,9 @@
     "ECP02-SL47",
     "CSD02a-T01",
     "CSD02b-T01",
-    "CSD02c-T01"
+    "CSD02c-T01",
+    "PR-155",
+    "PR-156"
    ],
    "name": "Magical Item",
    "names": {
@@ -3894,6 +3950,16 @@
      "en": "Passion Earrings",
      "cn": "Passion耳环",
      "ja": "パッションイヤリング"
+    },
+    "PR-155": {
+     "en": "魔法の靴",
+     "cn": null,
+     "ja": "魔法の靴"
+    },
+    "PR-156": {
+     "en": "魔法のドレス",
+     "cn": null,
+     "ja": "魔法のドレス"
     }
    }
   }

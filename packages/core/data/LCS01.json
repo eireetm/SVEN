@@ -1,0 +1,32 @@
+{
+ "format": 1,
+ "set": "LCS01",
+ "printings": 1,
+ "cards": [
+  {
+   "id": "LCS01-007",
+   "printings": [
+    "LCS01-007"
+   ],
+   "name": "Dreizehn",
+   "names": {
+    "en": "Dreizehn",
+    "cn": null,
+    "ja": "ドライツェーン"
+   },
+   "class": "Neutral",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": null,
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

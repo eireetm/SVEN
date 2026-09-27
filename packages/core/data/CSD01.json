@@ -1,0 +1,117 @@
+{
+ "format": 1,
+ "set": "CSD01",
+ "printings": 4,
+ "cards": [
+  {
+   "id": "CSD01-007",
+   "printings": [
+    "CSD01-007"
+   ],
+   "name": "Tazuna Hayakawa [Tracen Reception]",
+   "names": {
+    "en": "Tazuna Hayakawa [Tracen Reception]",
+    "cn": "[欢迎来到特雷森学园！]骏川手纲",
+    "ja": "〔ようこそ、トレセン学園へ！〕駿川たづな"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 6,
+   "attack": 3,
+   "defense": 5,
+   "text": {
+    "en": "Ward. (This follower can be engaged when it’s put onto your field or during your end phase. When followers with Ward are engaged, your opponent can only attack them.)\n{[fanfare]} Select an Umamusume follower or Umamusume amulet that costs 4 play points or less in your cemetery and put it onto your field.",
+    "cn": "【守护】（当这张卡召唤到场上时，或自己的结束阶段中、可以将这张卡横置。只要有「处于横置状态并持有【守护】能力的从者」存在，敌方不能攻击那以外的目标）\n《入场曲》选择自己的墓场中的消费为4及以下的1张「赛马娘类型·从者卡或赛马娘类型·护符卡」。将其召唤到场上。",
+    "ja": "【守護】（これが場に出たときか、自分のエンドフェイズにこれをアクトできる。相手は、アクト状態の【守護】を持つフォロワー以外を攻撃できない）\n《ファンファーレ》自分の墓場のコスト4以下の「ウマ娘・フォロワーかウマ娘・アミュレット」1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "トレセン学園"
+   ]
+  },
+  {
+   "id": "CSD01-030",
+   "printings": [
+    "CSD01-030"
+   ],
+   "name": "Riko Kashimoto",
+   "names": {
+    "en": "Riko Kashimoto",
+    "cn": "㭴本理子",
+    "ja": "樫本理子"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "Activate {[engage]}: Select an Umamusume follower on your field and give it {[attack]}+1. If it's a racing follower, give it {[attack]}+2 instead.",
+    "cn": "《起动》将这张卡《横置》：选择自己的1个赛马娘类型·从者。使其《攻击力》+1。如果其为已起跑的从者的话，转变为《攻击力》+2。",
+    "ja": "《起動》これを《アクト》：自分のウマ娘・フォロワー1体を選ぶ。それは《攻撃力》+1する。それが出走したフォロワーなら、代わりに《攻撃力》+2する。"
+   },
+   "traits": [
+    "トレセン学園"
+   ]
+  },
+  {
+   "id": "CSD01-031",
+   "printings": [
+    "CSD01-031"
+   ],
+   "name": "Aoi Kiryuin",
+   "names": {
+    "en": "Aoi Kiryuin",
+    "cn": "桐生院葵",
+    "ja": "桐生院葵"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Activate {[engage]}: Select an Umamusume follower on your field and give it {[defense]}+1. If it's a racing follower, give it {[defense]}+2 instead.",
+    "cn": "《起动》将这张卡《横置》：选择自己的1个赛马娘类型·从者。使其《生命值》+1。如果其为已起跑的从者的话，转变为《生命值》+2。",
+    "ja": "《起動》これを《アクト》：自分のウマ娘・フォロワー1体を選ぶ。それは《体力》+1する。それが出走したフォロワーなら、代わりに《体力》+2する。"
+   },
+   "traits": [
+    "トレセン学園"
+   ]
+  },
+  {
+   "id": "CSD01-LD01",
+   "printings": [
+    "CSD01-LD01"
+   ],
+   "name": "Special Week [The Brightest Star in Japan!]",
+   "names": {
+    "en": "Special Week [The Brightest Star in Japan!]",
+    "cn": "[在日本第一的舞台]特别周",
+    "ja": "〔日本一のステージを〕スペシャルウィーク"
+   },
+   "class": "Dragoncraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "umamusume",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

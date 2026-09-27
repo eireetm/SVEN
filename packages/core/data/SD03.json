@@ -1,0 +1,336 @@
+{
+ "format": 1,
+ "set": "SD03",
+ "printings": 17,
+ "cards": [
+  {
+   "id": "SD03-001",
+   "printings": [
+    "SD03-001"
+   ],
+   "name": "Mythril Golem",
+   "names": {
+    "en": "Mythril Golem",
+    "cn": "秘银巨像",
+    "ja": "ミスリルゴーレム"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 5,
+   "defense": 6,
+   "text": {
+    "en": "{[fanfare]} Deal 3 damage to each enemy follower on the field. Spellchain (7): Deal 5 damage instead. SC (15): Deal 5 damage to each enemy leader. (If you have at least 7 spells in the cemetery, perform Spellchain (7). Then, if you have at least 15 spells, perform SC (15).)",
+    "cn": "《入场曲》给予敌方的全体从者各3点伤害。【魔力连锁_7】转变为各5点伤害。【SC_15】给予敌方的全体主战者各5点伤害。（如果自己的墓场中的法术卡为7张及以上的话，就会发动【魔力连锁_7】之后的能力。如果为15张及以上的话，再发动【SC_15】之后的能力）",
+    "ja": "《ファンファーレ》相手のフォロワーすべてに3ダメージ。【スペルチェイン_7】代わりに5ダメージ。【SC_15】相手のリーダーすべてに5ダメージ。(自分の墓場のスペルが7枚以上なら、【スペルチェイン_7】の後の能力が働く。15枚以上なら、さらに【SC_15】の後の能力が働く)"
+   },
+   "traits": [
+    "ゴーレム"
+   ]
+  },
+  {
+   "id": "SD03-002",
+   "printings": [
+    "SD03-002"
+   ],
+   "name": "Rune Blade Summoner",
+   "names": {
+    "en": "Rune Blade Summoner",
+    "cn": "符文之剑召唤师",
+    "ja": "ルーンブレードサモナー"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[fanfare]}, Spellchain (5): Give this follower {[attack]}+4/{[defense]}+4. SC (10): Give this follower Storm. (If you have at least 5 spells in your cemetery, perform Spellchain (5). Then, if you have at least 10 spells, perform SC (10).)",
+    "cn": "《入场曲》【魔力连锁_5】使这张卡《攻击力》+4/《生命值》+4。【SC_10】使这张卡获得【疾驰】能力。（如果自己的墓场中的法术卡为5张及以上的话，就会发动【魔力连锁_5】之后的能力。如果为10张及以上的话，再发动【SC_10】之后的能力）",
+    "ja": "《ファンファーレ》【スペルチェイン_5】これは《攻撃力》+4/《体力》+4する。【SC_10】これは【疾走】を持つ。(自分の墓場のスペルが5枚以上なら、【スペルチェイン_5】の後の能力が働く。10枚以上なら、さらに【SC_10】の後の能力が働く)"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "SD03-003",
+   "printings": [
+    "SD03-003"
+   ],
+   "name": "Demonflame Mage",
+   "names": {
+    "en": "Demonflame Mage",
+    "cn": "恶魔炎术师",
+    "ja": "デモンフレイムメイジ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "《進化》《コスト1》：これは進化する。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "SD03-004",
+   "printings": [
+    "SD03-004"
+   ],
+   "name": "Demonflame Mage",
+   "names": {
+    "en": "Demonflame Mage",
+    "cn": "恶魔炎术师",
+    "ja": "デモンフレイムメイジ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve: Deal 2 damage to each enemy follower on the field.",
+    "cn": "【进化时】给予敌方的全体从者各2点伤害。",
+    "ja": "【進化時】相手のフォロワーすべてに2ダメージ。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "SD03-005",
+   "printings": [
+    "SD03-005",
+    "PR-008"
+   ],
+   "name": "Insight",
+   "names": {
+    "en": "Insight",
+    "cn": "智慧之光",
+    "ja": "知恵の光"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nDraw a card.",
+    "cn": "《快速》\n抽取1张卡。",
+    "ja": "《クイック》\n1枚引く。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "SD03-006",
+   "printings": [
+    "SD03-006",
+    "EBD02-015",
+    "PR-532"
+   ],
+   "name": "Fire Chain",
+   "names": {
+    "en": "Fire Chain",
+    "cn": "火焰连锁",
+    "ja": "ファイアーチェイン"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect up to 2 enemy followers on the field and deal 3 damage divided between them.",
+    "cn": "《快速》\n选择敌方的从者最多2个。给予其合计3点伤害、任意分配。",
+    "ja": "《クイック》\n相手のフォロワー2体まで選ぶ。それに3ダメージを割りふる。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "SD03-008",
+   "printings": [
+    "SD03-008",
+    "PR-090"
+   ],
+   "name": "Penguin Wizard",
+   "names": {
+    "en": "Penguin Wizard",
+    "cn": "企鹅魔法师",
+    "ja": "ペンギンウィザード"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 1,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\nActivate {[engage]}, discard a spell: Draw a card.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《起动》将这张卡《横置》将手牌中的1张法术卡舍弃：抽取1张卡。",
+    "ja": "《進化》《コスト1》：これは進化する。\n《起動》これを《アクト》手札のスペル1枚を捨てる：1枚引く。"
+   },
+   "traits": [
+    "魔法生物"
+   ]
+  },
+  {
+   "id": "SD03-009",
+   "printings": [
+    "SD03-009",
+    "PR-104"
+   ],
+   "name": "Penguin Wizard",
+   "names": {
+    "en": "Penguin Wizard",
+    "cn": "企鹅魔法师",
+    "ja": "ペンギンウィザード"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 5,
+   "text": {
+    "en": "On Evolve: Refresh this card.\nActivate {[engage]}, discard a spell: Draw a card.",
+    "cn": "【进化时】将这张卡竖置。\n《起动》将这张卡《横置》将手牌中的1张法术卡舍弃：抽取1张卡。",
+    "ja": "【進化時】これをスタンドする。\n《起動》これを《アクト》手札のスペル1枚を捨てる：1枚引く。"
+   },
+   "traits": [
+    "魔法生物"
+   ]
+  },
+  {
+   "id": "SD03-010",
+   "printings": [
+    "SD03-010"
+   ],
+   "name": "Sammy, Wizard's Apprentice",
+   "names": {
+    "en": "Sammy, Wizard's Apprentice",
+    "cn": "新星魔术师·萨米",
+    "ja": "ルーキーマジシャン・サミー"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.\n{[fanfare]} Look at the top card of your deck. You may put it into your cemetery.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《入场曲》查看自己的牌堆顶1张卡。可以将其置于墓场。",
+    "ja": "《進化》《コスト2》：これは進化する。\n《ファンファーレ》自分のデッキの上1枚を見る。それを墓場に置いてよい。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "SD03-011",
+   "printings": [
+    "SD03-011"
+   ],
+   "name": "Sammy, Wizard's Apprentice",
+   "names": {
+    "en": "Sammy, Wizard's Apprentice",
+    "cn": "新星魔术师·萨米",
+    "ja": "ルーキーマジシャン・サミー"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve: Each player draws a card.",
+    "cn": "【进化时】每位玩家各抽取1张卡。",
+    "ja": "【進化時】各プレイヤーは1枚引く。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "SD03-015",
+   "printings": [
+    "SD03-015"
+   ],
+   "name": "Magic Missile",
+   "names": {
+    "en": "Magic Missile",
+    "cn": "魔导飞弹",
+    "ja": "マジックミサイル"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field. Deal it 2 damage and draw a card.",
+    "cn": "《快速》\n选择敌方的1个从者。给予其2点伤害。抽取1张卡。",
+    "ja": "《クイック》\n相手のフォロワー1体を選ぶ。それに2ダメージ。1枚引く。"
+   },
+   "traits": [
+    "魔法使い"
+   ]
+  },
+  {
+   "id": "SD03-016",
+   "printings": [
+    "SD03-016"
+   ],
+   "name": "Conjure Golem",
+   "names": {
+    "en": "Conjure Golem",
+    "cn": "巨像炼成术",
+    "ja": "ゴーレムの錬成"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nPut a Guardform Golem or a Strikeform Golem token into your EX area.",
+    "cn": "《快速》\n将1张『防御型巨像』卡或1张『攻击型巨像』卡置于EX区域。\n―――――――――――――――\n『防御型巨像』《巫师职业》巨像类型·从者《消费2》《攻击力》2/《生命值》3【守护】\n『攻击型巨像』《巫师职业》巨像类型·从者《消费2》《攻击力》3/《生命值》2【突进】",
+    "ja": "《クイック》\n『防御型ゴーレム』1枚か『攻撃型ゴーレム』1枚をEXエリアに置く。\n―――――――――――――――\n『防御型ゴーレム』《ウィッチ》ゴーレム・フォロワー《コスト2》《攻撃力》2/《体力》3【守護】\n『攻撃型ゴーレム』《ウィッチ》ゴーレム・フォロワー《コスト2》《攻撃力》3/《体力》2【突進】"
+   },
+   "traits": [
+    "錬金術師"
+   ]
+  }
+ ]
+}

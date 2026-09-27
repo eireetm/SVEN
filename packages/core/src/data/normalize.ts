@@ -230,6 +230,12 @@ const MAGICAL_ITEM_NAMES: LocalizedText = { en: MAGICAL_ITEM, ja: "魔法のア�
 const isMagicalItem = (token: boolean, text: string | null, treatedAs: string | undefined): boolean =>
   token && (treatedAs === MAGICAL_ITEM || (text ?? "").includes("put 5 Magical Item tokens into your EX area"));
 
+/**
+ * Japanese-only data (some promos and deck products, docs/data-notes.md): the scraped `name_en` holds the Japanese name and
+ * `name_ja` is empty. The Japanese name is then the card name too, evolved cards included (no " (Evolved)" to strip).
+ */
+const japaneseOnlyName = (raw: RawCardJson): boolean => !(raw.name_ja ?? "").trim() && /[\u3040-\u30ff\u3400-\u9fff]/.test(raw.name_en);
+
 export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   const cardNo = raw.card_no;
   const { type, evolved, token, advanced } = parseCardType(cardNo, raw.card_type);
@@ -237,8 +243,10 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   const doubleFaced = raw.back !== undefined && raw.back !== null;
 
   const rawName = raw.name_en.trim();
-  const ownEvolvedName = evolved && !doubleFaced && !rawName.endsWith(EVOLVED_SUFFIX);
-  const printedName = ownEvolvedName ? rawName : stripEvolvedSuffix(cardNo, rawName, evolved, doubleFaced);
+  const japaneseOnly = japaneseOnlyName(raw);
+  const nameJa = japaneseOnly ? rawName : raw.name_ja;
+  const ownEvolvedName = evolved && !doubleFaced && !japaneseOnly && !rawName.endsWith(EVOLVED_SUFFIX);
+  const printedName = ownEvolvedName || japaneseOnly ? rawName : stripEvolvedSuffix(cardNo, rawName, evolved, doubleFaced);
   const en = englishText(raw);
   // CR 2.13: "(This card is treated as X.)" — X is the card name, the printed name an alternate name.
   const magicalItem = isMagicalItem(token, en.text, raw.treated_as);
@@ -253,7 +261,7 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
     set: raw.set,
     def: {
       name,
-      names: magicalItem ? MAGICAL_ITEM_NAMES : alias === null ? { en: name, cn: raw.name_cn, ja: raw.name_ja } : { en: name, cn: null, ja: null },
+      names: magicalItem ? MAGICAL_ITEM_NAMES : alias === null ? { en: name, cn: raw.name_cn, ja: nameJa } : { en: name, cn: null, ja: null },
       class: parseClass(cardNo, raw.class),
       type,
       evolved,
@@ -270,10 +278,11 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
         ja: (raw.effect_ja_sve ?? raw.effect_ja)?.trim() ?? null,
       },
     },
-    traits: parseTraits(cardNo, raw.traits_ja),
+    // A leader has no traits (its data says ""); the Japanese-only data of some leaders has none at all.
+    traits: type === "leader" && raw.traits_ja == null ? [] : parseTraits(cardNo, raw.traits_ja),
     textSource: en.source,
     officialMismatch: en.officialMismatch,
-    alternateName: alias === null ? null : { en: printedName, cn: raw.name_cn, ja: raw.name_ja },
+    alternateName: alias === null ? null : { en: printedName, cn: raw.name_cn, ja: nameJa },
     jaKey: japaneseKey(raw),
     back: doubleFaced ? normalizeBack(cardNo, raw) : null,
     ownEvolvedName,
@@ -394,9 +403,11 @@ export function groupPrintings(printings: readonly NormalizedPrinting[], support
   // CR 5.16.1.1.1 — an evolved card without " (Evolved)" whose Japanese name is a base card's has lost the suffix
   // in the data (e.g. BP14-057): an error to fix in data/fixes.ts. Otherwise its name is its own (CP03-006).
   const baseJapaneseNames = new Set(printings.filter((p) => !p.def.evolved && p.def.names.ja).map((p) => p.def.names.ja!));
+  // Data errors of all groups are collected and reported together.
+  const errors: string[] = [];
   for (const p of printings) {
     if (p.ownEvolvedName && p.def.names.ja && baseJapaneseNames.has(p.def.names.ja) && supported.includes(p.set)) {
-      throw new CardDataError(`${p.printing}: evolved card name "${p.def.name}" lacks the "${EVOLVED_SUFFIX}" suffix`);
+      errors.push(`${p.printing}: evolved card name "${p.def.name}" lacks the "${EVOLVED_SUFFIX}" suffix`);
     }
   }
   const groups = new Map<string, NormalizedPrinting[]>();
@@ -418,6 +429,19 @@ export function groupPrintings(printings: readonly NormalizedPrinting[], support
   const japaneseVariants: GroupResult["japaneseVariants"] = [];
   for (const list of groups.values()) {
     if (!list.some((p) => supported.includes(p.set))) continue;
+    try {
+      groupOne(list);
+    } catch (e) {
+      if (!(e instanceof CardDataError)) throw e;
+      errors.push(e.message);
+    }
+  }
+  if (errors.length > 0) throw new CardDataError(`${errors.length} card data error(s):\n${errors.join("\n")}`);
+  defs.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  return { cards: defs, setOf, textVariants, noEnglishText, officialMismatches, japaneseVariants };
+
+  /** One group of printings with the same identity: its definition (and back face), or a CardDataError. */
+  function groupOne(list: NormalizedPrinting[]): void {
     list.sort(
       (a, b) =>
         setRank(a.set) - setRank(b.set) ||
@@ -474,8 +498,6 @@ export function groupPrintings(printings: readonly NormalizedPrinting[], support
       setOf[back.id] = canonical.set;
     }
   }
-  defs.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-  return { cards: defs, setOf, textVariants, noEnglishText, officialMismatches, japaneseVariants };
 }
 
 /**

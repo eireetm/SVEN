@@ -1,0 +1,364 @@
+{
+ "format": 1,
+ "set": "CSD02b",
+ "printings": 24,
+ "cards": [
+  {
+   "id": "CSD02b-001",
+   "printings": [
+    "CSD02b-001",
+    "CSD02b-SL01"
+   ],
+   "name": "Rin Shibuya [Triad Primus]",
+   "names": {
+    "en": "Rin Shibuya [Triad Primus]",
+    "cn": "[Triad Primus]涩谷凛",
+    "ja": "〔Triad Primus〕渋谷凛"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Storm.\n{[fanfare]} If there are at least 3 Cool followers on your field, select another follower with 3 attack or less on your field and give it Storm.\n{[act]} {[cost01]}, Lesson (1): Give this follower {[attack]}+1. Activate only once per turn.",
+    "cn": "【疾驰】\n《入场曲》如果自己场上的Cool类型·从者为3个及以上的话，选择攻击力为3及以下的自己场上的其他的1个从者。使其获得【疾驰】能力。\n《起动》《消费1》【课程_1】：使这张卡《攻击力》+1。这个能力在1回合可以使用1次。",
+    "ja": "【疾走】\nファンファーレ自分の場のクール・フォロワーが3体以上なら、攻撃力3以下の自分の場の他のフォロワー1体を選ぶ。それは【疾走】を持つ。\n起動コスト1【レッスン_1】：これは攻撃力+1する。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-002",
+   "printings": [
+    "CSD02b-002",
+    "CSD02b-SL02"
+   ],
+   "name": "Nao Kamiya [Over the Rainbow]",
+   "names": {
+    "en": "Nao Kamiya [Over the Rainbow]",
+    "cn": "[Over The Rainbow]神谷奈绪",
+    "ja": "〔オーバー・ザ・レインボー〕神谷奈緒"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 5,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Look at the top 5 cards of your deck. From among them, you may summon up to 2 Cool followers that cost a total of 4 or less. Put the rest on the bottom of your deck in any order.",
+    "cn": "《入场曲》查看自己的牌堆顶5张卡。从那之中，直到原始消费的合计变为4及以下、可以将Cool类型·从者卡最多2张召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "ファンファーレ自分のデッキの上5枚を見る。その中から、クール・フォロワーを元のコストの合計が4以下になるように2枚まで場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-003",
+   "printings": [
+    "CSD02b-003",
+    "CSD02b-SL03"
+   ],
+   "name": "Karen Hojo [Song for Life]",
+   "names": {
+    "en": "Karen Hojo [Song for Life]",
+    "cn": "[Song for Life]北条加莲",
+    "ja": "〔ソング・フォー・ライフ〕北条加蓮"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "At the start of your end phase, if there are no other Cool followers on your field, deal 1 damage to this follower.\n{[act]} {[cost03]}, Lesson (1): Give each follower on your field {[attack]}+1.",
+    "cn": "当自己的结束阶段到来时，如果自己场上没有其他的Cool类型·从者的话，给予这张卡1点伤害。\n《起动》《消费3》【课程_1】：使自己场上的全体从者各《攻击力》+1。",
+    "ja": "自分のエンドフェイズが来たとき、自分の場に他のクール・フォロワーがいないなら、これに1ダメージ。\n起動コスト3【レッスン_1】：自分の場のフォロワーすべては攻撃力+1する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-004",
+   "printings": [
+    "CSD02b-004",
+    "CSD02b-P01"
+   ],
+   "name": "Yasuha Okazaki",
+   "names": {
+    "en": "Yasuha Okazaki",
+    "cn": "冈崎泰叶",
+    "ja": "岡崎泰葉"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Search your deck for a Cool follower that costs 2 or less, summon it, then shuffle your deck.",
+    "cn": "《入场曲》从自己的牌堆之中搜寻原始消费为2及以下的1张Cool类型·从者卡，并召唤到场上。",
+    "ja": "ファンファーレ自分のデッキから元のコスト2以下のクール・フォロワー1枚を探し、場に出す。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-005",
+   "printings": [
+    "CSD02b-005",
+    "CSD02b-P02"
+   ],
+   "name": "Yukimi Sajo",
+   "names": {
+    "en": "Yukimi Sajo",
+    "cn": "佐城雪美",
+    "ja": "佐城雪美"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} {[cost02]}, Lesson (1): Give this follower {[attack]}+1/{[defense]}+1. (To perform Lesson (1), banish a Magical Item token from your EX area.)",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》《消费2》【课程_1】：使这张卡《攻击力》+1/《生命值》+1。（【课程_1】意为，将自己EX区域的1张『魔法道具』卡消失）",
+    "ja": "進化コスト1：これは進化する。\nファンファーレコスト2【レッスン_1】：これは攻撃力+1/体力+1する。（【レッスン_1】とは、自分のEXエリアの『魔法のアイテム』1枚を消滅させること）"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-006",
+   "printings": [
+    "CSD02b-006",
+    "CSD02b-P03"
+   ],
+   "name": "Yukimi Sajo",
+   "names": {
+    "en": "Yukimi Sajo",
+    "cn": "佐城雪美",
+    "ja": "佐城雪美"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Select another Cool follower on your field. Give it {[attack]}+1, Rush, and Assail.",
+    "cn": "【进化时】选择自己场上的其他的1个Cool类型·从者。使其《攻击力》+1，并获得【突进】【指定攻击】能力。（持有【指定攻击】能力的从者，可以对竖置状态的从者进行攻击）",
+    "ja": "【進化時】自分の場の他のクール・フォロワー1体を選ぶ。それは攻撃力+1して、【突進】【指定攻撃】を持つ。（【指定攻撃】を持つフォロワーは、スタンド状態のフォロワーを攻撃できる）"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-007",
+   "printings": [
+    "CSD02b-007",
+    "CSD02b-P04"
+   ],
+   "name": "Kako Takafuji",
+   "names": {
+    "en": "Kako Takafuji",
+    "cn": "鹰富士茄子",
+    "ja": "鷹富士茄子"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.",
+    "cn": "《进化》《消费2》：使这张卡进化。",
+    "ja": "進化コスト2：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-008",
+   "printings": [
+    "CSD02b-008",
+    "CSD02b-P05"
+   ],
+   "name": "Kako Takafuji",
+   "names": {
+    "en": "Kako Takafuji",
+    "cn": "鹰富士茄子",
+    "ja": "鷹富士茄子"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - {[cost03]}: Select an enemy leader and deal it 3 damage.",
+    "cn": "【进化时】《消费3》：选择敌方的1位主战者。给予其3点伤害。",
+    "ja": "【進化時】コスト3：相手のリーダー1人を選ぶ。それに3ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-009",
+   "printings": [
+    "CSD02b-009",
+    "CSD02b-P06"
+   ],
+   "name": "Chizuru Matsuo",
+   "names": {
+    "en": "Chizuru Matsuo",
+    "cn": "松尾千鹤",
+    "ja": "松尾千鶴"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Select another Cool follower on your field and give it {[attack]}+1.\n{[lastwords]} Select a Cool follower on your field and give it {[attack]}+1.",
+    "cn": "《入场曲》选择自己场上的其他的1个Cool类型·从者。使其《攻击力》+1。\n《谢幕曲》选择自己场上的1个Cool类型·从者。使其《攻击力》+1。",
+    "ja": "ファンファーレ自分の場の他のクール・フォロワー1体を選ぶ。それは攻撃力+1する。\nラストワード自分の場のクール・フォロワー1体を選ぶ。それは攻撃力+1する。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-010",
+   "printings": [
+    "CSD02b-010",
+    "CSD02b-P07"
+   ],
+   "name": "Seira Mizuki",
+   "names": {
+    "en": "Seira Mizuki",
+    "cn": "水木圣来",
+    "ja": "水木聖來"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.\nStorm.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n【疾驰】（持有【疾驰】能力的从者，在召唤到场上的当回合即可进行攻击）",
+    "ja": "進化コスト2：これは進化する。\n【疾走】（【疾走】を持つフォロワーは、場に出たターンから攻撃できる）"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-011",
+   "printings": [
+    "CSD02b-011",
+    "CSD02b-P08"
+   ],
+   "name": "Seira Mizuki",
+   "names": {
+    "en": "Seira Mizuki",
+    "cn": "水木圣来",
+    "ja": "水木聖來"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Storm.\nOn Evolve - Select an enemy follower on the field and deal it 5 damage.",
+    "cn": "【疾驰】\n【进化时】选择敌方场上的1个从者。给予其5点伤害。",
+    "ja": "【疾走】\n【進化時】相手の場のフォロワー1体を選ぶ。それに5ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "クール"
+   ]
+  },
+  {
+   "id": "CSD02b-LD01",
+   "printings": [
+    "CSD02b-LD01",
+    "CSD02b-LDⓈ01"
+   ],
+   "name": "Rin Shibuya [Stage of Magic]",
+   "names": {
+    "en": "Rin Shibuya [Stage of Magic]",
+    "cn": "[魔法舞台]涩谷凛",
+    "ja": "〔ステージオブマジック〕渋谷凛"
+   },
+   "class": "Swordcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

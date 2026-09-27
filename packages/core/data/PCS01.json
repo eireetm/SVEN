@@ -1,0 +1,63 @@
+{
+ "format": 1,
+ "set": "PCS01",
+ "printings": 2,
+ "cards": [
+  {
+   "id": "PCS01-048",
+   "printings": [
+    "PCS01-048"
+   ],
+   "name": "Princess Knight",
+   "names": {
+    "en": "Princess Knight",
+    "cn": "公主骑士",
+    "ja": "プリンセスナイト"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 8,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nEach other PriConne follower on your field has Ward.\n{[fanfare]} Reveal the top card of your deck. If it's a PriConne follower, summon it.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n只要有这张卡在场上存在，使自己场上的其他的全体公主连结类型·从者各获得【守护】能力。\n《入场曲》将自己的牌堆顶1张卡公开。如果其为公主连结类型·从者卡的话，将其召唤到场上。",
+    "ja": "進化コスト1：これは進化する。\nこれが場にいる限り、自分の場の他のプリコネ・フォロワーすべては【守護】を持つ。\nファンファーレ自分のデッキの上1枚を公開する。それがプリコネ・フォロワーなら、それを場に出す。"
+   },
+   "traits": [
+    "プリコネ"
+   ]
+  },
+  {
+   "id": "PCS01-049",
+   "printings": [
+    "PCS01-049"
+   ],
+   "name": "Princess Knight",
+   "names": {
+    "en": "Princess Knight",
+    "cn": "公主骑士",
+    "ja": "プリンセスナイト"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "",
+    "cn": "只要有这张卡在场上存在，使自己场上的其他的全体公主连结类型·从者各获得【守护】能力。\n【进化时】选择自己场上的其他的1个公主连结类型·从者。使其《攻击力》+10/《生命值》+10。",
+    "ja": "これが場にいる限り、自分の場の他のプリコネ・フォロワーすべては【守護】を持つ。\n【進化時】自分の場の他のプリコネ・フォロワー1体を選ぶ。それは攻撃力+10/体力+10する。"
+   },
+   "traits": [
+    "プリコネ"
+   ]
+  }
+ ]
+}

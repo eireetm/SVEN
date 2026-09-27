@@ -1,0 +1,340 @@
+{
+ "format": 1,
+ "set": "SD06",
+ "printings": 17,
+ "cards": [
+  {
+   "id": "SD06-001",
+   "printings": [
+    "SD06-001"
+   ],
+   "name": "Skullfane",
+   "names": {
+    "en": "Skullfane",
+    "cn": "白骨圣堂教主",
+    "ja": "スカルフェイン"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 7,
+   "attack": 6,
+   "defense": 6,
+   "text": {
+    "en": "{[fanfare]} Look at the top 4 cads of your deck. You may reveal an amulet from among them and put it into your hand. Put the remaining cards into your cemetery.\nWhenever an amulet leaves your field, deal 2 damage to each enemy leader and enemy follower on the field.",
+    "cn": "当自己的护符离开场上时，给予敌方的全体主战者与敌方的全体从者各2点伤害。\n《入场曲》查看自己的牌堆顶4张卡。从那之中，可以将1张护符卡召唤到场上。将剩余的卡置于墓场。",
+    "ja": "自分のアミュレットが場を離れたとき、相手のリーダーすべてと相手のフォロワーすべてに2ダメージ。\n《ファンファーレ》自分のデッキの上4枚を見る。その中から、アミュレット1枚を場に出してよい。残りを墓場に置く。"
+   },
+   "traits": [
+    "狂信",
+    "偶像"
+   ]
+  },
+  {
+   "id": "SD06-002",
+   "printings": [
+    "SD06-002",
+    "PR-296"
+   ],
+   "name": "Hare of Illusions",
+   "names": {
+    "en": "Hare of Illusions",
+    "cn": "幻想白兔",
+    "ja": "夢想の白兎"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 0,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Activate {[engage]}, put this card into your cemetery: Select an enemy follower on the field and engage it.\n{[act]} {[cost10]}, {[engage]}, put this card into your cemetery: Banish each follower on the field.",
+    "cn": "《起动》将这张卡《横置》置于墓场：选择敌方的1个从者。将其横置。\n《起动》《消费10》将这张卡《横置》置于墓场：将全体从者各消失。",
+    "ja": "《起動》これを《アクト》墓場に置く：相手のフォロワー1体を選ぶ。それをアクトする。\n《起動》《コスト10》これを《アクト》墓場に置く：フォロワーすべてを消滅させる。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "SD06-003",
+   "printings": [
+    "SD06-003",
+    "PR-093"
+   ],
+   "name": "Priest of the Cudgel",
+   "names": {
+    "en": "Priest of the Cudgel",
+    "cn": "持矛锤的僧侣",
+    "ja": "鉄槌の僧侶"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "《進化》《コスト1》：これは進化する。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "SD06-004",
+   "printings": [
+    "SD06-004",
+    "PR-013",
+    "PR-107"
+   ],
+   "name": "Priest of the Cudgel",
+   "names": {
+    "en": "Priest of the Cudgel",
+    "cn": "持矛锤的僧侣",
+    "ja": "鉄槌の僧侶"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve: Select an enemy follower with 3 or less defense on the field and banish it.",
+    "cn": "【进化时】选择生命值为3及以下的敌方的1个从者。将其消失。",
+    "ja": "【進化時】体力3以下の相手のフォロワー1体を選ぶ。それを消滅させる。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "SD06-005",
+   "printings": [
+    "SD06-005",
+    "PR-014"
+   ],
+   "name": "Acolyte's Light",
+   "names": {
+    "en": "Acolyte's Light",
+    "cn": "破邪圣光",
+    "ja": "破邪の光"
+   },
+   "class": "Havencraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field. Banish it and give your leader {[defense]}+2.",
+    "cn": "《快速》\n选择敌方的1个从者。将其消失。使自己的主战者《生命值》+2。",
+    "ja": "《クイック》\n相手のフォロワー1体を選ぶ。それを消滅させる。自分のリーダーは《体力》+2する。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "SD06-006",
+   "printings": [
+    "SD06-006"
+   ],
+   "name": "Dual Flames",
+   "names": {
+    "en": "Dual Flames",
+    "cn": "双生之炎",
+    "ja": "二対の炎"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Summon a Holy Tiger token.\n{[act]} {[cost02]}, {[engage]}, put this card into your cemetery: Summon a Holy Tiger token.",
+    "cn": "《入场曲》将1个『神圣猛虎』召唤。\n《起动》《消费2》将这张卡《横置》置于墓场：将1个『神圣猛虎』召唤。\n―――――――――――――――\n『神圣猛虎』《主教职业》野兽类型·从者《消费4》《攻击力》4/《生命值》4【突进】",
+    "ja": "《ファンファーレ》『ホーリータイガー』1体を出す。\n《起動》《コスト2》これを《アクト》墓場に置く：『ホーリータイガー』1体を出す。\n―――――――――――――――\n『ホーリータイガー』《ビショップ》獣・フォロワー《コスト4》《攻撃力》4/《体力》4【突進】"
+   },
+   "traits": [
+    "信仰",
+    "獣"
+   ]
+  },
+  {
+   "id": "SD06-009",
+   "printings": [
+    "SD06-009"
+   ],
+   "name": "Ardent Nun",
+   "names": {
+    "en": "Ardent Nun",
+    "cn": "充满热诚的修女",
+    "ja": "アーデントシスター"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\nWard.\nDuring each opponent's turn, this follower deals 1 more damage.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】\n敌方的回合中，使这张卡给予的伤害+1。",
+    "ja": "《進化》《コスト1》：これは進化する。\n【守護】\n相手のターン中、これが与えるダメージを+1する。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "SD06-010",
+   "printings": [
+    "SD06-010"
+   ],
+   "name": "Ardent Nun",
+   "names": {
+    "en": "Ardent Nun",
+    "cn": "充满热诚的修女",
+    "ja": "アーデントシスター"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Ward.\nDuring each opponent's turn, this follower deals 2 more damage.",
+    "cn": "【守护】\n敌方的回合中，使这张卡给予的伤害+2。",
+    "ja": "【守護】\n相手のターン中、これが与えるダメージを+2する。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "SD06-011",
+   "printings": [
+    "SD06-011"
+   ],
+   "name": "Guardian Nun",
+   "names": {
+    "en": "Guardian Nun",
+    "cn": "修女卫士",
+    "ja": "ガーディアンシスター"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\nWard.\n{[fanfare]} If there is an amulet on your field, give this follower {[defense]}+1.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】\n《入场曲》如果自己的场上有护符的话，使这张卡《生命值》+1。",
+    "ja": "《進化》《コスト1》：これは進化する。\n【守護】\n《ファンファーレ》自分の場にアミュレットがあるなら、これは《体力》+1する。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "SD06-012",
+   "printings": [
+    "SD06-012"
+   ],
+   "name": "Guardian Nun",
+   "names": {
+    "en": "Guardian Nun",
+    "cn": "修女卫士",
+    "ja": "ガーディアンシスター"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\nOn Evolve: Give your leader {[defense]}+2.",
+    "cn": "【守护】\n【进化时】使自己的主战者《生命值》+2。",
+    "ja": "【守護】\n【進化時】自分のリーダーは《体力》+2する。"
+   },
+   "traits": [
+    "信仰"
+   ]
+  },
+  {
+   "id": "SD06-015",
+   "printings": [
+    "SD06-015"
+   ],
+   "name": "Pinion Prayer",
+   "names": {
+    "en": "Pinion Prayer",
+    "cn": "银翼祷告",
+    "ja": "白翼への祈り"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[act]} {[cost01]}, {[engage]}, put this card into your cemetery: Summon a Holy Falcon token.",
+    "cn": "《起动》《消费1》将这张卡《横置》置于墓场：将1个『神圣猎鹰』召唤。\n―――――――――――――――\n『神圣猎鹰』《主教职业》鸟族类型·从者《消费3》《攻击力》2/《生命值》2【疾驰】",
+    "ja": "《起動》《コスト1》これを《アクト》墓場に置く：『ホーリーファルコン』1体を出す。\n―――――――――――――――\n『ホーリーファルコン』《ビショップ》鳥族・フォロワー《コスト3》《攻撃力》2/《体力》2【疾走】"
+   },
+   "traits": [
+    "信仰",
+    "鳥族"
+   ]
+  },
+  {
+   "id": "SD06-016",
+   "printings": [
+    "SD06-016"
+   ],
+   "name": "Beastly Vow",
+   "names": {
+    "en": "Beastly Vow",
+    "cn": "圣兽之誓",
+    "ja": "聖獣への誓い"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "This card is put onto the field engaged.\n{[act]} {[cost01]}, {[engage]}, put this card into your cemetery: Summon a Holy Tiger token.",
+    "cn": "这张卡会以横置状态召唤到场上。\n《起动》《消费1》将这张卡《横置》置于墓场：将1个『神圣猛虎』召唤。\n―――――――――――――――\n『神圣猛虎』《主教职业》野兽类型·从者《消费4》《攻击力》4/《生命值》4【突进】",
+    "ja": "これはアクト状態で場に出る。\n《起動》《コスト1》これを《アクト》墓場に置く：『ホーリータイガー』1体を出す。\n―――――――――――――――\n『ホーリータイガー』《ビショップ》獣・フォロワー《コスト4》《攻撃力》4/《体力》4【突進】"
+   },
+   "traits": [
+    "信仰",
+    "獣"
+   ]
+  }
+ ]
+}

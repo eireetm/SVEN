@@ -59,10 +59,12 @@ describe("BP11 Forestcraft", () => {
     expect([t.ex(), t.leader("opp"), t.stats("opp:V5"), t.stats("opp:V3")]).toEqual([[STEED, BIKE, CARRIER], 17, [5, 2], [3, 1]]);
   });
 
-  it("007 Fairy Flowering — needs 4 Pixie tokens buried to be played", () => {
+  it("007 Fairy Flowering — needs 4 Pixie tokens buried to be played; summons an Aria, Fairy Princess from the deck", () => {
     expect(d({ me: { hand: ["BP11-007"], field: [FAIRY, FAIRY, FAIRY], playPoints: 2 } }).canPlay("BP11-007")).toBe(false);
     const t = d({ me: { hand: ["BP11-007"], field: [FAIRY, FAIRY, FAIRY, FAIRY], playPoints: 2 } }).play("BP11-007");
     expect([t.field(), t.cemetery()]).toEqual([[], ["BP11-007"]]);
+    const a = d({ me: { hand: ["BP11-007"], field: [FAIRY, FAIRY, FAIRY, FAIRY], deck: ["V1", "SD01-001"], playPoints: 2 } }).play("BP11-007");
+    expect(a.pick("SD01-001").none().choose("0").choose("0").field()).toEqual(["SD01-001"]);
   });
 
   it("008 / 009 Varmint Hunter — during your turn a Mount put into your EX area deals 3 damage; evolved: puts a Dutiful Steed there", () => {

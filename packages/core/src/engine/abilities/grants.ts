@@ -204,4 +204,15 @@ export const GRANT_ABILITIES: Record<GrantedAbilityId, AbilityDef> = {
       if (fx.game.card(fx.self)?.zone === "field") yield* fx.bury([fx.self]);
     },
   },
+  // CSD03b-002 Dragonic Overlord (Evolved), for the rest of the turn: "Once per turn, when this follower deals combat damage,
+  // refresh it." (CR 5.14.3.2 combat damage; 10.7.2.2 once per turn.)
+  combatDamageRefreshOnce: {
+    kind: "automatic",
+    timing: "other",
+    oncePerTurn: true,
+    trigger: (e, me) => !me.lookBack && e.type === "damageDealt" && e.source === me.card && e.combat,
+    *resolve(fx) {
+      if (fx.game.card(fx.self)?.zone === "field") yield* fx.refresh([fx.self]);
+    },
+  },
 };

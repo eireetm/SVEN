@@ -1,6 +1,6 @@
 // CP03-035 Future Knight, Llew — Swordcraft follower, 2, 2/3. ヴァンガード・ロイヤルパラディン. Critical Trigger.
 // {[fanfare]} Discard a Vanguard card: Search your deck for a Blaster Blade, reveal it, add it to your hand, then shuffle.
-// (Blaster Blade is CSD03a-003, not in the supported sets yet.)
+// (Blaster Blade is CSD03a-003.)
 // ----------
 // (If this card is revealed by a drive check, give a follower on your field {[attack]}+2.) (Resolved by the engine.)
 import { discardA } from "../costs";

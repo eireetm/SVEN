@@ -20,6 +20,7 @@ export function emptyTurnCounts(turn: number): TurnCounts {
     evolved: 0,
     leftField: [],
     leaderDefenseGained: 0,
+    leaderDefenseGainedTotal: 0,
     playFromBanished: false,
     diceRolled: [],
     magicalItemsBanished: 0,

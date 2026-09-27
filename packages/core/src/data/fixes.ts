@@ -237,6 +237,38 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
       [`ECP02-SL${34 + Number(n) - 1}`, { treated_as: MAGICAL_ITEM }],
     ]),
   ),
+  // PR printings of CINDERELLA GIRLS cards with a new title, scraped with Japanese data only (no traits): the card name is printed
+  // in small type above the title (assets/PR-435: アナスタシア; PR-436: 前川みく; PR-437: 女神は朝焼けの海に; PR-439:
+  // 〔ポジティブパッション〕本田未央; PR-442: 〔シンデレラガール〕十時愛梨; PR-148: ぶちあがれ感情; PR-149: ラストデイライト), with that
+  // card's text, class and stats.
+  "PR-148": { treated_as: "Unbound Emotion" },
+  "PR-149": { treated_as: "Last Daylight" },
+  "PR-435": { treated_as: "Anastasia" },
+  "PR-436": { treated_as: "Miku Maekawa" },
+  "PR-437": { treated_as: "Goddess by the Sunlit Sea" },
+  "PR-438": { treated_as: "Miho Kohinata [P.C.S]" },
+  "PR-439": { treated_as: "Mio Honda [Positive Passion]" },
+  "PR-440": { treated_as: "Center Street" },
+  "PR-441": { treated_as: "Whispers of a Dream" },
+  "PR-442": { treated_as: "Airi Totoki [Cinderella Girl]" },
+  // Magical Items (small type 魔法のアイテム, assets/PR-155), Japanese data only.
+  "PR-155": { treated_as: MAGICAL_ITEM },
+  "PR-156": { treated_as: MAGICAL_ITEM },
+  // スパークルアサルト: small type 烈火の魔弾 (assets/PR-406), BP02-112 Surefire Bullet's text, cost and trait.
+  "PR-406": { treated_as: "Surefire Bullet" },
+  // The evolved 静寂のアナテマ・ギルダリア (EVOLVE banner, assets/PR-559) — BP19-022's evolved card — scraped with the Japanese name
+  // plus "（EVOLVE）" and no traits.
+  "PR-559": { name_en: "Gildaria, Anathema of Peace (Evolved)", name_ja: "静寂のアナテマ・ギルダリア" },
+  // PCS01's evolved printings named after units: the card name in small type (assets/PCS01-005: リノ; PCS01-019: キョウカ;
+  // PCS01-040: サレン), the texts of CP04's evolved cards.
+  "PCS01-005": { treated_as: "Rino" },
+  "PCS01-019": { treated_as: "Kyoka" },
+  "PCS01-040": { treated_as: "Saren" },
+  // The evolved プリンセスナイト (PCS01-048 Princess Knight's evolved card) has only a Japanese name.
+  "PCS01-049": { name_en: "Princess Knight (Evolved)", name_ja: "プリンセスナイト" },
+  // アンの大魔法 has only Japanese data; BP21-039 and DSD01a-001 call it "Anne's Sorcery" in English (『アンの大魔法』 in Japanese).
+  "DSD01a-008": { name_en: "Anne's Sorcery", name_ja: "アンの大魔法" },
+  "DSD01a-P02": { name_en: "Anne's Sorcery", name_ja: "アンの大魔法" },
   // Back faces of double-faced cards (see above).
   "BP09-005": { back: BP09_005_BACK },
   "BP09-P02": { back: BP09_005_BACK },

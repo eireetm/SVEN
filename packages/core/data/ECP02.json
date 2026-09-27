@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "ECP02",
- "printings": 176,
+ "printings": 177,
  "cards": [
   {
    "id": "ECP02-001",
@@ -555,7 +555,8 @@
    "id": "ECP02-017",
    "printings": [
     "ECP02-017",
-    "ECP02-SL11"
+    "ECP02-SL11",
+    "PR-442"
    ],
    "name": "Airi Totoki [Cinderella Girl]",
    "names": {
@@ -579,7 +580,14 @@
    "traits": [
     "デレマス",
     "パッション"
-   ]
+   ],
+   "alternateNames": {
+    "PR-442": {
+     "en": "〔アニバーサリープリンセス〕十時愛梨",
+     "cn": null,
+     "ja": "〔アニバーサリープリンセス〕十時愛梨"
+    }
+   }
   },
   {
    "id": "ECP02-018",

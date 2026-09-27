@@ -1,0 +1,372 @@
+{
+ "format": 1,
+ "set": "CSD02c",
+ "printings": 25,
+ "cards": [
+  {
+   "id": "CSD02c-001",
+   "printings": [
+    "CSD02c-001",
+    "CSD02c-SL01",
+    "PR-439"
+   ],
+   "name": "Mio Honda [Positive Passion]",
+   "names": {
+    "en": "Mio Honda [Positive Passion]",
+    "cn": "[Positive Passion]本田未央",
+    "ja": "〔ポジティブパッション〕本田未央"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 6,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Rush.\n{[fanfare]} Look at the top 2 cards of your deck. You may summon a Passion follower from among them. Bury the rest.\n{[act]} {[cost02]}, Lesson (2): Look at the top 2 cards of your deck. You may summon a Passion follower from among them. Bury the rest.",
+    "cn": "【突进】\n《入场曲》查看自己的牌堆顶2张卡。从那之中，可以将1张Passion类型·从者卡召唤到场上。将剩余的卡置于墓场。\n《起动》《消费2》【课程_2】：查看自己的牌堆顶2张卡。从那之中，可以将1张Passion类型·从者卡召唤到场上。将剩余的卡置于墓场。",
+    "ja": "【突進】\nファンファーレ自分のデッキの上2枚を見る。その中から、パッション・フォロワー1枚を場に出してよい。残りを墓場に置く。\n起動コスト2【レッスン_2】：自分のデッキの上2枚を見る。その中から、パッション・フォロワー1枚を場に出してよい。残りを墓場に置く。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ],
+   "alternateNames": {
+    "PR-439": {
+     "en": "〔マーメイド・スター〕本田未央",
+     "cn": null,
+     "ja": "〔マーメイド・スター〕本田未央"
+    }
+   }
+  },
+  {
+   "id": "CSD02c-002",
+   "printings": [
+    "CSD02c-002",
+    "CSD02c-SL02"
+   ],
+   "name": "Aiko Takamori [Handmade Happiness]",
+   "names": {
+    "en": "Aiko Takamori [Handmade Happiness]",
+    "cn": "[亲手制作的幸福]高森蓝子",
+    "ja": "〔てづくりのしあわせ〕高森藍子"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Activate {[engage]} 3 Passion followers on your field: You may summon a Passion follower from your hand and give it \"At the start of your end phase, return this card to its owner's hand.\"",
+    "cn": "《起动》将场上的3个Passion类型·从者《横置》：可以将自己的手牌中的1张Passion类型·从者卡召唤到场上。使其获得「当自己的结束阶段到来时，将这张卡放回手牌」能力。",
+    "ja": "起動場のパッション・フォロワー3体をアクト：自分の手札のパッション・フォロワー1枚を場に出してよい。それは「自分のエンドフェイズが来たとき、これを手札に戻す」を持つ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CSD02c-003",
+   "printings": [
+    "CSD02c-003",
+    "CSD02c-SL03"
+   ],
+   "name": "Akane Hino [Positive Passion]",
+   "names": {
+    "en": "Akane Hino [Positive Passion]",
+    "cn": "[Positive Passion]日野茜",
+    "ja": "〔ポジティブパッション〕日野茜"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 8,
+   "attack": 7,
+   "defense": 7,
+   "text": {
+    "en": "Storm.\n{[fanfare]}, Lesson (3), discard 2 Passion cards: Deal 6 damage to each enemy follower on the field. Draw 2 cards.",
+    "cn": "【疾驰】\n《入场曲》【课程_3】：将手牌中的2张Passion类型·卡片舍弃：给予敌方场上的全体从者各6点伤害。抽取2张卡。",
+    "ja": "【疾走】\nファンファーレ【レッスン_3】手札のパッション・カード2枚を捨てる：相手の場のフォロワーすべてに6ダメージ。2枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CSD02c-004",
+   "printings": [
+    "CSD02c-004",
+    "CSD02c-P01"
+   ],
+   "name": "Kaoru Ryuzaki",
+   "names": {
+    "en": "Kaoru Ryuzaki",
+    "cn": "龙崎薰",
+    "ja": "龍崎薫"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[act]} {[cost02]}: If there are at least 5 Passion cards in your cemetery, select a follower in your cemetery and add it to your hand. Activate only once per turn.",
+    "cn": "《起动》《消费2》：如果自己的墓场中的Passion类型·卡片为5张及以上的话，选择自己的墓场中的1张从者卡。将其加入手牌。这个能力在1回合可以使用1次。",
+    "ja": "起動コスト2：自分の墓場のパッション・カードが5枚以上なら、自分の墓場のフォロワー1枚を選ぶ。それを手札に加える。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CSD02c-005",
+   "printings": [
+    "CSD02c-005",
+    "CSD02c-P02"
+   ],
+   "name": "Suzuho Ueda",
+   "names": {
+    "en": "Suzuho Ueda",
+    "cn": "上田铃帆",
+    "ja": "上田鈴帆"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} Look at the top card of your deck.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》查看自己的牌堆顶1张卡。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分のデッキの上1枚を見る。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CSD02c-006",
+   "printings": [
+    "CSD02c-006",
+    "CSD02c-P03"
+   ],
+   "name": "Suzuho Ueda",
+   "names": {
+    "en": "Suzuho Ueda",
+    "cn": "上田铃帆",
+    "ja": "上田鈴帆"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field. Reveal the top card of your deck and deal damage equal to its cost to the selected follower.",
+    "cn": "【进化时】选择敌方场上的1个从者。将自己的牌堆顶1张卡公开。给予其与「公开的卡片的原始消费值」等量的伤害。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。自分のデッキの上1枚を公開する。それに「公開したカードの元のコスト」と同じダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CSD02c-007",
+   "printings": [
+    "CSD02c-007",
+    "CSD02c-P04"
+   ],
+   "name": "Miria Akagi",
+   "names": {
+    "en": "Miria Akagi",
+    "cn": "赤城米莉亚",
+    "ja": "赤城みりあ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} {[cost02]}, Lesson (1): Give this follower {[attack]}+1/{[defense]}+1.  (To perform Lesson (1), banish a Magical Item token from your EX area.)",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》《消费2》【课程_1】：使这张卡《攻击力》+1/《生命值》+1。（【课程_1】意为，将自己EX区域的1张『魔法道具』卡消失）",
+    "ja": "進化コスト1：これは進化する。\nファンファーレコスト2【レッスン_1】：これは攻撃力+1/体力+1する。（【レッスン_1】とは、自分のEXエリアの『魔法のアイテム』1枚を消滅させること）"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CSD02c-008",
+   "printings": [
+    "CSD02c-008",
+    "CSD02c-P05"
+   ],
+   "name": "Miria Akagi",
+   "names": {
+    "en": "Miria Akagi",
+    "cn": "赤城米莉亚",
+    "ja": "赤城みりあ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Discard a Passion card: Draw 2 cards.",
+    "cn": "【进化时】将手牌中的1张Passion类型·卡片舍弃：抽取2张卡。",
+    "ja": "【進化時】手札のパッション・カード1枚を捨てる：2枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CSD02c-009",
+   "printings": [
+    "CSD02c-009",
+    "CSD02c-P06"
+   ],
+   "name": "Miu Yaguchi",
+   "names": {
+    "en": "Miu Yaguchi",
+    "cn": "矢口美羽",
+    "ja": "矢口美羽"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Bury the top card of your deck. If it costs an odd number of play points, draw a card. If not, give your leader {[defense]}+2.",
+    "cn": "【守护】\n《入场曲》将自己的牌堆顶1张卡置于墓场。如果将原始消费为奇数的卡片置于墓场的话，抽取1张卡。如果将原始消费为偶数的卡片置于墓场的话，使自己的主战者《生命值》+2。",
+    "ja": "【守護】\nファンファーレ自分のデッキの上1枚を墓場に置く。元のコストが奇数のカードを墓場に置いたなら、1枚引く。元のコストが偶数のカードを墓場に置いたなら、自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CSD02c-010",
+   "printings": [
+    "CSD02c-010",
+    "CSD02c-P07"
+   ],
+   "name": "Kumiko Matsuyama",
+   "names": {
+    "en": "Kumiko Matsuyama",
+    "cn": "松山久美子",
+    "ja": "松山久美子"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CSD02c-011",
+   "printings": [
+    "CSD02c-011",
+    "CSD02c-P08"
+   ],
+   "name": "Kumiko Matsuyama",
+   "names": {
+    "en": "Kumiko Matsuyama",
+    "cn": "松山久美子",
+    "ja": "松山久美子"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "On Evolve - Select a Passion follower that costs 3 or less in your cemetery and summon it.",
+    "cn": "【进化时】选择自己的墓场中的原始消费为3及以下的1张Passion类型·从者卡。将其召唤到场上。",
+    "ja": "【進化時】自分の墓場の元のコスト3以下のパッション・フォロワー1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "デレマス",
+    "パッション"
+   ]
+  },
+  {
+   "id": "CSD02c-LD01",
+   "printings": [
+    "CSD02c-LD01",
+    "CSD02c-LDⓈ01"
+   ],
+   "name": "Mio Honda [Stage of Magic]",
+   "names": {
+    "en": "Mio Honda [Stage of Magic]",
+    "cn": "[魔法舞台]本田未央",
+    "ja": "〔ステージオブマジック〕本田未央"
+   },
+   "class": "Swordcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

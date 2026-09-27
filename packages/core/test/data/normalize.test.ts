@@ -107,6 +107,15 @@ describe("English text", () => {
     expect(en({ effect_en: "カードを1枚引く。", effect_en_official: "Ward." })).toEqual({ text: "", source: "none", officialMismatch: false });
   });
 
+  it("keeps the Japanese name of Japanese-only data (in name_en) as the card name and its Japanese name, evolved cards too", () => {
+    const base = normalizePrinting(raw({ name_en: "気高き雷・ロマロニア", name_ja: "" }));
+    expect([base.def.name, base.def.names.ja]).toEqual(["気高き雷・ロマロニア", "気高き雷・ロマロニア"]);
+    const evolved = normalizePrinting(raw({ name_en: "気高き雷・ロマロニア", name_ja: "", card_type: ["Follower", "Evolved"], cost: null }));
+    expect([evolved.def.name, evolved.ownEvolvedName]).toEqual(["気高き雷・ロマロニア", false]);
+    // An English name with an empty name_ja stays as it is.
+    expect(normalizePrinting(raw({ name_ja: "" })).def.names.ja).toBe("");
+  });
+
   it("CR 2.13 — an alternate-name printing joins the card it is treated as", () => {
     expect(treatedAs("(This card is treated as Vania, Vampire Princess.)\n{[fanfare]} ...")).toBe("Vania, Vampire Princess");
     const p = normalizePrinting(raw({ card_no: "XX01-002", name_en: "La+", effect_en: "(This card is treated as Test.)\nDraw a card." }));

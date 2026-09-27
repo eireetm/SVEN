@@ -34,6 +34,9 @@ describe("BP21 Runecraft", () => {
     expect([e.field(), e.keywords("BP13-T01"), e.leader()]).toEqual([["BP21-038", "BP13-T01"], ["rush", "ward", "assail"], 22]);
     const s = d({ me: { field: ["BP21-038"], evolveDeck: ["BP21-039"], playPoints: 1, ...SUPER } }).evolve("BP21-038", { sep: true }).flush().none().flush();
     expect([s.field(), s.game.state.nextPlay.length]).toEqual([["BP21-038", "BP13-T01"], 1]);
+    const f = d({ me: { field: ["BP21-038"], evolveDeck: ["BP21-039"], deck: ["DSD01a-008"], playPoints: 1, ...SUPER } }).evolve("BP21-038", { sep: true });
+    f.flush().none().flush().pick("DSD01a-008").flush();
+    expect([f.hand(), f.pp(), f.canPlay("DSD01a-008")]).toEqual([["DSD01a-008"], 0, true]);
   });
 
   it("040 Ceridwen, Eternal Duality — Fanfare, Earth Rite: a 1-cost follower with Earth Rite from the deck; end phase after an Earth Rite: 2 damage", () => {

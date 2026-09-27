@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "BP19",
- "printings": 212,
+ "printings": 213,
  "cards": [
   {
    "id": "BP19-001",
@@ -640,7 +640,8 @@
    "id": "BP19-023",
    "printings": [
     "BP19-023",
-    "BP19-SL09"
+    "BP19-SL09",
+    "PR-559"
    ],
    "name": "Gildaria, Anathema of Peace",
    "names": {

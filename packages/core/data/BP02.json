@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "BP02",
- "printings": 277,
+ "printings": 278,
  "cards": [
   {
    "id": "BP02-001",
@@ -207,9 +207,9 @@
    "printings": [
     "BP02-008",
     "BP02-P02",
-    "PR-196",
     "SP01-008",
-    "SP01-SL08"
+    "SP01-SL08",
+    "PR-196"
    ],
    "name": "Crystalia Lily",
    "names": {
@@ -238,9 +238,9 @@
    "printings": [
     "BP02-009",
     "BP02-P03",
-    "PR-197",
     "SP01-009",
-    "SP01-SL09"
+    "SP01-SL09",
+    "PR-197"
    ],
    "name": "Crystalia Lily",
    "names": {
@@ -3108,7 +3108,8 @@
    "id": "BP02-112",
    "printings": [
     "BP02-112",
-    "PR-047"
+    "PR-047",
+    "PR-406"
    ],
    "name": "Surefire Bullet",
    "names": {
@@ -3130,7 +3131,14 @@
    },
    "traits": [
     "傭兵"
-   ]
+   ],
+   "alternateNames": {
+    "PR-406": {
+     "en": "スパークルアサルト",
+     "cn": null,
+     "ja": "スパークルアサルト"
+    }
+   }
   },
   {
    "id": "BP02-113",

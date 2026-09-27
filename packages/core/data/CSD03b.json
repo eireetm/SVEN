@@ -1,0 +1,394 @@
+{
+ "format": 1,
+ "set": "CSD03b",
+ "printings": 26,
+ "cards": [
+  {
+   "id": "CSD03b-001",
+   "printings": [
+    "CSD03b-001",
+    "CSD03b-SL01"
+   ],
+   "name": "Dragonic Overlord",
+   "names": {
+    "en": "Dragonic Overlord",
+    "cn": "龙纹·帝王",
+    "ja": "ドラゴニック・オーバーロード"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\nTwin Drive.\nWhile Overflow is active for you, and there's another Kagero follower on your field, this follower has Storm.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【双重驱动】\n只要处于【觉醒】状态，且自己的场上有其他的阳炎类型·从者存在，使这张卡获得【疾驰】能力。（持有【疾驰】能力的从者，在召唤到场上的当回合即可进行攻击）",
+    "ja": "進化コスト1：これは進化する。\n【ツインドライブ】\n【覚醒】状態であり、自分の場に他のかげろう・フォロワーがいる限り、これは【疾走】を持つ。（【疾走】を持つフォロワーは、場に出たターンから攻撃できる）"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-002",
+   "printings": [
+    "CSD03b-002",
+    "CSD03b-SL02",
+    "PR-288"
+   ],
+   "name": "Dragonic Overlord",
+   "names": {
+    "en": "Dragonic Overlord",
+    "cn": "龙纹·帝王",
+    "ja": "ドラゴニック・オーバーロード"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "vanguard",
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Twin Drive.\nWhile Overflow is active for you, and there's another Kagero follower on your field, this follower has Storm.\nOn Evolve - Select an enemy follower on the field. Deal it 5 damage and, if Overflow is active for you, for the rest of this turn, this follower has \"Once per turn, when this follower deals combat damage, refresh it.\"",
+    "cn": "【双重驱动】\n只要处于【觉醒】状态，且自己的场上有其他的阳炎类型·从者存在，使这张卡获得【疾驰】能力。\n【进化时】选择敌方场上的1个从者。给予其5点伤害。如果处于【觉醒】状态的话，这个回合，使这张卡获得「当这张卡给予交战伤害时，将这张卡竖置。这个能力在1回合仅限发动1次」能力。",
+    "ja": "【ツインドライブ】\n【覚醒】状態であり、自分の場に他のかげろう・フォロワーがいる限り、これは【疾走】を持つ。\n【進化時】相手の場のフォロワー1体を選ぶ。それに5ダメージ。【覚醒】状態なら、このターン、これは「これが交戦ダメージを与えたとき、これをスタンドする。この能力は1ターンに1回働く」を持つ。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-003",
+   "printings": [
+    "CSD03b-003",
+    "CSD03b-SL03"
+   ],
+   "name": "Dragon Monk, Goku",
+   "names": {
+    "en": "Dragon Monk, Goku",
+    "cn": "龙僧 悟空",
+    "ja": "ドラゴンモンク ゴクウ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 6,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Ward.\nActivate {[engage]}, banish 4 Kagero cards from your cemetery: Deal 4 damage to each enemy leader and enemy follower on the field.",
+    "cn": "【守护】\n《起动》将这张卡《横置》将墓场中的4张阳炎类型·卡片消失：给予敌方的全体主战者与敌方场上的全体从者各4点伤害。",
+    "ja": "【守護】\n起動これをアクト墓場のかげろう・カード4枚を消滅：相手のリーダーすべてと相手の場のフォロワーすべてに4ダメージ。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-004",
+   "printings": [
+    "CSD03b-004",
+    "CSD03b-P01"
+   ],
+   "name": "Dragon Knight, Aleph",
+   "names": {
+    "en": "Dragon Knight, Aleph",
+    "cn": "龙骑士 阿利夫",
+    "ja": "ドラゴンナイト アリフ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower into a Embodiment of Victory, Aleph.\n{[fanfare]} If there's an Embodiment of Armor, Bahr and Embodiment of Spear, Tahr in your cemetery, evolve this follower into an Embodiment of Victory, Aleph.",
+    "cn": "《进化》《消费1》：使这张卡进化为『胜利的化身 阿利夫』。\n《入场曲》如果自己的墓场中有『铠之化身 巴尔』卡与『枪之化身 塔尔』卡的话，使这张卡进化为『胜利的化身 阿利夫』。",
+    "ja": "進化コスト1：これは『勝利の化身 アリフ』に進化する。\nファンファーレ自分の墓場に『鎧の化身 バー』と『槍の化身 ター』があるなら、これは『勝利の化身 アリフ』に進化する。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-005",
+   "printings": [
+    "CSD03b-005",
+    "CSD03b-P02"
+   ],
+   "name": "Embodiment of Victory, Aleph",
+   "names": {
+    "en": "Embodiment of Victory, Aleph",
+    "cn": "胜利的化身 阿利夫",
+    "ja": "勝利の化身 アリフ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "vanguard",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Twin Drive.\nOn Evolve - Look at the top 3 cards of your deck. You may put a Kagero follower not named Dragon Knight, Aleph from among them into your EX area. It costs 3 less to play this turn. Put the rest on the bottom of your deck in any order.",
+    "cn": "【双重驱动】（持有【双重驱动】的从者，当攻击时，将进行2次驱动判定）\n【进化时】查看自己的牌堆顶3张卡。从那之中，可以将1张「『龙骑士 阿利夫』以外的阳炎类型·从者卡」置于EX区域。将剩余的卡以任意顺序置于牌堆底。这个回合，将其使用之际，将其消费-3。",
+    "ja": "【ツインドライブ】（【ツインドライブ】を持つフォロワーは、攻撃したとき、ドライブチェックを2回する）\n【進化時】自分のデッキの上3枚を見る。その中から、「『ドラゴンナイト アリフ』を除くかげろう・フォロワー」1枚をEXエリアに置いてよい。残りを好きな順にデッキの下に置く。このターン、それをプレイする際、コストを-3する。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-006",
+   "printings": [
+    "CSD03b-006",
+    "CSD03b-P03"
+   ],
+   "name": "Berserk Dragon",
+   "names": {
+    "en": "Berserk Dragon",
+    "cn": "狂暴龙",
+    "ja": "バーサーク・ドラゴン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ride]} {[cost01]}: Give this follower Drive.\nOn Drive - Select up to 1 enemy follower on the field. Deal it 3 damage and give this follower {[attack]}+1/{[defense]}+1.\n{[fanfare]} Discard a Kagero card: Select an enemy follower on the field and deal it 2 damage.",
+    "cn": "《凭依》《消费1》：使这张卡获得驱动能力。\n【驱动获得时】选择敌方场上的从者最多1个。给予其3点伤害。使这张卡《攻击力》+1/《生命值》+1。\n《入场曲》将手牌中的1张阳炎类型·卡片舍弃：选择敌方场上的1个从者。给予其2点伤害。",
+    "ja": "憑依コスト1：これはドライブを持つ。\n【ドライブ獲得時】相手の場のフォロワー1体まで選ぶ。それに3ダメージ。これは攻撃力+1/体力+1する。\nファンファーレ手札のかげろう・カード1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに2ダメージ。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-007",
+   "printings": [
+    "CSD03b-007",
+    "CSD03b-P04"
+   ],
+   "name": "Wyvern Guard, Barri",
+   "names": {
+    "en": "Wyvern Guard, Barri",
+    "cn": "双足飞龙守卫 巴里",
+    "ja": "ワイバーンガード バリィ"
+   },
+   "class": "Dragoncraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nChoose one. (1) Select an enemy follower on the field and deal it 2 damage. (2) Discard a Kagero card: Select an enemy follower on the field. Deal 3 damage to it and 1 damage to its leader.",
+    "cn": "《快速》\n从下述之中抉择1项。\n【1】选择敌方场上的1个从者。给予其2点伤害。\n【2】将手牌中的1张阳炎类型·卡片舍弃：选择敌方场上的1个从者。给予其3点伤害。给予其主战者1点伤害。",
+    "ja": "クイック\n下記から1つチョイスする。【1】相手の場のフォロワー1体を選ぶ。それに2ダメージ。【2】手札のかげろう・カード1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに3ダメージ。それのリーダーに1ダメージ。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-008",
+   "printings": [
+    "CSD03b-008",
+    "CSD03b-P05"
+   ],
+   "name": "Dragon Knight, Nehalem",
+   "names": {
+    "en": "Dragon Knight, Nehalem",
+    "cn": "龙骑士 尼海连",
+    "ja": "ドラゴンナイト ネハーレン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ride]} {[cost01]}: Give this follower Drive.\nOn Drive - Select up to 1 enemy follower on the field. Deal it 2 damage and give this follower {[attack]}+1/{[defense]}+1.\nStrike - Deal 1 damage to each enemy leader.",
+    "cn": "《凭依》《消费1》：使这张卡获得驱动能力。\n【驱动获得时】选择敌方场上的从者最多1个。给予其2点伤害。使这张卡《攻击力》+1/《生命值》+1。\n【攻击时】给予敌方的全体主战者各1点伤害。",
+    "ja": "憑依コスト1：これはドライブを持つ。\n【ドライブ獲得時】相手の場のフォロワー1体まで選ぶ。それに2ダメージ。これは攻撃力+1/体力+1する。\n【攻撃時】相手のリーダーすべてに1ダメージ。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-009",
+   "printings": [
+    "CSD03b-009",
+    "CSD03b-P06"
+   ],
+   "name": "Embodiment of Armor, Bahr",
+   "names": {
+    "en": "Embodiment of Armor, Bahr",
+    "cn": "铠之化身 巴尔",
+    "ja": "鎧の化身 バー"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 3,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Draw a card.",
+    "cn": "【守护】（当这张卡召唤到场上时，或自己的结束阶段中、可以将这张卡横置。只要有「处于横置状态并持有【守护】能力的从者」存在，敌方不能攻击那以外的目标）\n《入场曲》抽取1张卡。",
+    "ja": "【守護】（これが場に出たときか、自分のエンドフェイズにこれをアクトできる。相手は、アクト状態の【守護】を持つフォロワー以外を攻撃できない）\nファンファーレ1枚引く。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-010",
+   "printings": [
+    "CSD03b-010",
+    "CSD03b-P07"
+   ],
+   "name": "Chain-Attack Sutherland",
+   "names": {
+    "en": "Chain-Attack Sutherland",
+    "cn": "连击之萨瑟兰德",
+    "ja": "連撃のサザーランド"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 3,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Select a Vanguard follower on your field and give it {[attack]}+3.\nActivate {[engage]}, bury this card: Select an enemy follower on the field and deal it damage equal to this follower's attack.",
+    "cn": "《入场曲》选择自己场上的1个先导者类型·从者。使其《攻击力》+3。\n《起动》将这张卡《横置》置于墓场：选择敌方场上的1个从者。给予其与「这张卡的攻击力」等量的伤害。",
+    "ja": "ファンファーレ自分の場のヴァンガード・フォロワー1体を選ぶ。それは攻撃力+3する。\n起動これをアクト墓場に置く：相手の場のフォロワー1体を選ぶ。それに「これの攻撃力」と同じダメージ。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-011",
+   "printings": [
+    "CSD03b-011",
+    "CSD03b-P08"
+   ],
+   "name": "Follower, Reas",
+   "names": {
+    "en": "Follower, Reas",
+    "cn": "从者 蕾雅丝",
+    "ja": "従者 レアス"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[ride]} {[cost02]}: Give this follower Drive.\nOn Drive - Give this follower {[attack]}+1/{[defense]}+1. Search your deck for a Kagero follower, reveal it, add it to your hand, then shuffle.",
+    "cn": "《凭依》《消费2》：使这张卡获得驱动能力。\n【驱动获得时】使这张卡《攻击力》+1/《生命值》+1。从自己的牌堆中搜寻1张阳炎类型·从者卡，并加入手牌。",
+    "ja": "憑依コスト2：これはドライブを持つ。\n【ドライブ獲得時】これは攻撃力+1/体力+1する。自分のデッキからかげろう・フォロワー1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-016",
+   "printings": [
+    "CSD03b-016",
+    "CSD03b-P09"
+   ],
+   "name": "Lizard Runner, Undeux",
+   "names": {
+    "en": "Lizard Runner, Undeux",
+    "cn": "蜥蜴奔行者 安多",
+    "ja": "リザードランナー アンドゥー"
+   },
+   "class": "Dragoncraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Starting Amulet.\nActivate {[engage]}, bury this card: Select a Vanguard follower on your field and give it {[attack]}+1/{[defense]}+1.\n----------\n(At the start of the game, if your deck is based on the Cardfight!! Vanguard universe, put a card with Starting Amulet from your deck onto your field.)",
+    "cn": "【起始护符】\n《起动》将这张卡《横置》置于墓场：选择自己场上的1个先导者类型·从者。使其《攻击力》+1/《生命值》+1。\n----------\n（※如果自己的牌组构筑为「卡片战斗！！先导者」主题构筑的话，将以从自己的牌堆之中将1张持有【起始护符】能力的卡片召唤到场上的状态开始对战）",
+    "ja": "【スタートアミュレット】\n起動これをアクト墓場に置く：自分の場のヴァンガード・フォロワー1体を選ぶ。それは攻撃力+1/体力+1する。\n----------\n（※自分のデッキ構築が「カードファイト!! ヴァンガード」タイトル構築なら、自分のデッキから【スタートアミュレット】を持つカード1枚を場に出した状態でバトルを開始する）"
+   },
+   "traits": [
+    "ヴァンガード",
+    "かげろう"
+   ]
+  },
+  {
+   "id": "CSD03b-LD01",
+   "printings": [
+    "CSD03b-LD01"
+   ],
+   "name": "Toshiki Kai [Burn in Apocalyptic Fire!!]",
+   "names": {
+    "en": "Toshiki Kai [Burn in Apocalyptic Fire!!]",
+    "cn": "[燃烧殆尽吧！！默示录之炎！！]櫂俊树",
+    "ja": "〔焼きつくせ!!黙示録の炎!!〕櫂トシキ"
+   },
+   "class": "Dragoncraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "vanguard",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

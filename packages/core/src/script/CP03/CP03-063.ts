@@ -1,7 +1,7 @@
 // CP03-063 Dragonic Overlord the End — Dragoncraft follower, 7, 6/6. ヴァンガード・かげろう.
 // Storm. Ward. Twin Drive.
 // {[fanfare]} If there's a Dragonic Overlord in your cemetery, recover 1 play point. (Only that name, not another Dragonic
-// Overlord the End — ruling. Dragonic Overlord is CSD03b-001, not in the supported sets yet.)
+// Overlord the End — ruling. Dragonic Overlord is CSD03b-001.)
 // Strike - {[cost03]}, discard a Dragonic Overlord the End: Refresh this follower. (An optional cost, CR 10.4.7.4.)
 // Activate Banish 5 Kagero cards from your cemetery: Destroy each other follower on the field. (Both fields — ruling.)
 import { allCosts, banishFromYour, discardA, playPointsCost } from "../costs";

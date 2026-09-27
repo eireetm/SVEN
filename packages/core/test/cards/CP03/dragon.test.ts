@@ -4,7 +4,7 @@ import { cardEngine } from "../../helpers";
 
 // CP03 Dragoncraft (063–082), Cardfight!! Vanguard (Kagero). V1 is 1c 2/2, V3 3c 3/4, V5 5c 5/5 (Neutral). CP03-127 is a
 // Drive Point. Kagero cards: CP03-080 Irontail Dragon (1c 1/2), CP03-077 Gatling Claw Dragon (2c 2/3), CP03-075 Kimnara (a
-// 3-cost Quick spell: 6 damage). CP03-086 Blaster Dark has Single Drive. Dragonic Overlord (CSD03b) isn't in a supported set yet.
+// 3-cost Quick spell: 6 damage). CP03-086 Blaster Dark has Single Drive. CSD03b-001 is Dragonic Overlord.
 const E = cardEngine();
 const d = (spec: DriveSpec) => drive(E, spec);
 const n = (count: number, id: string) => Array<string>(count).fill(id);
@@ -17,6 +17,9 @@ describe("CP03 Dragoncraft", () => {
     expect([t.engaged("CP03-063"), t.pp(), t.hand(), t.leader("opp")]).toEqual([false, 0, [], 14]);
     const a = d({ me: { field: ["CP03-063", "V1"], cemetery: n(5, "CP03-080") }, opp: { field: ["V5"] } }).activate("CP03-063");
     expect([a.field(), a.field("opp"), a.cemetery()]).toEqual([["CP03-063"], [], ["V1"]]);
+    // Fanfare with a Dragonic Overlord in the cemetery: recover 1 play point.
+    expect(d({ me: { hand: ["CP03-063"], cemetery: ["CSD03b-001"], playPoints: 7 } }).play("CP03-063").none().pp()).toBe(1);
+    expect(d({ me: { hand: ["CP03-063"], cemetery: ["CP03-063"], playPoints: 7 } }).play("CP03-063").none().pp()).toBe(0);
   });
 
   it("064 Seal Dragon, Blockade — an opponent's spell during your turn: 2 to their leader; your Kagero card's ability damage to an enemy follower: draw, once per turn", () => {

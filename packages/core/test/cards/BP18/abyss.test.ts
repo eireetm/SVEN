@@ -69,9 +69,11 @@ describe("BP18 Abysscraft", () => {
     expect([ten.field("opp"), ten.leader("opp")]).toEqual([["V5"], 18]);
   });
 
-  it("089 Vampire Queen's Castle — Fanfare, discard a Vampire card: draw; act, engage and bury it: a Forest Bat", () => {
+  it("089 Vampire Queen's Castle — Fanfare, discard a Vampire card: draw; act, engage and bury it: a Forest Bat (3 with a Queen Vampire follower)", () => {
     expect(d({ me: { hand: ["BP18-089", "BP17-085"], deck: ["V1"], playPoints: 1 } }).play("BP18-089").yes().hand()).toEqual(["V1"]);
     expect(d({ me: { field: ["BP18-089"] } }).activate("BP18-089").field()).toEqual([BAT]);
+    // SP01-032 Queen Vampire, Sultry Evening has "Queen Vampire" in its name.
+    expect(d({ me: { field: ["BP18-089", "SP01-032"] } }).activate("BP18-089").field()).toEqual(["SP01-032", BAT, BAT, BAT]);
   });
 
   it("090 / 091 Gnawing Rat — when played, discard another 2-cost card: 1 less; Fanfare: draw; evolved: destroy", () => {

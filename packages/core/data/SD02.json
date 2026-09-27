@@ -1,0 +1,339 @@
+{
+ "format": 1,
+ "set": "SD02",
+ "printings": 18,
+ "cards": [
+  {
+   "id": "SD02-001",
+   "printings": [
+    "SD02-001"
+   ],
+   "name": "Tsubaki",
+   "names": {
+    "en": "Tsubaki",
+    "cn": "椿",
+    "ja": "ツバキ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 5,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Choose one of the following effects: (1) Select an enemy follower on the field and destroy it. (2) Give this follower Storm. (Followers with Storm can attack enemy followers and leaders on the turn they're put onto the field.)",
+    "cn": "《入场曲》从下述之中抉择1项。\n【1】选择敌方的1个从者。将其破坏。\n【2】使这张卡获得【疾驰】能力。（持有【疾驰】能力的从者，在召唤到场上的当回合即可进行攻击）",
+    "ja": "《ファンファーレ》下記から1つチョイスする。【1】相手のフォロワー1体を選ぶ。それを破壊する。【2】これは【疾走】を持つ。(【疾走】を持つフォロワーは、場に出たターンから攻撃できる)"
+   },
+   "traits": [
+    "暗殺者",
+    "忍者"
+   ]
+  },
+  {
+   "id": "SD02-002",
+   "printings": [
+    "SD02-002"
+   ],
+   "name": "Latham, Vanguard Captain",
+   "names": {
+    "en": "Latham, Vanguard Captain",
+    "cn": "无惧的先锋·雷瑟姆",
+    "ja": "ヴァンガード・レイサム"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": [
+    "指揮官"
+   ]
+  },
+  {
+   "id": "SD02-003",
+   "printings": [
+    "SD02-003",
+    "PR-089"
+   ],
+   "name": "Floral Fencer",
+   "names": {
+    "en": "Floral Fencer",
+    "cn": "华丽的花园剑士",
+    "ja": "フローラルフェンサー"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "《進化》《コスト1》：これは進化する。"
+   },
+   "traits": [
+    "兵士"
+   ]
+  },
+  {
+   "id": "SD02-004",
+   "printings": [
+    "SD02-004",
+    "PR-006",
+    "PR-103"
+   ],
+   "name": "Floral Fencer",
+   "names": {
+    "en": "Floral Fencer",
+    "cn": "华丽的花园剑士",
+    "ja": "フローラルフェンサー"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve: Summon a Steelclad Knight and Knight token.",
+    "cn": "【进化时】将1个『铁甲骑士』与1个『骑士』召唤。\n―――――――――――――――\n『铁甲骑士』《皇家护卫职业》士兵类型·从者《消费2》《攻击力》2/《生命值》2\n『骑士』《皇家护卫职业》士兵类型·从者《消费1》《攻击力》1/《生命值》1",
+    "ja": "【進化時】『スティールナイト』1体と『ナイト』1体を出す。\n―――――――――――――――\n『スティールナイト』《ロイヤル》兵士・フォロワー《コスト2》《攻撃力》2/《体力》2\n『ナイト』《ロイヤル》兵士・フォロワー《コスト1》《攻撃力》1/《体力》1"
+   },
+   "traits": [
+    "兵士"
+   ]
+  },
+  {
+   "id": "SD02-005",
+   "printings": [
+    "SD02-005"
+   ],
+   "name": "Moonlight Assassin",
+   "names": {
+    "en": "Moonlight Assassin",
+    "cn": "刺客",
+    "ja": "アサシン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[act]} {[cost01]}: Give this follower Bane. (Followers attacking or attacked by a follower with Bane are destroyed after damage is exchanged.)",
+    "cn": "《起动》《消费1》：使这张卡获得【必杀】能力。（持有【必杀】能力的从者与敌方的从者交战时，在交战后就会将之破坏）",
+    "ja": "《起動》《コスト1》：これは【必殺】を持つ。(【必殺】を持つフォロワーと交戦した相手のフォロワーは、ダメージを与え合ったあと破壊される)"
+   },
+   "traits": [
+    "暗殺者"
+   ]
+  },
+  {
+   "id": "SD02-006",
+   "printings": [
+    "SD02-006"
+   ],
+   "name": "White General",
+   "names": {
+    "en": "White General",
+    "cn": "白银将军",
+    "ja": "ホワイトジェネラル"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 5,
+   "defense": 3,
+   "text": {
+    "en": "Rush. (Followers with Rush can attack enemy followers from the turn they're put onto the field.)\nStrike: Select another follower on your field and give it {[attack]}+2.",
+    "cn": "【突进】（持有【突进】能力的从者，在召唤到场上的当回合即可攻击敌方的从者）\n【攻击时】选择自己的其他的1个从者。使其《攻击力》+2。",
+    "ja": "【突進】(【突進】を持つフォロワーは、場に出たターンから相手のフォロワーを攻撃できる)\n【攻撃時】自分の他のフォロワー1体を選ぶ。それは《攻撃力》+2する。"
+   },
+   "traits": [
+    "指揮官"
+   ]
+  },
+  {
+   "id": "SD02-009",
+   "printings": [
+    "SD02-009"
+   ],
+   "name": "Fencer",
+   "names": {
+    "en": "Fencer",
+    "cn": "剑术教官",
+    "ja": "フェンサー"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Select another follower on your field and give it {[attack]}+1/{[defense]}+1.",
+    "cn": "《入场曲》选择自己的其他的1个从者。使其《攻击力》+1/《生命值》+1。",
+    "ja": "《ファンファーレ》自分の他のフォロワー1体を選ぶ。それは《攻撃力》+1/《体力》+1する。"
+   },
+   "traits": [
+    "指揮官",
+    "貴族"
+   ]
+  },
+  {
+   "id": "SD02-010",
+   "printings": [
+    "SD02-010"
+   ],
+   "name": "Oathless Knight",
+   "names": {
+    "en": "Oathless Knight",
+    "cn": "背水一战的骑士",
+    "ja": "オースレスナイト"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} Summon a Knight token.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》将1个『骑士』召唤。\n―――――――――――――――\n『骑士』《皇家护卫职业》士兵类型·从者《消费1》《攻击力》1/《生命值》1",
+    "ja": "《進化》《コスト1》：これは進化する。\n《ファンファーレ》『ナイト』1体を出す。\n―――――――――――――――\n『ナイト』《ロイヤル》兵士・フォロワー《コスト1》《攻撃力》1/《体力》1"
+   },
+   "traits": [
+    "兵士"
+   ]
+  },
+  {
+   "id": "SD02-011",
+   "printings": [
+    "SD02-011",
+    "PR-033"
+   ],
+   "name": "Oathless Knight",
+   "names": {
+    "en": "Oathless Knight",
+    "cn": "背水一战的骑士",
+    "ja": "オースレスナイト"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 1,
+   "text": {
+    "en": "Assail",
+    "cn": "【指定攻击】（持有【指定攻击】能力的从者，可以对竖置状态的从者进行攻击）",
+    "ja": "【指定攻撃】(【指定攻撃】を持つフォロワーは、スタンド状態のフォロワーを攻撃できる)"
+   },
+   "traits": [
+    "兵士"
+   ]
+  },
+  {
+   "id": "SD02-012",
+   "printings": [
+    "SD02-012",
+    "PR-005"
+   ],
+   "name": "Quickblader",
+   "names": {
+    "en": "Quickblader",
+    "cn": "迅捷的剑士",
+    "ja": "クイックブレーダー"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost03]}: Evolve this follower.\nStorm",
+    "cn": "《进化》《消费3》：使这张卡进化。\n【疾驰】（持有【疾驰】能力的从者，在召唤到场上的当回合即可进行攻击）",
+    "ja": "《進化》《コスト3》：これは進化する。\n【疾走】(【疾走】を持つフォロワーは、場に出たターンから攻撃できる)"
+   },
+   "traits": [
+    "兵士"
+   ]
+  },
+  {
+   "id": "SD02-013",
+   "printings": [
+    "SD02-013"
+   ],
+   "name": "Quickblader",
+   "names": {
+    "en": "Quickblader",
+    "cn": "迅捷的剑士",
+    "ja": "クイックブレーダー"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Storm.",
+    "cn": "【疾驰】",
+    "ja": "【疾走】"
+   },
+   "traits": [
+    "兵士"
+   ]
+  },
+  {
+   "id": "SD02-016",
+   "printings": [
+    "SD02-016",
+    "PR-120"
+   ],
+   "name": "Unbridled Fury",
+   "names": {
+    "en": "Unbridled Fury",
+    "cn": "疾风怒涛",
+    "ja": "疾風怒濤"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field and deal it X damage. X equals the number of followers on your field.",
+    "cn": "《快速》\n选择敌方的1个从者。给予其与「自己场上的从者的数量」等量的伤害。",
+    "ja": "《クイック》\n相手のフォロワー1体を選ぶ。それに「自分の場のフォロワーの数」と同じダメージ。"
+   },
+   "traits": [
+    "兵士"
+   ]
+  }
+ ]
+}

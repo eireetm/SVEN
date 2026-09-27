@@ -1,0 +1,316 @@
+{
+ "format": 1,
+ "set": "DSD01a",
+ "printings": 33,
+ "cards": [
+  {
+   "id": "DSD01a-001",
+   "printings": [
+    "DSD01a-001",
+    "DSD01a-SL01",
+    "DSD01a-U01",
+    "SP01-020",
+    "SP01-SL20",
+    "SP01-SP13",
+    "SP01-U11"
+   ],
+   "name": "Anne, Mysterian Prodigy",
+   "names": {
+    "en": "Anne, Mysterian Prodigy",
+    "cn": "马纳历亚魔导公主·安",
+    "ja": "マナリアの魔導姫・アン"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} Choose one. If there are at least 10 Academic cards in your cemetery, choose up to 2 instead. (1) Search your deck for an Anne's Sorcery, put it into your EX area, then shuffle. The next Anne's Sorcery you play this turn costs 5 less. (2) Search your deck for a Grea, Mysterian Dragoness, summon it, then shuffle.",
+    "cn": "《入场曲》从下述之中抉择1项。如果自己的墓场中的学院类型·卡片为10张及以上的话，转变为最多2项。\n【1】从自己的牌堆之中搜寻1张『安的大魔法』卡，并置于EX区域。这个回合，下次自己将『安的大魔法』卡使用之际，将其消费-5。\n【2】从自己的牌堆之中搜寻1张『马纳历亚龙人公主·古蕾娅』卡，并召唤到场上。",
+    "ja": "ファンファーレ下記から1つチョイスする。自分の墓場の学院・カードが10枚以上なら、代わりに2つまで。\n【1】自分のデッキから『アンの大魔法』1枚を探し、EXエリアに置く。このターン、次に自分が『アンの大魔法』をプレイする際、コストを-5する。【2】自分のデッキから『マナリアの竜姫・グレア』1枚を探し、場に出す。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "DSD01a-002",
+   "printings": [
+    "DSD01a-002",
+    "DSD01a-SL02",
+    "SP01-021",
+    "SP01-SL21",
+    "SP01-SP14",
+    "SP01-U12"
+   ],
+   "name": "Grea, Mysterian Dragoness",
+   "names": {
+    "en": "Grea, Mysterian Dragoness",
+    "cn": "马纳历亚龙人公主·古蕾娅",
+    "ja": "マナリアの竜姫・グレア"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} Select an enemy follower on the field. If there are at least 10 Academic cards in your cemetery, deal 4 damage to it and 1 damage to its leader.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》选择敌方场上的1个从者。如果自己的墓场中的学院类型·卡片为10张及以上的话，给予其4点伤害。给予其主战者1点伤害。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ相手の場のフォロワー1体を選ぶ。自分の墓場の学院・カードが10枚以上なら、それに4ダメージ。それのリーダーに1ダメージ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "DSD01a-003",
+   "printings": [
+    "DSD01a-003",
+    "DSD01a-SL03",
+    "SP01-022",
+    "SP01-SL22",
+    "SP01-SP15",
+    "SP01-U13"
+   ],
+   "name": "Grea, Mysterian Dragoness",
+   "names": {
+    "en": "Grea, Mysterian Dragoness",
+    "cn": "马纳历亚龙人公主·古蕾娅",
+    "ja": "マナリアの竜姫・グレア"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "If an Academic spell you control would deal damage, it deals that much plus 1 instead.\nOn Evolve - Search your deck for a Grea's Ember, put it into your EX area, then shuffle. The next Grea's Ember you play this turn costs 1 less.",
+    "cn": "只要有这张卡在场上存在，使自己的学院类型·法术卡给予的伤害+1。\n【进化时】从自己的牌堆之中搜寻1张『古蕾娅的炎热之术』卡，并置于EX区域。这个回合，下次自己将『古蕾娅的炎热之术』卡使用之际，将其消费-1。",
+    "ja": "これが場にいる限り、自分の学院・スペルが与えるダメージを+1する。\n【進化時】自分のデッキから『グレアの炎熱』1枚を探し、EXエリアに置く。このターン、次に自分が『グレアの炎熱』をプレイする際、コストを-1する。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "DSD01a-006",
+   "printings": [
+    "DSD01a-006",
+    "DSD01a-P01"
+   ],
+   "name": "マナリアナイト・オーウェン",
+   "names": {
+    "en": "マナリアナイト・オーウェン",
+    "cn": "马纳历亚骑士·欧文",
+    "ja": "マナリアナイト・オーウェン"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "",
+    "cn": "【突进】（持有【突进】能力的从者，在召唤到场上的当回合即可攻击敌方的从者）\n【攻击时】将1张『马纳历亚魔弹』卡置于EX区域。\n《入场曲》如果自己的墓场中的学院类型·卡片为5张及以上的话，使这张卡《攻击力》+1/《生命值》+1，并获得【指定攻击】能力。",
+    "ja": "【突進】（【突進】を持つフォロワーは、場に出たターンから相手のフォロワーを攻撃できる）\n【攻撃時】『マナリアの魔弾』1枚をEXエリアに置く。\nファンファーレ自分の墓場の学院・カードが5枚以上なら、これは攻撃力+1/体力+1して、【指定攻撃】を持つ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "DSD01a-008",
+   "printings": [
+    "DSD01a-008",
+    "DSD01a-P02"
+   ],
+   "name": "Anne's Sorcery",
+   "names": {
+    "en": "Anne's Sorcery",
+    "cn": "安的宏大魔法",
+    "ja": "アンの大魔法"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "从下述之中抉择1项。\n【1】选择敌方的1位主战者或敌方场上的1个从者。给予其4点伤害。抽取1张卡。\n【2】《消费3》：选择敌方的1位主战者或敌方场上的1个从者。如果自己的墓场中的学院类型·卡片为10张及以上的话，给予其8点伤害。抽取2张卡。",
+    "ja": "下記から1つチョイスする。【1】相手のリーダー1人か相手の場のフォロワー1体を選ぶ。それに4ダメージ。1枚引く。【2】コスト3：相手のリーダー1人か相手の場のフォロワー1体を選ぶ。自分の墓場の学院・カードが10枚以上なら、それに8ダメージ。2枚引く。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "DSD01a-010",
+   "printings": [
+    "DSD01a-010",
+    "DSD01a-P04"
+   ],
+   "name": "マナリアの召喚士・ベリル",
+   "names": {
+    "en": "マナリアの召喚士・ベリル",
+    "cn": "马纳历亚召唤师·贝莉鲁",
+    "ja": "マナリアの召喚士・ベリル"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "魔法使い",
+    "魔法生物",
+    "学院"
+   ]
+  },
+  {
+   "id": "DSD01a-011",
+   "printings": [
+    "DSD01a-011",
+    "DSD01a-P05"
+   ],
+   "name": "マナリアの召喚士・ベリル",
+   "names": {
+    "en": "マナリアの召喚士・ベリル",
+    "cn": "马纳历亚召唤师·贝莉鲁",
+    "ja": "マナリアの召喚士・ベリル"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "",
+    "cn": "【进化时】查看自己的牌堆顶5张卡。从那之中，可以将原始消费为2及以下的学院类型·卡片最多2张置于EX区域。将剩余的卡以任意顺序置于牌堆底。这个回合，将其使用之际，将其消费-2。",
+    "ja": "【進化時】自分のデッキの上5枚を見る。その中から、元のコスト2以下の学院・カード2枚までEXエリアに置いてよい。残りを好きな順にデッキの下に置く。このターン、それをプレイする際、コストを-2する。"
+   },
+   "traits": [
+    "魔法使い",
+    "魔法生物",
+    "学院"
+   ]
+  },
+  {
+   "id": "DSD01a-014",
+   "printings": [
+    "DSD01a-014",
+    "DSD01a-P06"
+   ],
+   "name": "マナリアの知識",
+   "names": {
+    "en": "マナリアの知識",
+    "cn": "马纳历亚的知识",
+    "ja": "マナリアの知識"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "将这张卡使用之际，作为额外消费、将手牌中的2张学院类型·卡片公开。（不能支付额外消费将不能使用）\n抽取1张卡。将1张『马纳历亚魔弹』卡置于EX区域。\n―――――――――――――――\n『马纳历亚魔弹』《巫师职业》魔法使类型·学院类型·法术《消费2》选择敌方场上的1个从者。给予其3点伤害。如果自己的墓场中的学院类型·卡片为10张及以上的话，给予其主战者2点伤害。",
+    "ja": "これをプレイする際、追加コストとして手札の学院・カード2枚を公開する。（追加コストを支払わなければプレイできない）\n1枚引く。『マナリアの魔弾』1枚をEXエリアに置く。\n―――――――――――――――\n『マナリアの魔弾』ウィッチ魔法使い・学院・スペルコスト2相手の場のフォロワー1体を選ぶ。それに3ダメージ。自分の墓場の学院・カードが10枚以上なら、それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "DSD01a-015",
+   "printings": [
+    "DSD01a-015",
+    "DSD01a-P07"
+   ],
+   "name": "術式の教師・ジル",
+   "names": {
+    "en": "術式の教師・ジル",
+    "cn": "术式的教师·吉尔",
+    "ja": "術式の教師・ジル"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "",
+    "cn": "《入场曲》从下述之中抉择1项。\n【1】将1张『马纳历亚魔弹』卡置于EX区域。\n【2】选择自己的墓场中的1张学院类型·法术卡。如果自己的墓场中的学院类型·卡片为5张及以上的话，将其加入手牌。\n―――――――――――――――\n『马纳历亚魔弹』《巫师职业》魔法使类型·学院类型·法术《消费2》选择敌方场上的1个从者。给予其3点伤害。如果自己的墓场中的学院类型·卡片为10张及以上的话，给予其主战者2点伤害。",
+    "ja": "ファンファーレ下記から1つチョイスする。【1】『マナリアの魔弾』1枚をEXエリアに置く。【2】自分の墓場の学院・スペル1枚を選ぶ。自分の墓場の学院・カードが5枚以上なら、それを手札に加える。\n―――――――――――――――\n『マナリアの魔弾』ウィッチ魔法使い・学院・スペルコスト2相手の場のフォロワー1体を選ぶ。それに3ダメージ。自分の墓場の学院・カードが10枚以上なら、それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "DSD01a-T01",
+   "printings": [
+    "DSD01a-T01",
+    "PR-267"
+   ],
+   "name": "マナリアの魔弾",
+   "names": {
+    "en": "マナリアの魔弾",
+    "cn": "马纳历亚魔弹",
+    "ja": "マナリアの魔弾"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": true,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "选择敌方场上的1个从者。给予其3点伤害。如果自己的墓场中的学院类型·卡片为10张及以上的话，给予其主战者2点伤害。",
+    "ja": "相手の場のフォロワー1体を選ぶ。それに3ダメージ。自分の墓場の学院・カードが10枚以上なら、それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院"
+   ]
+  }
+ ]
+}

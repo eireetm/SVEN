@@ -1,0 +1,61 @@
+{
+ "format": 1,
+ "set": "SD08",
+ "printings": 3,
+ "cards": [
+  {
+   "id": "SD08-011",
+   "printings": [
+    "SD08-011"
+   ],
+   "name": "Zahar, Stormwave Dragoon",
+   "names": {
+    "en": "Zahar, Stormwave Dragoon",
+    "cn": "骇浪龙骑士·萨哈尔",
+    "ja": "荒波のドラグーン・ザハール"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 8,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "When this is discarded, look at the top 2 cards of your deck. You may reveal a {[dragoncraft]} card that costs 7 or more from among them and add it to your hand. Put the rest on the bottom of your deck in any order.\n----------\n{[fanfare]} Look at the top 3 cards of your deck. You may summon a {[dragoncraft]} follower not named Zahar, Stormwave Dragoon from among them. Put the rest on the bottom of your deck in any order.",
+    "cn": "当将这张卡从自己的手牌中舍弃时，查看自己的牌堆顶2张卡。从那之中，可以将原始消费为7及以上的1张《龙族职业》卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。\n《入场曲》查看自己的牌堆顶3张卡。从那之中，可以将1张「与这张卡不同名的《龙族职业》从者卡」召唤到场上。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "これを自分の手札から捨てたとき、自分のデッキの上2枚を見る。その中から、元のコスト7以上のドラゴンカード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。\nファンファーレ自分のデッキの上3枚を見る。その中から、「これと同名を除くドラゴンフォロワー」1枚を場に出してよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "竜使い",
+    "海洋"
+   ]
+  },
+  {
+   "id": "SD08-LD01",
+   "printings": [
+    "SD08-LD01",
+    "LCS01-004"
+   ],
+   "name": "伽藍",
+   "names": {
+    "en": "伽藍",
+    "cn": "伽蓝",
+    "ja": "伽藍"
+   },
+   "class": "Dragoncraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

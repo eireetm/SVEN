@@ -154,5 +154,6 @@ describe("end-to-end vanilla games (BP01)", () => {
     }
     expect(totalSteps).toBeGreaterThan(GAMES * 10);
     expect(replayed).toBeGreaterThan(GAMES * 0.8);
-  }, 60_000);
+    // A limit against hangs, not a speed requirement: alone it takes about 20 s, next to the whole suite's set tests about 60 s.
+  }, 120_000);
 });

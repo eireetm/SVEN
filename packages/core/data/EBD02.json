@@ -1,0 +1,67 @@
+{
+ "format": 1,
+ "set": "EBD02",
+ "printings": 9,
+ "cards": [
+  {
+   "id": "EBD02-003",
+   "printings": [
+    "EBD02-003",
+    "SP01-019",
+    "SP01-SL19",
+    "SP01-SP11",
+    "SP01-SP12",
+    "SP01-U10"
+   ],
+   "name": "Falise, Innocent Sea Spray",
+   "names": {
+    "en": "Falise, Innocent Sea Spray",
+    "cn": null,
+    "ja": "あどけない飛沫・プリス"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 4,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} Look at the top 5 cards of your deck. From among them, you may put up to 1 Mage follower that costs 3 or less and up to 1 Mage spell that costs 3 or less into your EX area. They cost 3 less to play this turn. Put the rest on the bottom of your deck in any order.\nWhenever you play a Mage card, select an enemy follower on the field and deal it 2 damage.",
+    "cn": null,
+    "ja": "自分が魔法使い・カードをプレイしたとき、相手の場のフォロワー1体を選ぶ。それに2ダメージ。\n\n{[fanfare]}自分のデッキの上5枚を見る。その中から、元のコスト3以下の魔法使い・フォロワーと元のコスト3以下の魔法使い・スペルそれぞれ1枚までEXエリアに置いてよい。残りを好きな順にデッキの下に置く。このターン、それをプレイする際、コストを-3する。"
+   },
+   "traits": [
+    "魔法使い",
+    "学院"
+   ]
+  },
+  {
+   "id": "EBD02-LD01",
+   "printings": [
+    "EBD02-LD01",
+    "LCS01-003",
+    "PR-421"
+   ],
+   "name": "歪原火織",
+   "names": {
+    "en": "歪原火織",
+    "cn": null,
+    "ja": "歪原火織"
+   },
+   "class": "Runecraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": null,
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

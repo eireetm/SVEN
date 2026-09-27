@@ -1,0 +1,66 @@
+{
+ "format": 1,
+ "set": "EBD01",
+ "printings": 9,
+ "cards": [
+  {
+   "id": "EBD01-007",
+   "printings": [
+    "EBD01-007",
+    "SP01-001",
+    "SP01-SL01",
+    "SP01-SP01",
+    "SP01-SP02",
+    "SP01-U01"
+   ],
+   "name": "Spinaria, Wavering Will",
+   "names": {
+    "en": "Spinaria, Wavering Will",
+    "cn": null,
+    "ja": "揺蕩う意志・スピネ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "Whenever a follow on your field evolves, give your leader {[defense]}+2.\n{[fanfare]} Select a {[forestcraft]} follower in your cemetery that originally costs 2 or less and put it into your EX area. This turn, it costs 2 less to play.",
+    "cn": null,
+    "ja": "自分の場のフォロワーが進化したとき、自分のリーダーは{[defense]}+2する。\n\n{[fanfare]}自分の墓場の元のコスト2以下の{[forestcraft]}フォロワー1枚を選ぶ。それをEXエリアに置く。このターン、それをプレイする際、コストを-2する。"
+   },
+   "traits": [
+    "超克"
+   ]
+  },
+  {
+   "id": "EBD01-LD01",
+   "printings": [
+    "EBD01-LD01",
+    "LCS01-001",
+    "PR-420"
+   ],
+   "name": "ラヴサイン",
+   "names": {
+    "en": "ラヴサイン",
+    "cn": null,
+    "ja": "ラヴサイン"
+   },
+   "class": "Forestcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": null,
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

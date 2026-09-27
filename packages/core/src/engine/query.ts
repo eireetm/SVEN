@@ -166,6 +166,8 @@ export interface GameReader {
   evolutionsThisTurn(player: PlayerId): number;
   /** Times this player's leader gained defense this turn (CR 5.27; BP18-111). */
   leaderDefenseGainedThisTurn(player: PlayerId): number;
+  /** The defense the player's leader gained this turn in total (CR 5.27, SP01-039). */
+  leaderDefenseGainedTotalThisTurn(player: PlayerId): number;
   /** CR 3.3 — the player's turns passed, this turn included (BP19-116 "your 8th turn or later"). */
   turnsPassed(player: PlayerId): number;
   /** "For the rest of this turn, you may play cards from your banished zone" (BP18-T03). */
@@ -326,6 +328,7 @@ export function makeReader(env: Env): GameReader {
     cardsLeftFieldThisTurn: (p) => countsThisTurn(state(), p).leftField,
     evolutionsThisTurn: (p) => countsThisTurn(state(), p).evolved,
     leaderDefenseGainedThisTurn: (p) => countsThisTurn(state(), p).leaderDefenseGained,
+    leaderDefenseGainedTotalThisTurn: (p) => countsThisTurn(state(), p).leaderDefenseGainedTotal,
     turnsPassed: (p) => ps(p).turnsPassed,
     canPlayFromBanished: (p) => countsThisTurn(state(), p).playFromBanished,
     tookDamageThisTurnFrom: (target, source) =>

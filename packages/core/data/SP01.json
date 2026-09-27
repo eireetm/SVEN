@@ -1,0 +1,159 @@
+{
+ "format": 1,
+ "set": "SP01",
+ "printings": 21,
+ "cards": [
+  {
+   "id": "SP01-010",
+   "printings": [
+    "SP01-010",
+    "SP01-SL10",
+    "SP01-SP05",
+    "SP01-U04"
+   ],
+   "name": "Amelia, Sunny Paladin",
+   "names": {
+    "en": "Amelia, Sunny Paladin",
+    "cn": "晴天的银骑士·艾蜜莉亚",
+    "ja": "晴天の銀騎士・エミリア"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Whenever an Officer follower is put onto your field, select an enemy follower on the field and deal it 3 damage.\n{[act]} {[cost00]}: You may summon an Officer follower that costs 2 or less from your hand or EX area. Activate only once per turn.",
+    "cn": "当士兵类型·从者召唤到自己的场上时，选择敌方场上的1个从者。给予其3点伤害。\n《起动》《消费0》：可以将自己的手牌中或自己EX区域的原始消费为2及以下的1张士兵类型·从者卡召唤到场上。这个能力在1回合可以使用1次。",
+    "ja": "自分の場に兵士・フォロワーが出たとき、相手の場のフォロワー1体を選ぶ。それに3ダメージ。\n起動コスト0：自分の手札か自分のEXエリアの元のコスト2以下の兵士・フォロワー1枚を場に出してよい。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "指揮官"
+   ]
+  },
+  {
+   "id": "SP01-026",
+   "printings": [
+    "SP01-026",
+    "SP01-SL26",
+    "SP01-SP16",
+    "SP01-U14"
+   ],
+   "name": "Sharon, Seaside Nymph",
+   "names": {
+    "en": "Sharon, Seaside Nymph",
+    "cn": "水边的宁芙·莎朗",
+    "ja": "水辺のニンフ・シャロン"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 7,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Recover 5 play points.\nActivate {[engage]}: Choose up to 2. (1) Select an enemy follower on the field. It can't attack enemies during its controller's next turn. (2) The next time 1 or more followers are put onto your field this turn, give one {[attack]}+1/{[defense]}+1. (3) Give your leader {[defense]}+2. (4) Draw a card.",
+    "cn": "《入场曲》将自己的PP回复5点。\n《起动》将这张卡《横置》：从下述之中抉择最多2项。\n【1】选择敌方场上的1个从者。下次的其玩家的回合中，使其不能对敌方进行攻击。\n【2】这个回合，当下次从者1个及以上召唤到自己的场上时，使那之中的1个《攻击力》+1/《生命值》+1。\n【3】使自己的主战者《生命值》+2。\n【4】抽取1张卡。",
+    "ja": "ファンファーレ自分のPPを5回復する。\n起動これをアクト：下記から2つまでチョイスする。【1】相手の場のフォロワー1体を選ぶ。次のそれのプレイヤーのターン中、それは相手を攻撃できない。【2】このターン、次に自分の場にフォロワーが1体以上出たとき、その中の1体は攻撃力+1/体力+1する。【3】自分のリーダーは体力+2する。【4】1枚引く。"
+   },
+   "traits": [
+    "海洋"
+   ]
+  },
+  {
+   "id": "SP01-032",
+   "printings": [
+    "SP01-032",
+    "SP01-SL32",
+    "SP01-SP20",
+    "SP01-U18"
+   ],
+   "name": "Queen Vampire, Sultry Evening",
+   "names": {
+    "en": "Queen Vampire, Sultry Evening",
+    "cn": "火热之夜·吸血鬼女王",
+    "ja": "熱き夜・クイーンヴァンパイア"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Select an enemy follower on the field and deal it 4 damage.\nAt the start of your end phase, if there are at least 3 other Vampire cards on your field, deal 3 damage to each enemy leader and give your leader {[defense]}+3.",
+    "cn": "当自己的结束阶段到来时，如果自己场上的其他的吸血鬼类型·卡片为3张及以上的话，给予敌方的全体主战者各3点伤害。使自己的主战者《生命值》+3。\n《入场曲》选择敌方场上的1个从者。给予其4点伤害。",
+    "ja": "自分のエンドフェイズが来たとき、自分の場の他の吸血鬼・カードが3枚以上なら、相手のリーダーすべてに3ダメージ。自分のリーダーは体力+3する。\nファンファーレ相手の場のフォロワー1体を選ぶ。それに4ダメージ。"
+   },
+   "traits": [
+    "吸血鬼"
+   ]
+  },
+  {
+   "id": "SP01-039",
+   "printings": [
+    "SP01-039",
+    "SP01-SL39",
+    "SP01-SP25",
+    "SP01-U23"
+   ],
+   "name": "Zoe, Shore's Melody",
+   "names": {
+    "en": "Zoe, Shore's Melody",
+    "cn": "沙滩的旋律·莉迪耶尔",
+    "ja": "砂浜の調べ・リテュエル"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 0,
+   "defense": 1,
+   "text": {
+    "en": "{[fanfare]} Select an enemy follower on the field. If your leader has gained at least 4 defense this turn, destroy it and draw a card.",
+    "cn": "《入场曲》选择敌方场上的1个从者。这个回合，如果自己的主战者的《生命值》已获得+4及以上的话，将其破坏。抽取1张卡。",
+    "ja": "ファンファーレ相手の場のフォロワー1体を選ぶ。このターン、自分のリーダーの体力を+4以上していたなら、それを破壊する。1枚引く。"
+   },
+   "traits": [
+    "信仰",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "SP01-045",
+   "printings": [
+    "SP01-045",
+    "SP01-SL45",
+    "SP01-SP30",
+    "SP01-SP31",
+    "SP01-U28"
+   ],
+   "name": "Alice, Golden Afternoon",
+   "names": {
+    "en": "Alice, Golden Afternoon",
+    "cn": "不可思议的蓝天·爱丽丝",
+    "ja": "不思議な青空・アリス"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Draw a card.\n{[fanfare]} Select an enemy follower that costs 4 or less on the field. If this card wasn't put onto the field from hand, put the selected follower into its owner's EX area.area.",
+    "cn": "《入场曲》抽取1张卡。\n《入场曲》选择原始消费为4及以下的敌方场上的1个从者。如果这张卡从手牌以外召唤到场上的话，将其置于EX区域。",
+    "ja": "ファンファーレ1枚引く。\nファンファーレ元のコスト4以下の相手の場のフォロワー1体を選ぶ。これが手札以外から場に出ていたなら、それをEXエリアに置く。"
+   },
+   "traits": [
+    "童話"
+   ]
+  }
+ ]
+}

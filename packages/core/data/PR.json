@@ -1,0 +1,182 @@
+{
+ "format": 1,
+ "set": "PR",
+ "printings": 7,
+ "cards": [
+  {
+   "id": "PR-260",
+   "printings": [
+    "PR-260"
+   ],
+   "name": "蒼龍レオン",
+   "names": {
+    "en": "蒼龍レオン",
+    "cn": null,
+    "ja": "蒼龍レオン"
+   },
+   "class": "Forestcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": null,
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "PR-261",
+   "printings": [
+    "PR-261"
+   ],
+   "name": "先導アイチ",
+   "names": {
+    "en": "先導アイチ",
+    "cn": null,
+    "ja": "先導アイチ"
+   },
+   "class": "Swordcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": null,
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "PR-262",
+   "printings": [
+    "PR-262"
+   ],
+   "name": "鳴海アサカ",
+   "names": {
+    "en": "鳴海アサカ",
+    "cn": null,
+    "ja": "鳴海アサカ"
+   },
+   "class": "Runecraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": null,
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "PR-263",
+   "printings": [
+    "PR-263"
+   ],
+   "name": "櫂トシキ",
+   "names": {
+    "en": "櫂トシキ",
+    "cn": null,
+    "ja": "櫂トシキ"
+   },
+   "class": "Dragoncraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": null,
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "PR-264",
+   "printings": [
+    "PR-264"
+   ],
+   "name": "雀ヶ森レン",
+   "names": {
+    "en": "雀ヶ森レン",
+    "cn": null,
+    "ja": "雀ヶ森レン"
+   },
+   "class": "Abysscraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": null,
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "PR-265",
+   "printings": [
+    "PR-265"
+   ],
+   "name": "戸倉ミサキ",
+   "names": {
+    "en": "戸倉ミサキ",
+    "cn": null,
+    "ja": "戸倉ミサキ"
+   },
+   "class": "Havencraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": null,
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "PR-405",
+   "printings": [
+    "PR-405"
+   ],
+   "name": "森の弓使い・アリサ",
+   "names": {
+    "en": "森の弓使い・アリサ",
+    "cn": null,
+    "ja": "森の弓使い・アリサ"
+   },
+   "class": "Forestcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": null,
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

@@ -10,7 +10,9 @@ const db = new CardDatabase(ALL_CARDS);
 describe("card pool (all supported sets)", () => {
   it("every supported set has its data and script registry", () => {
     for (const set of SUPPORTED_SETS) {
-      expect(SETS[set].cards.length, set).toBeGreaterThan(0);
+      // A set of reprints only (ETD01, PCS02, ...) has no definition of its own: its printings belong to earlier cards.
+      const printed = ALL_CARDS.some((c) => c.printings.some((p) => p.startsWith(`${set}-`)));
+      expect(SETS[set].cards.length > 0 || printed, set).toBe(true);
       for (const id of Object.keys(SETS[set].scripts)) expect(db.get(id).id.startsWith(`${set}-`), id).toBe(true);
     }
     expect(Object.keys(ALL_SCRIPTS).length).toBe(SUPPORTED_SETS.reduce((n, s) => n + Object.keys(SETS[s].scripts).length, 0));

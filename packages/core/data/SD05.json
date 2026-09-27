@@ -1,0 +1,339 @@
+{
+ "format": 1,
+ "set": "SD05",
+ "printings": 20,
+ "cards": [
+  {
+   "id": "SD05-001",
+   "printings": [
+    "SD05-001"
+   ],
+   "name": "Queen Vampire",
+   "names": {
+    "en": "Queen Vampire",
+    "cn": "吸血鬼女王",
+    "ja": "クイーンヴァンパイア"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[fanfare]} Summon 2 Forest Bat tokens.\nActivate {[engage]}, give your leader {[defense]}-1: Summon 2 Forest Bat tokens.\nWhenever a Forest Bat token is put onto your field, give it {[attack]}+1 and Ward.",
+    "cn": "当『丛林蝙蝠』召唤到自己的场上时，使其《攻击力》+1，并获得【守护】能力。\n《入场曲》将2个『丛林蝙蝠』召唤。\n《起动》将这张卡《横置》主战者的《生命值》-1：将2个『丛林蝙蝠』召唤。",
+    "ja": "自分の場に『フォレストバット』が出たとき、それは《攻撃力》+1して、【守護】を持つ。\n《ファンファーレ》『フォレストバット』2体を出す。\n《起動》これを《アクト》リーダーの《体力》-1：『フォレストバット』2体を出す。"
+   },
+   "traits": [
+    "吸血鬼"
+   ]
+  },
+  {
+   "id": "SD05-002",
+   "printings": [
+    "SD05-002",
+    "PR-069"
+   ],
+   "name": "Alucard",
+   "names": {
+    "en": "Alucard",
+    "cn": "阿鲁卡多",
+    "ja": "アルカード"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 7,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Storm.\n{[fanfare]}, Necrocharge (10): Give this follower {[attack]}+2.\nStrike: Select an enemy follower on the field. Deal it 4 damage and give your leader {[defense]}+4.",
+    "cn": "【疾驰】\n【攻击时】选择敌方的1个从者。给予其4点伤害。使自己的主战者《生命值》+4。\n《入场曲》【死灵充能_10】使这张卡《攻击力》+2。",
+    "ja": "【疾走】\n【攻撃時】相手のフォロワー1体を選ぶ。それに4ダメージ。自分のリーダーは《体力》+4する。\n《ファンファーレ》【ネクロチャージ_10】これは《攻撃力》+2する。"
+   },
+   "traits": [
+    "吸血鬼"
+   ]
+  },
+  {
+   "id": "SD05-003",
+   "printings": [
+    "SD05-003",
+    "ETD02-004"
+   ],
+   "name": "Playful Necromancer",
+   "names": {
+    "en": "Playful Necromancer",
+    "cn": "爱捣蛋的死灵法师",
+    "ja": "悪戯なネクロマンサー"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "《進化》《コスト1》：これは進化する。"
+   },
+   "traits": [
+    "死霊術師"
+   ]
+  },
+  {
+   "id": "SD05-004",
+   "printings": [
+    "SD05-004",
+    "ETD02-005",
+    "PR-106"
+   ],
+   "name": "Playful Necromancer",
+   "names": {
+    "en": "Playful Necromancer",
+    "cn": "爱捣蛋的死灵法师",
+    "ja": "悪戯なネクロマンサー"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve: Summon 3 Ghost tokens.",
+    "cn": "【进化时】将3个『怨灵』召唤。\n―――――――――――――――\n『怨灵』《梦魇职业》死者类型·从者《消费1》《攻击力》1/《生命值》1【疾驰】当自己的结束阶段到来时，使这张卡消失。",
+    "ja": "【進化時】『ゴースト』3体を出す。\n―――――――――――――――\n『ゴースト』《ナイトメア》死者・フォロワー《コスト1》《攻撃力》1/《体力》1【疾走】自分のエンドフェイズが来たとき、これは消滅する。"
+   },
+   "traits": [
+    "死霊術師"
+   ]
+  },
+  {
+   "id": "SD05-005",
+   "printings": [
+    "SD05-005"
+   ],
+   "name": "Midnight Vampire",
+   "names": {
+    "en": "Midnight Vampire",
+    "cn": "午夜的吸血鬼",
+    "ja": "ミッドナイトヴァンパイア"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Summon a Forest Bat token.\nWhile this card is on your field, your Forest Bat tokens have Drain. (When a follower with Drain attacks and deals damage, its leader gains defense equal to the damage dealt.)",
+    "cn": "只要有这张卡存在，使自己的全体『丛林蝙蝠』各获得【吸血】能力。（持有【吸血】能力的从者进行攻击并给予伤害时，使自己的主战者生命值+等量的数值）\n《入场曲》将1个『丛林蝙蝠』召唤。",
+    "ja": "これがいる限り、自分の『フォレストバット』すべては【ドレイン】を持つ。(【ドレイン】を持つフォロワーが攻撃して与えたダメージと同じだけ、自分のリーダーは体力を+する)\n《ファンファーレ》『フォレストバット』1体を出す。"
+   },
+   "traits": [
+    "吸血鬼"
+   ]
+  },
+  {
+   "id": "SD05-006",
+   "printings": [
+    "SD05-006"
+   ],
+   "name": "Night Horde",
+   "names": {
+    "en": "Night Horde",
+    "cn": "暗夜中的兽群",
+    "ja": "夜の群れ"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Summon 2 Forest Bat tokens.\nSelect an enemy follower on the field and deal it X damage. X equals the number of Forest Bat tokens on your field.",
+    "cn": "将2个『丛林蝙蝠』召唤。\n选择敌方的1个从者。给予其与「自己场上的『丛林蝙蝠』的数量」等量的伤害。\n―――――――――――――――\n『丛林蝙蝠』《梦魇职业》吸血鬼类型·从者《消费1》《攻击力》1/《生命值》1",
+    "ja": "『フォレストバット』2体を出す。\n相手のフォロワー1体を選ぶ。それに「自分の場の『フォレストバット』の数」と同じダメージ。\n―――――――――――――――\n『フォレストバット』《ナイトメア》吸血鬼・フォロワー《コスト1》《攻撃力》1/《体力》1"
+   },
+   "traits": [
+    "吸血鬼"
+   ]
+  },
+  {
+   "id": "SD05-010",
+   "printings": [
+    "SD05-010"
+   ],
+   "name": "Lesser Mummy",
+   "names": {
+    "en": "Lesser Mummy",
+    "cn": "小木乃伊",
+    "ja": "レッサーマミー"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]}, Necrocharge (10): Give this follower Storm. (If your cemetery contains at least 10 cards, perform Necrocharge (10).)",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》【死灵充能_10】使这张卡获得【疾驰】能力。（如果自己的墓场为10张及以上的话，就会发动【死灵充能_10】之后的能力）",
+    "ja": "《進化》《コスト1》：これは進化する。\n《ファンファーレ》【ネクロチャージ_10】これは【疾走】を持つ。(自分の墓場が10枚以上なら、【ネクロチャージ_10】の後の能力が働く)"
+   },
+   "traits": [
+    "死者"
+   ]
+  },
+  {
+   "id": "SD05-011",
+   "printings": [
+    "SD05-011"
+   ],
+   "name": "Lesser Mummy",
+   "names": {
+    "en": "Lesser Mummy",
+    "cn": "小木乃伊",
+    "ja": "レッサーマミー"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Strike: Summon a Ghost token.",
+    "cn": "【攻击时】将1个『怨灵』召唤。\n―――――――――――――――\n『怨灵』《梦魇职业》死者类型·从者《消费1》《攻击力》1/《生命值》1【疾驰】当自己的结束阶段到来时，使这张卡消失。",
+    "ja": "【攻撃時】『ゴースト』1体を出す。\n―――――――――――――――\n『ゴースト』《ナイトメア》死者・フォロワー《コスト1》《攻撃力》1/《体力》1【疾走】自分のエンドフェイズが来たとき、これは消滅する。"
+   },
+   "traits": [
+    "死者"
+   ]
+  },
+  {
+   "id": "SD05-012",
+   "printings": [
+    "SD05-012",
+    "PR-092"
+   ],
+   "name": "Lilith",
+   "names": {
+    "en": "Lilith",
+    "cn": "莉莉姆",
+    "ja": "リリム"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} Put a Forest Bat token into your EX area.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》将1张『丛林蝙蝠』卡置于EX区域。\n―――――――――――――――\n『丛林蝙蝠』《梦魇职业》吸血鬼类型·从者《消费1》《攻击力》1/《生命值》1",
+    "ja": "《進化》《コスト1》：これは進化する。\n《ファンファーレ》『フォレストバット』1枚をEXエリアに置く。\n―――――――――――――――\n『フォレストバット』《ナイトメア》吸血鬼・フォロワー《コスト1》《攻撃力》1/《体力》1"
+   },
+   "traits": [
+    "魔界"
+   ]
+  },
+  {
+   "id": "SD05-013",
+   "printings": [
+    "SD05-013",
+    "PR-011"
+   ],
+   "name": "Lilith",
+   "names": {
+    "en": "Lilith",
+    "cn": "莉莉姆",
+    "ja": "リリム"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Strike: Give your leader {[defense]}+2.",
+    "cn": "【攻击时】使自己的主战者《生命值》+2。",
+    "ja": "【攻撃時】自分のリーダーは《体力》+2する。"
+   },
+   "traits": [
+    "魔界"
+   ]
+  },
+  {
+   "id": "SD05-015",
+   "printings": [
+    "SD05-015",
+    "ETD02-016"
+   ],
+   "name": "Undying Resentment",
+   "names": {
+    "en": "Undying Resentment",
+    "cn": "不灭的怨念",
+    "ja": "消えぬ怨恨"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field and deal it 3 damage. Put the top card of your deck into your cemetery.",
+    "cn": "《快速》\n选择敌方的1个从者。给予其3点伤害。将自己的牌堆顶1张卡置于墓场。",
+    "ja": "《クイック》\n相手のフォロワー1体を選ぶ。それに3ダメージ。自分のデッキの上1枚を墓場に置く。"
+   },
+   "traits": [
+    "死者"
+   ]
+  },
+  {
+   "id": "SD05-016",
+   "printings": [
+    "SD05-016",
+    "PR-028"
+   ],
+   "name": "Summon Bloodkin",
+   "names": {
+    "en": "Summon Bloodkin",
+    "cn": "从魔召唤",
+    "ja": "眷属の召喚"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Summon a Forest Bat token. Put a Forest Bat token into your EX area.",
+    "cn": "将1个『丛林蝙蝠』召唤。将1张『丛林蝙蝠』卡置于EX区域。\n―――――――――――――――\n『丛林蝙蝠』《梦魇职业》吸血鬼类型·从者《消费1》《攻击力》1/《生命值》1",
+    "ja": "『フォレストバット』1体を出す。『フォレストバット』1枚をEXエリアに置く。\n―――――――――――――――\n『フォレストバット』《ナイトメア》吸血鬼・フォロワー《コスト1》《攻撃力》1/《体力》1"
+   },
+   "traits": [
+    "吸血鬼"
+   ]
+  }
+ ]
+}

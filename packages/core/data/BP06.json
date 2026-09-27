@@ -2045,11 +2045,11 @@
    "printings": [
     "BP06-073",
     "BP06-SL13",
-    "PR-164",
     "SP01-033",
     "SP01-SL33",
     "SP01-SP21",
-    "SP01-U19"
+    "SP01-U19",
+    "PR-164"
    ],
    "name": "Ginsetsu, Great Fox",
    "names": {
@@ -3481,7 +3481,7 @@
    "names": {
     "en": "博衣こより",
     "cn": "博衣小夜璃",
-    "ja": ""
+    "ja": "博衣こより"
    },
    "class": "Runecraft",
    "type": "leader",
@@ -3507,7 +3507,7 @@
    "names": {
     "en": "沙花叉クロヱ",
     "cn": "沙花叉库洛艾",
-    "ja": ""
+    "ja": "沙花叉クロヱ"
    },
    "class": "Dragoncraft",
    "type": "leader",

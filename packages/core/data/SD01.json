@@ -1,0 +1,341 @@
+{
+ "format": 1,
+ "set": "SD01",
+ "printings": 20,
+ "cards": [
+  {
+   "id": "SD01-001",
+   "printings": [
+    "SD01-001",
+    "SP01-003",
+    "SP01-SL03",
+    "SP01-SP04",
+    "SP01-U03",
+    "PR-051"
+   ],
+   "name": "Aria, Fairy Princess",
+   "names": {
+    "en": "Aria, Fairy Princess",
+    "cn": "妖精公主·阿丽雅",
+    "ja": "フェアリープリンセス・アリア"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 6,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Put up to 9 Fairy tokens onto your field or into your EX area.\nWhile this card is on your field, your other Pixie followers have Rush.",
+    "cn": "【守护】\n只要有这张卡存在，使自己的其他的全体妖精类型·从者各获得【突进】能力。\n《入场曲》从9张『妖精』卡之中，将任意张数召唤到场上。将任意张数置于EX区域。",
+    "ja": "【守護】\nこれがいる限り、自分の他の妖精・フォロワーすべては【突進】を持つ。\n《ファンファーレ》『フェアリー』9枚の中から、好きな枚数を場に出す。好きな枚数をEXエリアに置く。"
+   },
+   "traits": [
+    "妖精",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "SD01-002",
+   "printings": [
+    "SD01-002",
+    "EBD01-013"
+   ],
+   "name": "Titania's Sanctuary",
+   "names": {
+    "en": "Titania's Sanctuary",
+    "cn": "提泰妮娅的妖精乡",
+    "ja": "ティターニアの妖精郷"
+   },
+   "class": "Forestcraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "While this card is on your field, your Pixie tokens have Assail.\nWhenever a Pixie token is put onto your field, give it {[attack]}+1/{[defense]}+1.\n{[fanfare]} Give each Pixie token on your field {[attack]}+1/{[defense]}+1",
+    "cn": "只要有这张卡存在，使自己的全体妖精类型·衍生物各获得【指定攻击】能力。\n当妖精类型·衍生物召唤到自己的场上时，使其《攻击力》+1/《生命值》+1。\n《入场曲》使自己的全体妖精类型·衍生物各《攻击力》+1/《生命值》+1。",
+    "ja": "これがある限り、自分の妖精・トークンすべては【指定攻撃】を持つ。\n自分の場に妖精・トークンが出たとき、それは《攻撃力》+1/《体力》+1する。\n《ファンファーレ》自分の妖精・トークンすべては《攻撃力》+1/《体力》+1する。"
+   },
+   "traits": [
+    "妖精",
+    "プリンセス"
+   ]
+  },
+  {
+   "id": "SD01-003",
+   "printings": [
+    "SD01-003"
+   ],
+   "name": "Rose Gardener",
+   "names": {
+    "en": "Rose Gardener",
+    "cn": "玫瑰花园守卫者",
+    "ja": "ローズガーデンキーパー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "《進化》《コスト1》：これは進化する。"
+   },
+   "traits": [
+    "植物族"
+   ]
+  },
+  {
+   "id": "SD01-004",
+   "printings": [
+    "SD01-004",
+    "PR-102"
+   ],
+   "name": "Rose Gardener",
+   "names": {
+    "en": "Rose Gardener",
+    "cn": "玫瑰花园守卫者",
+    "ja": "ローズガーデンキーパー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve: Select an enemy follower on the field and return it to its owner's hand. Combo (3): Draw a card. (Token cards returned to a player's hand are removed from the game.)",
+    "cn": "【进化时】选择敌方的1个从者。将其放回手牌。【连击_3】抽取1张卡。（放回到手牌的衍生物会从游戏中移出）",
+    "ja": "【進化時】相手のフォロワー1体を選ぶ。それを手札に戻す。【コンボ_3】1枚引く。（手札に戻ったトークンはゲームから取り除く）"
+   },
+   "traits": [
+    "植物族"
+   ]
+  },
+  {
+   "id": "SD01-005",
+   "printings": [
+    "SD01-005"
+   ],
+   "name": "Waltzing Fairy",
+   "names": {
+    "en": "Waltzing Fairy",
+    "cn": "舞夜妖精",
+    "ja": "ワルツフェアリー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]}/{[lastwords]} Put a Fairy token into your EX area.",
+    "cn": "《入场曲》《谢幕曲》将1张『妖精』卡置于EX区域。\n―――――――――――――――\n『妖精』《精灵职业》妖精类型·从者《消费1》《攻击力》1/《生命值》1",
+    "ja": "《ファンファーレ》《ラストワード》『フェアリー』1枚をEXエリアに置く。\n―――――――――――――――\n『フェアリー』《エルフ》妖精・フォロワー《コスト1》《攻撃力》1/《体力》1"
+   },
+   "traits": [
+    "妖精"
+   ]
+  },
+  {
+   "id": "SD01-006",
+   "printings": [
+    "SD01-006"
+   ],
+   "name": "Fairy Caster",
+   "names": {
+    "en": "Fairy Caster",
+    "cn": "妖精魔法师",
+    "ja": "フェアリーキャスター"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 4,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[fanfare]} Summon 3 Fairy tokens. If your field becomes full from this effect, put any remaining tokens into your EX area.",
+    "cn": "《入场曲》直到场上上限为止，将3张『妖精』卡召唤。将剩余的卡置于EX区域。\n―――――――――――――――\n『妖精』《精灵职业》妖精类型·从者《消费1》《攻击力》1/《生命值》1",
+    "ja": "《ファンファーレ》『フェアリー』3枚を、場が上限になるまで出す。残りをEXエリアに置く。\n―――――――――――――――\n『フェアリー』《エルフ》妖精・フォロワー《コスト1》《攻撃力》1/《体力》1"
+   },
+   "traits": [
+    "エルフ族"
+   ]
+  },
+  {
+   "id": "SD01-009",
+   "printings": [
+    "SD01-009"
+   ],
+   "name": "Treant",
+   "names": {
+    "en": "Treant",
+    "cn": "树精",
+    "ja": "トレント"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.\n{[fanfare]}, Combo (3): Change this card's Evolve cost to 0. (If you've played at least 3 cards this turn, including this one, perform Combo (3).)",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《入场曲》【连击_3】将这张卡的《进化》消费变为0。（包含这张卡在内，如果这个回合中已使用的卡为3张及以上的话，就会发动【连击_3】之后的能力）",
+    "ja": "《進化》《コスト2》：これは進化する。\n《ファンファーレ》【コンボ_3】これの《進化》コストを0にする。(このターン中にこれを含めて3枚以上プレイしていたなら、【コンボ_3】の後の能力が働く)"
+   },
+   "traits": [
+    "精霊"
+   ]
+  },
+  {
+   "id": "SD01-010",
+   "printings": [
+    "SD01-010"
+   ],
+   "name": "Treant",
+   "names": {
+    "en": "Treant",
+    "cn": "树精",
+    "ja": "トレント"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": [
+    "精霊"
+   ]
+  },
+  {
+   "id": "SD01-011",
+   "printings": [
+    "SD01-011"
+   ],
+   "name": "Water Fairy",
+   "names": {
+    "en": "Water Fairy",
+    "cn": "水之妖精",
+    "ja": "ウォーターフェアリー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this follower.\n{[lastwords]} Put a Fairy token into your EX area.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《谢幕曲》将1张『妖精』卡置于EX区域。\n―――――――――――――――\n『妖精』《精灵职业》妖精类型·从者《消费1》《攻击力》1/《生命值》1",
+    "ja": "《進化》《コスト2》：これは進化する。\n《ラストワード》『フェアリー』1枚をEXエリアに置く。\n―――――――――――――――\n『フェアリー』《エルフ》妖精・フォロワー《コスト1》《攻撃力》1/《体力》1"
+   },
+   "traits": [
+    "妖精"
+   ]
+  },
+  {
+   "id": "SD01-012",
+   "printings": [
+    "SD01-012",
+    "PR-031"
+   ],
+   "name": "Water Fairy",
+   "names": {
+    "en": "Water Fairy",
+    "cn": "水之妖精",
+    "ja": "ウォーターフェアリー"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve: Summon a Fairy token.\n{[lastwords]} Put a Fairy token into your EX area.",
+    "cn": "【进化时】将1个『妖精』召唤。\n《谢幕曲》将1张『妖精』卡置于EX区域。",
+    "ja": "【進化時】『フェアリー』1体を出す。\n《ラストワード》『フェアリー』1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "妖精"
+   ]
+  },
+  {
+   "id": "SD01-013",
+   "printings": [
+    "SD01-013"
+   ],
+   "name": "Elf Wanderer",
+   "names": {
+    "en": "Elf Wanderer",
+    "cn": "流浪精灵",
+    "ja": "放浪するエルフ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "Assail. (Followers with Assail can attack reserved followers.)\nThis follower ignores Ward.",
+    "cn": "【指定攻击】（持有【指定攻击】能力的从者，可以对竖置状态的从者进行攻击）\n这张卡可以无视【守护】能力进行攻击。",
+    "ja": "【指定攻撃】(【指定攻撃】を持つフォロワーは、スタンド状態のフォロワーを攻撃できる)\nこれは【守護】を無視して攻撃できる。"
+   },
+   "traits": [
+    "エルフ族"
+   ]
+  },
+  {
+   "id": "SD01-016",
+   "printings": [
+    "SD01-016"
+   ],
+   "name": "Sylvan Justice",
+   "names": {
+    "en": "Sylvan Justice",
+    "cn": "森林的反扑",
+    "ja": "森荒らしへの報い"
+   },
+   "class": "Forestcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field. Deal it 3 damage and put a Fairy token into your EX area.",
+    "cn": "《快速》\n选择敌方的1个从者。给予其3点伤害。将1张『妖精』卡置于EX区域。\n―――――――――――――――\n『妖精』《精灵职业》妖精类型·从者《消费1》《攻击力》1/《生命值》1",
+    "ja": "《クイック》\n相手のフォロワー1体を選ぶ。それに3ダメージ。『フェアリー』1枚をEXエリアに置く。\n―――――――――――――――\n『フェアリー』《エルフ》妖精・フォロワー《コスト1》《攻撃力》1/《体力》1"
+   },
+   "traits": [
+    "エルフ族"
+   ]
+  }
+ ]
+}

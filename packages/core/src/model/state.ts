@@ -228,6 +228,11 @@ export interface TurnCounts {
   /** Times this player's leader gained defense (CR 5.27, e.g. BP18-111 "if your leader has gained defense this turn"). */
   leaderDefenseGained: number;
   /**
+   * The defense this player's leader gained this turn, in total (CR 5.27), e.g. SP01-039 "if your leader has gained at least 4
+   * defense this turn": +1 and +3 count, so does a change from -3 to 1 (5.27.2), and later damage takes nothing away (rulings).
+   */
+  leaderDefenseGainedTotal: number;
+  /**
    * "For the rest of this turn, you may play cards from your banished zone" (BP18-T03): a card effect
    * allowing what CR 8.2.1 does not (CR 1.3.1).
    */
@@ -414,7 +419,8 @@ export type GrantedAbilityId =
   | "buryAtEnd"
   | "strikeDrawDiscard"
   | "mainPhaseDamageYourLeader2"
-  | "activateDiscard2Bury";
+  | "activateDiscard2Bury"
+  | "combatDamageRefreshOnce";
 
 /** Extra information a trigger attaches to its pending ability (e.g. the card that entered). */
 export interface TriggerData {

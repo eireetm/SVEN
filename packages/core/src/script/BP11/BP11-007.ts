@@ -1,8 +1,7 @@
 // BP11-007 Fairy Flowering — Forestcraft spell, 2. 妖精.
 // As an additional cost to play this card, bury 4 Pixie tokens. (It can't be played without paying it.)
 // ----------
-// Search your deck for an Aria, Fairy Princess, summon it, then shuffle. (That card is in SD01 / SP01,
-// not in a supported set yet: until then nothing is found.)
+// Search your deck for an Aria, Fairy Princess, summon it, then shuffle. (That card is SD01-001.)
 import { buryFromYourField } from "../costs";
 import { defineCard, spell } from "../helpers";
 import { named } from "../targets";

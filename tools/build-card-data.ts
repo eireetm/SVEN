@@ -42,6 +42,8 @@ const skipped: { printing: string; reason: string }[] = [];
 const markers: string[] = [];
 const raws = new Map<string, RawCardJson>();
 const printings: NormalizedPrinting[] = [];
+/** Data errors of supported sets' printings, reported together. */
+const errors: string[] = [];
 
 for (const folder of readdirSync(assetsDir).sort()) {
   const file = join(assetsDir, folder, `${folder}.json`);
@@ -59,10 +61,12 @@ for (const folder of readdirSync(assetsDir).sort()) {
     // Cards of sets that are not supported yet may use card types the engine does not model
     // (Crest, Equipment, Advanced, evolution point cards ...); they cannot be alternate
     // printings of supported cards, so they are only listed in the report.
-    if (!(e instanceof CardDataError) || supported.has(raw.set)) throw e;
-    skipped.push({ printing: folder, reason: e.message.slice(folder.length + 2) });
+    if (!(e instanceof CardDataError)) throw e;
+    if (supported.has(raw.set)) errors.push(e.message);
+    else skipped.push({ printing: folder, reason: e.message.slice(folder.length + 2) });
   }
 }
+if (errors.length > 0) throw new CardDataError(`${errors.length} card data error(s):\n${errors.join("\n")}`);
 
 const { cards, setOf, textVariants, noEnglishText, officialMismatches, japaneseVariants } = groupPrintings(printings, SUPPORTED_SETS);
 new CardDatabase(cards); // index validation (duplicate printings, unique token names, ...)

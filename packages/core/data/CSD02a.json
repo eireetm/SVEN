@@ -1,0 +1,372 @@
+{
+ "format": 1,
+ "set": "CSD02a",
+ "printings": 25,
+ "cards": [
+  {
+   "id": "CSD02a-001",
+   "printings": [
+    "CSD02a-001",
+    "CSD02a-SL01"
+   ],
+   "name": "Uzuki Shimamura [P.C.S.]",
+   "names": {
+    "en": "Uzuki Shimamura [P.C.S.]",
+    "cn": "[P.C.S]岛村卯月",
+    "ja": "〔P.C.S〕島村卯月"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 7,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[fanfare]} Select up to 1 Cute follower that costs 4 or less and up to 1 Cute follower that costs 2 or less in your cemetery. Summon them and give them {[attack]}+1/{[defense]}+1.\nActivate, Lesson (1): Give your leader {[defense]}+3. Activate only once per turn.",
+    "cn": "《入场曲》选择自己的墓场中的原始消费为4及以下的Cute类型·从者卡与原始消费为2及以下的Cute类型·从者卡最多各1张。将其召唤到场上。使其各《攻击力》+1/《生命值》+1。\n《起动》【课程_1】：使自己的主战者《生命值》+3。这个能力在1回合可以使用1次。",
+    "ja": "ファンファーレ自分の墓場の元のコスト4以下のキュート・フォロワーと元のコスト2以下のキュート・フォロワーそれぞれ1枚まで選ぶ。それを場に出す。それは攻撃力+1/体力+1する。\n起動【レッスン_1】：自分のリーダーは体力+3する。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CSD02a-002",
+   "printings": [
+    "CSD02a-002",
+    "CSD02a-SL02"
+   ],
+   "name": "Kyoko Igarashi [P.C.S.]",
+   "names": {
+    "en": "Kyoko Igarashi [P.C.S.]",
+    "cn": "[P.C.S]五十岚响子",
+    "ja": "〔P.C.S〕五十嵐響子"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Select an enemy follower on the field and give it {[attack]}-1/{[defense]}-1 for every Cute follower on your field.\nActivate, Lesson (1): Select an enemy follower on the field and give it {[attack]}-1/{[defense]}-1. Activate only once per turn.",
+    "cn": "【守护】\n《入场曲》选择敌方场上的1个从者。使其《攻击力》-X/《生命值》-X。X为「自己场上的Cute类型·从者的数量」。\n《起动》【课程_1】：选择敌方场上的1个从者。使其《攻击力》-1/《生命值》-1。这个能力在1回合可以使用1次。",
+    "ja": "【守護】\nファンファーレ相手の場のフォロワー1体を選ぶ。それは攻撃力-X/体力-Xする。Xは「自分の場のキュート・フォロワーの数」である。\n起動【レッスン_1】：相手の場のフォロワー1体を選ぶ。それは攻撃力-1/体力-1する。この能力は1ターンに1回使える。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CSD02a-003",
+   "printings": [
+    "CSD02a-003",
+    "CSD02a-SL03",
+    "PR-438"
+   ],
+   "name": "Miho Kohinata [P.C.S]",
+   "names": {
+    "en": "Miho Kohinata [P.C.S]",
+    "cn": "[P.C.S]小日向美穗",
+    "ja": "〔P.C.S〕小日向美穂"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} Look at the top card of your deck. If it's a Cute card, you may reveal it and add it to your hand.\nWhile there are at least 3 Cute followers on your field, this follower has Rush.",
+    "cn": "只要自己的场上有Cute类型·从者3个及以上存在，使这张卡获得【突进】能力。\n《入场曲》查看自己的牌堆顶1张卡。从那之中，可以将1张Cute类型·卡片公开并加入手牌。",
+    "ja": "自分の場にキュート・フォロワーが3体以上いる限り、これは【突進】を持つ。\nファンファーレ自分のデッキの上1枚を見る。その中から、キュート・カード1枚を公開して手札に加えてよい。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ],
+   "alternateNames": {
+    "PR-438": {
+     "en": "〔踏み出す夏空〕小日向美穂",
+     "cn": null,
+     "ja": "〔踏み出す夏空〕小日向美穂"
+    }
+   }
+  },
+  {
+   "id": "CSD02a-004",
+   "printings": [
+    "CSD02a-004",
+    "CSD02a-P01"
+   ],
+   "name": "Chika Yokoyama",
+   "names": {
+    "en": "Chika Yokoyama",
+    "cn": "横山千佳",
+    "ja": "横山千佳"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[fanfare]} If there are at least 5 Cute cards in your cemetery, give this follower {[attack]}+1/{[defense]}+2 and Ward.",
+    "cn": "《入场曲》如果自己的墓场中的Cute类型·卡片为5张及以上的话，使这张卡《攻击力》+1/《生命值》+2，并获得【守护】能力。",
+    "ja": "ファンファーレ自分の墓場のキュート・カードが5枚以上なら、これは攻撃力+1/体力+2して、【守護】を持つ。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CSD02a-005",
+   "printings": [
+    "CSD02a-005",
+    "CSD02a-P02"
+   ],
+   "name": "Momoka Sakurai",
+   "names": {
+    "en": "Momoka Sakurai",
+    "cn": "樱井桃华",
+    "ja": "櫻井桃華"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} {[cost02]}, Lesson (1): Give this follower {[attack]}+1/{[defense]}+1. (To perform Lesson (1), banish a Magical Item token from your EX area.)",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》《消费2》【课程_1】：使这张卡《攻击力》+1/《生命值》+1。（【课程_1】意为，将自己EX区域的1张『魔法道具』卡消失）",
+    "ja": "進化コスト1：これは進化する。\nファンファーレコスト2【レッスン_1】：これは攻撃力+1/体力+1する。（【レッスン_1】とは、自分のEXエリアの『魔法のアイテム』1枚を消滅させること）"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CSD02a-006",
+   "printings": [
+    "CSD02a-006",
+    "CSD02a-P03"
+   ],
+   "name": "Momoka Sakurai",
+   "names": {
+    "en": "Momoka Sakurai",
+    "cn": "樱井桃华",
+    "ja": "櫻井桃華"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Look at the top 3 cards of your deck. You may reveal a Cute card from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "【进化时】查看自己的牌堆顶3张卡。从那之中，可以将1张Cute类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "【進化時】自分のデッキの上3枚を見る。その中から、キュート・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CSD02a-007",
+   "printings": [
+    "CSD02a-007",
+    "CSD02a-P04"
+   ],
+   "name": "Akiha Ikebukuro",
+   "names": {
+    "en": "Akiha Ikebukuro",
+    "cn": "池袋晶叶",
+    "ja": "池袋晶葉"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\n{[fanfare]} Select another Cute follower on your field and give it {[defense]}+1.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》选择自己场上的其他的1个Cute类型·从者。使其《生命值》+1。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分の場の他のキュート・フォロワー1体を選ぶ。それは体力+1する。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CSD02a-008",
+   "printings": [
+    "CSD02a-008",
+    "CSD02a-P05"
+   ],
+   "name": "Akiha Ikebukuro",
+   "names": {
+    "en": "Akiha Ikebukuro",
+    "cn": "池袋晶叶",
+    "ja": "池袋晶葉"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Discard a Cute card: Select an enemy follower on the field. Deal it 3 damage and draw a card.",
+    "cn": "【进化时】将手牌中的1张Cute类型·卡片舍弃：选择敌方场上的1个从者。给予其3点伤害。抽取1张卡。",
+    "ja": "【進化時】手札のキュート・カード1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに3ダメージ。1枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CSD02a-009",
+   "printings": [
+    "CSD02a-009",
+    "CSD02a-P06"
+   ],
+   "name": "Nene Kurihara",
+   "names": {
+    "en": "Nene Kurihara",
+    "cn": "栗原宁宁",
+    "ja": "栗原ネネ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 5,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this follower.\nWard.\n{[fanfare]} Select an enemy follower on the field and deal it 3 damage.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】\n《入场曲》选择敌方场上的1个从者。给予其3点伤害。",
+    "ja": "進化コスト1：これは進化する。\n【守護】\nファンファーレ相手の場のフォロワー1体を選ぶ。それに3ダメージ。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CSD02a-010",
+   "printings": [
+    "CSD02a-010",
+    "CSD02a-P07"
+   ],
+   "name": "Nene Kurihara",
+   "names": {
+    "en": "Nene Kurihara",
+    "cn": "栗原宁宁",
+    "ja": "栗原ネネ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": 4,
+   "defense": 5,
+   "text": {
+    "en": "Ward.\nOn Evolve - {[cost03]}: Select a Cute follower in your cemetery and summon it.",
+    "cn": "【守护】\n【进化时】《消费3》：选择自己的墓场中的1张Cute类型·从者卡。将其召唤到场上。",
+    "ja": "【守護】\n【進化時】コスト3：自分の墓場のキュート・フォロワー1枚を選ぶ。それを場に出す。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CSD02a-011",
+   "printings": [
+    "CSD02a-011",
+    "CSD02a-P08"
+   ],
+   "name": "Karin Domyoji",
+   "names": {
+    "en": "Karin Domyoji",
+    "cn": "道明寺歌铃",
+    "ja": "道明寺歌鈴"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "Ward.\n{[fanfare]} Discard a Cute card: Give this follower {[defense]}+2. Draw a card.",
+    "cn": "【守护】（当这张卡召唤到场上时，或自己的结束阶段中、可以将这张卡横置。只要有「处于横置状态并持有【守护】能力的从者」存在，敌方不能攻击那以外的目标）\n《入场曲》将手牌的1张Cute类型·卡片舍弃：使这张卡《生命值》+2。抽取1张卡。",
+    "ja": "【守護】（これが場に出たときか、自分のエンドフェイズにこれをアクトできる。相手は、アクト状態の【守護】を持つフォロワー以外を攻撃できない）\nファンファーレ手札のキュート・カード1枚を捨てる：これは体力+2する。1枚引く。"
+   },
+   "traits": [
+    "デレマス",
+    "キュート"
+   ]
+  },
+  {
+   "id": "CSD02a-LD01",
+   "printings": [
+    "CSD02a-LD01",
+    "CSD02a-LDⓈ01"
+   ],
+   "name": "Uzuki Shimamura [Stage of Magic]",
+   "names": {
+    "en": "Uzuki Shimamura [Stage of Magic]",
+    "cn": "[魔法舞台]岛村卯月",
+    "ja": "〔ステージオブマジック〕島村卯月"
+   },
+   "class": "Swordcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "cinderellaGirls",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  }
+ ]
+}

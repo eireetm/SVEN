@@ -519,11 +519,11 @@
    "printings": [
     "BP09-018",
     "BP09-SL04",
-    "PR-222",
     "SP01-011",
     "SP01-SL11",
     "SP01-SP06",
-    "SP01-U05"
+    "SP01-U05",
+    "PR-222"
    ],
    "name": "Celia, Sky Commander",
    "names": {
@@ -1773,8 +1773,8 @@
    "printings": [
     "BP09-059",
     "BP09-P18",
-    "DSD01b-014",
-    "SD08-014"
+    "SD08-014",
+    "DSD01b-014"
    ],
    "name": "Roy, Dragoncleaver",
    "names": {
@@ -1804,8 +1804,8 @@
    "printings": [
     "BP09-060",
     "BP09-P19",
-    "DSD01b-015",
-    "SD08-015"
+    "SD08-015",
+    "DSD01b-015"
    ],
    "name": "Roy, Dragoncleaver",
    "names": {

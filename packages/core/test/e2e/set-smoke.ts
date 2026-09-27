@@ -36,16 +36,19 @@ export interface SmokeExtras {
 const SMOKE_CREST = "BP20-T11";
 
 /**
- * Whole-set checks (every card script of one set runs, in random situations):
+ * Whole-set checks (every card script of one set, or of a few small sets together, runs in random situations):
  *  1. every card is played / evolved / activated in a busy scenario with random choices;
  *  2. random games between random decks built from the set.
  * All invariants are checked after every input, and games must restore identically from a
  * snapshot. The engine holds the whole card pool (later sets reuse earlier tokens).
  */
-export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?: SmokeExtras }): void {
+export function setSmokeTests(sets: SupportedSet | readonly SupportedSet[], opts: { games: number; extras?: SmokeExtras }): void {
   const engine = poolEngine();
   const extras = opts.extras ?? {};
-  const defs = SETS[set].cards;
+  // Small sets (starter decks, special packs) are checked together: their cards make one pool.
+  const list: readonly SupportedSet[] = typeof sets === "string" ? [sets] : sets;
+  const set = list.join(" + ");
+  const defs = list.flatMap((s) => SETS[s].cards);
   const playable = defs.filter((c) => !c.token && !c.evolved && !c.advanced && c.type !== "leader");
   const spells = playable.filter((c) => c.type === "spell");
   // Evolve deck cards (CR 6.1.1.3): evolved and advanced cards. Back faces of double-faced cards
@@ -217,7 +220,10 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
         const rng = seedRng(`${set}-deck-${i}-${p}`);
         const main = Array.from({ length: 40 }, () => playable[randomInt(rng, playable.length)]!.id);
         const pick = (xs: readonly CardDefinition[]) => xs[randomInt(rng, xs.length)]!.id;
-        const evolve = Array.from({ length: 10 }, (_, k) => (resources.length > 0 && k < 5 ? pick(resources) : pick(evolvedCards)));
+        // Sets without evolved cards (a few small ones) use the universe's resources only, or no evolve deck.
+        const evolvePool = evolvedCards.length > 0 ? evolvedCards : resources;
+        const evolve =
+          evolvePool.length === 0 ? [] : Array.from({ length: 10 }, (_, k) => (resources.length > 0 && k < 5 ? pick(resources) : pick(evolvePool)));
         return { ...(universeLeader ? { leader: universeLeader.printings[0]! } : {}), main, evolve };
       };
       const g = engine.newGame({ seed: `${set}-game-${i}`, players: [deck(0), deck(1)], config: { deckRestrictions: false } });
@@ -242,5 +248,7 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
       }
     }
     expect(finished).toBe(games);
-  }, 120_000 + games * 200);
+    // A time limit per game, not a speed requirement: a set with only a few expensive cards makes long games (PCS01's decks are 40
+    // Princess Knights, about 30 turns each).
+  }, 120_000 + games * 500);
 }

@@ -4,7 +4,7 @@ import { cardEngine } from "../../helpers";
 
 // CP03 Swordcraft (022–041), Cardfight!! Vanguard (Royal Paladin). V1 is 1c 2/2, V3 3c 3/4, V5 5c 5/5 (Neutral). CP03-127 is a
 // Drive Point. Royal Paladin cards without effects on their own here: CP03-031 Miru Biru (1c), CP03-036 Margal (1c). Blaster
-// followers: CP03-086 Blaster Dark, CP03-095 Blaster Javelin. Blaster Blade (CSD03a) is not in a supported set yet.
+// followers: CP03-086 Blaster Dark, CP03-095 Blaster Javelin, CSD03a-003 Blaster Blade.
 // QUICK-SAC (0) destroys a follower of yours; CP02-076 (3c) deals 2 damage to your leader.
 const E = cardEngine();
 const d = (spec: DriveSpec) => drive(E, spec);
@@ -12,9 +12,13 @@ const n = (count: number, id: string) => Array<string>(count).fill(id);
 const DP = "CP03-127";
 
 describe("CP03 Swordcraft", () => {
-  it("022 Majesty Lord Blaster — Storm, Twin Drive; no Blaster Blade and Blaster Dark pair: no destruction, no +2/+2", () => {
+  it("022 Majesty Lord Blaster — Storm, Twin Drive; a Blaster Blade and Blaster Dark pair: destroy up to 1, Strike +2/+2", () => {
     const t = d({ me: { field: ["CP03-022"], cemetery: ["CP03-086"], deck: ["V1", "V1"] } }).attack("CP03-022", "opp:leader").flush();
     expect([t.stats("CP03-022"), t.leader("opp"), t.keywords("CP03-022")]).toEqual([[4, 4], 16, ["storm", "twinDrive"]]);
+    const pair = ["CSD03a-003", "CP03-086"];
+    const s = d({ me: { field: ["CP03-022"], cemetery: pair, deck: ["V1", "V1"] } }).attack("CP03-022", "opp:leader").flush();
+    expect([s.stats("CP03-022"), s.leader("opp")]).toEqual([[6, 6], 14]);
+    expect(d({ me: { hand: ["CP03-022"], cemetery: pair, playPoints: 6 }, opp: { field: ["V5", "V3"] } }).play("CP03-022").pick("opp:V5").field("opp")).toEqual(["V3"]);
   });
 
   it("023 Palamedes — Fanfare: 5 damage; with 15 Royal Paladin cards in the cemetery: Storm and a Strike giving +1/+1", () => {
@@ -47,9 +51,11 @@ describe("CP03 Swordcraft", () => {
     expect([t.stats("CP03-027"), t.keywords("CP03-027")]).toEqual([[4, 2], ["ward", "storm"]]);
   });
 
-  it("028 Gancelot — Rush, Assail, Twin Drive; without a Blaster Blade in the cemetery the Fanfare does nothing", () => {
+  it("028 Gancelot — Rush, Assail, Twin Drive; Fanfare with a Blaster Blade in the cemetery: draw 2, discard", () => {
     const t = d({ me: { hand: ["CP03-028"], deck: ["V1", "V1"], playPoints: 4 } }).play("CP03-028");
     expect([t.hand(), t.keywords("CP03-028")]).toEqual([[], ["rush", "assail", "twinDrive"]]);
+    const b = d({ me: { hand: ["CP03-028"], cemetery: ["CSD03a-003"], deck: ["V1", "V3"], playPoints: 4 } }).play("CP03-028").pick("V3");
+    expect([b.hand(), b.cemetery()]).toEqual([["V1"], ["CSD03a-003", "V3"]]);
   });
 
   it("029 Kay — turn a faceup evolved Blaster follower in the evolve deck facedown: 3 less; Rush", () => {
@@ -88,9 +94,11 @@ describe("CP03 Swordcraft", () => {
     expect([t.stats("CP03-034"), t.leader("opp")]).toEqual([[3, 3], 19]);
   });
 
-  it("035 Future Knight, Llew — Fanfare, discard a Vanguard card: a Blaster Blade (none in the supported sets yet)", () => {
+  it("035 Future Knight, Llew — Fanfare, discard a Vanguard card: a Blaster Blade", () => {
     const t = d({ me: { hand: ["CP03-035", "CP03-031"], deck: ["V1"], playPoints: 2 } }).play("CP03-035").yes();
     expect([t.cemetery(), t.hand()]).toEqual([["CP03-031"], []]);
+    const b = d({ me: { hand: ["CP03-035", "CP03-031"], deck: ["V1", "CSD03a-003"], playPoints: 2 } }).play("CP03-035").yes().pick("CSD03a-003");
+    expect(b.hand()).toEqual(["CSD03a-003"]);
   });
 
   it("037 Flogal / 038 Elaine — end phase: refresh this; Ward, Fanfare: leader +2", () => {

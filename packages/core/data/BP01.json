@@ -402,8 +402,8 @@
    "id": "BP01-015",
    "printings": [
     "BP01-015",
-    "EBD01-015",
     "ETD03-008",
+    "EBD01-015",
     "PR-003",
     "PR-223"
    ],
@@ -575,8 +575,8 @@
    "id": "BP01-021",
    "printings": [
     "BP01-021",
-    "ETD03-017",
-    "SD01-008"
+    "SD01-008",
+    "ETD03-017"
    ],
    "name": "Okami",
    "names": {
@@ -632,10 +632,10 @@
    "printings": [
     "BP01-023",
     "BP01-P05",
+    "SD01-014",
     "EBD01-021",
     "PR-042",
-    "PR-443",
-    "SD01-014"
+    "PR-443"
    ],
    "name": "Fairy Circle",
    "names": {
@@ -2033,8 +2033,8 @@
    "id": "BP01-073",
    "printings": [
     "BP01-073",
-    "PR-021",
-    "SD03-014"
+    "SD03-014",
+    "PR-021"
    ],
    "name": "Fiery Embrace",
    "names": {
@@ -2622,8 +2622,8 @@
    "id": "BP01-094",
    "printings": [
     "BP01-094",
-    "ETD01-015",
-    "SD04-007"
+    "SD04-007",
+    "ETD01-015"
    ],
    "name": "Fire Lizard",
    "names": {
@@ -2705,8 +2705,8 @@
    "id": "BP01-097",
    "printings": [
     "BP01-097",
-    "ETD01-016",
-    "SD04-008"
+    "SD04-008",
+    "ETD01-016"
    ],
    "name": "Dread Dragon",
    "names": {
@@ -2735,10 +2735,10 @@
    "printings": [
     "BP01-098",
     "BP01-P20",
-    "DSD01b-018",
-    "PR-211",
     "SD04-015",
-    "SD08-019"
+    "SD08-019",
+    "DSD01b-018",
+    "PR-211"
    ],
    "name": "Blazing Breath",
    "names": {
@@ -2822,11 +2822,11 @@
    "printings": [
     "BP01-101",
     "BP01-SL13",
-    "PR-097",
     "SP01-035",
     "SP01-SL35",
     "SP01-SP23",
-    "SP01-U21"
+    "SP01-U21",
+    "PR-097"
    ],
    "name": "Cerberus",
    "names": {
@@ -3360,9 +3360,9 @@
    "id": "BP01-120",
    "printings": [
     "BP01-120",
+    "SD05-008",
     "ETD02-014",
-    "PR-080",
-    "SD05-008"
+    "PR-080"
    ],
    "name": "Spartoi Sergeant",
    "names": {
@@ -3500,8 +3500,8 @@
    "id": "BP01-125",
    "printings": [
     "BP01-125",
-    "PR-175",
-    "SD05-014"
+    "SD05-014",
+    "PR-175"
    ],
    "name": "Razory Claw",
    "names": {
@@ -4846,9 +4846,9 @@
    "id": "BP01-173",
    "printings": [
     "BP01-173",
-    "PR-000",
     "SD02-019",
-    "SD05-017"
+    "SD05-017",
+    "PR-000"
    ],
    "name": "Fighter",
    "names": {
@@ -4934,11 +4934,11 @@
    "id": "BP01-176",
    "printings": [
     "BP01-176",
-    "ETD01-019",
     "SD02-020",
     "SD04-019",
     "SD05-020",
-    "SD06-017"
+    "SD06-017",
+    "ETD01-019"
    ],
    "name": "Angelic Sword Maiden",
    "names": {
@@ -5024,13 +5024,13 @@
    "id": "BP01-179",
    "printings": [
     "BP01-179",
-    "ETD03-019",
-    "PR-001",
-    "PR-166",
     "SD01-019",
     "SD03-019",
     "SD04-020",
-    "SD06-020"
+    "SD06-020",
+    "ETD03-019",
+    "PR-001",
+    "PR-166"
    ],
    "name": "Angelic Snipe",
    "names": {
@@ -5058,10 +5058,10 @@
    "id": "BP01-180",
    "printings": [
     "BP01-180",
-    "ETD02-019",
-    "PR-002",
     "SD01-020",
-    "SD03-020"
+    "SD03-020",
+    "ETD02-019",
+    "PR-002"
    ],
    "name": "Angelic Barrage",
    "names": {
@@ -5397,8 +5397,8 @@
     "BP01-T01",
     "BP02-T09",
     "BP08-T04",
-    "PR-190",
-    "ETD03-T02"
+    "ETD03-T02",
+    "PR-190"
    ],
    "name": "Thorn Burst",
    "names": {
@@ -5433,9 +5433,9 @@
     "BP08-T05",
     "BP09-T03",
     "BP13-T06",
-    "PR-187",
+    "ETD03-T01",
     "EBD01-T01",
-    "ETD03-T01"
+    "PR-187"
    ],
    "name": "Fairy Wisp",
    "names": {
@@ -5475,10 +5475,10 @@
     "BP13-T07",
     "BP16-T10",
     "BP21-T11",
-    "PR-108",
-    "EBD01-T02",
     "SD01-T01",
-    "SP01-T01"
+    "EBD01-T02",
+    "SP01-T01",
+    "PR-108"
    ],
    "name": "Fairy",
    "names": {
@@ -5540,9 +5540,9 @@
     "BP16-T12",
     "BP17-T11",
     "BP19-T04",
-    "PR-109",
     "SD02-T01",
-    "SP01-T02"
+    "SP01-T02",
+    "PR-109"
    ],
    "name": "Knight",
    "names": {
@@ -5604,9 +5604,9 @@
     "BP16-T13",
     "BP17-T12",
     "BP19-T05",
-    "PR-110",
     "SD02-T02",
-    "SD07-T01"
+    "SD07-T01",
+    "PR-110"
    ],
    "name": "Steelclad Knight",
    "names": {
@@ -5637,8 +5637,8 @@
     "BP02-T13",
     "BP09-T08",
     "BP12-T06",
-    "PR-111",
-    "SD03-T01"
+    "SD03-T01",
+    "PR-111"
    ],
    "name": "Strikeform Golem",
    "names": {
@@ -5669,8 +5669,8 @@
     "BP02-T14",
     "BP09-T09",
     "BP12-T07",
-    "PR-112",
-    "SD03-T02"
+    "SD03-T02",
+    "PR-112"
    ],
    "name": "Guardform Golem",
    "names": {
@@ -5739,9 +5739,9 @@
     "BP09-T11",
     "BP13-T10",
     "BP16-T17",
-    "PR-113",
     "SD04-T01",
-    "SD08-T01"
+    "SD08-T01",
+    "PR-113"
    ],
    "name": "Dragon",
    "names": {
@@ -5832,9 +5832,9 @@
     "BP10-T10",
     "BP13-T11",
     "BP16-T18",
-    "PR-114",
+    "SD05-T01",
     "ETD02-T02",
-    "SD05-T01"
+    "PR-114"
    ],
    "name": "Ghost",
    "names": {
@@ -5867,9 +5867,9 @@
     "BP12-T08",
     "BP16-T19",
     "BP18-T13",
+    "SD05-T02",
     "PR-115",
-    "PR-346",
-    "SD05-T02"
+    "PR-346"
    ],
    "name": "Forest Bat",
    "names": {
@@ -5903,8 +5903,8 @@
     "BP09-T14",
     "BP10-T12",
     "BP11-T09",
-    "PR-116",
-    "SD06-T01"
+    "SD06-T01",
+    "PR-116"
    ],
    "name": "Holy Falcon",
    "names": {
@@ -5938,8 +5938,8 @@
     "BP11-T10",
     "BP16-T20",
     "BP19-T07",
-    "PR-117",
-    "SD06-T02"
+    "SD06-T02",
+    "PR-117"
    ],
    "name": "Holy Tiger",
    "names": {
