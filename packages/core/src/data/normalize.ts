@@ -1,6 +1,7 @@
 import { backFaceId, CARD_CLASSES, type CardClass, type CardDefinition, type CardType, type LocalizedText } from "../model/card";
 import { englishText, japaneseKey, treatedAs, withoutReminders, withoutTreatedAs, wordDice, type TextSource } from "./english-text";
 import type { RawCardJson } from "./raw";
+import { UNIVERSE_OF_SET } from "./universes";
 
 /**
  * Raw scraped JSON -> CardDefinition.
@@ -37,6 +38,13 @@ export interface NormalizedPrinting {
   jaKey: string;
   /** CR 2.14 — the back face of a double-faced card. */
   back: NormalizedBack | null;
+  /**
+   * An evolved card whose English name lacks " (Evolved)": either named differently from any base card by design
+   * (CR 5.16.1.1.1 "unless specified otherwise", e.g. CP03-006 Navalgazer Dragon, evolved into by name; the
+   * evolve-deck spells Carrot / Drive Point), or a data error when its Japanese name is a base card's (checked in
+   * groupPrintings).
+   */
+  ownEvolvedName: boolean;
 }
 
 /** The back face of a double-faced card after normalization (CR 2.14). */
@@ -90,8 +98,9 @@ export function parseCardType(cardNo: string, raw: readonly string[]): {
   if (type === undefined || rest.length > 0) {
     throw new CardDataError(`${cardNo}: expected exactly one primary card type, got ${JSON.stringify(raw)}`);
   }
-  if (evolved && type !== "follower" && type !== "amulet") {
-    throw new CardDataError(`${cardNo}: evolved card must be a follower or amulet in the supported sets`);
+  // Evolved spells are the evolve-deck resources Carrot (CR 14.2.1, 4.13) and Drive Point (14.4.9, 4.14).
+  if (evolved && type !== "follower" && type !== "amulet" && type !== "spell") {
+    throw new CardDataError(`${cardNo}: evolved card must be a follower, amulet or spell in the supported sets`);
   }
   // CR 9.1.4.2 — crests exist only as tokens (BP20). A crest that is not a token fails until one appears.
   if (type === "crest" && (!token || evolved || advanced)) {
@@ -165,8 +174,9 @@ function checkStats(
     return;
   }
   if (evolved) {
-    if (type !== "amulet") fail("only followers and amulets can currently be evolved cards");
-    if (cost !== null || atk !== null || def !== null) fail("evolved amulet must not have cost/atk/def");
+    // Evolved amulets (CR 5.16.1.2.1) and the evolve-deck spells Carrot / Drive Point (14.2.1, 14.4.9): never
+    // played, so no cost.
+    if (cost !== null || atk !== null || def !== null) fail(`evolved ${type} must not have cost/atk/def`);
     return;
   }
   if (cost === null) fail(`${type} needs a cost`);
@@ -178,12 +188,15 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   checkStats(cardNo, type, evolved, raw.cost, raw.atk, raw.def);
   const doubleFaced = raw.back !== undefined && raw.back !== null;
 
-  const printedName = stripEvolvedSuffix(cardNo, raw.name_en.trim(), evolved, doubleFaced);
+  const rawName = raw.name_en.trim();
+  const ownEvolvedName = evolved && !doubleFaced && !rawName.endsWith(EVOLVED_SUFFIX);
+  const printedName = ownEvolvedName ? rawName : stripEvolvedSuffix(cardNo, rawName, evolved, doubleFaced);
   const en = englishText(raw);
   // CR 2.13: "(This card is treated as X.)" — X is the card name, the printed name an alternate name.
   const alias = treatedAs(en.text);
   const name = alias === null ? printedName : stripEvolvedSuffix(cardNo, alias, false);
   if (name === "") throw new CardDataError(`${cardNo}: empty English name`);
+  const universe = UNIVERSE_OF_SET[raw.set];
 
   return {
     printing: cardNo,
@@ -196,6 +209,7 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
       evolved,
       token,
       ...(advanced ? { advanced: true as const } : {}),
+      ...(universe ? { universe } : {}),
       cost: raw.cost,
       attack: raw.atk,
       defense: raw.def,
@@ -211,6 +225,7 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
     alternateName: alias === null ? null : { en: printedName, cn: raw.name_cn, ja: raw.name_ja },
     jaKey: japaneseKey(raw),
     back: doubleFaced ? normalizeBack(cardNo, raw) : null,
+    ownEvolvedName,
   };
 }
 
@@ -325,6 +340,14 @@ function printingRank(p: string): number {
  * numbering, then lexical order.
  */
 export function groupPrintings(printings: readonly NormalizedPrinting[], supported: readonly string[]): GroupResult {
+  // CR 5.16.1.1.1 — an evolved card without " (Evolved)" whose Japanese name is a base card's has lost the suffix
+  // in the data (e.g. BP14-057): an error to fix in data/fixes.ts. Otherwise its name is its own (CP03-006).
+  const baseJapaneseNames = new Set(printings.filter((p) => !p.def.evolved && p.def.names.ja).map((p) => p.def.names.ja!));
+  for (const p of printings) {
+    if (p.ownEvolvedName && p.def.names.ja && baseJapaneseNames.has(p.def.names.ja) && supported.includes(p.set)) {
+      throw new CardDataError(`${p.printing}: evolved card name "${p.def.name}" lacks the "${EVOLVED_SUFFIX}" suffix`);
+    }
+  }
   const groups = new Map<string, NormalizedPrinting[]>();
   for (const p of printings) {
     const key = identityKey(p.def);
@@ -384,6 +407,11 @@ export function groupPrintings(printings: readonly NormalizedPrinting[], support
     if (canonical.textSource === "none" && canonical.jaKey !== "") noEnglishText.push(canonical.printing);
     if (canonical.officialMismatch) officialMismatches.push(canonical.printing);
     const def: CardDefinition = { id: canonical.printing, printings: list.map((p) => p.printing), ...canonical.def, traits: [...traits] };
+    // CR 2.12.2.1 — the universe of the printings from universe sets (reprints elsewhere carry none); they must agree.
+    const universes = [...new Set(list.flatMap((p) => (p.def.universe ? [p.def.universe] : [])))];
+    if (universes.length > 1) throw new CardDataError(`${canonical.printing}: printings in different universes ${universes.join(", ")}`);
+    if (universes[0]) def.universe = universes[0];
+    else delete def.universe;
     const alternates = list.filter((p) => p.alternateName !== null);
     if (alternates.length > 0) def.alternateNames = Object.fromEntries(alternates.map((p) => [p.printing, p.alternateName!]));
     defs.push(def);

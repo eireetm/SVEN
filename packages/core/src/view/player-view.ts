@@ -1,4 +1,4 @@
-import type { DefId, PrintingId, CardType } from "../model/card";
+import type { DefId, PrintingId, CardType, Universe } from "../model/card";
 import type { Decision } from "../model/decision";
 import type { CardId, PlayerId } from "../model/ids";
 import type { Keyword } from "../model/keyword";
@@ -33,6 +33,8 @@ export interface CardView {
   boxed: boolean;
   /** CR 15.1 */
   counters: Readonly<Record<string, number>>;
+  /** A race-zone, drive-zone or equipment-zone card: the card on the field it is linked to (CR 14.2.1.1, 14.4.9.2, 14.5.2.2). */
+  linkedTo: CardId | null;
 }
 
 /** A card the viewer may not look at (only that it exists). */
@@ -59,6 +61,13 @@ export interface PlayerSideView {
   banished: (CardView | HiddenCardView)[];
   evolveDeck: (CardView | HiddenCardView)[];
   evolveZone: CardView[];
+  /** CR 4.13–4.16 — the collaboration zones (public). */
+  raceZone: CardView[];
+  driveZone: CardView[];
+  triggerZone: CardView[];
+  equipmentZone: CardView[];
+  /** CR 6.1.1.5 — the universe the deck is based on, or null for a class-based deck (public). */
+  universe: Universe | null;
 }
 
 export interface PlayerView {
@@ -101,6 +110,7 @@ function cardView(env: Env, id: CardId): CardView {
     superEvolved: c.superEvolved,
     boxed: isBoxed(env.state, id),
     counters: { ...c.counters },
+    linkedTo: c.linkedTo ?? null,
   };
 }
 
@@ -132,6 +142,11 @@ function sideView(env: Env, viewer: PlayerId, p: PlayerId): PlayerSideView {
     banished: some("banished"),
     evolveDeck: some("evolveDeck"),
     evolveZone: all("evolveZone"),
+    raceZone: all("raceZone"),
+    driveZone: all("driveZone"),
+    triggerZone: all("triggerZone"),
+    equipmentZone: all("equipmentZone"),
+    universe: ps.universe,
   };
 }
 

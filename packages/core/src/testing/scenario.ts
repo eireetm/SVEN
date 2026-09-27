@@ -1,4 +1,4 @@
-import type { PrintingId } from "../model/card";
+import type { PrintingId, Universe } from "../model/card";
 import type { PlayerId } from "../model/ids";
 import { createInitialState } from "../engine/deck";
 import type { Engine, GameConfigInput } from "../engine/engine";
@@ -29,6 +29,8 @@ export interface FieldCardSpec {
   enteredByAbility?: boolean;
   /** It gained defense this turn (BP21-096 "Activate only if this gained defense this turn"). */
   gainedDefenseThisTurn?: boolean;
+  /** It raced this many times: as many Carrots (CP01-085) are put into the race zone linked to it (CR 14.2). */
+  racing?: number;
 }
 
 export interface ScenarioSide {
@@ -61,6 +63,8 @@ export interface ScenarioSide {
   leftFieldThisTurn?: PrintingId[];
   /** Followers on this player's field already evolved this turn (BP18-014 "if a follower on your field has evolved this turn"). */
   evolvedThisTurn?: number;
+  /** CR 6.1.1.5 — the universe the deck is based on (default: a class). */
+  universe?: Universe;
 }
 
 export interface ScenarioSpec {
@@ -121,6 +125,11 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
       const c = state.cards[id]!;
       if (f.enteredByAbility) c.enteredByAbility = true;
       if (f.gainedDefenseThisTurn) gainedDefense.push(id);
+      if (f.racing) {
+        for (let i = 0; i < f.racing; i++) state.cards[placeInitialCard(state, engine.db, "CP01-085", p, "raceZone")]!.linkedTo = id;
+        c.raced = f.racing;
+        c.raceSeq = 0;
+      }
       c.enteredFieldTurn = f.enteredThisTurn ? turn : turn - 1;
       c.damage = f.damage ?? 0;
       const stack: Record<string, number> = engine.scripts[c.def]?.keywords?.includes("stack") ? { stack: 1 } : {};
@@ -143,6 +152,7 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
     ps.leaderDefense = side.leaderDefense ?? config.rules.leaderDefense;
     ps.evolutionPoints = side.evolutionPoints ?? config.rules.evolutionPoints[p === first ? 0 : 1];
     ps.superEvolutionPoints = side.superEvolutionPoints ?? config.rules.superEvolutionPoints;
+    ps.universe = side.universe ?? null;
     if (gainedDefense.length > 0) {
       ps.thisTurn = { ...ps.thisTurn, turn, statsGained: [...gainedDefense], defenseGained: [...gainedDefense] };
     }

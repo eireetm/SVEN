@@ -94,6 +94,19 @@ export const banishThis: CustomCost = {
   },
 };
 
+/**
+ * CR 14.2.2.3 — the serving part of a serve ability's cost ("{[feed]}" × `times`): serve this follower that many times
+ * (14.2.1.1). Not payable when it is already linked to a race-zone card (14.2.1.2.1) or with too few facedown Carrots.
+ */
+export function serveCost(times: number): CustomCost {
+  return {
+    canPay: (g, _c, self) => g.canServe(self, times),
+    *pay(fx) {
+      yield* fx.serve(fx.self, times);
+    },
+  };
+}
+
 /** "Discard this card" — a cost of an ability valid in the hand (BP08-037, 105; CR 10.3.5, 5.12). */
 export const discardThis: CustomCost = {
   canPay: (g, _c, self) => g.card(self)?.zone === "hand",

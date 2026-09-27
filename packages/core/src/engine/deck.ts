@@ -1,5 +1,5 @@
 import { DEFAULT_LEADER, type CardDatabase } from "../data/database";
-import type { CardDefinition, PrintingId } from "../model/card";
+import type { CardDefinition, PrintingId, Universe } from "../model/card";
 import type { GameConfig } from "../model/config";
 import type { PlayerId } from "../model/ids";
 import type { GameState, PlayerState } from "../model/state";
@@ -19,6 +19,21 @@ export interface DeckList {
 }
 
 export type ImplementationStatus = "vanilla" | "scripted" | "missing";
+
+/**
+ * CR 6.1.1.5 — the universe a deck is based on: the one its leader and every card of its main and evolve decks
+ * share (6.1.1.5.2). Otherwise the deck is based on a class (null). The engine decides this from the deck list
+ * instead of a declaration at 6.2.1.3 (confirmed by the owner): a deck of one universe's cards is based on it.
+ */
+export function deckUniverse(db: CardDatabase, deck: DeckList): Universe | null {
+  if (deck.leader === undefined || !db.hasPrinting(deck.leader)) return null;
+  const universe = db.ofPrinting(deck.leader).universe;
+  if (universe === undefined) return null;
+  for (const p of [...deck.main, ...deck.evolve]) {
+    if (!db.hasPrinting(p) || db.ofPrinting(p).universe !== universe) return null;
+  }
+  return universe;
+}
 
 /** Does the engine know how this card behaves? Cards without card text need no script. */
 export function implementationStatus(scripts: ScriptRegistry, def: CardDefinition): ImplementationStatus {
@@ -105,7 +120,8 @@ export function validateDeck(
         if (n > limit) problems.push(`${label}: ${n} copies of "${name}", at most ${limit} (6.1.1.4)`);
       }
     }
-    if (leader) {
+    // CR 6.1.1.5 — based on a universe (6.1.1.5.2, by construction of deckUniverse) or on the leader's class.
+    if (leader && deckUniverse(db, deck) === null) {
       for (const d of [...main, ...evolve]) {
         if (d.class !== "Neutral" && d.class !== leader.class) {
           problems.push(`${d.id} ${d.name} (${d.class}) does not match the leader class ${leader.class} (6.1.1.5.1)`);
@@ -124,8 +140,23 @@ function emptyPlayer(id: PlayerId, leaderDefense: number): PlayerState {
     maxPlayPoints: 0,
     evolutionPoints: 0,
     superEvolutionPoints: 0,
+    universe: null,
     turnsPassed: 0,
-    zones: { leader: [], deck: [], hand: [], field: [], ex: [], cemetery: [], banished: [], evolveDeck: [], evolveZone: [] },
+    zones: {
+      leader: [],
+      deck: [],
+      hand: [],
+      field: [],
+      ex: [],
+      cemetery: [],
+      banished: [],
+      evolveDeck: [],
+      evolveZone: [],
+      raceZone: [],
+      driveZone: [],
+      triggerZone: [],
+      equipmentZone: [],
+    },
     evolveAbilityTurn: null,
     drewFromEmptyDeck: false,
     cardsPlayed: { turn: 0, count: 0 },
@@ -172,6 +203,7 @@ export function createInitialState(
   ([0, 1] as PlayerId[]).forEach((p) => {
     const deck = decks[p];
     placeInitialCard(state, db, deck.leader ?? DEFAULT_LEADER.id, p, "leader");
+    state.players[p].universe = deckUniverse(db, deck); // CR 6.1.1.5, 6.2.1.3
     for (const printing of deck.main) placeInitialCard(state, db, printing, p, "deck");
     for (const printing of deck.evolve) placeInitialCard(state, db, printing, p, "evolveDeck");
   });

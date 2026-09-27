@@ -120,6 +120,8 @@ export type GameEvent =
   | { type: "extraTurnGranted"; player: PlayerId }
   /** CR 5.26 a player's turn was skipped (it did not begin). */
   | { type: "turnSkipped"; player: PlayerId }
+  /** CR 14.2.3 — a card raced `times` times (each is a race for On Race, 14.2.4). */
+  | { type: "raced"; card: CardId; player: PlayerId; times: number }
   /** CR 5.20 a player rolled a six-sided die. */
   | { type: "dieRolled"; player: PlayerId; result: number }
   /**

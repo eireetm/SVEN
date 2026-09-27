@@ -25,6 +25,7 @@ import {
   transformCards,
 } from "../actions/cards";
 import { addCounters, removeCounters } from "../actions/counters";
+import { race as raceCard, serve as serveCard } from "../actions/race";
 import { recordStatsGained } from "../actions/stats";
 import { dealDamage, type DamageInstance } from "../actions/damage";
 import { changeLeaderDefense, setLeaderDefense } from "../actions/leader";
@@ -355,6 +356,10 @@ export interface EffectContext {
   skipNextRefresh(card: CardId): Proc<void>;
   /** CR 5.20 roll a six-sided die (the game's seeded random source); returns 1–6. */
   rollDie(player?: PlayerId): Proc<number>;
+  /** CR 14.2.1 — serve this card `times` times (Carrots from the evolve deck into the race zone, linked). */
+  serve(card: CardId, times: number): Proc<boolean>;
+  /** CR 14.2.3 — race this card `times` times (while linked to a race-zone card). */
+  race(card: CardId, times: number): Proc<void>;
   /** CR 5.32 — maneuver an amulet on the field: for the rest of the turn it is a follower (BP11-T01). */
   maneuver(card: CardId): Proc<void>;
   /** CR 5.31 — the card becomes Boxed for the duration (BP11-018 "until the end of its controller's next turn"). */
@@ -874,6 +879,12 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *skipNextRefresh(card) {
       if (g.state.cards[card]?.zone === "field") addEffect(card, null, { kind: "skipNextRefresh" });
+    },
+    *serve(card, times) {
+      return serveCard(g, card, times);
+    },
+    *race(card, times) {
+      raceCard(g, card, times);
     },
     *rollDie(player = ctrl) {
       const result = randomInt(g.state.rng, 6) + 1;

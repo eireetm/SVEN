@@ -51,6 +51,11 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
   // Evolve deck cards (CR 6.1.1.3): evolved and advanced cards. Back faces of double-faced cards
   // (CR 2.14) are not cards by themselves.
   const evolvedCards = defs.filter((c) => (c.evolved || c.advanced) && c.frontFace === undefined);
+  // Collaboration sets (CR 14): decks of the set's cards with one of its leaders are based on its universe (6.1.1.5.2), so
+  // its rules apply; its evolve-deck resources (Carrot, Drive Point: evolved spells) are used by serving and riding.
+  const universe = playable.find((c) => c.universe !== undefined)?.universe;
+  const universeLeader = universe ? defs.find((c) => c.type === "leader" && c.universe === universe) : undefined;
+  const resources = evolvedCards.filter((c) => c.type === "spell");
 
   const assertOk = (g: GameSession) => {
     const errors = checkInvariants(g.state as never, engine.db, g.decision);
@@ -77,6 +82,8 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
     const skipped: string[] = [];
     for (const card of defs) {
       if (card.type === "leader" || extras.notInScenario?.[card.id] !== undefined) continue;
+      // Evolve-deck resources (Carrot, Drive Point) are used by other cards' serve / ride abilities, not by themselves.
+      if (card.evolved && card.type === "spell") continue;
       // An evolved card normally shares its base's name (CR 5.16.1.1.1); some are evolved into
       // by an evolve ability that names part of their name instead (BP03-056 -> BP03-058, and
       // from an earlier set: BP03-056 -> BP04-061), or names them (a face of a double-faced card,
@@ -111,7 +118,8 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
               { card: "BP01-173", engaged: true },
               ...(extras.field ?? []),
             ],
-            evolveDeck: card.evolved ? [physical] : [],
+            evolveDeck: [...(card.evolved ? [physical] : []), ...resources.flatMap((r) => [r.id, r.id, r.id])],
+            ...(universe ? { universe } : {}),
             ex: ["BP01-T03", "BP01-T11", ...(card.id === SMOKE_CREST ? [] : [SMOKE_CREST]), ...(card.token || card.advanced ? [card.id] : [])],
             // 10 spells for Spellchain, plus a few other cards for Necrocharge.
             cemetery: [...pick(`${card.id}:spells`, spells, 10), ...pick(`${card.id}:cem`, playable, 6), ...(extras.cemetery ?? [])],
@@ -189,8 +197,9 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
       const deck = (p: PlayerId): DeckList => {
         const rng = seedRng(`${set}-deck-${i}-${p}`);
         const main = Array.from({ length: 40 }, () => playable[randomInt(rng, playable.length)]!.id);
-        const evolve = Array.from({ length: 10 }, () => evolvedCards[randomInt(rng, evolvedCards.length)]!.id);
-        return { main, evolve };
+        const pick = (xs: readonly CardDefinition[]) => xs[randomInt(rng, xs.length)]!.id;
+        const evolve = Array.from({ length: 10 }, (_, k) => (resources.length > 0 && k < 5 ? pick(resources) : pick(evolvedCards)));
+        return { ...(universeLeader ? { leader: universeLeader.printings[0]! } : {}), main, evolve };
       };
       const g = engine.newGame({ seed: `${set}-game-${i}`, players: [deck(0), deck(1)], config: { deckRestrictions: false } });
       const agents: [Agent, Agent] = [randomAgent(`${set}x${i}`), randomAgent(`${set}y${i}`)];

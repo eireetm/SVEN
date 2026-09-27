@@ -39,7 +39,8 @@ describe("card pool (all supported sets)", () => {
   });
 
   it("CR 5.16.1.1.1 — every evolved card has exactly one base follower with the same name", () => {
-    for (const e of ALL_CARDS.filter((c) => c.evolved)) {
+    // Evolved spells are evolve-deck resources, not evolved forms: Carrot (CR 14.2.1), Drive Point (14.4.9).
+    for (const e of ALL_CARDS.filter((c) => c.evolved && c.type !== "spell")) {
       const same = db.named(e.name).filter((d) => !d.evolved && d.type === "follower");
       if (same.length === 1) continue;
       // "Unless specified otherwise": evolved into from a card whose text names a string this

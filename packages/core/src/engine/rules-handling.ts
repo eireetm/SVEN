@@ -13,8 +13,8 @@ import { cannotLose, endGame } from "./flow/end-game";
  * the plan is then executed at once, because simultaneous rules handling is executed
  * simultaneously (CR 11.1.3, 10.5.2.1).
  *
- * To add or change a rule, add or edit an entry of RULES_PROCESSES. Not implemented (no
- * supported card needs them): 11.8 racing, 11.10 drive points, 11.11 equipment (universes).
+ * To add or change a rule, add or edit an entry of RULES_PROCESSES. Not implemented yet (no
+ * supported card needs it): 11.11 equipment.
  */
 export interface RulesPlan {
   losses: { player: PlayerId; reason: LossReason }[];
@@ -22,7 +22,7 @@ export interface RulesPlan {
   destroy: Set<CardId>;
   /** Moved to the owner's cemetery without being destroyed (CR 11.4.1, 11.5.1). */
   toCemetery: Set<CardId>;
-  /** Moved faceup to the evolve deck area (CR 11.6.1). */
+  /** Moved faceup to the evolve deck area (CR 11.6.1, 11.8.1, 11.10.1). */
   toEvolveDeck: Set<CardId>;
   /** Players whose play points are lowered to their maximum (CR 11.9.1). */
   capPlayPoints: Set<PlayerId>;
@@ -34,6 +34,12 @@ export interface RulesProcess {
 }
 
 const BOTH: readonly PlayerId[] = [0, 1];
+
+/** Is this race-zone / drive-zone / equipment card linked to a card on the field (CR 14.2.1.3, 14.4.9.4, 14.5.2.4)? */
+function linkedToField(g: G, id: CardId): boolean {
+  const to = g.state.cards[id]!.linkedTo;
+  return to !== undefined && g.state.cards[to]?.zone === "field";
+}
 
 export const RULES_PROCESSES: readonly RulesProcess[] = [
   {
@@ -110,6 +116,24 @@ export const RULES_PROCESSES: readonly RulesProcess[] = [
       }
       for (const p of BOTH) {
         for (const id of g.state.players[p].zones.evolveZone) if (!linked.has(id)) plan.toEvolveDeck.add(id);
+      }
+    },
+  },
+  {
+    clause: "11.8",
+    *collect(g, plan) {
+      // 11.8.1 — race-zone cards (Carrots) not linked to a card on the field.
+      for (const p of BOTH) {
+        for (const id of g.state.players[p].zones.raceZone) if (!linkedToField(g, id)) plan.toEvolveDeck.add(id);
+      }
+    },
+  },
+  {
+    clause: "11.10",
+    *collect(g, plan) {
+      // 11.10.1 — Drive Point cards in the drive zone not linked to a card on the field.
+      for (const p of BOTH) {
+        for (const id of g.state.players[p].zones.driveZone) if (!linkedToField(g, id)) plan.toEvolveDeck.add(id);
       }
     },
   },

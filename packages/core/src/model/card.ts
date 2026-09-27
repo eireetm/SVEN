@@ -12,7 +12,7 @@ export type DefId = string;
 /** A physical printing's card number, e.g. "BP01-SL01" (only matters for art / GUI). */
 export type PrintingId = string;
 
-/** CR 2.2.2 — classes. Universe cards (CR 14) are not supported yet. */
+/** CR 2.2.2 — classes. Collaboration cards have a class and a universe (Universe below). */
 export const CARD_CLASSES = [
   "Neutral",
   "Forestcraft",
@@ -23,6 +23,14 @@ export const CARD_CLASSES = [
   "Havencraft",
 ] as const;
 export type CardClass = (typeof CARD_CLASSES)[number];
+
+/**
+ * CR 2.12 / 14 — universes of collaboration cards (CR 14.2–14.5): Umamusume: Pretty Derby, THE IDOLM@STER
+ * CINDERELLA GIRLS, Cardfight!! Vanguard, Princess Connect! Re: Dive. A deck is based on a universe when its
+ * leader and all its cards share it (6.1.1.5.2); its rules (Magical Items, drive checks, Union Burst …) then apply.
+ */
+export const UNIVERSES = ["umamusume", "cinderellaGirls", "vanguard", "princessConnect"] as const;
+export type Universe = (typeof UNIVERSES)[number];
 
 /**
  * CR 2.3.2 primary card types. Crests (BP20) are tokens that exist only in the EX area (9.1.4.2), one
@@ -58,6 +66,11 @@ export interface CardDefinition {
   advanced?: true;
   /** Token (CR 9.1). */
   token: boolean;
+  /**
+   * CR 2.12.2.1 — the card's universe (collaboration cards, CR 14), printed with the collector number; the data
+   * build takes it from the set (data/universes.ts). Absent for class-only cards.
+   */
+  universe?: Universe;
   /**
    * Traits (CR 2.4) in Japanese, exactly as printed on the Japanese card (e.g. "妖精").
    * The only trait identity: English trait names are translations and are not used.

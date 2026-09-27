@@ -8,6 +8,7 @@ import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX } from "../abilities/keyword-abil
 import { makeReader } from "../query";
 import { getCard, type Env } from "./access";
 import { effectInForce } from "./effects";
+import { isRacing } from "./links";
 
 /** An ability together with where it is defined (definition id + index in its script). */
 export interface AbilityRef {
@@ -230,6 +231,8 @@ export function characteristics(env: Env, id: CardId): Characteristics {
       for (const k of passive(reader, x, id)) addKeyword(k);
     }
   }
+  // CR 14.2.3.1 — a card that raced has Rush while it is linked to a race-zone card.
+  if (c.raceSeq !== undefined && !lost(c.raceSeq) && isRacing(env, id)) addKeyword("rush");
   if (type !== "follower" && baseDef.type !== "leader") {
     // CR 5.25.2.1 — a card that is not a follower has no attack or defense to reference.
     attack = null;

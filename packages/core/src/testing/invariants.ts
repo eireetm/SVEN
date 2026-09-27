@@ -56,6 +56,15 @@ export function checkInvariants(state: GameState, db: CardDatabase, decision: De
         for (const id of state.players[q].zones.field) linked.add(state.cards[id]?.evolvedWith);
       }
       for (const id of ps.zones.evolveZone) if (!linked.has(id)) errors.push(`unlinked evolve card ${id} at a main phase decision`);
+      // CR 11.8.1 / 11.10.1 — every Carrot / Drive Point card is linked to a card on the field; the Trigger zone is
+      // empty between drive checks (CR 4.15.1).
+      for (const zone of ["raceZone", "driveZone"] as const) {
+        for (const id of ps.zones[zone]) {
+          const to = state.cards[id]!.linkedTo;
+          if (to === undefined || state.cards[to]?.zone !== "field") errors.push(`unlinked ${zone} card ${id} at a main phase decision`);
+        }
+      }
+      if (ps.zones.triggerZone.length > 0) errors.push(`P${p} Trigger zone not empty at a main phase decision`);
     }
   }
   for (const id of state.resolution) note(id, "resolution");

@@ -1,5 +1,5 @@
 import type { CardDatabase } from "../data/database";
-import type { CardType, DefId } from "../model/card";
+import type { CardType, DefId, Universe } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import { opponentOf } from "../model/ids";
 import type { Keyword } from "../model/keyword";
@@ -12,6 +12,8 @@ import { playVariants } from "./flow/play-card";
 import { choosesAnyNumberOfOptions } from "./abilities/modes";
 import { countsThisTurn } from "./state/turn-counts";
 import { effectInForce } from "./state/effects";
+import { carrotsToServe, canServe } from "./actions/race";
+import { isRacing, linkedCards } from "./state/links";
 
 /**
  * Read-only access to a game for card scripts, bots and views. Scripts must go through this
@@ -110,6 +112,18 @@ export interface GameReader {
   diceRolledThisTurn(player: PlayerId): readonly number[];
   /** Did this card gain defense this turn (an effect's +X or a super-evolution's +1, CR 12.2.4.1; BP21-096)? */
   gainedDefenseThisTurn(id: CardId): boolean;
+  /** CR 6.1.1.5 — the universe the player's deck is based on (null: a class). */
+  deckUniverse(player: PlayerId): Universe | null;
+  /** CR 14.2.3.1 — "a racing follower": it raced and is still linked to a race-zone card. */
+  isRacing(id: CardId): boolean;
+  /** CR 14.2.3.1 — how many times this object has raced. */
+  racedTimes(id: CardId): number;
+  /** Facedown Carrot cards in the player's evolve deck, which serving uses (CR 14.2.1.1, 4.6.3). */
+  carrotsToServe(player: PlayerId): CardId[];
+  /** Can this card be served `times` times as a cost (CR 14.2.1.2.1)? */
+  canServe(id: CardId, times: number): boolean;
+  /** The race-zone / drive-zone / equipment cards linked to this card (CR 14.2.1.1, 14.4.9.2, 14.5.2.2). */
+  linkedCards(id: CardId, zone: "raceZone" | "driveZone" | "equipmentZone"): CardId[];
   /** Cards returned from this player's field to a hand this turn (BP03-005). */
   returnedToHandThisTurn(player: PlayerId): number;
   /** The cards returned from this player's field to a hand this turn, as they were on the field (BP10-009). */
@@ -250,6 +264,12 @@ export function makeReader(env: Env): GameReader {
     enteredFrom: (id) => state().cards[id]?.enteredFrom ?? null,
     enteredByAbility: (id) => state().cards[id]?.enteredByAbility === true,
     diceRolledThisTurn: (p) => countsThisTurn(state(), p).diceRolled,
+    deckUniverse: (p) => ps(p).universe,
+    isRacing: (id) => isRacing(env, id),
+    racedTimes: (id) => state().cards[id]?.raced ?? 0,
+    carrotsToServe: (p) => carrotsToServe(env, p),
+    canServe: (id, times) => canServe(env, id, times),
+    linkedCards: (id, zone) => linkedCards(env, id, zone),
     gainedDefenseThisTurn: (id) => {
       const c = state().cards[id];
       return c !== undefined && countsThisTurn(state(), c.controller).defenseGained.includes(id);

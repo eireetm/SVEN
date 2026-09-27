@@ -1,4 +1,4 @@
-import type { CardType, DefId, PrintingId } from "./card";
+import type { CardType, DefId, PrintingId, Universe } from "./card";
 import type { GameConfig } from "./config";
 import type { CardId, PlayerId } from "./ids";
 import type { Keyword } from "./keyword";
@@ -22,6 +22,10 @@ export const PLAYER_ZONES = [
   "banished", // CR 4.10
   "evolveDeck", // CR 4.6
   "evolveZone", // CR 4.12
+  "raceZone", // CR 4.13 — Carrot cards linked to racing cards (Umamusume, 14.2.1)
+  "driveZone", // CR 4.14 — Drive Point cards linked to cards that rode (Vanguard, 14.4.9)
+  "triggerZone", // CR 4.15 — the card of a drive check until it is resolved (Vanguard, 14.4.5)
+  "equipmentZone", // CR 4.16 — equipment tokens linked to their equipped followers (Princess Connect, 14.5.2)
 ] as const;
 export type PlayerZone = (typeof PLAYER_ZONES)[number];
 
@@ -84,6 +88,16 @@ export interface CardInstance {
    * was put onto the field by an ability"). Summoned tokens too.
    */
   enteredByAbility?: boolean;
+  /**
+   * A card in the race zone, drive zone or equipment zone: the card on the field it is linked to (CR 14.2.1.1,
+   * 14.4.9.2, 14.5.2.2.2). The link is lost when that card leaves the field (14.2.1.3, 14.4.9.4, 14.5.2.4): its id
+   * then no longer exists, and rules handling (11.8, 11.10, 11.11) moves this card.
+   */
+  linkedTo?: CardId;
+  /** CR 14.2.3.1 — the number of times this object has raced (it has Rush while linked to a race-zone card). */
+  raced?: number;
+  /** Timestamp of its first race: the Rush racing gives is lost by a later "loses all abilities" (CR 10.9.1.6). */
+  raceSeq?: number;
 }
 
 export interface PlayerState {
@@ -95,6 +109,12 @@ export interface PlayerState {
   maxPlayPoints: number;
   evolutionPoints: number;
   superEvolutionPoints: number;
+  /**
+   * CR 6.1.1.5 / 6.2.1.3 — the universe this player's deck is based on (its leader and every card of the main and
+   * evolve decks share it, 6.1.1.5.2), or null when it is based on a class. Decided from the deck list when the
+   * game is created and public.
+   */
+  universe: Universe | null;
   /** CR 3.3 */
   turnsPassed: number;
   zones: Record<PlayerZone, CardId[]>;

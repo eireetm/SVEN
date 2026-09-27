@@ -49,14 +49,21 @@ describe("normalizePrinting", () => {
   it("strips the database's (Evolved) suffix and requires it on evolved cards", () => {
     const p = normalizePrinting(raw({ name_en: "Test (Evolved)", card_type: ["Follower", "Evolved"], cost: null }));
     expect(p.def.name).toBe("Test");
-    expect(() => normalizePrinting(raw({ card_type: ["Follower", "Evolved"], cost: null }))).toThrow(/suffix/);
+    // CR 5.16.1.1.1 — without the suffix it is a data error when a base card has its Japanese name (BP14-057)…
+    const base = normalizePrinting(raw({}));
+    const lost = normalizePrinting(raw({ card_no: "XX01-002", card_type: ["Follower", "Evolved"], cost: null }));
+    expect(() => groupPrintings([base, lost], ["XX01"])).toThrow(/suffix/);
+    // …and otherwise its own name, evolved into by name (CP03-006 Navalgazer Dragon) or an evolve-deck spell (Carrot).
+    const own = normalizePrinting(raw({ card_no: "XX01-003", name_en: "Other", name_ja: "別", card_type: ["Follower", "Evolved"], cost: null }));
+    expect(groupPrintings([base, own], ["XX01"]).cards.map((c) => [c.name, c.evolved])).toEqual([["Test", false], ["Other", true]]);
   });
 
-  it("CR 5.16.1.2.1 — accepts evolved amulets (BP08-090) without cost or stats, but no other evolved non-followers", () => {
+  it("CR 5.16.1.2.1 — accepts evolved amulets (BP08-090) and the evolve-deck spells (Carrot, Drive Point) without cost or stats", () => {
     const amulet = normalizePrinting(raw({ name_en: "Test (Evolved)", card_type: ["Amulet", "Evolved"], cost: null, atk: null, def: null }));
     expect([amulet.def.type, amulet.def.evolved, amulet.def.cost, amulet.def.attack]).toEqual(["amulet", true, null, null]);
     expect(() => normalizePrinting(raw({ name_en: "Test (Evolved)", card_type: ["Amulet", "Evolved"], cost: 2, atk: null, def: null }))).toThrow(CardDataError);
-    expect(() => parseCardType("x", ["Spell", "Evolved"])).toThrow(CardDataError);
+    expect(parseCardType("x", ["Spell", "Evolved"])).toMatchObject({ type: "spell", evolved: true });
+    expect(() => parseCardType("x", ["Leader", "Evolved"])).toThrow(CardDataError);
   });
 
   it("rejects impossible stats instead of guessing", () => {

@@ -5,6 +5,7 @@ import type { CardMove, GameEvent, MoveCause } from "../events/types";
 import type { EffectContext } from "../engine/effects/context";
 import type { Proc } from "../engine/runtime/proc";
 import type { GameReader } from "../engine/query";
+import { serveCost } from "./costs";
 import { costAtMost, isCrest } from "./targets";
 import type {
   ActivatedAbility,
@@ -871,6 +872,48 @@ export function* selectWithinTotalCost(
     left -= fx.game.info(pick).cost ?? 0;
   }
   return chosen;
+}
+
+/**
+ * CR 14.2.2 — a serve ability, "{[feed]}×`times` {[costN]}: [effect]" (Umamusume): serve this follower `times` times
+ * and pay `playPoints`. Serve abilities are equivalent to evolve abilities (14.2.2.5, 8.3.2.1: one per turn together
+ * with evolving) and 1 evolution point may pay 1 play point (14.2.2.4) — the handling of `advanced` abilities. The
+ * effect is "Race this follower `times` times" unless given.
+ */
+export function serveAbility(times: number, playPoints: number, spec: Omit<ActivatedAbility, "kind" | "cost" | "advanced"> = {}): ActivatedAbility {
+  return activated(
+    { playPoints, custom: serveCost(times) },
+    {
+      advanced: true,
+      *resolve(fx) {
+        yield* fx.race(fx.self, times);
+      },
+      ...spec,
+    },
+  );
+}
+
+/** CR 14.2.4 — "On Race: [text]": when this card races; racing N times triggers it N times (CP01-042 ruling). */
+export const onRace = (spec: TimingSpec) =>
+  automatic(
+    "onRace",
+    (e, me) => (!me.lookBack && e.type === "raced" && e.card === me.card ? Array.from({ length: e.times }, (_, i) => ({ count: i + 1 })) : false),
+    spec,
+  );
+
+/**
+ * "Whenever [another] one of your followers races" (CP01-032, 082): once per race (a follower racing 3 times
+ * triggers it 3 times — CP01-032 ruling). Data: the card.
+ */
+export function whenYourFollowerRaces(spec: TimingSpec, opts: { another?: boolean } = {}): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me) =>
+      !me.lookBack && e.type === "raced" && e.player === me.controller && !(opts.another && e.card === me.card)
+        ? Array.from({ length: e.times }, () => ({ card: e.card }))
+        : false,
+    spec,
+  );
 }
 
 /** An activated ability. */

@@ -71,7 +71,19 @@ export function cardRefs(g: G, ids: readonly CardId[]): CardRef[] {
 }
 
 /** Zones whose cards may be named in a cardsSelected event (CR 4.1.2 — not the hand or a deck). */
-const PUBLIC_ZONE = new Set(["field", "ex", "cemetery", "banished", "evolveZone", "leader", "resolution"]);
+const PUBLIC_ZONE = new Set([
+  "field",
+  "ex",
+  "cemetery",
+  "banished",
+  "evolveZone",
+  "leader",
+  "resolution",
+  "raceZone",
+  "driveZone",
+  "triggerZone",
+  "equipmentZone",
+]);
 
 /**
  * BP03-091 — while Diamond Master is on the field, an opponent who can select it must.
