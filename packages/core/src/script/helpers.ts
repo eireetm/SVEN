@@ -560,9 +560,9 @@ export function whenDamagedEnemyFollowerToCemetery(spec: TimingSpec, from: (by: 
 }
 
 /**
- * "Whenever a [matching] card on your field deals damage to 1 or more enemy followers on the field" (ECP02-057): once for the
- * damage dealt at the same time (ruling Q4), per such card; combat damage too (Q3), and an ability's damage dealt after its card
- * left the field (Q1, by its last-known information: DamageSource.onField). A follower with 0 or less attack deals none (Q2).
+ * "Whenever a [matching] card you control deals damage to 1 or more enemy followers on the field" (ECP02-057): once for the
+ * damage dealt at the same time (ruling Q4), per such card; combat damage too (Q3). `match` sees the card as it was when it dealt
+ * the damage (DamageSource), e.g. whether it did so from the field (`onField`). A follower with 0 or less attack deals none (Q2).
  */
 export const whenYourCardDamagesEnemyFollowers = (spec: TimingSpec, match: (by: DamageSource) => boolean) =>
   automatic(
@@ -572,7 +572,7 @@ export const whenYourCardDamagesEnemyFollowers = (spec: TimingSpec, match: (by: 
       const sources = new Set<CardId>();
       for (const d of e.batch) {
         const t = game.card(d.target);
-        if (d.by === undefined || !d.by.onField || d.by.controller !== me.controller || !match(d.by)) continue;
+        if (d.by === undefined || d.by.controller !== me.controller || !match(d.by)) continue;
         if (t?.zone === "field" && t.controller !== me.controller) sources.add(d.by.card);
       }
       return [...sources].map((card) => ({ card }));
