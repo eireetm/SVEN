@@ -60,17 +60,17 @@ describe("ECP02 Abysscraft", () => {
     expect([t.stats("ECP02-055"), t.stats("opp:V5"), t.leader("opp")]).toEqual([[4, 4], [5, 1], 19]);
   });
 
-  it("057 Takumi Mukai — Rush, Assail; Fanfare: a Passion follower costing 3 or less from the cemetery; your iM@S CG card (on the field, or a spell) damages enemy followers: 1 to the leader", () => {
+  it("057 Takumi Mukai — Rush, Assail; Fanfare: a Passion follower costing 3 or less from the cemetery; your iM@S CG card on the field damages enemy followers: 1 to the leader", () => {
     expect(d({ me: { hand: ["ECP02-057"], cemetery: ["CP02-047"], playPoints: 6 } }).play("ECP02-057").field()).toEqual(["ECP02-057", "CP02-047"]);
     // Combat damage counts (ruling).
     expect(d({ me: { field: ["ECP02-057", "CP02-014"] }, opp: { field: [{ card: "V1", engaged: true }] } }).attack("CP02-014", "opp:V1").leader("opp")).toBe(19);
     // Several enemy followers damaged at once: once (ruling).
     const s = d({ me: { hand: ["ECP02-005"], field: ["ECP02-057"], playPoints: 7 }, opp: { field: ["V5", "V3"] } }).play("ECP02-005");
     expect(s.leader("opp")).toBe(19);
-    // An iM@S CG spell's damage counts too (decided by the project owner): Self-Proclaimed Fan Favorite's 4 damage.
+    // An iM@S CG spell is not a card on your field (a judge's answer): Self-Proclaimed Fan Favorite's 4 damage doesn't count.
     const sp = d({ me: { field: ["ECP02-057"], hand: ["ECP02-059"], playPoints: 2 }, opp: { field: ["V5"] } }).play("ECP02-059").choose("damage");
-    expect([sp.stats("opp:V5"), sp.leader("opp")]).toEqual([[5, 1], 19]);
-    // An ability used from the hand (Riamu Yumemi's) is not a card on your field.
+    expect([sp.stats("opp:V5"), sp.leader("opp")]).toEqual([[5, 1], 20]);
+    // Nor is an ability used from the hand (Riamu Yumemi's, the same answer).
     const h = d({ me: { field: ["ECP02-057"], hand: ["ECP02-041"], ex: [ITEM], playPoints: 1 }, opp: { field: ["V5"] } }).activate("ECP02-041");
     expect([h.stats("opp:V5"), h.leader("opp")]).toEqual([[5, 3], 20]);
   });
