@@ -5,8 +5,9 @@ import { opponentOf } from "../model/ids";
 import type { Keyword } from "../model/keyword";
 import type { CardInstance, GameState, PlayerZone, ReturnedCard, ZoneName } from "../model/state";
 import type { Env } from "./state/access";
-import { leaderOf, usesThisTurn } from "./state/access";
-import { activeScript, characteristics, currentStats, infoDefId, isBoxed, isFollowerOnField, namesOf, passiveSources, typeAndTraits, type Characteristics } from "./state/characteristics";
+import { ATTACKS_KEY, leaderOf, usesThisTurn } from "./state/access";
+import { equipmentOf, equippedFollower } from "./abilities/equipment";
+import { abilitiesLostAt, activeScript, characteristics, currentStats, infoDefId, isBoxed, isFollowerOnField, namesOf, passiveSources, typeAndTraits, type Characteristics } from "./state/characteristics";
 import { exAreaLimit, fieldLimit } from "./state/limits";
 import { playVariants } from "./flow/play-card";
 import { choosesAnyNumberOfOptions } from "./abilities/modes";
@@ -209,6 +210,19 @@ export interface GameReader {
   gainedStatsThisTurn(id: CardId): boolean;
   /** How often `key` was recorded for this card this turn (`fx.recordUse`, e.g. BP11-092's options). */
   usesThisTurn(id: CardId, key: string): number;
+  /** How many times this card object has attacked this turn (CR 8.4.5; CP04-012). */
+  attacksThisTurn(id: CardId): number;
+  /** Union Burst abilities this player executed this turn (CR 14.5.1.3; CP04-089 "at least 2 other times" counts this one too). */
+  unionBurstsThisTurn(player: PlayerId): number;
+  /** CR 14.5.2.2.2 — the follower on the field an equipment token is linked to ("the equipped follower"), or null. */
+  equippedFollower(token: CardId): CardId | null;
+  /** CR 14.5.2.3 — the equipment tokens a card on the field has equipped. */
+  equipmentOf(id: CardId): CardId[];
+  /**
+   * Does the follower that equips this token have what the token gives it ("The equipped follower has ...")? Not after it
+   * lost all abilities, unless it equipped the token later (CP04-T07 ruling; CR 10.9.1.6).
+   */
+  equipmentGiftActive(token: CardId): boolean;
 }
 
 /**
@@ -335,6 +349,19 @@ export function makeReader(env: Env): GameReader {
     usesThisTurn: (id, key) => {
       const c = state().cards[id];
       return c === undefined ? 0 : usesThisTurn(state(), c, key);
+    },
+    attacksThisTurn: (id) => {
+      const c = state().cards[id];
+      return c === undefined ? 0 : usesThisTurn(state(), c, ATTACKS_KEY);
+    },
+    unionBurstsThisTurn: (p) => countsThisTurn(state(), p).unionBursts,
+    equippedFollower: (token) => equippedFollower(env, token),
+    equipmentOf: (id) => equipmentOf(env, id),
+    equipmentGiftActive: (token) => {
+      const follower = equippedFollower(env, token);
+      if (follower === null) return false;
+      const lostAt = abilitiesLostAt(state(), follower);
+      return lostAt === null || lostAt < state().cards[token]!.zoneSeq;
     },
     hasEarthRite: (id) => {
       const def = state().cards[id]?.def;

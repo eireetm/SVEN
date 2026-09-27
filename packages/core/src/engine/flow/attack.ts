@@ -4,7 +4,7 @@ import { dealDamage, type DamageInstance } from "../actions/damage";
 import { confirmationTiming } from "../abilities/confirmation";
 import type { G } from "../runtime/context";
 import type { Proc } from "../runtime/proc";
-import { isOnField, leaderOf } from "../state/access";
+import { ATTACKS_KEY, isOnField, leaderOf, recordUse } from "../state/access";
 import { activeScript, characteristics, hasKeyword, isFollowerOnField, passiveSources } from "../state/characteristics";
 import { makeReader } from "../query";
 import { effectPreventsAttack, effectPreventsLeaderAttack } from "../state/effects";
@@ -116,6 +116,7 @@ export function* performAttack(g: G, attacker: CardId, target: CardId): Proc<voi
   g.state.attack = { attacker, target, targetIsLeader };
   thisTurn(g.state, player).followerAttacks += 1;
   thisTurn(g.state, player).attackerTraits.push([...characteristics(g, attacker).traits]); // CP03-005 "the 3rd time ..."
+  recordUse(g.state, g.state.cards[attacker]!, ATTACKS_KEY); // CP04-012 "must attack once per turn"
   g.emit({ type: "attackDeclared", player, attacker, target });
   // 8.4.6
   yield* confirmationTiming(g);

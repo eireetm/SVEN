@@ -1,5 +1,5 @@
 import type { CardId, PlayerId } from "../../model/ids";
-import type { TargetSpec } from "../../script/types";
+import type { PlayContext, TargetSpec } from "../../script/types";
 import { EngineError } from "../errors";
 import type { G } from "../runtime/context";
 import type { Env } from "../state/access";
@@ -15,10 +15,10 @@ export function selectableBy(g: Env, card: CardId, player: PlayerId): boolean {
   return makeReader(g).canSelect(card, player);
 }
 
-function candidatesOf(g: Env, spec: TargetSpec, controller: PlayerId, self: CardId): CardId[] {
+function candidatesOf(g: Env, spec: TargetSpec, controller: PlayerId, self: CardId, play?: PlayContext): CardId[] {
   const reader = makeReader(g);
   if (spec.when && !spec.when(reader, controller, self)) return [];
-  return spec.candidates(reader, controller, self).filter((id) => selectableBy(g, id, controller));
+  return spec.candidates(reader, controller, self, play).filter((id) => selectableBy(g, id, controller));
 }
 
 /**
@@ -40,9 +40,15 @@ function required(g: Env, spec: TargetSpec, controller: PlayerId, self: CardId):
  * offered at all: illegal plays are never selectable (CR 10.6.2.1.2), so the engine never
  * has to "return to the point before the play" (10.6.2.3.3).
  */
-export function targetsAvailable(g: Env, specs: readonly TargetSpec[] | undefined, controller: PlayerId, self: CardId): boolean {
+export function targetsAvailable(
+  g: Env,
+  specs: readonly TargetSpec[] | undefined,
+  controller: PlayerId,
+  self: CardId,
+  play?: PlayContext,
+): boolean {
   if (!specs) return true;
-  return feasibleFrom(g, specs, controller, self, 0, []);
+  return feasibleFrom(g, specs, controller, self, 0, [], play);
 }
 
 /**
@@ -50,17 +56,25 @@ export function targetsAvailable(g: Env, specs: readonly TargetSpec[] | undefine
  * selection can't take a card an earlier one took (BP20-084 "a 5-cost or less ... and a 3-cost or less ...":
  * two different cards, both needed — rulings), so a required selection followed by one is tried card by card.
  */
-function feasibleFrom(g: Env, specs: readonly TargetSpec[], controller: PlayerId, self: CardId, index: number, used: readonly CardId[]): boolean {
+function feasibleFrom(
+  g: Env,
+  specs: readonly TargetSpec[],
+  controller: PlayerId,
+  self: CardId,
+  index: number,
+  used: readonly CardId[],
+  play?: PlayContext,
+): boolean {
   const spec = specs[index];
   if (!spec) return true;
   const need = required(g, spec, controller, self);
-  const candidates = candidatesOf(g, spec, controller, self).filter((id) => !(spec.distinct && used.includes(id)));
+  const candidates = candidatesOf(g, spec, controller, self, play).filter((id) => !(spec.distinct && used.includes(id)));
   if (candidates.length < need) return false;
   const laterDistinct = specs.slice(index + 1).some((t) => t.distinct && required(g, t, controller, self) > 0);
   // An "up to" selection can take nothing, so it never stands in a later one's way.
-  if (need === 0 || !laterDistinct) return feasibleFrom(g, specs, controller, self, index + 1, used);
+  if (need === 0 || !laterDistinct) return feasibleFrom(g, specs, controller, self, index + 1, used, play);
   if (need !== 1) throw new EngineError("a required selection before a distinct one must be of 1 card");
-  return candidates.some((c) => feasibleFrom(g, specs, controller, self, index + 1, [...used, c]));
+  return candidates.some((c) => feasibleFrom(g, specs, controller, self, index + 1, [...used, c], play));
 }
 
 /**
@@ -73,9 +87,10 @@ export function* chooseTargets(
   specs: readonly TargetSpec[] | undefined,
   controller: PlayerId,
   self: CardId,
+  play?: PlayContext,
 ): Proc<CardId[][] | null> {
   if (!specs || specs.length === 0) return [];
-  if (!targetsAvailable(g, specs, controller, self)) return null;
+  if (!targetsAvailable(g, specs, controller, self, play)) return null;
   const chosen: CardId[][] = [];
   for (const [index, spec] of specs.entries()) {
     if (spec.count < 0) throw new EngineError("negative target count");
@@ -86,10 +101,11 @@ export function* chooseTargets(
     // Only choices after which the later selections can still be made (the principle of CR 10.6.2.1.2).
     const constrained =
       required(g, spec, controller, self) > 0 && specs.slice(index + 1).some((t) => t.distinct && required(g, t, controller, self) > 0);
-    const candidates = candidatesOf(g, spec, controller, self).filter(
-      (id) => !(spec.distinct && earlier.includes(id)) && (!constrained || feasibleFrom(g, specs, controller, self, index + 1, [...earlier, id])),
+    const candidates = candidatesOf(g, spec, controller, self, play).filter(
+      (id) =>
+        !(spec.distinct && earlier.includes(id)) && (!constrained || feasibleFrom(g, specs, controller, self, index + 1, [...earlier, id], play)),
     );
-    const cap = spec.max ? Math.max(0, spec.max(makeReader(g), controller, self)) : spec.count;
+    const cap = spec.max ? Math.max(0, spec.max(makeReader(g), controller, self, play)) : spec.count;
     const max = Math.min(spec.count, cap, candidates.length);
     const min = required(g, spec, controller, self);
     // Selecting does not change the state, so targetsAvailable() above guarantees this.

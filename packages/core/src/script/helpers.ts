@@ -5,7 +5,7 @@ import type { CardMove, GameEvent, MoveCause } from "../events/types";
 import type { EffectContext } from "../engine/effects/context";
 import type { Proc } from "../engine/runtime/proc";
 import type { GameReader } from "../engine/query";
-import { rideCost, serveCost } from "./costs";
+import { playPointsCost, rideCost, serveCost } from "./costs";
 import { costAtMost, isCrest } from "./targets";
 import type {
   ActivatedAbility,
@@ -963,6 +963,57 @@ export const whenYourFollowerDriveChecks = (spec: TimingSpec) =>
 export function activated(cost: CostSpec, spec: Omit<ActivatedAbility, "kind" | "cost"> = {}): ActivatedAbility {
   return { kind: "activated", cost, ...spec };
 }
+
+/**
+ * CR 14.5.1 — "{[ub]} [ability]": a Union Burst ability (CP04), valid only in a deck based on Princess Connect! Re: Dive
+ * (14.5.1.2). An "if" in its effect goes into `resolve`: played and resolved, it has executed (14.5.1.3).
+ */
+export function ub<A extends ActivatedAbility | AutomaticAbility>(ability: A): A {
+  return { ...ability, unionBurst: true };
+}
+
+/**
+ * "Whenever a {[ub]} ability of another follower on your field is executed" (CP04, CR 14.5.1.3): once per execution, also
+ * during an opponent's turn and for one executed by another ability's effect (rulings; not this follower's own, CP04-114
+ * Q13). Data: that follower.
+ */
+export const whenAnotherFollowersUnionBurst = (spec: TimingSpec) =>
+  automatic(
+    "other",
+    (e, me, game) =>
+      !me.lookBack &&
+      e.type === "unionBurstExecuted" &&
+      e.source !== me.card &&
+      game.card(e.source)?.zone === "field" &&
+      game.controller(e.source) === me.controller &&
+      game.info(e.source).type === "follower"
+        ? [{ card: e.source }]
+        : false,
+    spec,
+  );
+
+/**
+ * "{[fanfare]} {[cost02]}: Equip this with a [name] token." (CP04): pay the play points to equip it (CR 10.4.7.4, 14.5.2.2).
+ * Without `playPoints`, "{[fanfare]} Equip this with ..." (CP04-022, 055 under a condition: `condition` in `resolve`).
+ */
+export function equipFanfare(tokenName: string, playPoints: number, when?: (fx: EffectContext) => boolean): AutomaticAbility {
+  return fanfare({
+    ...(playPoints > 0 ? { cost: playPointsCost(playPoints) } : {}),
+    *resolve(fx) {
+      if (when && !when(fx)) return;
+      yield* fx.equip(fx.self, tokenName);
+    },
+  });
+}
+
+/** "When this is put into your EX area" (CP04-007), from any zone, during either player's turn (its rulings). */
+export const whenThisPutIntoYourEx = (spec: TimingSpec) =>
+  automatic(
+    "other",
+    (e, me) => !me.lookBack && moves(e).some((m) => m.newCard === me.card && m.to.zone === "ex" && m.from?.zone !== "ex"),
+    spec,
+    { validIn: ["ex"] },
+  );
 
 /** A spell's text (CR 10.1.1.4). */
 export function spell(spec: Omit<import("./types").SpellAbility, "kind">): import("./types").SpellAbility {

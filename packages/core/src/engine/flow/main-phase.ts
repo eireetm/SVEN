@@ -1,12 +1,14 @@
 import type { MainAction } from "../../model/decision";
-import type { PlayerId } from "../../model/ids";
+import { opponentOf, type PlayerId } from "../../model/ids";
 import { confirmationTiming } from "../abilities/confirmation";
 import { evolveActions, playEvolveAbility } from "../abilities/evolve";
 import { canPlayActivated, cardsWithActivatedAbilities, playActivatedAbility } from "../abilities/play-ability";
 import type { G } from "../runtime/context";
 import { anchor, chooseMainAction } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
-import { characteristics } from "../state/characteristics";
+import { activeScript, characteristics, passiveSources } from "../state/characteristics";
+import { ATTACKS_KEY, usesThisTurn } from "../state/access";
+import { makeReader } from "../query";
 import { attackTargets, canAttackWith, performAttack } from "./attack";
 import { canPlayCard, cardsToPlayFrom, playCard } from "./play-card";
 
@@ -37,9 +39,23 @@ export function mainPhaseActions(g: G, player: PlayerId): MainAction[] {
     if (!canAttackWith(g, player, attacker)) continue;
     for (const target of attackTargets(g, attacker)) actions.push({ type: "attack", attacker, target });
   }
-  // 7.3.3 end the main phase
-  actions.push({ type: "endMainPhase" });
+  // 7.3.3 end the main phase — not while a follower must attack and can (CP04-012)
+  if (!mustAttackFirst(g, player, actions)) actions.push({ type: "endMainPhase" });
   return actions;
+}
+
+/**
+ * CP04-012 "each enemy follower on the field must attack once per turn if able" (`FieldPassives.forcesEnemyAttacks` of a card
+ * on an opponent's side): while a follower of the active player that hasn't attacked this turn can attack, the main phase
+ * can't end (rulings: other actions come first as the player likes; followers put onto the field later must attack too; one
+ * that already attacked this turn need not attack again). A requirement that can't be met is not (CR 1.3.2): a follower
+ * that can't attack is free.
+ */
+function mustAttackFirst(g: G, player: PlayerId, actions: readonly MainAction[]): boolean {
+  const opp = opponentOf(player);
+  const reader = makeReader(g);
+  if (!passiveSources(g, opp).some((id) => activeScript(g, id)?.field?.forcesEnemyAttacks?.(reader, id) === true)) return false;
+  return actions.some((a) => a.type === "attack" && usesThisTurn(g.state, g.state.cards[a.attacker]!, ATTACKS_KEY) === 0);
 }
 
 function* performMainAction(g: G, player: PlayerId, action: Exclude<MainAction, { type: "endMainPhase" }>): Proc<void> {

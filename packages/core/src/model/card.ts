@@ -38,9 +38,11 @@ export type Universe = (typeof UNIVERSES)[number];
 
 /**
  * CR 2.3.2 primary card types. Crests (BP20) are tokens that exist only in the EX area (9.1.4.2), one
- * per name there (9.1.5), whose abilities work in the EX area (10.3.6); they can't be played.
+ * per name there (9.1.5), whose abilities work in the EX area (10.3.6); they can't be played. Equipment
+ * (CP04, Princess Connect! Re: Dive) are tokens that exist only in the equipment zone, linked to the
+ * follower that equips them, and whose abilities work only there (14.5.2.1).
  */
-export type CardType = "leader" | "follower" | "amulet" | "spell" | "crest";
+export type CardType = "leader" | "follower" | "amulet" | "spell" | "crest" | "equipment";
 
 export interface LocalizedText {
   /** English — authoritative for implementation (official EN text). */

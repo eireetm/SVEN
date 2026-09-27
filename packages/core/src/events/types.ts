@@ -131,6 +131,13 @@ export type GameEvent =
   /** CR 5.20 a player rolled a six-sided die. */
   | { type: "dieRolled"; player: PlayerId; result: number }
   /**
+   * CR 14.5.1.3 — a Union Burst ability was executed (played; the engine resolves every ability it plays): the ability
+   * `ability` of `sourceDef`, whose card is `source`, controlled by `player`.
+   */
+  | { type: "unionBurstExecuted"; player: PlayerId; source: CardId; sourceDef: DefId; ability: number }
+  /** CR 14.5.2.2 — `follower` equipped the equipment token `token`, created in `player`'s equipment zone and linked to it. */
+  | { type: "equipped"; player: PlayerId; token: CardId; follower: CardId }
+  /**
    * CR 5.14. `kind` follows CR 5.14.3 (attack / combat / ability damage); `combat` tells
    * whether it is combat damage (5.14.3.2: damage exchanged by an attacking follower and the
    * follower it attacks).
@@ -142,6 +149,11 @@ export type GameEvent =
       amount: number;
       kind: "attack" | "combat" | "ability";
       combat: boolean;
+      /**
+       * On the last of the instances dealt at the same time (also a single one): all of them (CR 5.14), for "whenever this deals
+       * damage to 1 or more ..." (CP04-T11), which triggers once for them (rulings).
+       */
+      batch?: { source: CardId | null; target: CardId; amount: number; kind: "attack" | "combat" | "ability" }[];
     }
   /** A leader's defense changed by `delta` (damage, CR 5.14; or "give +/-X", 5.27). */
   | { type: "leaderDefenseChanged"; player: PlayerId; defense: number; delta: number }

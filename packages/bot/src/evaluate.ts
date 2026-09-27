@@ -31,6 +31,8 @@ export interface EvalWeights {
   ex: number;
   /** A crest in the EX area: not a card to play but an effect that lasts (CR 10.3.6, BP20). */
   crest: number;
+  /** An equipment token: an effect its follower has while it stays on the field (CR 14.5.2, CP04). */
+  equipment: number;
   evolutionPoint: number;
   superEvolutionPoint: number;
   /** Per maximum play point (up to 10). */
@@ -56,6 +58,7 @@ export const DEFAULT_WEIGHTS: EvalWeights = {
   handCap: 7,
   ex: 1,
   crest: 2,
+  equipment: 1.5,
   evolutionPoint: 1.5,
   superEvolutionPoint: 2,
   maxPlayPoint: 0.5,
@@ -75,6 +78,7 @@ function sideValue(s: PlayerSideView, w: EvalWeights): number {
   for (const card of s.field) v += card.hidden ? w.amulet : fieldCardValue(card, w);
   v += Math.min(s.hand.length, w.handCap) * w.hand;
   for (const card of s.ex) v += card.type === "crest" ? w.crest + Object.values(card.counters).reduce((a, b) => a + b, 0) * w.counter : w.ex;
+  v += s.equipmentZone.length * w.equipment;
   v += s.evolutionPoints * w.evolutionPoint + s.superEvolutionPoints * w.superEvolutionPoint;
   v += Math.min(s.maxPlayPoints, 10) * w.maxPlayPoint + s.playPoints * w.playPoint;
   if (s.deckCount < 3) v -= (3 - s.deckCount) * w.deckDanger;

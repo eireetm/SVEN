@@ -189,14 +189,17 @@ export function* dealDamage(g: G, instances: readonly DamageInstance[]): Proc<Da
       c.damage += d.amount;
     }
   }
-  for (const d of dealt) {
-    g.emit({ type: "damageDealt", source: d.source, target: d.target, amount: d.amount, kind: d.kind, combat: d.combat });
+  const batch = dealt.map((d) => ({ source: d.source, target: d.target, amount: d.amount, kind: d.kind }));
+  dealt.forEach((d, i) => {
+    // The last instance carries all of them, for "whenever this deals damage to 1 or more ..." (CP04-T11: once for them).
+    const all = i === dealt.length - 1 ? { batch } : {};
+    g.emit({ type: "damageDealt", source: d.source, target: d.target, amount: d.amount, kind: d.kind, combat: d.combat, ...all });
     const c = state.cards[d.target]!;
     if (c.zone === "field") thisTurn(state, c.controller).followersDamagedBy.push({ source: d.source, target: d.target }); // BP20-025, 069
     if (c.zone === "leader") {
       const defense = state.players[c.controller].leaderDefense;
       g.emit({ type: "leaderDefenseChanged", player: c.controller, defense, delta: -d.amount });
     }
-  }
+  });
   return dealt;
 }

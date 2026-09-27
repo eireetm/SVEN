@@ -41,9 +41,10 @@ import type { G } from "../runtime/context";
 import { cardRefs, chooseOptions, confirm, orderCards, selectCards } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { getCard, nextSeq, recordUse } from "../state/access";
-import { characteristics } from "../state/characteristics";
+import { characteristics, isFollowerOnField } from "../state/characteristics";
 import { exAreaLimit } from "../state/limits";
-import { moveCards } from "../state/zones";
+import { createCards, moveCards } from "../state/zones";
+import { executeUnionBurst } from "../abilities/play-ability";
 import { thisTurn } from "../state/turn-counts";
 import { makeReader, type GameReader } from "../query";
 
@@ -372,6 +373,18 @@ export interface EffectContext {
   giveDrive(card: CardId): Proc<boolean>;
   /** CR 14.4.9.2 — the part of a Ride cost every Ride has: a Drive Point from the evolve deck into the drive zone, linked. */
   ride(card: CardId): Proc<boolean>;
+  /**
+   * CR 14.5.2.2 — equip `follower` with a [name] (CP04): create that equipment token in this ability's controller's equipment
+   * zone (4.16.1, 14.5.2.2.1) and link it to the follower, which satisfies the token's "when a follower equips this"
+   * (14.5.2.2.2). A follower may equip several (14.5.2.3). Nothing happens if it is no longer a follower on the field (CR
+   * 1.3.2). Returns the token, or null.
+   */
+  equip(follower: CardId, tokenName: string): Proc<CardId | null>;
+  /**
+   * CR 14.5.1.4 — execute one of `follower`'s Union Burst abilities without paying its cost (CP04-114): its controller chooses
+   * one that can be played, which is played ignoring its trigger condition, with X = 0. Returns whether one was executed.
+   */
+  executeUnionBurst(follower: CardId): Proc<boolean>;
   /** CR 5.32 — maneuver an amulet on the field: for the rest of the turn it is a follower (BP11-T01). */
   maneuver(card: CardId): Proc<void>;
   /** CR 5.31 — the card becomes Boxed for the duration (BP11-018 "until the end of its controller's next turn"). */
@@ -915,6 +928,16 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
     },
     *ride(card) {
       return rideCard(g, card);
+    },
+    *equip(follower, tokenName) {
+      if (!isFollowerOnField(g, follower)) return null; // CR 1.3.2
+      const [id] = createCards(g, [{ def: token(tokenName), player: ctrl, to: "equipmentZone", linkTo: follower }], "effect");
+      if (id === undefined) return null;
+      g.emit({ type: "equipped", player: ctrl, token: id, follower }); // 14.5.2.2.2
+      return id;
+    },
+    *executeUnionBurst(follower) {
+      return yield* executeUnionBurst(g, ctrl, follower, selfIfPresent());
     },
     *rollDie(player = ctrl) {
       const result = randomInt(g.state.rng, 6) + 1;

@@ -5,6 +5,7 @@ import type { GameState, GrantedAbilityId, ZoneName } from "../../model/state";
 import type { AbilityDef, CardScript } from "../../script/types";
 import { GRANT_ABILITIES, GRANT_PREFIX } from "../abilities/grants";
 import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX } from "../abilities/keyword-abilities";
+import { EQUIP_PREFIX, equipmentOf } from "../abilities/equipment";
 import { makeReader } from "../query";
 import { getCard, type Env } from "./access";
 import { effectInForce } from "./effects";
@@ -80,14 +81,17 @@ export function activeScript(env: Env, id: CardId): CardScript | undefined {
 
 const ON_FIELD: readonly ZoneName[] = ["field"];
 const IN_EX: readonly ZoneName[] = ["ex"];
+const IN_EQUIPMENT_ZONE: readonly ZoneName[] = ["equipmentZone"];
 
 /**
- * CR 10.3.5 / 10.3.6 — where the abilities of a card with this definition work unless its text says
- * otherwise: a crest's in the EX area, other cards' on the field. (Abilities given by effects,
- * "grant:" definitions, work on the field.)
+ * CR 10.3.5 / 10.3.6 / 14.5.2.1.2 — where the abilities of a card with this definition work unless its text says
+ * otherwise: a crest's in the EX area, an equipment token's in the equipment zone, other cards' on the field.
+ * (Abilities given by effects, "grant:" definitions, and by equipment, "equip:", work on the field.)
  */
 export function defaultAbilityZones(env: Env, def: DefId): readonly ZoneName[] {
-  return env.db.has(def) && env.db.get(def).type === "crest" ? IN_EX : ON_FIELD;
+  if (!env.db.has(def)) return ON_FIELD;
+  const type = env.db.get(def).type;
+  return type === "crest" ? IN_EX : type === "equipment" ? IN_EQUIPMENT_ZONE : ON_FIELD;
 }
 
 /** The zones where an ability of a card with definition `def` works: its `validIn`, else the default. */
@@ -102,14 +106,16 @@ export function inAbilityZone(env: Env, id: CardId): boolean {
 }
 
 /**
- * CR 10.3.5 / 10.3.6 — the cards of a player whose passive abilities (`CardScript.field`) work: the
- * cards on their field and the crests in their EX area. (The EX-area passives of other cards are
- * `CardScript.exPassives`, BP13-003.) Without crests this is the field list itself.
+ * CR 10.3.5 / 10.3.6 / 14.5.2.1.2 — the cards of a player whose passive abilities (`CardScript.field`) work: the
+ * cards on their field, the crests in their EX area and the equipment tokens in their equipment zone. (The EX-area
+ * passives of other cards are `CardScript.exPassives`, BP13-003.) Without crests and equipment this is the field
+ * list itself.
  */
 export function passiveSources(env: Env, player: PlayerId): readonly CardId[] {
   const zones = env.state.players[player].zones;
   let crests: CardId[] | null = null;
   for (const id of zones.ex) if (env.db.get(getCard(env.state, id).def).type === "crest") (crests ??= []).push(id);
+  if (zones.equipmentZone.length > 0) return [...zones.field, ...(crests ?? []), ...zones.equipmentZone];
   return crests === null ? zones.field : [...zones.field, ...crests];
 }
 
@@ -229,6 +235,20 @@ export function characteristics(env: Env, id: CardId): Characteristics {
       if (!passive || lost(getCard(state, x).zoneSeq)) continue;
       reader ??= makeReader(env);
       for (const k of passive(reader, x, id)) addKeyword(k);
+    }
+  }
+  // CR 14.5.2 — what the equipment tokens it equips give it ("The equipped follower has ..."): keyword abilities
+  // (CP04-T09 Storm) and activated abilities (CP04-T01); automatic ones trigger through triggers.ts. They are its own
+  // abilities, so a "loses all abilities" after the token was linked removes them (rulings); one per token (CP04-114 Q11).
+  if (c.zone === "field") {
+    for (const token of equipmentOf(env, id)) {
+      const t = getCard(state, token);
+      const gift = scripts[t.def]?.equipment;
+      if (!gift || lost(t.zoneSeq)) continue;
+      for (const k of gift.keywords ?? []) addKeyword(k);
+      (gift.abilities ?? []).forEach((ability, index) => {
+        if (ability.kind === "activated") grantedAbilities.push({ def: `${EQUIP_PREFIX}${t.def}`, index, ability });
+      });
     }
   }
   // CR 14.2.3.1 — a card that raced has Rush while it is linked to a race-zone card.

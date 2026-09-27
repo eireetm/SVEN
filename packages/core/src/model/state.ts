@@ -243,6 +243,11 @@ export interface TurnCounts {
    * (ruling: it goes to the cemetery and the token then ceases to exist).
    */
   magicalItemsBanished: number;
+  /**
+   * Union Burst abilities this player executed this turn (CR 14.5.1.3), e.g. CP04-089 "If {[ub]} abilities you control have
+   * executed at least 2 other times this turn".
+   */
+  unionBursts: number;
 }
 
 /** A persistent effect (CR 10.2.1.2) applied to one card object. */

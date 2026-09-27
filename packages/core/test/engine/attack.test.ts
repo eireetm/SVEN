@@ -116,7 +116,7 @@ describe("CR 8.4.4–8.4.11 the attack", () => {
     const events = doMain(g, { type: "attack", attacker: v5, target: leaderId(g, 1) });
     expect(g.state.cards[v5]!.engaged).toBe(true);
     expect(g.state.players[1].leaderDefense).toBe(15);
-    expect(events).toContainEqual({ type: "damageDealt", source: v5, target: leaderId(g, 1), amount: 5, kind: "attack", combat: false });
+    expect(events).toContainEqual(expect.objectContaining({ type: "damageDealt", source: v5, target: leaderId(g, 1), amount: 5, kind: "attack", combat: false }));
     expect(events.map((e) => e.type)).toEqual(
       expect.arrayContaining(["placementChanged", "attackDeclared", "damageDealt", "leaderDefenseChanged", "attackEnded"]),
     );
@@ -141,7 +141,7 @@ describe("CR 8.4.4–8.4.11 the attack", () => {
     expect(stats(g, v3)).toEqual({ attack: 3, defense: 2 });
     expect(cardsOf(g, 1, "cemetery", "V1")).toHaveLength(1);
     expect(events).toContainEqual({ type: "fought", attacker: v3, defender: v1 });
-    expect(events).toContainEqual({ type: "damageDealt", source: v1, target: v3, amount: 2, kind: "combat", combat: true });
+    expect(events).toContainEqual(expect.objectContaining({ type: "damageDealt", source: v1, target: v3, amount: 2, kind: "combat", combat: true }));
   });
 
   it("11.3.1 — both followers can destroy each other", () => {

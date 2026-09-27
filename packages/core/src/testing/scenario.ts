@@ -37,6 +37,8 @@ export interface FieldCardSpec {
    * Single Drive and Rush, 14.4.7.3).
    */
   rode?: boolean;
+  /** Equipment tokens it has equipped (e.g. "CP04-T02"): put into the equipment zone, linked to it (CR 14.5.2.2). */
+  equipped?: PrintingId[];
 }
 
 export interface ScenarioSide {
@@ -145,6 +147,7 @@ export function scenario(engine: Engine, spec: ScenarioSpec, options: SessionOpt
           state.effects.push({ id: `e${seq}`, seq, target: id, source: id, controller: p, until: null, createdTurn: turn - 1, change: { kind: "keyword", keyword } });
         }
       }
+      for (const token of f.equipped ?? []) state.cards[placeInitialCard(state, engine.db, token, p, "equipmentZone")]!.linkedTo = id;
       c.enteredFieldTurn = f.enteredThisTurn ? turn : turn - 1;
       c.damage = f.damage ?? 0;
       const stack: Record<string, number> = engine.scripts[c.def]?.keywords?.includes("stack") ? { stack: 1 } : {};

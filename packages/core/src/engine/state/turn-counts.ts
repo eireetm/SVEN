@@ -24,6 +24,7 @@ export function emptyTurnCounts(turn: number): TurnCounts {
     diceRolled: [],
     magicalItemsBanished: 0,
     attackerTraits: [],
+    unionBursts: 0,
   };
 }
 

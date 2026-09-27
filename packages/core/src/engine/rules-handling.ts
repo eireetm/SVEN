@@ -5,7 +5,7 @@ import { selectCards } from "./runtime/decide";
 import type { Proc } from "./runtime/proc";
 import { characteristics, hasKeyword } from "./state/characteristics";
 import { exAreaLimit, fieldLimit } from "./state/limits";
-import { moveCards, type MoveSpec } from "./state/zones";
+import { eliminateTokens, moveCards, type MoveSpec } from "./state/zones";
 import { cannotLose, endGame } from "./flow/end-game";
 
 /**
@@ -13,8 +13,7 @@ import { cannotLose, endGame } from "./flow/end-game";
  * the plan is then executed at once, because simultaneous rules handling is executed
  * simultaneously (CR 11.1.3, 10.5.2.1).
  *
- * To add or change a rule, add or edit an entry of RULES_PROCESSES. Not implemented yet (no
- * supported card needs it): 11.11 equipment.
+ * To add or change a rule, add or edit an entry of RULES_PROCESSES.
  */
 export interface RulesPlan {
   losses: { player: PlayerId; reason: LossReason }[];
@@ -26,6 +25,10 @@ export interface RulesPlan {
   toEvolveDeck: Set<CardId>;
   /** Players whose play points are lowered to their maximum (CR 11.9.1). */
   capPlayPoints: Set<PlayerId>;
+  /** Tokens eliminated (CR 9.1.3, 11.11.1). */
+  eliminate: Set<CardId>;
+  /** Equipment tokens whose controller becomes the controller of the card they are linked to (CR 11.11.2). */
+  equipmentController: Map<CardId, PlayerId>;
 }
 
 export interface RulesProcess {
@@ -138,6 +141,23 @@ export const RULES_PROCESSES: readonly RulesProcess[] = [
     },
   },
   {
+    clause: "11.11",
+    *collect(g, plan) {
+      for (const p of BOTH) {
+        for (const id of g.state.players[p].zones.equipmentZone) {
+          // 11.11.1 — not linked to a card on the field (its follower left the field, 14.5.2.4).
+          if (!linkedToField(g, id)) {
+            plan.eliminate.add(id);
+            continue;
+          }
+          // 11.11.2 — the equipped card's controller also becomes the token's (e.g. after a change of control, 5.22).
+          const holder = g.state.cards[g.state.cards[id]!.linkedTo!]!.controller;
+          if (holder !== p) plan.equipmentController.set(id, holder);
+        }
+      }
+    },
+  },
+  {
     clause: "11.7",
     *collect(g, plan) {
       // 11.7.1 — a card with Stack on the field without Stack counters goes to the cemetery.
@@ -166,7 +186,9 @@ function isEmpty(plan: RulesPlan): boolean {
     plan.destroy.size === 0 &&
     plan.toCemetery.size === 0 &&
     plan.toEvolveDeck.size === 0 &&
-    plan.capPlayPoints.size === 0
+    plan.capPlayPoints.size === 0 &&
+    plan.eliminate.size === 0 &&
+    plan.equipmentController.size === 0
   );
 }
 
@@ -178,6 +200,8 @@ function* rulesHandlingStep(g: G): Proc<boolean> {
     toCemetery: new Set(),
     toEvolveDeck: new Set(),
     capPlayPoints: new Set(),
+    eliminate: new Set(),
+    equipmentController: new Map(),
   };
   for (const rule of RULES_PROCESSES) yield* rule.collect(g, plan);
   // 11.3.2 counts fights "after the previous instance of rules handling".
@@ -195,7 +219,11 @@ function* rulesHandlingStep(g: G): Proc<boolean> {
     if (!plan.destroy.has(card)) specs.push({ card, to: "cemetery", reason: "rules" });
   }
   for (const card of plan.toEvolveDeck) specs.push({ card, to: "evolveDeck", faceUp: true, reason: "rules" });
+  for (const [card, player] of plan.equipmentController) {
+    specs.push({ card, to: "equipmentZone", player, keepState: true, linkTo: g.state.cards[card]!.linkedTo!, reason: "rules" });
+  }
   if (specs.length > 0) moveCards(g, specs, "rules");
+  if (plan.eliminate.size > 0) eliminateTokens(g, [...plan.eliminate]);
   if (plan.losses.length > 0) endGame(g, plan.losses);
   return true;
 }

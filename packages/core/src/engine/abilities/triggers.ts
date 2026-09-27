@@ -12,6 +12,8 @@ import { abilityKey, getAbility } from "./play-ability";
 import { GRANT_ABILITIES, GRANT_PREFIX } from "./grants";
 import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX, KEYWORD_TRIGGERS } from "./keyword-abilities";
 import { effectInForce } from "../state/effects";
+import { EQUIP_PREFIX } from "./equipment";
+import { unionBurstValid } from "./union-burst";
 
 interface Candidate {
   subject: TriggerSubject;
@@ -21,8 +23,11 @@ interface Candidate {
   source: CardId;
 }
 
-/** Zones scanned for automatic abilities that work outside the field (`validIn`, or a crest's in the EX area, CR 10.3.6). */
-const OTHER_ZONES: readonly PlayerZone[] = ["hand", "ex", "cemetery", "banished", "leader"];
+/**
+ * Zones scanned for automatic abilities that work outside the field (`validIn`, a crest's in the EX area, CR 10.3.6, an
+ * equipment token's in the equipment zone, 14.5.2.1.2).
+ */
+const OTHER_ZONES: readonly PlayerZone[] = ["hand", "ex", "cemetery", "banished", "leader", "equipmentZone"];
 
 /**
  * BP19-092 "Your abilities that activate at the start of the end phase activate 1 additional time":
@@ -118,6 +123,7 @@ export function collectTriggers(g: G, event: GameEvent): void {
     scripts[c.abilityDef]?.abilities?.forEach((ability, index) => {
       if (ability.kind !== "automatic" || ability.delayed) return;
       if (!abilityZones(g, c.abilityDef, ability).includes(c.subject.zone)) return; // CR 10.3.5 / 10.3.6
+      if (ability.unionBurst && !unionBurstValid(g, c.source)) return; // CR 14.5.1.2
       for (const data of matches(ability, event, c.subject, reader)) {
         // "During your turn, whenever ..." (triggerIf); an "if" in the effect (condition) is only
         // checked when the ability is played (play-ability.ts, BP10-109 ruling).
@@ -164,6 +170,32 @@ export function collectTriggers(g: G, event: GameEvent): void {
         if (!withinPerTurnLimit(g, ability, card, abilityKey(`${GRANT_PREFIX}${grant}`, 0))) break;
         addPending(g, controller, card, `${GRANT_PREFIX}${grant}`, 0, event, data);
       }
+    }
+  }
+
+  // CR 14.5.2 — automatic abilities an equipment token gives the follower it equips (CP04-T09 "Strike - ...", CP04-T11), one
+  // set per token (two Precious Mementos give two Strikes — CP04-114 ruling Q11); lost with the follower's abilities if it
+  // lost them after the token was linked (rulings).
+  for (const p of [0, 1] as PlayerId[]) {
+    for (const token of state.players[p].zones.equipmentZone) {
+      const t = state.cards[token]!;
+      const abilities = scripts[t.def]?.equipment?.abilities;
+      const follower = t.linkedTo;
+      if (!abilities || follower === undefined || state.cards[follower]?.zone !== "field" || lostBefore(follower, t.zoneSeq)) continue;
+      const controller = state.cards[follower]!.controller;
+      const subject: TriggerSubject = { card: follower, controller, zone: "field", lookBack: false };
+      const def = `${EQUIP_PREFIX}${t.def}`;
+      abilities.forEach((ability, index) => {
+        if (ability.kind !== "automatic") return;
+        if (ability.unionBurst && !unionBurstValid(g, follower)) return; // CR 14.5.1.2
+        for (const data of matches(ability, event, subject, reader)) {
+          if (ability.triggerIf && !ability.triggerIf(reader, controller, follower)) continue;
+          for (let k = instances(g, event, controller); k > 0; k--) {
+            if (!withinPerTurnLimit(g, ability, follower, `${abilityKey(def, index)}@${token}`)) break;
+            addPending(g, controller, follower, def, index, event, data);
+          }
+        }
+      });
     }
   }
 

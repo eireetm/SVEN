@@ -57,6 +57,12 @@ export function recordUse(state: GameState, card: CardInstance, key: string): vo
   card.abilityUses[key] = { turn: state.turn, count: usesThisTurn(state, card, key) + 1 };
 }
 
+/**
+ * The `abilityUses` key of this card object's attacks this turn (CR 8.4.5), e.g. CP04-012 "must attack once per turn if able"
+ * (an attack before the requirement began counts — rulings; a card put onto the field again is a new object).
+ */
+export const ATTACKS_KEY = "attack";
+
 /** Next value of the monotonic counter used for ids and timestamps. */
 export function nextSeq(state: GameState): number {
   state.seq += 1;

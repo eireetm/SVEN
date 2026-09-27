@@ -129,6 +129,11 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   // "Lilium, the Wyrmwitch" — the same Japanese name 竜の魔女・リリウム and Chinese name 龙之魔女·莉莉尤姆 (CR 5.16.1.1.1).
   "BP21-056": { name_en: "Lilium, the Wyrmwitch (Evolved)" },
   "BP21-SL14": { name_en: "Lilium, the Wyrmwitch (Evolved)" },
+  // The evolved card of CP04-095 "Yui" (and its reprints) without the " (Evolved)" suffix: the same Japanese name ユイ,
+  // class and traits, and its card type is Evolved (CR 5.16.1.1.1).
+  "CP04-096": { name_en: "Yui (Evolved)" },
+  "CP04-P72": { name_en: "Yui (Evolved)" },
+  "PR-500": { name_en: "Yui (Evolved)" },
   // CP02's unit printings (SP / U): the big printed name is the idol unit's name, and the card name is printed in small type
   // above it (assets/CP02-SP01a/CP02-SP01a.webp: 前川みく above *(Asterisk); CP02-SP09a: 神崎蘭子 above フォルトゥナ・レジーナ).
   // Their texts, class, stats and rulings are those of the named card, which an evolved one needs to evolve from its
@@ -168,6 +173,26 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   "CP02-U13a": { treated_as: "New Generations" },
   "CP02-U13b": { treated_as: "New Generations" },
   "CP02-U13c": { treated_as: "New Generations" },
+  // CP04's SP / U printings of three cards carry the big name of the characters shown together, with the card name in
+  // small type above it (assets/CP04-SP06a: ユニ above ユニ＆クロエ＆チエル; CP04-SP10a: ランファ; CP04-SP12a: ノゾミ), and
+  // the texts, class, stats and traits of that card — the same case as CP02's unit printings.
+  // ユニ (CP04-039) under ユニ＆クロエ＆チエル.
+  "CP04-SP06a": { treated_as: "Yuni" },
+  "CP04-SP06b": { treated_as: "Yuni" },
+  "CP04-SP06c": { treated_as: "Yuni" },
+  "CP04-U06": { treated_as: "Yuni" },
+  // ランファ (CP04-075) under ランファ＆ミソラ.
+  "CP04-SP10a": { treated_as: "Ranpha" },
+  "CP04-SP10b": { treated_as: "Ranpha" },
+  "CP04-U10": { treated_as: "Ranpha" },
+  // ノゾミ (CP04-093) under ノゾミ＆チカ＆ツムギ.
+  "CP04-SP12a": { treated_as: "Nozomi" },
+  "CP04-SP12b": { treated_as: "Nozomi" },
+  "CP04-SP12c": { treated_as: "Nozomi" },
+  "CP04-U12": { treated_as: "Nozomi" },
+  // The leader 〔プリンセスフォーム〕ペコリーヌ is listed as Forestcraft; its printed class icon is Swordcraft's crown
+  // (assets/CP04-PR02/CP04-PR02.webp; Forestcraft's is the leaf of CP04-PR01), as for CP04-PR09 of the same name.
+  "CP04-PR02": { class: "Swordcraft" },
   // Back faces of double-faced cards (see above).
   "BP09-005": { back: BP09_005_BACK },
   "BP09-P02": { back: BP09_005_BACK },

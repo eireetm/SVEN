@@ -88,8 +88,9 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
       // by an evolve ability that names part of their name instead (BP03-056 -> BP03-058, and
       // from an earlier set: BP03-056 -> BP04-061), or names them (a face of a double-faced card,
       // BP09-004 -> BP09-005 and its back face BP09-005_back).
+      // (Not a token of the same English name: BP01-T12 "Mimi" is a spell token, CP04-104's base is CP04-103 "Mimi".)
       const base = card.evolved
-        ? (ALL_CARDS.find((d) => d.name === card.name && !d.evolved) ??
+        ? (ALL_CARDS.find((d) => d.name === card.name && !d.evolved && !d.token) ??
           ALL_CARDS.find((d) =>
             (engine.scripts[d.id]?.abilities ?? []).some(
               (a) =>
@@ -102,6 +103,9 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
       const physical = card.frontFace ?? card.id;
       if (!base) throw new Error(`${card.id} has no base card`);
       const inOpponentsTurn = extras.opponentsTurn?.includes(card.id) ?? false;
+      // An equipment token exists only in the equipment zone (CR 14.5.2.1.1): a follower of the player equips it, and then
+      // uses what it gives (an activated ability, a Strike) or plays on to the end phase.
+      const equipment = card.type === "equipment";
       const g = scenario(engine, {
         seed: card.id,
         // Turn 6 belongs to the second player (the opponent here).
@@ -112,6 +116,7 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
             // they are played from the EX area.
             hand: [...(card.evolved || card.token || card.advanced ? ["BP01-042"] : [card.id]), ...(extras.hand ?? [])],
             field: [
+              ...(equipment ? [{ card: "BP01-042", equipped: [card.id] }] : []),
               ...(card.evolved ? [base.id] : []),
               "BP01-T10", // a Stack amulet for Earth Rite
               "BP01-042",
@@ -120,7 +125,12 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
             ],
             evolveDeck: [...(card.evolved ? [physical] : []), ...resources.flatMap((r) => [r.id, r.id, r.id])],
             ...(universe ? { universe } : {}),
-            ex: ["BP01-T03", "BP01-T11", ...(card.id === SMOKE_CREST ? [] : [SMOKE_CREST]), ...(card.token || card.advanced ? [card.id] : [])],
+            ex: [
+              "BP01-T03",
+              "BP01-T11",
+              ...(card.id === SMOKE_CREST ? [] : [SMOKE_CREST]),
+              ...((card.token || card.advanced) && !equipment ? [card.id] : []),
+            ],
             // 10 spells for Spellchain, plus a few other cards for Necrocharge.
             cemetery: [...pick(`${card.id}:spells`, spells, 10), ...pick(`${card.id}:cem`, playable, 6), ...(extras.cemetery ?? [])],
             deck: pick(`${card.id}:deck`, playable, 12),
@@ -167,12 +177,18 @@ export function setSmokeTests(set: SupportedSet, opts: { games: number; extras?:
         const def = g.state.cards[a.evolveCard]!.def;
         return a.backFace ? engine.db.get(def).backFace : def;
       };
+      const equipped = equipment ? g.state.players[0].zones.field[0] : undefined;
       const action =
         d.actions.find((a) => a.type === "evolve" && mine(a.card) && revealed(a) === card.id) ??
         d.actions.find((a) => a.type === "play" && mine(a.card)) ??
         d.actions.find((a) => a.type === "activate" && mine(a.card)) ??
         // A crest can't be played (CR 8.2.1): without an activated ability it works through the end phase.
-        (card.type === "crest" ? d.actions.find((a) => a.type === "endMainPhase") : undefined);
+        (card.type === "crest" ? d.actions.find((a) => a.type === "endMainPhase") : undefined) ??
+        (equipped === undefined
+          ? undefined
+          : (d.actions.find((a) => a.type === "activate" && a.card === equipped) ??
+            d.actions.find((a) => a.type === "attack" && a.attacker === equipped) ??
+            d.actions.find((a) => a.type === "endMainPhase")));
       if (!action) skipped.push(card.id);
       else {
         g.act({ type: "mainPhase", action });

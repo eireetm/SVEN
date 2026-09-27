@@ -1,0 +1,4287 @@
+{
+ "format": 1,
+ "set": "CP04",
+ "printings": 379,
+ "cards": [
+  {
+   "id": "CP04-001",
+   "printings": [
+    "CP04-001",
+    "CP04-SL01",
+    "PCS01-001"
+   ],
+   "name": "Kokkoro",
+   "names": {
+    "en": "Kokkoro",
+    "cn": "可可萝",
+    "ja": "コッコロ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Give your leader {[defense]}+1.\n-------\n{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} {[cost02]} Equip this with an Ameth Amulet token.",
+    "cn": "《UB》《入场曲》使自己的主战者《生命值》+1。\n----------\n《进化》《消费1》：使这张卡进化。\n《入场曲》《消费2》：将1张『爱梅斯守护符』卡装备到这张卡。",
+    "ja": "UBファンファーレ自分のリーダーは体力+1する。\n----------\n進化コスト1：これは進化する。\nファンファーレコスト2：これは『アメスアミュレット』1枚を装備する。\n―――――――――――――――\n『アメスアミュレット』エルフプリコネ・美食殿・イクイップメントコスト2これを装備しているフォロワーは「起動これをアクト：自分の場のフォロワーすべては攻撃力+1/体力+1する」を持つ。"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-002",
+   "printings": [
+    "CP04-002",
+    "CP04-SL02",
+    "CP04-SP01",
+    "CP04-U01",
+    "PCS01-002"
+   ],
+   "name": "Kokkoro",
+   "names": {
+    "en": "Kokkoro",
+    "cn": "可可萝",
+    "ja": "コッコロ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "On Evolve - Draw a card.\nOn Super-Evolve - Give your leader {[defense]}+2. Draw a card.",
+    "cn": "【进化时】抽取1张卡。\n【超进化时】使自己的主战者《生命值》+2。抽取1张卡。",
+    "ja": "【進化時】1枚引く。\n【超進化時】自分のリーダーは体力+2する。1枚引く。"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-003",
+   "printings": [
+    "CP04-003",
+    "CP04-SL03",
+    "CP04-SP02",
+    "CP04-U02"
+   ],
+   "name": "Eris",
+   "names": {
+    "en": "Eris",
+    "cn": "厄里斯",
+    "ja": "エリス"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 4,
+   "attack": 4,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Select another PriConne follower on your field. Give it {[attack]}+1/{[defense]}+1 and, if {[ub]} abilities you control have executed at least 3 other times this turn, give it Storm.\n----------\n{[fanfare]} Look at the top 4 cards of your deck. You may reveal a PriConne card from among them and add it to your hand. Put the rest on the bottom of your deck in any order. The next PriConne card you play this turn costs 2 less.",
+    "cn": "《UB》《起动》将这张卡《横置》：选择自己场上的其他的1个公主连结类型·从者。使其《攻击力》+1/《生命值》+1。如果不包含这个能力，这个回合中自己的《UB》能力已发动3次及以上的话，使其获得【疾驰】能力。\n----------\n《入场曲》查看自己的牌堆顶4张卡。从那之中，可以将1张公主连结类型·卡片公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。这个回合，下次自己将公主连结类型·卡片使用之际，将其消费-2。",
+    "ja": "UB起動これをアクト：自分の場の他のプリコネ・フォロワー1体を選ぶ。それは攻撃力+1/体力+1する。これを含めず、このターン中に自分のUB能力が3回以上発動していたなら、それは【疾走】を持つ。\n----------\nファンファーレ自分のデッキの上4枚を見る。その中から、プリコネ・カード1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。このターン、次に自分がプリコネ・カードをプレイする際、コストを-2する。"
+   },
+   "traits": [
+    "プリコネ"
+   ]
+  },
+  {
+   "id": "CP04-004",
+   "printings": [
+    "CP04-004",
+    "CP04-SL04"
+   ],
+   "name": "Nephi Nela",
+   "names": {
+    "en": "Nephi Nela",
+    "cn": "涅妃=涅菈",
+    "ja": "ネフィ＝ネラ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 5,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select an enemy follower on the field. Deal it 4 damage and put the top card of your deck into your EX area.\n----------\nAny 1-cost PriConne follower you play from the EX area costs 1 less.\nWhenever a {[ub]} ability of another follower on your field is executed, put the top card of your deck into your EX area.",
+    "cn": "《UB》《入场曲》选择敌方场上的1个从者。给予其4点伤害。将自己的牌堆顶1张卡置于EX区域。\n----------\n只要有这张卡在场上存在，自己将EX区域的原始消费为1的公主连结类型·从者卡使用之际，将其消费-1。\n当自己场上的其他的从者的《UB》能力发动时，将自己的牌堆顶1张卡置于EX区域。",
+    "ja": "UBファンファーレ相手の場のフォロワー1体を選ぶ。それに4ダメージ。自分のデッキの上1枚をEXエリアに置く。\n----------\nこれが場にいる限り、自分がEXエリアの元のコスト1のプリコネ・フォロワーをプレイする際、コストを-1する。\n自分の場の他のフォロワーのUB能力が発動したとき、自分のデッキの上1枚をEXエリアに置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈ジオ・ゲヘナ〉"
+   ]
+  },
+  {
+   "id": "CP04-005",
+   "printings": [
+    "CP04-005",
+    "CP04-P01"
+   ],
+   "name": "Shiori",
+   "names": {
+    "en": "Shiori",
+    "cn": "栞",
+    "ja": "シオリ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Select a PriConne follower on your field and refresh it. For the rest of this turn, it can't attack enemies.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》选择自己场上的1个公主连结类型·从者。将其竖置。这个回合，使其不能对敌方进行攻击。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分の場のプリコネ・フォロワー1体を選ぶ。それをスタンドする。このターン、それは相手を攻撃できない。"
+   },
+   "traits": [
+    "プリコネ",
+    "エリザベスパーク"
+   ]
+  },
+  {
+   "id": "CP04-006",
+   "printings": [
+    "CP04-006",
+    "CP04-P02"
+   ],
+   "name": "Shiori",
+   "names": {
+    "en": "Shiori",
+    "cn": "栞",
+    "ja": "シオリ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} On Evolve - Deal 2 damage to each enemy leader.",
+    "cn": "《UB》【进化时】给予敌方的全体主战者各2点伤害。",
+    "ja": "UB【進化時】相手のリーダーすべてに2ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "エリザベスパーク"
+   ]
+  },
+  {
+   "id": "CP04-007",
+   "printings": [
+    "CP04-007",
+    "CP04-P03"
+   ],
+   "name": "Anemone",
+   "names": {
+    "en": "Anemone",
+    "cn": "银莲",
+    "ja": "アネモネ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Deal 1 damage to each enemy leader. Give your leader {[defense]}+1.\n-------\nWard.\nWhen this is put into your EX area, deal 1 damage to each enemy leader and give your leader {[defense]}+1.",
+    "cn": "《UB》《入场曲》给予敌方的全体主战者各1点伤害。使自己的主战者《生命值》+1。\n----------\n【守护】\n当这张卡置于到EX区域时，给予敌方的全体主战者各1点伤害。使自己的主战者《生命值》+1。",
+    "ja": "UBファンファーレ相手のリーダーすべてに1ダメージ。自分のリーダーは体力+1する。\n----------\n【守護】\nEXエリアにこれが置かれたとき、相手のリーダーすべてに1ダメージ。自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈ジオ・ゲヘナ〉"
+   ]
+  },
+  {
+   "id": "CP04-008",
+   "printings": [
+    "CP04-008",
+    "CP04-P04",
+    "PCS01-003"
+   ],
+   "name": "Makoto",
+   "names": {
+    "en": "Makoto",
+    "cn": "真琴",
+    "ja": "マコト"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]}{[fanfare]} {[engage]} 3 cards on your field: Select an enemy follower on the field. Deal 4 damage to it and 2 damage to its leader.",
+    "cn": "《UB》《入场曲》将场上的3张卡片《横置》：选择敌方场上的1个从者。给予其4点伤害。给予其主战者2点伤害。",
+    "ja": "UBファンファーレ場のカード3枚をアクト：相手の場のフォロワー1体を選ぶ。それに4ダメージ。それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "カォン"
+   ]
+  },
+  {
+   "id": "CP04-009",
+   "printings": [
+    "CP04-009",
+    "CP04-P05",
+    "PCS01-004"
+   ],
+   "name": "Rino",
+   "names": {
+    "en": "Rino",
+    "cn": "璃乃",
+    "ja": "リノ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this.\n{[fanfare]} If this was played from the EX area, evolve it.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《入场曲》如果这张卡从EX区域使用的话，使这张卡进化。",
+    "ja": "進化コスト2：これは進化する。\nファンファーレこれがEXエリアからプレイされていたなら、これは進化する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ラビリンス"
+   ]
+  },
+  {
+   "id": "CP04-010",
+   "printings": [
+    "CP04-010",
+    "CP04-P06"
+   ],
+   "name": "Rino",
+   "names": {
+    "en": "Rino",
+    "cn": "璃乃",
+    "ja": "リノ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} On Evolve - Deal 1 damage to each enemy follower on the field.",
+    "cn": "《UB》【进化时】给予敌方场上的全体从者各1点伤害。",
+    "ja": "UB【進化時】相手の場のフォロワーすべてに1ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "ラビリンス"
+   ]
+  },
+  {
+   "id": "CP04-011",
+   "printings": [
+    "CP04-011",
+    "CP04-P07"
+   ],
+   "name": "Cleuru",
+   "names": {
+    "en": "Cleuru",
+    "cn": "库露露",
+    "ja": "クルル"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 0,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} Activate Remove 2 Bunclie counters from this: Give your leader {[defense]}+2. Draw a card.\n----------\n{[fanfare]} If this wasn't put onto the field from hand, place 2 Bunclie counters on it.\nAt the start of your end phase, place a Bunclie counter on this.",
+    "cn": "《UB》《起动》将这张卡的2个卡班君指示物取除：使自己的主战者《生命值》+2。抽取1张卡。\n----------\n当自己的结束阶段到来时，将1个卡班君指示物置于到这张卡上。\n《入场曲》如果这张卡从手牌以外召唤到场上的话，将2个卡班君指示物置于到这张卡上。",
+    "ja": "UB起動これのかばばん君カウンター2個を取る：自分のリーダーは体力+2する。1枚引く。\n----------\n自分のエンドフェイズが来たとき、これにかばばん君カウンター1個を置く。\nファンファーレこれが手札以外から場に出ていたなら、これにかばばん君カウンター2個を置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈ジオ・テオゴニア〉"
+   ]
+  },
+  {
+   "id": "CP04-012",
+   "printings": [
+    "CP04-012",
+    "CP04-P08"
+   ],
+   "name": "Nea",
+   "names": {
+    "en": "Nea",
+    "cn": "涅亚",
+    "ja": "ネア"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: During each opponent's next turn, this has \"While this is engaged, each enemy follower on the field must attack once per turn if able.\"\n----------\nWard.\n{[lastwords]} Select an enemy follower on the field. It doesn't refresh during its controller's next start phase.",
+    "cn": "《UB》《起动》将这张卡《横置》：下个敌方的回合中，使这张卡获得「只要有这张卡以横置状态在场上存在，使敌方场上的全体从者，如果可能的话每个回合1次，必须进行攻击」能力。\n----------\n【守护】\n《谢幕曲》选择敌方场上的1个从者。使其在下个其玩家的开始阶段中不能竖置。",
+    "ja": "UB起動これをアクト：次の相手のターン中、これは「これがアクト状態で場にいる限り、相手の場のフォロワーすべては、可能ならターンごとに1回、攻撃する」を持つ。\n----------\n【守護】\nラストワード相手の場のフォロワー1体を選ぶ。それは次のそれのプレイヤーのスタートフェイズにスタンドしない。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈レイジ・レギオン〉"
+   ]
+  },
+  {
+   "id": "CP04-013",
+   "printings": [
+    "CP04-013",
+    "CP04-P09"
+   ],
+   "name": "Lima",
+   "names": {
+    "en": "Lima",
+    "cn": "莉玛",
+    "ja": "リマ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "This can only be played if it's your 5th turn or later.\n----------\n{[evolve]} {[cost01]}: Evolve this.\nWard.",
+    "cn": "这张卡在自己的回合不为第5回合或那之后的话，不能使用。\n《进化》《消费1》：使这张卡进化。\n【守护】（当这张卡召唤到场上时、或自己的结束阶段中，可以将这张卡横置。只要有「处于横置状态并持有【守护】能力的从者」存在，敌方不能攻击那以外的目标）",
+    "ja": "これは自分のターンが5ターン目かそれ以降でないなら、プレイできない。\n進化コスト1：これは進化する。\n【守護】（これが場に出たときか、自分のエンドフェイズにこれをアクトできる。相手は、アクト状態の【守護】を持つフォロワー以外を攻撃できない）"
+   },
+   "traits": [
+    "プリコネ",
+    "エリザベスパーク"
+   ]
+  },
+  {
+   "id": "CP04-014",
+   "printings": [
+    "CP04-014",
+    "CP04-P10"
+   ],
+   "name": "Lima",
+   "names": {
+    "en": "Lima",
+    "cn": "莉玛",
+    "ja": "リマ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} On Evolve - Give your leader {[defense]}+3.\n---------\nWard.",
+    "cn": "《UB》【进化时】使自己的主战者《生命值》+3。\n----------\n【守护】",
+    "ja": "UB【進化時】自分のリーダーは体力+3する。\n----------\n【守護】"
+   },
+   "traits": [
+    "プリコネ",
+    "エリザベスパーク"
+   ]
+  },
+  {
+   "id": "CP04-015",
+   "printings": [
+    "CP04-015",
+    "CP04-P11"
+   ],
+   "name": "Aoi",
+   "names": {
+    "en": "Aoi",
+    "cn": "碧",
+    "ja": "アオイ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Select an enemy follower on the field and give it {[attack]}-1/{[defense]}-1.",
+    "cn": "《UB》《起动》将这张卡《横置》：选择敌方场上的1个从者。使其《攻击力》-1/《生命值》-1。",
+    "ja": "UB起動これをアクト：相手の場のフォロワー1体を選ぶ。それは攻撃力-1/体力-1する。"
+   },
+   "traits": [
+    "プリコネ",
+    "フォレスティエ"
+   ]
+  },
+  {
+   "id": "CP04-016",
+   "printings": [
+    "CP04-016",
+    "CP04-P12"
+   ],
+   "name": "Nebbia",
+   "names": {
+    "en": "Nebbia",
+    "cn": "涅比亚",
+    "ja": "ネビア"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Strike - For the rest of this turn, this doesn't take damage.\n----------\nRush.\n{[fanfare]} Put another card from your field into its owner's EX area: Select an enemy follower on the field and engage it.",
+    "cn": "《UB》【攻击时】这个回合，使这张卡不会受到伤害。\n----------\n【突进】（持有【突进】能力的从者，在召唤到场上的当回合即可攻击敌方的从者）\n《入场曲》将场上的其他的1张卡片置于EX区域：选择敌方场上的1个从者。将其横置。",
+    "ja": "UB【攻撃時】このターン、これはダメージを受けない。\n----------\n【突進】（【突進】を持つフォロワーは、場に出たターンから相手のフォロワーを攻撃できる）\nファンファーレ場の他のカード1枚をEXエリアに置く：相手の場のフォロワー1体を選ぶ。それをアクトする。"
+   },
+   "traits": [
+    "プリコネ"
+   ]
+  },
+  {
+   "id": "CP04-017",
+   "printings": [
+    "CP04-017",
+    "CP04-P13",
+    "PCS01-006"
+   ],
+   "name": "Suzuna",
+   "names": {
+    "en": "Suzuna",
+    "cn": "铃奈",
+    "ja": "スズナ"
+   },
+   "class": "Forestcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Select an enemy follower on the field and deal it 3 damage.\n---------\n{[fanfare]} Discard a card.",
+    "cn": "《UB》《起动》将这张卡《横置》：选择敌方场上的1个从者。给予其3点伤害。\n----------\n《入场曲》将自己的1张手牌舍弃。",
+    "ja": "UB起動これをアクト：相手の場のフォロワー1体を選ぶ。それに3ダメージ。\n----------\nファンファーレ自分の手札1枚を捨てる。"
+   },
+   "traits": [
+    "プリコネ",
+    "ルーセント学院"
+   ]
+  },
+  {
+   "id": "CP04-018",
+   "printings": [
+    "CP04-018",
+    "CP04-P14",
+    "PCS01-007"
+   ],
+   "name": "Aurora Healing",
+   "names": {
+    "en": "Aurora Healing",
+    "cn": "极光治疗",
+    "ja": "オーロラヒーリング"
+   },
+   "class": "Forestcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select a PriConne follower on your field and refresh it. For the rest of this turn, it can't attack enemies. If it costs 1, draw a card.",
+    "cn": "选择自己场上的1个公主连结类型·从者。将其竖置。这个回合，使其不能对敌方进行攻击。如果其原始消费为1的话，抽取1张卡。",
+    "ja": "自分の場のプリコネ・フォロワー1体を選ぶ。それをスタンドする。このターン、それは相手を攻撃できない。それの元のコストが1なら、1枚引く。"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-019",
+   "printings": [
+    "CP04-019",
+    "CP04-SL05",
+    "PCS01-008"
+   ],
+   "name": "Pecorine",
+   "names": {
+    "en": "Pecorine",
+    "cn": "佩可莉姆",
+    "ja": "ペコリーヌ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWard.\n{[fanfare]} {[cost02]} Equip this with a Princess Sword token.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】\n《入场曲》《消费2》：将1张『公主之剑』卡装备到这张卡。",
+    "ja": "進化コスト1：これは進化する。\n【守護】\nファンファーレコスト2：これは『プリンセスソード』1枚を装備する。\n―――――――――――――――\n『プリンセスソード』ロイヤルプリコネ・美食殿・イクイップメントコスト2これを装備しているフォロワーが与えるダメージを+2する。これを装備しているフォロワーが受けるダメージを-2する。"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-020",
+   "printings": [
+    "CP04-020",
+    "CP04-SL06",
+    "CP04-SP03",
+    "CP04-U03",
+    "PCS01-009"
+   ],
+   "name": "Pecorine",
+   "names": {
+    "en": "Pecorine",
+    "cn": "佩可莉姆",
+    "ja": "ペコリーヌ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} On Evolve - Select an enemy follower on the field and deal it 4 damage.\n-------\nWard.\nOn Super Evolve - Deal 4 damage to each enemy leader.",
+    "cn": "《UB》【进化时】选择敌方场上的1个从者。给予其4点伤害。\n----------\n【守护】\n【超进化时】给予敌方的全体主战者各4点伤害。",
+    "ja": "UB【進化時】相手の場のフォロワー1体を選ぶ。それに4ダメージ。\n----------\n【守護】\n【超進化時】相手のリーダーすべてに4ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-021",
+   "printings": [
+    "CP04-021",
+    "CP04-SL07",
+    "CP04-SP04",
+    "CP04-U04"
+   ],
+   "name": "Christina",
+   "names": {
+    "en": "Christina",
+    "cn": "克莉丝提娜",
+    "ja": "クリスティーナ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} Strike - Discard a card: Select an enemy follower on the field and deal it 5 damage.\n------\nStorm.\n{[fanfare]} {[cost02]} Equip this with a Sanctum Blade Avalon token.",
+    "cn": "《UB》【攻击时】将1张手牌舍弃：选择敌方场上的1个从者。给予其5点伤害。\n----------\n【疾驰】\n《入场曲》《消费2》：将1张『圣域剑阿瓦隆』卡装备到这张卡。",
+    "ja": "UB【攻撃時】手札1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに5ダメージ。\n----------\n【疾走】\nファンファーレコスト2：これは『聖域剣アヴァロン』1枚を装備する。"
+   },
+   "traits": [
+    "プリコネ",
+    "NIGHTMARE",
+    "七冠"
+   ]
+  },
+  {
+   "id": "CP04-022",
+   "printings": [
+    "CP04-022",
+    "CP04-SL08"
+   ],
+   "name": "Labyrista",
+   "names": {
+    "en": "Labyrista",
+    "cn": "菈比莉斯塔",
+    "ja": "ラビリスタ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Give this {[attack]}+1.\n---------\n{[fanfare]} If there are at least 4 followers on your field, equip this with a Queen's Console token.\nAt the start of your end phase, if the total attack of 1-cost followers on your field is at least 10, deal 2 damage to each enemy follower on the field.",
+    "cn": "《UB》《起动》将这张卡《横置》：使这张卡《攻击力》+1。\n----------\n当自己的结束阶段到来时，如果自己场上的原始消费为1的从者的攻击力的合计为10及以上的话，给予敌方场上的全体从者各2点伤害。\n《入场曲》如果自己场上的从者为4个及以上的话，将1张『女王操作台』卡装备到这张卡。",
+    "ja": "UB起動これをアクト：これは攻撃力+1する。\n----------\n自分のエンドフェイズが来たとき、自分の場の元のコスト1のフォロワーの攻撃力の合計が10以上なら、相手の場のフォロワーすべてに2ダメージ。\nファンファーレ自分の場のフォロワーが4体以上なら、これは『クイーンズコンソール』1枚を装備する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ラビリンス",
+    "七冠"
+   ]
+  },
+  {
+   "id": "CP04-023",
+   "printings": [
+    "CP04-023",
+    "CP04-P15"
+   ],
+   "name": "Jun",
+   "names": {
+    "en": "Jun",
+    "cn": "纯",
+    "ja": "ジュン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 4,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nWard.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【守护】",
+    "ja": "進化コスト1：これは進化する。\n【守護】"
+   },
+   "traits": [
+    "プリコネ",
+    "NIGHTMARE"
+   ]
+  },
+  {
+   "id": "CP04-024",
+   "printings": [
+    "CP04-024",
+    "CP04-P16"
+   ],
+   "name": "Jun",
+   "names": {
+    "en": "Jun",
+    "cn": "纯",
+    "ja": "ジュン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 4,
+   "defense": 5,
+   "text": {
+    "en": "{[ub]} On Evolve - Search your deck for up to 2 Nightmare followers not named Jun, put them into your EX area, then shuffle. The next Nightmare follower you play this turn costs 2 less.turn.\n------\nWard.",
+    "cn": "《UB》【进化时】从自己的牌堆之中搜寻「与这张卡不同名的王宫骑士团类型·从者卡」最多2张，并置于EX区域。这个回合，下次自己将王宫骑士团类型·从者卡使用之际，将其消费-2。\n----------\n【守护】",
+    "ja": "UB【進化時】自分のデッキから「これと同名を除くNIGHTMARE・フォロワー」2枚まで探し、EXエリアに置く。このターン、次に自分がNIGHTMARE・フォロワーをプレイする際、コストを-2する。\n----------\n【守護】"
+   },
+   "traits": [
+    "プリコネ",
+    "NIGHTMARE"
+   ]
+  },
+  {
+   "id": "CP04-025",
+   "printings": [
+    "CP04-025",
+    "CP04-P17"
+   ],
+   "name": "Lily",
+   "names": {
+    "en": "Lily",
+    "cn": "莉莉",
+    "ja": "リリ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 5,
+   "attack": 4,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]}{[fanfare]} / Strike - Draw a card. You may summon a follower that costs 2 or less from your hand.\n--------\nRush.",
+    "cn": "《UB》《入场曲》/【攻击时】抽取1张卡。可以将自己的手牌中的原始消费为2及以下的1张从者卡召唤到场上。\n----------\n【突进】",
+    "ja": "UBファンファーレ/【攻撃時】1枚引く。自分の手札の元のコスト2以下のフォロワー1枚を場に出してよい。\n----------\n【突進】"
+   },
+   "traits": [
+    "プリコネ",
+    "アルターメイデン"
+   ]
+  },
+  {
+   "id": "CP04-026",
+   "printings": [
+    "CP04-026",
+    "CP04-P18",
+    "PCS01-010"
+   ],
+   "name": "Creditta",
+   "names": {
+    "en": "Creditta",
+    "cn": "克蕾琪塔",
+    "ja": "クレジッタ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 4,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Select an enemy follower on the field. For the rest of this turn, if it would take damage, it takes that much +2 instead.\n----------\n{[fanfare]} Search your deck for a follower with \"Pecorine\" in its name, put it into your EX area, then shuffle. It costs 3 less to play this turn.",
+    "cn": "《UB》《起动》将这张卡《横置》：选择敌方场上的1个从者。这个回合，使其受到的伤害+2。\n----------\n《入场曲》从自己的牌堆之中搜寻1张「卡片名包含『佩可莉姆』的从者卡」，并置于EX区域。这个回合，将其使用使用之际，将其消费-3。",
+    "ja": "UB起動これをアクト：相手の場のフォロワー1体を選ぶ。このターン、それが受けるダメージを+2する。\n----------\nファンファーレ自分のデッキから「カード名に『ペコリーヌ』を含むフォロワー」1枚を探し、EXエリアに置く。このターン、それをプレイする際、コストを-3する。"
+   },
+   "traits": [
+    "プリコネ",
+    "リッチモンド商工会"
+   ]
+  },
+  {
+   "id": "CP04-027",
+   "printings": [
+    "CP04-027",
+    "CP04-P19"
+   ],
+   "name": "Tomo",
+   "names": {
+    "en": "Tomo",
+    "cn": "智",
+    "ja": "トモ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this.\nStorm.\n{[fanfare]} If there are at least 4 PriConne followers on your field, evolve this.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n【疾驰】（持有【疾驰】能力的从者，在召唤到场上的当回合即可进行攻击）\n《入场曲》如果自己场上的公主连结类型·从者为4个及以上的话，使这张卡进化。",
+    "ja": "進化コスト2：これは進化する。\n【疾走】（【疾走】を持つフォロワーは、場に出たターンから攻撃できる）\nファンファーレ自分の場のプリコネ・フォロワーが4体以上なら、これは進化する。"
+   },
+   "traits": [
+    "プリコネ",
+    "NIGHTMARE"
+   ]
+  },
+  {
+   "id": "CP04-028",
+   "printings": [
+    "CP04-028",
+    "CP04-P20"
+   ],
+   "name": "Tomo",
+   "names": {
+    "en": "Tomo",
+    "cn": "智",
+    "ja": "トモ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Strike - Select an enemy follower on the field and deal it 2 damage.\n-------\nStorm.",
+    "cn": "《UB》【攻击时】选择敌方场上的1个从者。给予其2点伤害。\n----------\n【疾驰】",
+    "ja": "UB【攻撃時】相手の場のフォロワー1体を選ぶ。それに2ダメージ。\n----------\n【疾走】"
+   },
+   "traits": [
+    "プリコネ",
+    "NIGHTMARE"
+   ]
+  },
+  {
+   "id": "CP04-029",
+   "printings": [
+    "CP04-029",
+    "CP04-P21",
+    "PCS01-011",
+    "PR-506"
+   ],
+   "name": "Shizuru",
+   "names": {
+    "en": "Shizuru",
+    "cn": "静流",
+    "ja": "シズル"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Select an enemy follower on the field. Deal it 1 damage and give your leader {[defense]}+1.\n----------\nWard.\n{[fanfare]} Search your deck for a 1-cost PriConne follower with {[evolve]}, put it into your EX area, then shuffle.",
+    "cn": "《UB》《起动》将这张卡《横置》：选择敌方场上的1个从者。给予其1点伤害。使自己的主战者《生命值》+1。\n----------\n【守护】\n《入场曲》从自己的牌堆之中搜寻原始消费为1的持有《进化》能力的1张公主连结类型·从者卡，并置于EX区域。",
+    "ja": "UB起動これをアクト：相手の場のフォロワー1体を選ぶ。それに1ダメージ。自分のリーダーは体力+1する。\n----------\n【守護】\nファンファーレ自分のデッキから元のコスト1の進化を持つプリコネ・フォロワー1枚を探し、EXエリアに置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "ラビリンス"
+   ]
+  },
+  {
+   "id": "CP04-030",
+   "printings": [
+    "CP04-030",
+    "CP04-P22",
+    "PCS01-012"
+   ],
+   "name": "Ruka",
+   "names": {
+    "en": "Ruka",
+    "cn": "流夏",
+    "ja": "ルカ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} Activate {[cost01]}, engage this: Select an enemy follower on the field and deal it 2 damage.\n----------\nWard.",
+    "cn": "《UB》《起动》《消费1》将这张卡《横置》：选择敌方场上的1个从者。给予其2点伤害。\n----------\n【守护】（当这张卡召唤到场上时、或自己的结束阶段中，可以将这张卡横置。只要有「处于横置状态并持有【守护】能力的从者」存在，敌方不能攻击那以外的目标）",
+    "ja": "UB起動コスト1これをアクト：相手の場のフォロワー1体を選ぶ。それに2ダメージ。\n----------\n【守護】（これが場に出たときか、自分のエンドフェイズにこれをアクトできる。相手は、アクト状態の【守護】を持つフォロワー以外を攻撃できない）"
+   },
+   "traits": [
+    "プリコネ",
+    "トワイライトキャラバン"
+   ]
+  },
+  {
+   "id": "CP04-031",
+   "printings": [
+    "CP04-031",
+    "CP04-P23"
+   ],
+   "name": "Tamaki",
+   "names": {
+    "en": "Tamaki",
+    "cn": "珠希",
+    "ja": "タマキ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nStorm.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【疾驰】（持有【疾驰】能力的从者，在召唤到场上的当回合即可进行攻击）",
+    "ja": "進化コスト1：これは進化する。\n【疾走】（【疾走】を持つフォロワーは、場に出たターンから攻撃できる）"
+   },
+   "traits": [
+    "プリコネ",
+    "メルクリウス財団"
+   ]
+  },
+  {
+   "id": "CP04-032",
+   "printings": [
+    "CP04-032",
+    "CP04-P24"
+   ],
+   "name": "Tamaki",
+   "names": {
+    "en": "Tamaki",
+    "cn": "珠希",
+    "ja": "タマキ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Strike - Select an enemy follower on the field with at least 3 attack and deal it 2 damage.\n---------\nStorm.",
+    "cn": "《UB》【攻击时】选择敌方场上的攻击力为3及以上的1个从者。给予其2点伤害。\n----------\n【疾驰】",
+    "ja": "UB【攻撃時】相手の場の攻撃力3以上のフォロワー1体を選ぶ。それに2ダメージ。\n----------\n【疾走】"
+   },
+   "traits": [
+    "プリコネ",
+    "メルクリウス財団"
+   ]
+  },
+  {
+   "id": "CP04-033",
+   "printings": [
+    "CP04-033",
+    "CP04-P25",
+    "PR-495"
+   ],
+   "name": "Mitsuki",
+   "names": {
+    "en": "Mitsuki",
+    "cn": "深月",
+    "ja": "ミツキ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select up to 2 enemy followers on the field and give them {[attack]}-2/{[defense]}-2.\n---------\nWhenever a {[ub]} ability of another follower on your field is executed, select an enemy follower on the field and give i {[attack]}-1/{[defense]}-1.",
+    "cn": "《UB》《入场曲》选择敌方场上的从者最多2个。使其《攻击力》-2/《生命值》-2。\n----------\n当自己场上的其他的从者的《UB》能力发动时，选择敌方场上的1个从者。使其《攻击力》-1/《生命值》-1。",
+    "ja": "UBファンファーレ相手の場のフォロワー2体まで選ぶ。それは攻撃力-2/体力-2する。\n----------\n自分の場の他のフォロワーのUB能力が発動したとき、相手の場のフォロワー1体を選ぶ。それは攻撃力-1/体力-1する。"
+   },
+   "traits": [
+    "プリコネ",
+    "トワイライトキャラバン"
+   ]
+  },
+  {
+   "id": "CP04-034",
+   "printings": [
+    "CP04-034",
+    "CP04-P26"
+   ],
+   "name": "Matsuri",
+   "names": {
+    "en": "Matsuri",
+    "cn": "茉莉",
+    "ja": "マツリ"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Strike - Select an enemy follower on the field and deal it 1 damage.\n-------\nRush.\nWhile there's another Nightmare follower on your field, this has Assail.",
+    "cn": "《UB》【攻击时】选择敌方场上的1个从者。给予其1点伤害。\n----------\n【突进】\n只要自己的场上有其他的王宫骑士团类型·从者存在，使这张卡获得【指定攻击】能力。（持有【指定攻击】能力的从者，可以对竖置状态的从者进行攻击）",
+    "ja": "UB【攻撃時】相手の場のフォロワー1体を選ぶ。それに1ダメージ。\n----------\n【突進】\n自分の場に他のNIGHTMARE・フォロワーがいる限り、これは【指定攻撃】を持つ。（【指定攻撃】を持つフォロワーは、スタンド状態のフォロワーを攻撃できる）"
+   },
+   "traits": [
+    "プリコネ",
+    "NIGHTMARE"
+   ]
+  },
+  {
+   "id": "CP04-035",
+   "printings": [
+    "CP04-035",
+    "CP04-P27",
+    "PCS01-013"
+   ],
+   "name": "Ninon",
+   "names": {
+    "en": "Ninon",
+    "cn": "妮侬",
+    "ja": "ニノン"
+   },
+   "class": "Swordcraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Activate {[cost04]}, engage this: Select an enemy follower on the field. Deal it 5 damage and refresh this. Activate only once per turn.\n---------\nWhenever a {[ub]} ability of another follower on your field is executed, give this {[attack]}+1/{[defense]}+1.",
+    "cn": "《UB》《起动》《消费4》将这张卡《横置》：选择敌方场上的1个从者。给予其5点伤害。将这张卡竖置。这个能力在1回合可以使用1次。\n----------\n当自己场上的其他的从者的《UB》能力发动时，使这张卡《攻击力》+1/《生命值》+1。",
+    "ja": "UB起動コスト4これをアクト：相手の場のフォロワー1体を選ぶ。それに5ダメージ。これをスタンドする。この能力は1ターンに1回使える。\n----------\n自分の場の他のフォロワーのUB能力が発動したとき、これは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ヴァイスフリューゲル"
+   ]
+  },
+  {
+   "id": "CP04-036",
+   "printings": [
+    "CP04-036",
+    "CP04-P28",
+    "PCS01-014"
+   ],
+   "name": "Princess Strike",
+   "names": {
+    "en": "Princess Strike",
+    "cn": "公主突袭",
+    "ja": "プリンセスストライク"
+   },
+   "class": "Swordcraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "When playing this, engage a follower on your field with \"Pecorine\" in its name: This costs 3 less to play.\n----------\nSelect an enemy follower on the field. Deal 5 damage to it and 2 damage to its leader.",
+    "cn": "将这张卡使用之际，将场上的1个「卡片名包含『佩可莉姆』的从者」《横置》：将消费-3。\n选择敌方场上的1个从者。给予其5点伤害。给予其主战者2点伤害。",
+    "ja": "これをプレイする際、場の「カード名に『ペコリーヌ』を含むフォロワー」1体をアクト：コストを-3する。\n相手の場のフォロワー1体を選ぶ。それに5ダメージ。それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-037",
+   "printings": [
+    "CP04-037",
+    "CP04-SL09",
+    "PCS01-015"
+   ],
+   "name": "Karyl",
+   "names": {
+    "en": "Karyl",
+    "cn": "凯露",
+    "ja": "キャル"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 4,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Discard a spell: Select an enemy follower on the field. Deal it 3 damage and draw a card.\n--------\n{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} {[cost02]} Equip this with a Chaos Grimoire token.",
+    "cn": "《UB》《入场曲》将手牌中的1张法术卡舍弃：选择敌方场上的1个从者。给予其3点伤害。抽取1张卡。\n----------\n《进化》《消费1》：使这张卡进化。\n《入场曲》《消费2》：将1张『混沌魔法书』卡装备到这张卡。",
+    "ja": "UBファンファーレ手札のスペル1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに3ダメージ。1枚引く。\n----------\n進化コスト1：これは進化する。\nファンファーレコスト2：これは『ケイオスグリモワール』1枚を装備する。"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-038",
+   "printings": [
+    "CP04-038",
+    "CP04-SL10",
+    "CP04-SP05",
+    "CP04-U05",
+    "PCS01-016"
+   ],
+   "name": "Karyl",
+   "names": {
+    "en": "Karyl",
+    "cn": "凯露",
+    "ja": "キャル"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 4,
+   "defense": 5,
+   "text": {
+    "en": "On Evolve - Select an enemy follower on the field and deal it 5 damage.\nOn Super-Evolve - Select up to 2 spells in your cemetery with different names and put them into your EX area. They cost 2 less to play this turn.",
+    "cn": "【进化时】选择敌方场上的1个从者。给予其5点伤害。\n【超进化时】选择自己的墓场中的卡片名各不相同的法术卡最多2张。将其置于EX区域。这个回合，将其使用之际，将其消费-2。",
+    "ja": "【進化時】相手の場のフォロワー1体を選ぶ。それに5ダメージ。\n【超進化時】自分の墓場のスペルをカード名が異なるように2枚まで選ぶ。それをEXエリアに置く。このターン、それをプレイする際、コストを-2する。"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-039",
+   "printings": [
+    "CP04-039",
+    "CP04-SL11",
+    "CP04-SP06a",
+    "CP04-SP06b",
+    "CP04-SP06c",
+    "CP04-U06"
+   ],
+   "name": "Yuni",
+   "names": {
+    "en": "Yuni",
+    "cn": "优妮",
+    "ja": "ユニ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 5,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Search your deck for up to 2 Friendship Club cards with different names that cost 2 or less, put them into your EX area, then shuffle. They cost 2 less to play this turn.\n---------\nWhenever a {[ub]} ability of another follower on your field is executed, the next PriConne spell you play this turn costs 2 less.",
+    "cn": "《UB》《入场曲》从自己的牌堆之中搜寻原始消费为2及以下的、卡片名各不相同的好朋友社类型·卡片最多2张，并置于EX区域。这个回合，将其使用之际，将其消费-2。\n----------\n当自己场上的其他的从者的《UB》能力发动时，这个回合，下次自己将公主连结类型·法术卡使用之际，将其消费-2。",
+    "ja": "UBファンファーレ自分のデッキから元のコスト2以下のなかよし部・カードをカード名が異なるように2枚まで探し、EXエリアに置く。このターン、それをプレイする際、コストを-2する。\n----------\n自分の場の他のフォロワーのUB能力が発動したとき、このターン、次に自分がプリコネ・スペルをプレイする際、コストを-2する。"
+   },
+   "traits": [
+    "プリコネ",
+    "なかよし部"
+   ],
+   "alternateNames": {
+    "CP04-SP06a": {
+     "en": "Yuni, Chloe & Chieru",
+     "cn": "优妮&克罗依&千爱瑠",
+     "ja": "ユニ＆クロエ＆チエル"
+    },
+    "CP04-SP06b": {
+     "en": "Yuni, Chloe & Chieru",
+     "cn": "优妮&克罗依&千爱瑠",
+     "ja": "ユニ＆クロエ＆チエル"
+    },
+    "CP04-SP06c": {
+     "en": "Yuni, Chloe & Chieru",
+     "cn": "优妮&克罗依&千爱瑠",
+     "ja": "ユニ＆クロエ＆チエル"
+    },
+    "CP04-U06": {
+     "en": "Yuni, Chloe & Chieru",
+     "cn": "优妮&克罗依&千爱瑠",
+     "ja": "ユニ＆クロエ＆チエル"
+    }
+   }
+  },
+  {
+   "id": "CP04-040",
+   "printings": [
+    "CP04-040",
+    "CP04-SL12",
+    "PR-502"
+   ],
+   "name": "Neneka",
+   "names": {
+    "en": "Neneka",
+    "cn": "似似花",
+    "ja": "ネネカ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 0,
+   "defense": 1,
+   "text": {
+    "en": "{[ub]}{[fanfare]} If there's no Mirror Image Neneka on your field, summon one.\n-------\n{[fanfare]} {[cost02]} Equip this with a Mirage Wand token.\nActivate {[engage]} this: Select an enemy follower on the field and deal it 1 damage.",
+    "cn": "《UB》《入场曲》如果自己的场上没有『魔镜幻象·似似花』的话，将1个『魔镜幻象·似似花』召唤到场上。\n----------\n《入场曲》《消费2》：将1张『幻影之杖』卡装备到这张卡。\n《起动》将这张卡《横置》：选择敌方场上的1个从者。给予其1点伤害。",
+    "ja": "UBファンファーレ自分の場に『ミラーイメージ・ネネカ』がいないなら、『ミラーイメージ・ネネカ』1体を場に出す。\n----------\nファンファーレコスト2：これは『ワンドオブミラージュ』1枚を装備する。\n起動これをアクト：相手の場のフォロワー1体を選ぶ。それに1ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "七冠"
+   ]
+  },
+  {
+   "id": "CP04-041",
+   "printings": [
+    "CP04-041",
+    "CP04-P29",
+    "PCS01-017"
+   ],
+   "name": "Maho",
+   "names": {
+    "en": "Maho",
+    "cn": "真步",
+    "ja": "マホ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select your leader or another follower on your field and give it {[defense]}+1.\n------\n{[evolve]} {[cost01]}: Evolve this.",
+    "cn": "《UB》《入场曲》选择自己的主战者或自己场上的其他的1个从者。使其《生命值》+1。\n----------\n《进化》《消费1》：使这张卡进化。",
+    "ja": "UBファンファーレ自分のリーダーか自分の場の他のフォロワー1体を選ぶ。それは体力+1する。\n----------\n進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "プリコネ",
+    "カォン"
+   ]
+  },
+  {
+   "id": "CP04-042",
+   "printings": [
+    "CP04-042",
+    "CP04-P30"
+   ],
+   "name": "Maho",
+   "names": {
+    "en": "Maho",
+    "cn": "真步",
+    "ja": "マホ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Look at the top 4 cards of your deck. You may put one of them into your EX area. Put the rest on the bottom of your deck in any order.",
+    "cn": "【进化时】查看自己的牌堆顶4张卡。从那之中，可以将1张卡置于EX区域。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "【進化時】自分のデッキの上4枚を見る。その中から、1枚をEXエリアに置いてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "カォン"
+   ]
+  },
+  {
+   "id": "CP04-043",
+   "printings": [
+    "CP04-043",
+    "CP04-P31"
+   ],
+   "name": "Precia",
+   "names": {
+    "en": "Precia",
+    "cn": "普雷西娅",
+    "ja": "プレシア"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select an enemy follower on the field. Deal it damage equal to the number of other followers on your field and, if {[ub]} abilities you control have executed at least 2 other times this turn, draw a card.",
+    "cn": "《UB》《入场曲》选择敌方场上的1个从者。给予其与「自己场上的其他的从者的数量」等量的伤害。如果不包含这个能力，这个回合中自己的《UB》能力已发动2次及以上的话，抽取1张卡。",
+    "ja": "UBファンファーレ相手の場のフォロワー1体を選ぶ。それに「自分の場の他のフォロワーの数」と同じダメージ。これを含めず、このターン中に自分のUB能力が2回以上発動していたなら、1枚引く。"
+   },
+   "traits": [
+    "プリコネ",
+    "アルターメイデン"
+   ]
+  },
+  {
+   "id": "CP04-044",
+   "printings": [
+    "CP04-044",
+    "CP04-P32"
+   ],
+   "name": "Construct of Truth and Being",
+   "names": {
+    "en": "Construct of Truth and Being",
+    "cn": "真理与实存的共同幻想",
+    "ja": "真理と実存の共同幻想"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nDiscard a PriConne card: Draw 2 cards. If there's a Friendship Club follower on your field, give your leader {[defense]}+2.",
+    "cn": "《快速》\n将手牌中的1张公主连接类型·卡片舍弃：抽取2张卡。如果自己的场上有好朋友社类型·从者的话，使自己的主战者《生命值》+2。",
+    "ja": "クイック\n手札のプリコネ・カード1枚を捨てる：2枚引く。自分の場になかよし部・フォロワーがいるなら、自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "プリコネ",
+    "なかよし部"
+   ]
+  },
+  {
+   "id": "CP04-045",
+   "printings": [
+    "CP04-045",
+    "CP04-P33",
+    "PCS01-018"
+   ],
+   "name": "Kyoka",
+   "names": {
+    "en": "Kyoka",
+    "cn": "镜华",
+    "ja": "キョウカ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Select a PriConne spell in your cemetery. Put it into your EX area and give it \"At the start of your end phase, if this is in your EX area, bury it.\"",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》选择自己的墓场中的1张公主连结类型·法术卡。将其置于EX区域。使其获得「当自己的结束阶段到来时，将自己EX区域的这张卡置于墓场」能力。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分の墓場のプリコネ・スペル1枚を選ぶ。それをEXエリアに置く。それは「自分のエンドフェイズが来たとき、自分のEXエリアのこれを墓場に置く」を持つ。"
+   },
+   "traits": [
+    "プリコネ",
+    "リトルリリカル"
+   ]
+  },
+  {
+   "id": "CP04-046",
+   "printings": [
+    "CP04-046",
+    "CP04-P34"
+   ],
+   "name": "Kyoka",
+   "names": {
+    "en": "Kyoka",
+    "cn": "镜华",
+    "ja": "キョウカ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} On Evolve - Select an enemy follower on the field. Deal it 2 damage and, if you've played a spell this turn, deal 2 damage to its leader.",
+    "cn": "《UB》【进化时】选择敌方场上的1个从者。给予其2点伤害。这个回合，如果自己已将法术卡使用的话，给予其主战者2点伤害。",
+    "ja": "UB【進化時】相手の場のフォロワー1体を選ぶ。それに2ダメージ。このターン、自分がスペルをプレイしていたなら、それのリーダーに2ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "リトルリリカル"
+   ]
+  },
+  {
+   "id": "CP04-047",
+   "printings": [
+    "CP04-047",
+    "CP04-P35"
+   ],
+   "name": "Chieru",
+   "names": {
+    "en": "Chieru",
+    "cn": "千爱瑠",
+    "ja": "チエル"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Look at the top 4 cards of your deck. You may reveal a Friendship Club card or PriConne spell from among them and add it to your hand. Put the rest on the bottom of your deck in any order.",
+    "cn": "《UB》《入场曲》查看自己的牌堆顶4张卡。从那之中，可以将1张「好朋友社类型·卡片或公主连结类型·法术卡」公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "UBファンファーレ自分のデッキの上4枚を見る。その中から、なかよし部・カードかプリコネ・スペル1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "なかよし部"
+   ]
+  },
+  {
+   "id": "CP04-048",
+   "printings": [
+    "CP04-048",
+    "CP04-P36",
+    "PR-496"
+   ],
+   "name": "Chloe",
+   "names": {
+    "en": "Chloe",
+    "cn": "克罗依",
+    "ja": "クロエ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select an enemy follower on the field and deal it damage equal to the number of Friendship Club followers on your field.\n----------\nWhenever you play a Friendship Club card or PriConne spell, deal 1 damage to each enemy leader.",
+    "cn": "《UB》《入场曲》选择敌方场上的1个从者。给予其与「自己场上的好朋友社类型·从者的数量」等量的伤害。\n----------\n当自己将好朋友社类型·卡片或公主连结类型·法术卡使用时，给予敌方的全体主战者各1点伤害。",
+    "ja": "UBファンファーレ相手の場のフォロワー1体を選ぶ。それに「自分の場のなかよし部・フォロワーの数」と同じダメージ。\n----------\n自分がなかよし部・カードかプリコネ・スペルをプレイしたとき、相手のリーダーすべてに1ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "なかよし部"
+   ]
+  },
+  {
+   "id": "CP04-049",
+   "printings": [
+    "CP04-049",
+    "CP04-P37"
+   ],
+   "name": "Yuki",
+   "names": {
+    "en": "Yuki",
+    "cn": "雪",
+    "ja": "ユキ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Search your deck for a spell, reveal it, add it to your hand, then shuffle.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》从自己的牌堆之中搜寻1张法术卡，并加入手牌。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分のデッキからスペル1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "プリコネ",
+    "ヴァイスフリューゲル"
+   ]
+  },
+  {
+   "id": "CP04-050",
+   "printings": [
+    "CP04-050",
+    "CP04-P38"
+   ],
+   "name": "Yuki",
+   "names": {
+    "en": "Yuki",
+    "cn": "雪",
+    "ja": "ユキ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} On Evolve - Select an enemy follower on the field and give {[attack]}-2/{[defense]}-2.",
+    "cn": "《UB》【进化时】选择敌方场上的1个从者。使其《攻击力》-2/《生命值》-2。",
+    "ja": "UB【進化時】相手の場のフォロワー1体を選ぶ。それは攻撃力-2/体力-2する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ヴァイスフリューゲル"
+   ]
+  },
+  {
+   "id": "CP04-051",
+   "printings": [
+    "CP04-051",
+    "CP04-P39"
+   ],
+   "name": "Hatsune",
+   "names": {
+    "en": "Hatsune",
+    "cn": "初音",
+    "ja": "ハツネ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 2,
+   "defense": 5,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Deal 2 damage to each enemy leader and enemy follower on the field.\n-----------\nWard.\n{[fanfare]} {[engage]} this.",
+    "cn": "《UB》《起动》将这张卡《横置》：给予敌方的全体主战者与敌方场上的全体从者各2点伤害。\n----------\n【守护】（当这张卡召唤到场上时、或自己的结束阶段中，可以将这张卡横置。只要有「处于横置状态并持有【守护】能力的从者」存在，敌方不能攻击那以外的目标）\n《入场曲》将这张卡横置。",
+    "ja": "UB起動これをアクト：相手のリーダーすべてと相手の場のフォロワーすべてに2ダメージ。\n----------\n【守護】（これが場に出たときか、自分のエンドフェイズにこれをアクトできる。相手は、アクト状態の【守護】を持つフォロワー以外を攻撃できない）\nファンファーレこれをアクトする。"
+   },
+   "traits": [
+    "プリコネ",
+    "フォレスティエ"
+   ]
+  },
+  {
+   "id": "CP04-052",
+   "printings": [
+    "CP04-052",
+    "CP04-P40",
+    "PCS01-020"
+   ],
+   "name": "Nanaka",
+   "names": {
+    "en": "Nanaka",
+    "cn": "七七香",
+    "ja": "ナナカ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Discard a spell: Select an enemy follower on the field and deal it 5 damage.\n---------\nOnce per turn, when a {[ub]} ability of another follower on your field is executed, select a PriConne spell in your cemetery and put it into your EX area.",
+    "cn": "《UB》《入场曲》将手牌中的1张法术卡舍弃：选择敌方场上的1个从者。给予其5点伤害。\n----------\n每个回合1次，当自己场上的其他的从者的《UB》能力发动时，选择自己的墓场中的1张公主连结类型·法术卡。将其置于EX区域。",
+    "ja": "UBファンファーレ手札のスペル1枚を捨てる：相手の場のフォロワー1体を選ぶ。それに5ダメージ。\n----------\nターンごとに1回、自分の場の他のフォロワーのUB能力が発動したとき、自分の墓場のプリコネ・スペル1枚を選ぶ。それをEXエリアに置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "トワイライトキャラバン"
+   ]
+  },
+  {
+   "id": "CP04-053",
+   "printings": [
+    "CP04-053",
+    "CP04-P41"
+   ],
+   "name": "Chellerific Carnival",
+   "names": {
+    "en": "Chellerific Carnival",
+    "cn": "切噜切噜☆狂欢节",
+    "ja": "ちぇるちぇる☆かあにばる"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field. Deal it 3 damage and, if there's a Friendship Club follower on your field, draw a card.",
+    "cn": "《快速》\n选择敌方场上的1个从者。给予其3点伤害。如果自己的场上有好朋友社类型·从者的话，抽取1张卡。",
+    "ja": "クイック\n相手の場のフォロワー1体を選ぶ。それに3ダメージ。自分の場になかよし部・フォロワーがいるなら、1枚引く。"
+   },
+   "traits": [
+    "プリコネ",
+    "なかよし部"
+   ]
+  },
+  {
+   "id": "CP04-054",
+   "printings": [
+    "CP04-054",
+    "CP04-P42",
+    "PCS01-021"
+   ],
+   "name": "Dark Eclipse",
+   "names": {
+    "en": "Dark Eclipse",
+    "cn": "黑暗之蚀",
+    "ja": "ダークエクリプス"
+   },
+   "class": "Runecraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "When this is discarded, select an enemy follower on the field and deal it 1 damage.\n----------\nSelect a PriConne follower on your field and give it {[attack]}+3, Rush and Assail.",
+    "cn": "当将这张卡从自己的手牌中舍弃时，选择敌方场上的1个从者。给予其1点伤害。\n----------\n选择自己场上的1个公主连结类型·从者。使其《攻击力》+3，并获得【突进】【指定攻击】能力。（持有【指定攻击】能力的从者，可以对竖置状态的从者进行攻击）",
+    "ja": "これを自分の手札から捨てたとき、相手の場のフォロワー1体を選ぶ。それに1ダメージ。\n----------\n自分の場のプリコネ・フォロワー1体を選ぶ。それは攻撃力+3して、【突進】【指定攻撃】を持つ。（【指定攻撃】を持つフォロワーは、スタンド状態のフォロワーを攻撃できる）"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-055",
+   "printings": [
+    "CP04-055",
+    "CP04-SL13",
+    "PCS01-022",
+    "PR-511"
+   ],
+   "name": "Sheffy",
+   "names": {
+    "en": "Sheffy",
+    "cn": "雪菲",
+    "ja": "シェフィ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select an enemy follower on the field. It doesn't refresh during its controller's next start phase.\n-------\n{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} If Overflow is active for you, equip this with an Eisdrache token.",
+    "cn": "《UB》《入场曲》选择敌方场上的1个从者。使其在下个其玩家的开始阶段中不能竖置。\n----------\n《进化》《消费1》：使这张卡进化。\n《入场曲》如果处于【觉醒】状态的话，将1张『冰龙剑』卡装备到这张卡。（如果自己的PP最大值为7点及以上的话，就会处于【觉醒】状态）",
+    "ja": "UBファンファーレ相手の場のフォロワー1体を選ぶ。それは次のそれのプレイヤーのスタートフェイズにスタンドしない。\n----------\n進化コスト1：これは進化する。\nファンファーレ【覚醒】状態なら、これは『氷竜剣』1枚を装備する。（自分のPP最大値が7以上なら、【覚醒】状態になる）"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-056",
+   "printings": [
+    "CP04-056",
+    "CP04-SL14",
+    "CP04-SP07",
+    "CP04-U07"
+   ],
+   "name": "Sheffy",
+   "names": {
+    "en": "Sheffy",
+    "cn": "雪菲",
+    "ja": "シェフィ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "On Evolve - Select up to 2 enemy followers on the field and deal 2 damage divided between them.\nOn Super-Evolve - Deal 3 damage to each enemy follower on the field.",
+    "cn": "【进化时】选择敌方场上的从者最多2个。给予其合计2点伤害、任意分配。\n【超进化时】给予敌方场上的全体从者各3点伤害。",
+    "ja": "【進化時】相手の場のフォロワー2体まで選ぶ。それに2ダメージを割りふる。\n【超進化時】相手の場のフォロワーすべてに3ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-057",
+   "printings": [
+    "CP04-057",
+    "CP04-SL15",
+    "PR-505"
+   ],
+   "name": "Homare",
+   "names": {
+    "en": "Homare",
+    "cn": "帆稀",
+    "ja": "ホマレ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 5,
+   "attack": 4,
+   "defense": 5,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Select an enemy follower on the field. Deal it 5 damage and, if Overflow is active for you, recover 2 play points.\n--------\n{[fanfare]} Increase your max play points by 1.\nWhenever a {[ub]} ability of another follower on your field is executed, increase your max play points by 1.",
+    "cn": "《UB》《起动》将这张卡《横置》：选择敌方场上的1个从者。给予其5点伤害。如果处于【觉醒】状态的话，将自己的PP回复2点。（如果自己的PP最大值为7点及以上的话，就会处于【觉醒】状态）\n----------\n当自己场上的其他的从者的《UB》能力发动时，将自己的PP最大值+1点。\n《入场曲》将自己的PP最大值+1点。",
+    "ja": "UB起動これをアクト：相手の場のフォロワー1体を選ぶ。それに5ダメージ。【覚醒】状態なら、自分のPPを2回復する。（自分のPP最大値が7以上なら、【覚醒】状態になる）\n----------\n自分の場の他のフォロワーのUB能力が発動したとき、自分のPP最大値を+1する。\nファンファーレ自分のPP最大値を+1する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ドラゴンズネスト"
+   ]
+  },
+  {
+   "id": "CP04-058",
+   "printings": [
+    "CP04-058",
+    "CP04-SL16",
+    "CP04-SP08",
+    "CP04-U08",
+    "PR-503"
+   ],
+   "name": "Muimi",
+   "names": {
+    "en": "Muimi",
+    "cn": "矛依未",
+    "ja": "ムイミ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Draw a card. Discard a card. If Overflow is active for you, equip this with a Precious Memento token. If you have 10 max play points, give this {[attack]}+3.",
+    "cn": "《UB》《入场曲》抽取1张卡。将自己的1张手牌舍弃。如果处于【觉醒】状态的话，将1张『情谊的证明』卡装备到这张卡。如果自己的PP最大值为10点的话，使这张卡《攻击力》+3。",
+    "ja": "UBファンファーレ1枚引く。自分の手札1枚を捨てる。【覚醒】状態なら、これは『絆の証』1枚を装備する。自分のPP最大値が10なら、これは攻撃力+3する。（自分のPP最大値が7以上なら、【覚醒】状態になる）\n―――――――――――――――\n『絆の証』ドラゴンプリコネ・イクイップメントコスト2これを装備しているフォロワーは【疾走】と「【攻撃時】相手の場のフォロワー2体まで選ぶ。それに3ダメージ」を持つ。"
+   },
+   "traits": [
+    "プリコネ"
+   ]
+  },
+  {
+   "id": "CP04-059",
+   "printings": [
+    "CP04-059",
+    "CP04-P43",
+    "PCS01-023"
+   ],
+   "name": "Kaya",
+   "names": {
+    "en": "Kaya",
+    "cn": "嘉夜",
+    "ja": "カヤ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 6,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nStorm.\n{[fanfare]} Select an enemy follower on the field. Deal it 4 damage and, if you have 10 max play points, evolve this.\nWhenever a {[ub]} ability of another follower on your field is executed, deal 2 damage to each enemy leader.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n【疾驰】\n当自己场上的其他的从者的《UB》能力发动时，给予敌方的全体主战者各2点伤害。\n《入场曲》选择敌方场上的1个从者。给予其4点伤害。如果自己的PP最大值为10的话，使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。\n【疾走】\n自分の場の他のフォロワーのUB能力が発動したとき、相手のリーダーすべてに2ダメージ。\nファンファーレ相手の場のフォロワー1体を選ぶ。それに4ダメージ。自分のPP最大値が10なら、これは進化する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ドラゴンズネスト"
+   ]
+  },
+  {
+   "id": "CP04-060",
+   "printings": [
+    "CP04-060",
+    "CP04-P44",
+    "PCS01-024"
+   ],
+   "name": "Kaya",
+   "names": {
+    "en": "Kaya",
+    "cn": "嘉夜",
+    "ja": "カヤ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 5,
+   "defense": 5,
+   "text": {
+    "en": "{[ub]} On Evolve - Search your deck for a Dragon's Nest card not named Kaya, put it into your EX area, then shuffle. It costs 2 less to play this turn.\n----------\nStorm.\nWhenever a {[ub]} ability of another follower on your field is executed, deal 2 damage to each enemy leader.",
+    "cn": "《UB》【进化时】从自己的牌堆之中搜寻1张「与这张卡不同名的龙族据点类型·卡片」，并置于EX区域。这个回合，将其使用之际，将其消费-2。\n----------\n【疾驰】\n当自己场上的其他的从者的《UB》能力发动时，给予敌方的全体主战者各2点伤害。",
+    "ja": "UB【進化時】自分のデッキから「これと同名を除くドラゴンズネスト・カード」1枚を探し、EXエリアに置く。このターン、それをプレイする際、コストを-2する。\n----------\n【疾走】\n自分の場の他のフォロワーのUB能力が発動したとき、相手のリーダーすべてに2ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "ドラゴンズネスト"
+   ]
+  },
+  {
+   "id": "CP04-061",
+   "printings": [
+    "CP04-061",
+    "CP04-P45",
+    "PCS01-025",
+    "PR-497"
+   ],
+   "name": "Hiyori",
+   "names": {
+    "en": "Hiyori",
+    "cn": "日和莉",
+    "ja": "ヒヨリ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 4,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} Strike - Select an enemy follower on the field. Deal 2 damage to it and its leader. If you have 10 max play points, deal 4 damage instead.\n---------\nRush.\n{[fanfare]} Search your deck for a 1-cost Twinkle Wish follower, put it into your EX area, then shuffle.",
+    "cn": "《UB》【攻击时】选择敌方场上的1个从者。给予其与其主战者各2点伤害。如果自己的PP最大值为10点的话，转变为4点伤害。\n----------\n【突进】\n《入场曲》从自己的牌堆之中搜寻原始消费为1的1张破晓之星类型·从者卡，并置于EX区域。",
+    "ja": "UB【攻撃時】相手の場のフォロワー1体を選ぶ。それとそれのリーダーに2ダメージ。自分のPP最大値が10なら、代わりに4ダメージ。\n----------\n【突進】\nファンファーレ自分のデッキから元のコスト1のトゥインクルウィッシュ・フォロワー1枚を探し、EXエリアに置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "トゥインクルウィッシュ"
+   ]
+  },
+  {
+   "id": "CP04-062",
+   "printings": [
+    "CP04-062",
+    "CP04-P46"
+   ],
+   "name": "Until We Meet Again",
+   "names": {
+    "en": "Until We Meet Again",
+    "cn": "在终将再会的未来",
+    "ja": "いつか、また会う未来で"
+   },
+   "class": "Dragoncraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Choose 1. (1) Increase your max play points by 1. Give your leader {[defense]}+1. (2) If you have 10 max play points, search your deck for a 2-cost PriConne follower, summon it, then shuffle.",
+    "cn": "从下述之中抉择1项。\n【1】将自己的PP最大值+1点。使自己的《生命值》+1。\n【2】如果自己的PP最大值为10的话，从自己的牌堆之中搜寻原始消费为2的1张公主连结类型·从者卡，并召唤到场上。",
+    "ja": "下記から1つチョイスする。【1】自分のPP最大値を+1する。自分のリーダーは体力+1する。【2】自分のPP最大値が10なら、自分のデッキから元のコスト2のプリコネ・フォロワー1枚を探し、場に出す。"
+   },
+   "traits": [
+    "プリコネ"
+   ]
+  },
+  {
+   "id": "CP04-063",
+   "printings": [
+    "CP04-063",
+    "CP04-P47",
+    "PCS01-026"
+   ],
+   "name": "Inori",
+   "names": {
+    "en": "Inori",
+    "cn": "祈梨",
+    "ja": "イノリ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Deal 1 damage to each enemy leader and enemy follower on the field. Activate only if Overflow is active for you.\n--------\n{[evolve]} {[cost01]}: Evolve this.",
+    "cn": "《UB》《起动》将这张卡《横置》：给予敌方的全体主战者与敌方场上的全体从者各1点伤害。这个能力在处于【觉醒】状态的话才可使用。（如果自己的PP最大值为7点及以上的话，就会处于【觉醒】状态）\n----------\n《进化》《消费1》：使这张卡进化。",
+    "ja": "UB起動これをアクト：相手のリーダーすべてと相手の場のフォロワーすべてに1ダメージ。この能力は【覚醒】状態なら使える。（自分のPP最大値が7以上なら、【覚醒】状態になる）\n----------\n進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ドラゴンズネスト"
+   ]
+  },
+  {
+   "id": "CP04-064",
+   "printings": [
+    "CP04-064",
+    "CP04-P48",
+    "PR-498"
+   ],
+   "name": "Inori",
+   "names": {
+    "en": "Inori",
+    "cn": "祈梨",
+    "ja": "イノリ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Deal 1 damage to each enemy leader and enemy follower on the field. Activate only if Overflow is active for you.\n--------\nOn Evolve - Search your deck for a Dragon's Nest card not named Inori, reveal it, add it to your hand, then shuffle.",
+    "cn": "《UB》《起动》将这张卡《横置》：给予敌方的全体主战者与敌方场上的全体从者各1点伤害。这个能力在处于【觉醒】状态的话才可使用。\n----------\n【进化时】从自己的牌堆之中搜寻1张「与这张卡不同名的龙族据点类型·卡片」，并加入手牌。",
+    "ja": "UB起動これをアクト：相手のリーダーすべてと相手の場のフォロワーすべてに1ダメージ。この能力は【覚醒】状態なら使える。\n----------\n【進化時】自分のデッキから「これと同名を除くドラゴンズネスト・カード」1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "プリコネ",
+    "ドラゴンズネスト"
+   ]
+  },
+  {
+   "id": "CP04-065",
+   "printings": [
+    "CP04-065",
+    "CP04-P49"
+   ],
+   "name": "Lind",
+   "names": {
+    "en": "Lind",
+    "cn": "琳德",
+    "ja": "リンド"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Select a Geo Theogonia follower on your field not named Lind. Give it {[attack]}+1/{[defense]}+1 and refresh it. For the rest of this turn, it can't attack enemies.\n----------\nWard.",
+    "cn": "《UB》《起动》将这张卡《横置》：选择自己场上的1个「与这张卡不同名的〈吉奥·特尔哥尼亚〉类型·从者」。使其《攻击力》+1/《生命值》+1，并将其竖置。这个回合，使其不能对敌方进行攻击。\n----------\n【守护】（当这张卡召唤到场上时、或自己的结束阶段中，可以将这张卡横置。只要有「处于横置状态并持有【守护】能力的从者」存在，敌方不能攻击那以外的目标）",
+    "ja": "UB起動これをアクト：自分の場の「これと同名を除く〈ジオ・テオゴニア〉・フォロワー」1体を選ぶ。それは攻撃力+1/体力+1して、スタンドする。このターン、それは相手を攻撃できない。\n----------\n【守護】（これが場に出たときか、自分のエンドフェイズにこれをアクトできる。相手は、アクト状態の【守護】を持つフォロワー以外を攻撃できない）"
+   },
+   "traits": [
+    "プリコネ",
+    "〈ジオ・テオゴニア〉"
+   ]
+  },
+  {
+   "id": "CP04-066",
+   "printings": [
+    "CP04-066",
+    "CP04-P50"
+   ],
+   "name": "Wyrm",
+   "names": {
+    "en": "Wyrm",
+    "cn": "维尔姆",
+    "ja": "ヴルム"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Select an enemy follower on the field. Deal it 3 damage and, if there's a follower on your field that costs 7 or more, deal 3 damage to its leader.\n----------\n{[fanfare]} If there are no other Geo Theogonia followers on your field, engage this.",
+    "cn": "《UB》《起动》将这张卡《横置》：选择敌方场上的1个从者。给予其3点伤害。如果自己的场上有原始消费为7及以上的从者的话，给予其主战者3点伤害。\n----------\n《入场曲》如果自己的场上没有其他的〈吉奥·特尔哥尼亚〉类型·从者的话，将这张卡横置。",
+    "ja": "UB起動これをアクト：相手の場のフォロワー1体を選ぶ。それに3ダメージ。自分の場に元のコスト7以上のフォロワーがいるなら、それのリーダーに3ダメージ。\n----------\nファンファーレ自分の場に他の〈ジオ・テオゴニア〉・フォロワーがいないなら、これをアクトする。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈ジオ・テオゴニア〉"
+   ]
+  },
+  {
+   "id": "CP04-067",
+   "printings": [
+    "CP04-067",
+    "CP04-P51"
+   ],
+   "name": "Mifuyu",
+   "names": {
+    "en": "Mifuyu",
+    "cn": "美冬",
+    "ja": "ミフユ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "This costs 2 less to play if Overflow is active for you.\n----------\n{[evolve]} {[cost01]}: Evolve this.\nWard.",
+    "cn": "将这张卡使用之际，如果处于【觉醒】状态的话，将消费-2。（如果自己的PP最大值为7点及以上的话，就会处于【觉醒】状态）\n《进化》《消费1》：使这张卡进化。\n【守护】",
+    "ja": "これをプレイする際、【覚醒】状態なら、コストを-2する。（自分のPP最大値が7以上なら、【覚醒】状態になる）\n進化コスト1：これは進化する。\n【守護】"
+   },
+   "traits": [
+    "プリコネ",
+    "メルクリウス財団"
+   ]
+  },
+  {
+   "id": "CP04-068",
+   "printings": [
+    "CP04-068",
+    "CP04-P52"
+   ],
+   "name": "Mifuyu",
+   "names": {
+    "en": "Mifuyu",
+    "cn": "美冬",
+    "ja": "ミフユ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} On Evolve - Select an enemy amulet on the field and destroy it.\n-------\nWard.",
+    "cn": "《UB》【进化时】选择敌方场上的1个护符。将其破坏。\n----------\n【守护】",
+    "ja": "UB【進化時】相手の場のアミュレット1つを選ぶ。それを破壊する。\n----------\n【守護】"
+   },
+   "traits": [
+    "プリコネ",
+    "メルクリウス財団"
+   ]
+  },
+  {
+   "id": "CP04-069",
+   "printings": [
+    "CP04-069",
+    "CP04-P53",
+    "PCS01-027"
+   ],
+   "name": "Kaori",
+   "names": {
+    "en": "Kaori",
+    "cn": "香织",
+    "ja": "カオリ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} Strike - {[cost02]}: Deal 3 damage to each enemy leader.\n------\nRush.\nWhile there's another PriConne follower on your field, this has Storm.",
+    "cn": "《UB》【攻击时】《消费2》：给予敌方的全体主战者各3点伤害。\n----------\n【突进】（持有【突进】能力的从者，在召唤到场上的当回合即可攻击敌方的从者）\n只要自己的场上有其他的公主连结类型·从者存在，使这张卡获得【疾驰】能力。",
+    "ja": "UB【攻撃時】コスト2：相手のリーダーすべてに3ダメージ。\n----------\n【突進】（【突進】を持つフォロワーは、場に出たターンから相手のフォロワーを攻撃できる）\n自分の場に他のプリコネ・フォロワーがいる限り、これは【疾走】を持つ。"
+   },
+   "traits": [
+    "プリコネ",
+    "カォン"
+   ]
+  },
+  {
+   "id": "CP04-070",
+   "printings": [
+    "CP04-070",
+    "CP04-P54"
+   ],
+   "name": "Ayane",
+   "names": {
+    "en": "Ayane",
+    "cn": "绫音",
+    "ja": "アヤネ"
+   },
+   "class": "Dragoncraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Follower Strike - Put the attack target into its owner's EX area.\n--------\nWhile there's another Sarendia Orphanage follower on your field, this follower has Rush.",
+    "cn": "《UB》【攻击时】如果对从者进行攻击的话，将其置于EX区域。\n----------\n只要自己的场上有其他的咲恋救济院类型·从者存在，使这张卡获得【突进】能力。（持有【突进】能力的从者，在召唤到场上的当回合即可攻击敌方的从者）",
+    "ja": "UB【攻撃時】フォロワーへの攻撃なら、それをEXエリアに置く。\n----------\n自分の場に他のサレンディア救護院・フォロワーがいる限り、これは【突進】を持つ。（【突進】を持つフォロワーは、場に出たターンから相手のフォロワーを攻撃できる）"
+   },
+   "traits": [
+    "プリコネ",
+    "サレンディア救護院"
+   ]
+  },
+  {
+   "id": "CP04-071",
+   "printings": [
+    "CP04-071",
+    "CP04-P55"
+   ],
+   "name": "Dragon's End Fist",
+   "names": {
+    "en": "Dragon's End Fist",
+    "cn": "龙族终结拳",
+    "ja": "ドラゴンズエンドフィスト"
+   },
+   "class": "Dragoncraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Select an enemy follower on the field and deal it 4 damage. If there's a Dragon's Nest follower on your field, deal 6 damage instead.",
+    "cn": "选择敌方场上的1个从者。给予其4点伤害。如果自己的场上有龙族据点类型·从者的话，转变为6点伤害。",
+    "ja": "相手の場のフォロワー1体を選ぶ。それに4ダメージ。自分の場にドラゴンズネスト・フォロワーがいるなら、代わりに6ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "ドラゴンズネスト"
+   ]
+  },
+  {
+   "id": "CP04-072",
+   "printings": [
+    "CP04-072",
+    "CP04-P56",
+    "PCS01-028"
+   ],
+   "name": "Prank Proclamation",
+   "names": {
+    "en": "Prank Proclamation",
+    "cn": "恶作剧宣言",
+    "ja": "イタズラ宣言"
+   },
+   "class": "Dragoncraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Each player draws a card.\n{[lastwords]} Deal 1 damage to each enemy leader.",
+    "cn": "《入场曲》每位玩家，各抽取1张卡。\n《谢幕曲》给予敌方的全体主战者各1点伤害。",
+    "ja": "ファンファーレ各プレイヤーは、1枚引く。\nラストワード相手のリーダーすべてに1ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "リトルリリカル"
+   ]
+  },
+  {
+   "id": "CP04-073",
+   "printings": [
+    "CP04-073",
+    "CP04-SL17",
+    "PCS01-029"
+   ],
+   "name": "Illya",
+   "names": {
+    "en": "Illya",
+    "cn": "伊莉亚",
+    "ja": "イリヤ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this, banish 5 cards from your cemetery: Select an enemy follower on the field. Deal it 3 damage and give your leader {[defense]}+3.\n---------\n{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} {[cost02]} Equip this with a Dark Axe Nachtfang token.",
+    "cn": "《UB》《起动》将这张卡《横置》将墓场中的5张卡片消失：选择敌方场上的1个从者。给予其3点伤害。使自己的主战者《生命值》+3。\n----------\n《进化》《消费1》：使这张卡进化。\n《入场曲》《消费2》：将1张『夜之牙暗斧』卡装备到这张卡。",
+    "ja": "UB起動これをアクト墓場のカード5枚を消滅：相手の場のフォロワー1体を選ぶ。それに3ダメージ。自分のリーダーは体力+3する。\n----------\n進化コスト1：これは進化する。\nファンファーレコスト2：これは『闇斧ナハトファング』1枚を装備する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ディアボロス"
+   ]
+  },
+  {
+   "id": "CP04-074",
+   "printings": [
+    "CP04-074",
+    "CP04-SL18",
+    "CP04-SP09",
+    "CP04-U09",
+    "PCS01-030"
+   ],
+   "name": "Illya",
+   "names": {
+    "en": "Illya",
+    "cn": "伊莉亚",
+    "ja": "イリヤ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this, banish 5 cards from your cemetery: Select an enemy follower on the field. Deal it 3 damage and give your leader {[defense]}+3.\n---------\nOn Evolve - Search your deck for a PriConne card, bury it, then shuffle.\nOnn Super-Evolve - Select an enemy follower on the field and deal it 5 damage.",
+    "cn": "《UB》《起动》将这张卡《横置》将墓场中的5张卡片消失：选择敌方场上的1个从者。给予其3点伤害。使自己的主战者《生命值》+3。\n----------\n【进化时】从自己的牌堆之中搜寻1张公主连结类型·卡片，并置于墓场。\n【超进化时】选择敌方场上的1个从者。给予其5点伤害。",
+    "ja": "UB起動これをアクト墓場のカード5枚を消滅：相手の場のフォロワー1体を選ぶ。それに3ダメージ。自分のリーダーは体力+3する。\n----------\n【進化時】自分のデッキからプリコネ・カード1枚を探し、墓場に置く。\n【超進化時】相手の場のフォロワー1体を選ぶ。それに5ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "ディアボロス"
+   ]
+  },
+  {
+   "id": "CP04-075",
+   "printings": [
+    "CP04-075",
+    "CP04-SL19",
+    "CP04-SP10a",
+    "CP04-SP10b",
+    "CP04-U10"
+   ],
+   "name": "Ranpha",
+   "names": {
+    "en": "Ranpha",
+    "cn": "兰法",
+    "ja": "ランファ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 4,
+   "attack": 3,
+   "defense": 5,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select an enemy follower on the field. Deal it 5 damage and, if this wasn't put onto the field from hand, recover 2 play points.\n--------\nWhenever a {[ub]} ability of another follower on your field is executed, choose 1 that you haven't chosen this turn. (1) Deal 2 damage to each enemy leader. (2) Give your leader {[defense]}+2.",
+    "cn": "《UB》《入场曲》选择敌方场上的1个从者。给予其5点伤害。如果这张卡从手牌以外召唤到场上的话，将自己的PP回复2点。\n----------\n当自己场上的其他的从者的《UB》能力发动时，从下述之中抉择1项。这个回合，使这个能力不能抉择已抉择的选择项。\n【1】给予敌方的全体主战者各2点伤害。\n【2】使自己的主战者《生命值》+2。",
+    "ja": "UBファンファーレ相手の場のフォロワー1体を選ぶ。それに5ダメージ。これが手札以外から場に出ていたなら、自分のPPを2回復する。\n----------\n自分の場の他のフォロワーのUB能力が発動したとき、下記から1つチョイスする。このターン、この能力でチョイスした選択肢はチョイスできない。【1】相手のリーダーすべてに2ダメージ。【2】自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈レイジ・レギオン〉"
+   ],
+   "alternateNames": {
+    "CP04-SP10a": {
+     "en": "Ranpha & Misora",
+     "cn": "兰法&美空",
+     "ja": "ランファ＆ミソラ"
+    },
+    "CP04-SP10b": {
+     "en": "Ranpha & Misora",
+     "cn": "兰法&美空",
+     "ja": "ランファ＆ミソラ"
+    },
+    "CP04-U10": {
+     "en": "Ranpha & Misora",
+     "cn": "兰法&美空",
+     "ja": "ランファ＆ミソラ"
+    }
+   }
+  },
+  {
+   "id": "CP04-076",
+   "printings": [
+    "CP04-076",
+    "CP04-SL20"
+   ],
+   "name": "Violet",
+   "names": {
+    "en": "Violet",
+    "cn": "薇奥莉特",
+    "ja": "ヴァイオレット"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 4,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select a PriConne follower in your cemetery that costs 3 or less and summon it.\n-----------\nActivate Discard 2 cards: Put this card from your cemetery into your EX area.",
+    "cn": "《UB》《入场曲》选择自己的墓场中的原始消费为3及以下的1张公主连结类型·从者卡。将其召唤到场上。\n----------\n《起动》将2张手牌舍弃：将自己的墓场中的这张卡置于EX区域。",
+    "ja": "UBファンファーレ自分の墓場の元のコスト3以下のプリコネ・フォロワー1枚を選ぶ。それを場に出す。\n----------\n起動手札2枚を捨てる：自分の墓場のこれをEXエリアに置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈ジオ・ニヴルヘル〉"
+   ]
+  },
+  {
+   "id": "CP04-077",
+   "printings": [
+    "CP04-077",
+    "CP04-P57",
+    "PCS01-031"
+   ],
+   "name": "Shinobu",
+   "names": {
+    "en": "Shinobu",
+    "cn": "忍",
+    "ja": "シノブ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select an enemy follower on the field and deal it damage equal to the number of Diabolos followers on your field.\n-----------\n{[evolve]} {[cost01]}: Evolve this.\nWhenever a {[ub]} ability of another follower on your field is executed, bury the top card of your deck.",
+    "cn": "《UB》《入场曲》选择敌方场上的1个从者。给予其与「自己场上的恶魔伪王国军类型·从者的数量」等量的伤害。\n----------\n《进化》《消费1》：使这张卡进化。\n当自己场上的其他的从者的《UB》能力发动时，将自己的牌堆顶1张卡置于墓场。",
+    "ja": "UBファンファーレ相手の場のフォロワー1体を選ぶ。それに「自分の場のディアボロス・フォロワーの数」と同じダメージ。\n----------\n進化コスト1：これは進化する。\n自分の場の他のフォロワーのUB能力が発動したとき、自分のデッキの上1枚を墓場に置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "ディアボロス"
+   ]
+  },
+  {
+   "id": "CP04-078",
+   "printings": [
+    "CP04-078",
+    "CP04-P58",
+    "PCS01-032"
+   ],
+   "name": "Shinobu",
+   "names": {
+    "en": "Shinobu",
+    "cn": "忍",
+    "ja": "シノブ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "On Evolve - Summon a Skullfather token.\nWhenever a {[ub]} ability of another follower on your field is executed, bury the top card of your deck.",
+    "cn": "当自己场上的其他的从者的《UB》能力发动时，将自己的牌堆顶1张卡置于墓场。\n【进化时】将1个『骷髅老爸』召唤到场上。",
+    "ja": "自分の場の他のフォロワーのUB能力が発動したとき、自分のデッキの上1枚を墓場に置く。\n【進化時】『ドクロ親父』1体を場に出す。\n―――――――――――――――\n『ドクロ親父』ナイトメアプリコネ・ディアボロス・フォロワーコスト1攻撃力2/体力1【突進】ラストワード自分の場のディアボロス・フォロワー2体まで選ぶ。それは攻撃力+1する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ディアボロス"
+   ]
+  },
+  {
+   "id": "CP04-079",
+   "printings": [
+    "CP04-079",
+    "CP04-P59"
+   ],
+   "name": "Grace",
+   "names": {
+    "en": "Grace",
+    "cn": "格蕾丝",
+    "ja": "グレイス"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Draw a card. Discard a card. Bury the top 2 cards of your deck.\n-----------\nWhile there's another Geo Niflhel follower on your field, this has Ward.",
+    "cn": "《UB》《入场曲》抽取1张卡。将自己的1张手牌舍弃。将自己的牌堆顶2张卡置于墓场。\n----------\n只要自己的场上有其他的〈吉奥·尼弗尔海姆〉类型·从者存在，使这张卡获得【守护】能力。",
+    "ja": "UBファンファーレ1枚引く。自分の手札1枚を捨てる。自分のデッキの上2枚を墓場に置く。\n----------\n自分の場に他の〈ジオ・ニヴルヘル〉・フォロワーがいる限り、これは【守護】を持つ。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈ジオ・ニヴルヘル〉"
+   ]
+  },
+  {
+   "id": "CP04-080",
+   "printings": [
+    "CP04-080",
+    "CP04-P60",
+    "PCS01-033",
+    "PR-499"
+   ],
+   "name": "Rei",
+   "names": {
+    "en": "Rei",
+    "cn": "怜",
+    "ja": "レイ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 1,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Strike - Give this {[attack]}+1. If {[ub]} abilities you control have executed at least 2 other times this turn, give {[attack]}+2 instead.\n--------\nRush.",
+    "cn": "《UB》【攻击时】使这张卡《攻击力》+1。如果不包含这个能力，这个回合中自己的《UB》能力已发动2次及以上的话，转变为《攻击力》+2。\n----------\n【突进】",
+    "ja": "UB【攻撃時】これは攻撃力+1する。これを含めず、このターン中に自分のUB能力が2回以上発動していたなら、代わりに攻撃力+2する。\n----------\n【突進】"
+   },
+   "traits": [
+    "プリコネ",
+    "トゥインクルウィッシュ"
+   ]
+  },
+  {
+   "id": "CP04-081",
+   "printings": [
+    "CP04-081",
+    "CP04-P61",
+    "PCS01-034"
+   ],
+   "name": "Yori",
+   "names": {
+    "en": "Yori",
+    "cn": "依里",
+    "ja": "ヨリ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Select an enemy follower on the field and, if this wasn't put onto the field from hand, deal it 2 damage.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》选择敌方场上的1个从者。如果这张卡从手牌以外召唤到场上的话，给予其2点伤害。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ相手の場のフォロワー1体を選ぶ。これが手札以外から場に出ていたなら、それに2ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "ディアボロス"
+   ]
+  },
+  {
+   "id": "CP04-082",
+   "printings": [
+    "CP04-082",
+    "CP04-P62"
+   ],
+   "name": "Yori",
+   "names": {
+    "en": "Yori",
+    "cn": "依里",
+    "ja": "ヨリ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} On Evolve - Select an enemy follower on the field and deal it 2 damage.",
+    "cn": "《UB》【进化时】选择敌方场上的1个从者。给予其2点伤害。",
+    "ja": "UB【進化時】相手の場のフォロワー1体を選ぶ。それに2ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "ディアボロス"
+   ]
+  },
+  {
+   "id": "CP04-083",
+   "printings": [
+    "CP04-083",
+    "CP04-P63",
+    "PCS01-035"
+   ],
+   "name": "Akari",
+   "names": {
+    "en": "Akari",
+    "cn": "茜里",
+    "ja": "アカリ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Activate {[cost00]}: Select another Diabolos follower on your field and give it {[attack]}+1. Activate only once per turn.\n---------\n{[fanfare]} Select a Diabolos follower in your cemetery not named Akari and put it into your EX area. It costs 2 less to play this turn.",
+    "cn": "《UB》《起动》《消费0》：选择自己场上的其他的1个恶魔伪王国军类型·从者。使其《攻击力》+1。这个能力在1回合可以使用1次。\n----------\n《入场曲》选择自己的墓场中的1张「与这张卡不同名的恶魔伪王国军类型·从者卡」。将其置于EX区域。这个回合，将其使用之际，将其消费-2。",
+    "ja": "UB起動コスト0：自分の場の他のディアボロス・フォロワー1体を選ぶ。それは攻撃力+1する。この能力は1ターンに1回使える。\n----------\nファンファーレ自分の墓場の「これと同名を除くディアボロス・フォロワー」1枚を選ぶ。それをEXエリアに置く。このターン、それをプレイする際、コストを-2する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ディアボロス"
+   ]
+  },
+  {
+   "id": "CP04-084",
+   "printings": [
+    "CP04-084",
+    "CP04-P64",
+    "PCS01-036"
+   ],
+   "name": "Miyako",
+   "names": {
+    "en": "Miyako",
+    "cn": "宫子",
+    "ja": "ミヤコ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Activate {[cost04]}: Select an enemy follower on the field. Banish it and give your leader {[defense]}+2.\n------------\n{[fanfare]} Look at the top 5 cards of your deck. You may reveal a Diabolos follower from among them and add it to your hand. Put the rest on the bottom of your deck in any order. If you revealed a Diabolos follower, discard a card.",
+    "cn": "《UB》《起动》《消费4》：选择敌方场上的1个从者。将其消失。使自己的主战者《生命值》+2。\n----------\n《入场曲》查看自己的牌堆顶5张卡。从那之中，可以将1张恶魔伪王国军类型·从者卡公开并加入手牌。将剩余的卡以任意顺序置于牌堆底。如果将恶魔伪王国军类型·从者卡公开的话，将自己的1张手牌舍弃。",
+    "ja": "UB起動コスト4：相手の場のフォロワー1体を選ぶ。それを消滅させる。自分のリーダーは体力+2する。\n----------\nファンファーレ自分のデッキの上5枚を見る。その中から、ディアボロス・フォロワー1枚を公開して手札に加えてよい。残りを好きな順にデッキの下に置く。ディアボロス・フォロワーを公開したなら、自分の手札1枚を捨てる。"
+   },
+   "traits": [
+    "プリコネ",
+    "ディアボロス"
+   ]
+  },
+  {
+   "id": "CP04-085",
+   "printings": [
+    "CP04-085",
+    "CP04-P65"
+   ],
+   "name": "Misaki",
+   "names": {
+    "en": "Misaki",
+    "cn": "美咲",
+    "ja": "ミサキ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[ub]} Strike - Select an enemy follower on the field and deal it 3 damage.\n----------\n{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Deal 2 damage to your leader.",
+    "cn": "《UB》【攻击时】选择敌方场上的1个从者。给予其3点伤害。\n----------\n《进化》《消费1》：使这张卡进化。\n《入场曲》给予自己的主战者2点伤害。",
+    "ja": "UB【攻撃時】相手の場のフォロワー1体を選ぶ。それに3ダメージ。\n----------\n進化コスト1：これは進化する。\nファンファーレ自分のリーダーに2ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "ルーセント学院"
+   ]
+  },
+  {
+   "id": "CP04-086",
+   "printings": [
+    "CP04-086",
+    "CP04-P66"
+   ],
+   "name": "Misaki",
+   "names": {
+    "en": "Misaki",
+    "cn": "美咲",
+    "ja": "ミサキ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Strike - Select an enemy follower on the field and deal it 3 damage.",
+    "cn": "《UB》【攻击时】选择敌方场上的1个从者。给予其3点伤害。",
+    "ja": "UB【攻撃時】相手の場のフォロワー1体を選ぶ。それに3ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "ルーセント学院"
+   ]
+  },
+  {
+   "id": "CP04-087",
+   "printings": [
+    "CP04-087",
+    "CP04-P67"
+   ],
+   "name": "Kuuka",
+   "names": {
+    "en": "Kuuka",
+    "cn": "空花",
+    "ja": "クウカ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Give this Ward.\n-------\nWhile this is on the field, your opponents must select it for abilities if able.",
+    "cn": "《UB》《起动》将这张卡《横置》：使这张卡获得【守护】能力。（当这张卡召唤到场上时、或自己的结束阶段中，可以将这张卡横置。只要有「处于横置状态并持有【守护】能力的从者」存在，敌方不能攻击那以外的目标）\n----------\n只要有这张卡在场上存在，使敌方的全体玩家，如果能以能力选择这张卡的话，必须选择这张卡。",
+    "ja": "UB起動これをアクト：これは【守護】を持つ。（これが場に出たときか、自分のエンドフェイズにこれをアクトできる。相手は、アクト状態の【守護】を持つフォロワー以外を攻撃できない）\n----------\nこれが場にいる限り、相手プレイヤーすべては、能力でこれを選べるなら、これを選ぶ。"
+   },
+   "traits": [
+    "プリコネ",
+    "ヴァイスフリューゲル"
+   ]
+  },
+  {
+   "id": "CP04-088",
+   "printings": [
+    "CP04-088",
+    "CP04-P68",
+    "PCS01-037"
+   ],
+   "name": "Io",
+   "names": {
+    "en": "Io",
+    "cn": "伊绪",
+    "ja": "イオ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 5,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} Activate {[cost01]}: Each opponent buries a follower. Activate only once per turn.\n-------\n{[fanfare]} Search your deck for a Lucent Academy follower that costs 3 or less and a 1-cost Lucent Academy follower, summon them, then shuffle. Their {[fanfare]} abilities don't trigger.",
+    "cn": "《UB》《起动》《消费1》：使敌方的全体玩家，各将自身场上的1个从者置于墓场。这个能力在1回合可以使用1次。\n----------\n《入场曲》从自己的牌堆之中搜寻原始消费为3及以下的1张月光学院类型·从者卡与原始消费为1的1张月光学院类型·从者卡，并召唤到场上。使其《入场曲》能力不能触发。",
+    "ja": "UB起動コスト1：相手プレイヤーすべては、自身の場のフォロワー1体を墓場に置く。この能力は1ターンに1回使える。\n----------\nファンファーレ自分のデッキから元のコスト3以下のルーセント学院・フォロワー1枚と元のコスト1のルーセント学院・フォロワー1枚を探し、場に出す。それのファンファーレ能力は誘発しない。"
+   },
+   "traits": [
+    "プリコネ",
+    "ルーセント学院"
+   ]
+  },
+  {
+   "id": "CP04-089",
+   "printings": [
+    "CP04-089",
+    "CP04-P69",
+    "PR-507"
+   ],
+   "name": "Eriko",
+   "names": {
+    "en": "Eriko",
+    "cn": "惠理子",
+    "ja": "エリコ"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select an enemy follower on the field and deal it 1 damage. If {[ub]} abilities you control have executed at least 2 other times this turn, deal 3 damage instead.",
+    "cn": "《UB》《入场曲》选择敌方场上的1个从者。给予其1点伤害。如果不包含这个能力，这个回合中自己的《UB》能力已发动2次及以上的话，转变为3点伤害。",
+    "ja": "UBファンファーレ相手の場のフォロワー1体を選ぶ。それに1ダメージ。これを含めず、このターン中に自分のUB能力が2回以上発動していたなら、代わりに3ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "トワイライトキャラバン"
+   ]
+  },
+  {
+   "id": "CP04-090",
+   "printings": [
+    "CP04-090",
+    "CP04-P70",
+    "PCS01-038"
+   ],
+   "name": "Demonic Salvation: Infinity",
+   "names": {
+    "en": "Demonic Salvation: Infinity",
+    "cn": "罗刹涅槃·无式",
+    "ja": "羅刹涅槃・無式"
+   },
+   "class": "Abysscraft",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[quick]}\nSelect an enemy follower on the field. Deal it 2 damage and look at the top card of your deck. If it's a PriConne card, you may bury it.",
+    "cn": "《快速》\n选择敌方场上的1个从者。给予其2点伤害。查看自己的牌堆顶1张卡。从那之中，可以将1张公主连结类型·卡片置于墓场。",
+    "ja": "クイック\n相手の場のフォロワー1体を選ぶ。それに2ダメージ。自分のデッキの上1枚を見る。その中から、プリコネ・カード1枚を墓場に置いてよい。"
+   },
+   "traits": [
+    "プリコネ",
+    "トワイライトキャラバン"
+   ]
+  },
+  {
+   "id": "CP04-091",
+   "printings": [
+    "CP04-091",
+    "CP04-SL21",
+    "PCS01-039"
+   ],
+   "name": "Saren",
+   "names": {
+    "en": "Saren",
+    "cn": "咲恋",
+    "ja": "サレン"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 5,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]}  Choose 1. If your leader's defense is 10 or less, choose up to 2 instead. (1) Equip this with a Glorious Feather token. (2) Search your deck for up to 2 Sarendia Orphanage followers that cost a total of 3 or less, summon them, then shuffle.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》从下述之中抉择1项。如果自己的主战者的生命值为10及以下的话，转变为最多2项。\n【1】将1张『辉煌羽饰』卡装备到这张卡。\n【2】直到原始消费的合计变为3及以下、从自己的牌堆之中搜寻咲恋救济院类型·从者卡最多2张，并召唤到场上。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ下記から1つチョイスする。自分のリーダーの体力が10以下なら、代わりに2つまで。\n【1】これは『グロリアスフェザー』1枚を装備する。【2】自分のデッキからサレンディア救護院・フォロワーを元のコストの合計が3以下になるように2枚まで探し、場に出す。"
+   },
+   "traits": [
+    "プリコネ",
+    "サレンディア救護院"
+   ]
+  },
+  {
+   "id": "CP04-092",
+   "printings": [
+    "CP04-092",
+    "CP04-SL22",
+    "CP04-SP11",
+    "CP04-U11"
+   ],
+   "name": "Saren",
+   "names": {
+    "en": "Saren",
+    "cn": "咲恋",
+    "ja": "サレン"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 4,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} On Evolve - Select an enemy follower on the field. Deal 4 damage to it and 1 damage to each other enemy follower on the field.\n----------\nOn Super-Evolve - Deal 2 damage to each enemy leader and enemy follower on the field.",
+    "cn": "《UB》【进化时】选择敌方场上的1个从者。给予其4点伤害。给予那以外的敌方场上的全体从者各1点伤害。\n----------\n【超进化时】给予敌方的全体主战者与敌方场上的全体从者各2点伤害。",
+    "ja": "UB【進化時】相手の場のフォロワー1体を選ぶ。それに4ダメージ。それ以外の相手の場のフォロワーすべてに1ダメージ。\n----------\n【超進化時】相手のリーダーすべてと相手の場のフォロワーすべてに2ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "サレンディア救護院"
+   ]
+  },
+  {
+   "id": "CP04-093",
+   "printings": [
+    "CP04-093",
+    "CP04-SL23",
+    "CP04-SP12a",
+    "CP04-SP12b",
+    "CP04-SP12c",
+    "CP04-U12"
+   ],
+   "name": "Nozomi",
+   "names": {
+    "en": "Nozomi",
+    "cn": "望",
+    "ja": "ノゾミ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]}{[fanfare]} - Search your deck for an amulet, reveal it, add it to your hand, then shuffle.\n----------\nActivate {[engage]} an amulet on your field: Select an enemy follower on the field and deal it 1 damage.\nActivate {[engage]} this, bury 3 amulets: Select an enemy follower on the field. Deal 3 damage to it and its leader.",
+    "cn": "《UB》《入场曲》从自己的牌堆之中搜寻1张护符卡，并加入手牌。\n----------\n《起动》将场上的1个护符《横置》：选择敌方场上的1个从者。给予其1点伤害。\n《起动》将这张卡《横置》将场上的3个护符置于墓场：选择敌方场上的1个从者。给予其与其主战者各3点伤害。",
+    "ja": "UBファンファーレ自分のデッキからアミュレット1枚を探し、手札に加える。\n----------\n起動場のアミュレット1つをアクト：相手の場のフォロワー1体を選ぶ。それに1ダメージ。\n起動これをアクト場のアミュレット3つを墓場に置く：相手の場のフォロワー1体を選ぶ。それとそれのリーダーに3ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "カルミナ"
+   ],
+   "alternateNames": {
+    "CP04-SP12a": {
+     "en": "Nozomi, Chika & Tsumugi",
+     "cn": "望&千歌&纺希",
+     "ja": "ノゾミ＆チカ＆ツムギ"
+    },
+    "CP04-SP12b": {
+     "en": "Nozomi, Chika & Tsumugi",
+     "cn": "望&千歌&纺希",
+     "ja": "ノゾミ＆チカ＆ツムギ"
+    },
+    "CP04-SP12c": {
+     "en": "Nozomi, Chika & Tsumugi",
+     "cn": "望&千歌&纺希",
+     "ja": "ノゾミ＆チカ＆ツムギ"
+    },
+    "CP04-U12": {
+     "en": "Nozomi, Chika & Tsumugi",
+     "cn": "望&千歌&纺希",
+     "ja": "ノゾミ＆チカ＆ツムギ"
+    }
+   }
+  },
+  {
+   "id": "CP04-094",
+   "printings": [
+    "CP04-094",
+    "CP04-SL24"
+   ],
+   "name": "Akino",
+   "names": {
+    "en": "Akino",
+    "cn": "秋乃",
+    "ja": "アキノ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 7,
+   "attack": 6,
+   "defense": 6,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this: Select up to 2 enemy followers on the field and deal them damage equal to the number of cards in your hand.\n--------\nWard.\n{[fanfare]} Give your leader {[defense]}+3. Draw 3 cards.",
+    "cn": "《UB》《起动》将这张卡《横置》：选择敌方场上的从者最多2个。给予其各与「自己的手牌的张数」等量的伤害。\n----------\n【守护】\n《入场曲》使自己的主战者《生命值》+3。抽取3张卡。",
+    "ja": "UB起動これをアクト：相手の場のフォロワー2体まで選ぶ。それに「自分の手札の枚数」と同じダメージ。\n----------\n【守護】\nファンファーレ自分のリーダーは体力+3する。3枚引く。"
+   },
+   "traits": [
+    "プリコネ",
+    "メルクリウス財団"
+   ]
+  },
+  {
+   "id": "CP04-095",
+   "printings": [
+    "CP04-095",
+    "CP04-P71",
+    "PCS01-041"
+   ],
+   "name": "Yui",
+   "names": {
+    "en": "Yui",
+    "cn": "优衣",
+    "ja": "ユイ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 1,
+   "defense": 1,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.",
+    "cn": "《进化》《消费1》：使这张卡进化。",
+    "ja": "進化コスト1：これは進化する。"
+   },
+   "traits": [
+    "プリコネ",
+    "トゥインクルウィッシュ"
+   ]
+  },
+  {
+   "id": "CP04-096",
+   "printings": [
+    "CP04-096",
+    "CP04-P72",
+    "PR-500"
+   ],
+   "name": "Yui",
+   "names": {
+    "en": "Yui",
+    "cn": "优衣",
+    "ja": "ユイ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} On Evolve - {[costX]}: Select a PriConne follower in your cemetery that costs X or less and summon it.\n---------\nWhenever a {[ub]} ability of another follower on your field is executed, give your leader {[defense]}+1.",
+    "cn": "《UB》【进化时】《消费X》：选择自己的墓场中的原始消费为X及以下的1张公主连结类型·从者卡。将其召唤到场上。\n----------\n当自己场上的其他的从者的《UB》能力发动时，使自己的主战者《生命值》+1。",
+    "ja": "UB【進化時】コストX：自分の墓場の元のコストX以下のプリコネ・フォロワー1枚を選ぶ。それを場に出す。\n----------\n自分の場の他のフォロワーのUB能力が発動したとき、自分のリーダーは体力+1する。"
+   },
+   "traits": [
+    "プリコネ",
+    "トゥインクルウィッシュ"
+   ]
+  },
+  {
+   "id": "CP04-097",
+   "printings": [
+    "CP04-097",
+    "CP04-P73"
+   ],
+   "name": "Clear",
+   "names": {
+    "en": "Clear",
+    "cn": "可璃亚",
+    "ja": "クリア"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 3,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Deal 1 damage to each enemy leader.\n-----------\nWhenever a {[ub]} ability of another follower on your field is executed, deal 1 damage to each enemy leader.",
+    "cn": "《UB》《入场曲》给予敌方的全体主战者各1点伤害。\n----------\n当自己场上的其他的从者的《UB》能力发动时，给予敌方的全体主战者各1点伤害。",
+    "ja": "UBファンファーレ相手のリーダーすべてに1ダメージ。\n----------\n自分の場の他のフォロワーのUB能力が発動したとき、相手のリーダーすべてに1ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "アルターメイデン"
+   ]
+  },
+  {
+   "id": "CP04-098",
+   "printings": [
+    "CP04-098",
+    "CP04-P74",
+    "PCS01-042"
+   ],
+   "name": "Yukari",
+   "names": {
+    "en": "Yukari",
+    "cn": "由加莉",
+    "ja": "ユカリ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]}{[fanfare]} {[engage]} an amulet on your field: Select another follower on your field and give it {[defense]}+2.\n-----------\nWard.\nActivate {[engage]} this: Refresh each amulet on your field.",
+    "cn": "《UB》《入场曲》将场上的1个护符《横置》：选择自己场上的其他的1个从者。使其《生命值》+2。\n----------\n【守护】\n《起动》将这张卡《横置》：将自己场上的全体护符各竖置。",
+    "ja": "UBファンファーレ場のアミュレット1つをアクト：自分の場の他のフォロワー1体を選ぶ。それは体力+2する。\n----------\n【守護】\n起動これをアクト：自分の場のアミュレットすべてをスタンドする。"
+   },
+   "traits": [
+    "プリコネ",
+    "メルクリウス財団"
+   ]
+  },
+  {
+   "id": "CP04-099",
+   "printings": [
+    "CP04-099",
+    "CP04-P75"
+   ],
+   "name": "Chika",
+   "names": {
+    "en": "Chika",
+    "cn": "千歌",
+    "ja": "チカ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\nActivate {[engage]} an amulet on your field: Select another follower on your field and give it Rush, Bane or Ward.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《起动》将场上的1个护符《横置》：选择自己场上的其他的1个从者。使其获得【突进】或【必杀】或【守护】能力。（持有【突进】能力的从者，在召唤到场上的当回合即可攻击敌方的从者）",
+    "ja": "進化コスト1：これは進化する。\n起動場のアミュレット1つをアクト：自分の場の他のフォロワー1体を選ぶ。それは【突進】か【必殺】か【守護】を持つ。（【突進】を持つフォロワーは、場に出たターンから相手のフォロワーを攻撃できる）"
+   },
+   "traits": [
+    "プリコネ",
+    "カルミナ"
+   ]
+  },
+  {
+   "id": "CP04-100",
+   "printings": [
+    "CP04-100",
+    "CP04-P76"
+   ],
+   "name": "Chika",
+   "names": {
+    "en": "Chika",
+    "cn": "千歌",
+    "ja": "チカ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} On Evolve - Search for your deck for a Carmina card, reveal it, add it to your hand, then shuffle.\n------------\nActivate {[engage]} an amulet on your field: Select another follower on your field and give it Rush, Bane or Ward.",
+    "cn": "《UB》【进化时】从自己的牌堆之中搜寻1张慈乐之音类型·卡片，并加入手牌。\n----------\n《起动》将场上的1个护符《横置》：选择自己场上的其他的1个从者。使其获得【突进】或【必杀】或【守护】能力。（持有【必杀】能力的从者与敌方的从者交战时，在交战后就会将其破坏）",
+    "ja": "UB【進化時】自分のデッキからカルミナ・カード1枚を探し、手札に加える。\n----------\n起動場のアミュレット1つをアクト：自分の場の他のフォロワー1体を選ぶ。それは【突進】か【必殺】か【守護】を持つ。（【必殺】を持つフォロワーと交戦した相手のフォロワーは、ダメージを与え合ったあと破壊される）"
+   },
+   "traits": [
+    "プリコネ",
+    "カルミナ"
+   ]
+  },
+  {
+   "id": "CP04-101",
+   "printings": [
+    "CP04-101",
+    "CP04-P77",
+    "PCS01-043",
+    "PR-501"
+   ],
+   "name": "Misato",
+   "names": {
+    "en": "Misato",
+    "cn": "美里",
+    "ja": "ミサト"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Bury an amulet: Give your leader {[defense]}+2.\n------------\nWard.",
+    "cn": "《UB》《入场曲》将场上的1个护符置于墓场：使自己的主战者《生命值》+2。\n----------\n【守护】（当这张卡召唤到场上时、或自己的结束阶段中，可以将这张卡横置。只要有「处于横置状态并持有【守护】能力的从者」存在，敌方不能攻击那以外的目标）",
+    "ja": "UBファンファーレ場のアミュレット1つを墓場に置く：自分のリーダーは体力+2する。\n----------\n【守護】（これが場に出たときか、自分のエンドフェイズにこれをアクトできる。相手は、アクト状態の【守護】を持つフォロワー以外を攻撃できない）"
+   },
+   "traits": [
+    "プリコネ",
+    "フォレスティエ"
+   ]
+  },
+  {
+   "id": "CP04-102",
+   "printings": [
+    "CP04-102",
+    "CP04-P78",
+    "PCS01-044"
+   ],
+   "name": "Threading Snare",
+   "names": {
+    "en": "Threading Snare",
+    "cn": "捕捉线绳",
+    "ja": "キャプチャーストリング"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Select an enemy follower on the field and deal it 3 damage.\nWhenever this becomes engaged, select an enemy leader or enemy follower on the field and deal it 1 damage.\n{[lastwords]} Select an enemy leader or enemy follower on the field and deal it 1 damage.",
+    "cn": "当这张卡变为横置时，选择敌方的1位主战者或敌方场上的1个从者。给予其1点伤害。\n《入场曲》选择敌方场上的1个从者。给予其3点伤害。\n《谢幕曲》选择敌方的1位主战者或敌方场上的1个从者。给予其1点伤害。",
+    "ja": "これがアクトしたとき、相手のリーダー1人か相手の場のフォロワー1体を選ぶ。それに1ダメージ。\nファンファーレ相手の場のフォロワー1体を選ぶ。それに3ダメージ。\nラストワード相手のリーダー1人か相手の場のフォロワー1体を選ぶ。それに1ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "カルミナ"
+   ]
+  },
+  {
+   "id": "CP04-103",
+   "printings": [
+    "CP04-103",
+    "CP04-P79"
+   ],
+   "name": "Mimi",
+   "names": {
+    "en": "Mimi",
+    "cn": "美美",
+    "ja": "ミミ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost02]}: Evolve this.\n{[fanfare]} Search your deck for a Prank Proclamation, reveal it, add it to your hand, then shuffle.",
+    "cn": "《进化》《消费2》：使这张卡进化。\n《入场曲》从自己的牌堆之中搜寻1张『恶作剧宣言』卡，并加入手牌。",
+    "ja": "進化コスト2：これは進化する。\nファンファーレ自分のデッキから『イタズラ宣言』1枚を探し、手札に加える。"
+   },
+   "traits": [
+    "プリコネ",
+    "リトルリリカル"
+   ]
+  },
+  {
+   "id": "CP04-104",
+   "printings": [
+    "CP04-104",
+    "CP04-P80"
+   ],
+   "name": "Mimi",
+   "names": {
+    "en": "Mimi",
+    "cn": "美美",
+    "ja": "ミミ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} On Evolve - {[engage]} X amulets on your field: Select up to X enemy followers on the field and deal them 2 damage.",
+    "cn": "《UB》【进化时】将场上的X张护符《横置》：选择敌方场上的从者最多X个。给予其2点伤害。",
+    "ja": "UB【進化時】場のアミュレットX枚をアクト：相手の場のフォロワーX体まで選ぶ。それに2ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "リトルリリカル"
+   ]
+  },
+  {
+   "id": "CP04-105",
+   "printings": [
+    "CP04-105",
+    "CP04-P81"
+   ],
+   "name": "Suzume",
+   "names": {
+    "en": "Suzume",
+    "cn": "铃莓",
+    "ja": "スズメ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Give your leader {[defense]}+2.",
+    "cn": "《UB》《入场曲》使自己的主战者《生命值》+2。",
+    "ja": "UBファンファーレ自分のリーダーは体力+2する。"
+   },
+   "traits": [
+    "プリコネ",
+    "サレンディア救護院"
+   ]
+  },
+  {
+   "id": "CP04-106",
+   "printings": [
+    "CP04-106",
+    "CP04-P82"
+   ],
+   "name": "Mahiru",
+   "names": {
+    "en": "Mahiru",
+    "cn": "真阳",
+    "ja": "マヒル"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 3,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} Activate {[engage]} this and another card on your field: Select an enemy follower on the field and put it into its owner's EX area.\n-----\n{[fanfare]} Search your deck for an Elizabeth Park card not named Mahiru, put it into your EX area, then shuffle.",
+    "cn": "《UB》《起动》将这张卡与场上的其他的1张卡片《横置》：选择敌方场上的1个从者。将其置于EX区域。\n----------\n《入场曲》从自己的牌堆之中搜寻1张「与这张卡不同名的伊丽莎白牧场类型·卡片」，并置于EX区域。",
+    "ja": "UB起動これと場の他のカード1枚をアクト：相手の場のフォロワー1体を選ぶ。それをEXエリアに置く。\n----------\nファンファーレ自分のデッキから「これと同名を除くエリザベスパーク・カード」1枚を探し、EXエリアに置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "エリザベスパーク"
+   ]
+  },
+  {
+   "id": "CP04-107",
+   "printings": [
+    "CP04-107",
+    "CP04-P83",
+    "PCS01-045"
+   ],
+   "name": "Kurumi",
+   "names": {
+    "en": "Kurumi",
+    "cn": "胡桃",
+    "ja": "クルミ"
+   },
+   "class": "Havencraft",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select an enemy follower on the field and engage it.",
+    "cn": "《UB》《入场曲》选择敌方场上的1个从者。将其横置。",
+    "ja": "UBファンファーレ相手の場のフォロワー1体を選ぶ。それをアクトする。"
+   },
+   "traits": [
+    "プリコネ",
+    "サレンディア救護院"
+   ]
+  },
+  {
+   "id": "CP04-108",
+   "printings": [
+    "CP04-108",
+    "CP04-P84",
+    "PCS01-046"
+   ],
+   "name": "Amped on Acorns",
+   "names": {
+    "en": "Amped on Acorns",
+    "cn": "橡子充能",
+    "ja": "ドングリチャージ"
+   },
+   "class": "Havencraft",
+   "type": "amulet",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "{[fanfare]} Look at the top card of your deck. If it's a PriConne card, you may reveal it and add it to your hand.\nWhenever this becomes engaged, give your leader {[defense]}+1.",
+    "cn": "当这张卡变为横置时，使自己的主战者《生命值》+1。\n《入场曲》查看自己的牌堆顶1张卡。从那之中，可以将1张公主连结类型·卡片公开并加入手牌。",
+    "ja": "これがアクトしたとき、自分のリーダーは体力+1する。\nファンファーレ自分のデッキの上1枚を見る。その中から、プリコネ・カード1枚を公開して手札に加えてよい。"
+   },
+   "traits": [
+    "プリコネ",
+    "エリザベスパーク"
+   ]
+  },
+  {
+   "id": "CP04-109",
+   "printings": [
+    "CP04-109",
+    "CP04-SL25",
+    "PCS01-047"
+   ],
+   "name": "Omniscient Kaiser",
+   "names": {
+    "en": "Omniscient Kaiser",
+    "cn": "霸瞳皇帝",
+    "ja": "カイザーインサイト"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 7,
+   "attack": 6,
+   "defense": 6,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Discard 2 PriConne cards: Draw 2 cards. Each opponent discards 2 cards.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》将手牌中的2张公主连结类型·卡片舍弃：抽取2张卡。使敌方的全体玩家，各将自身的2张手牌舍弃。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ手札のプリコネ・カード2枚を捨てる：2枚引く。相手プレイヤーすべては、自身の手札2枚を捨てる。"
+   },
+   "traits": [
+    "プリコネ",
+    "七冠"
+   ]
+  },
+  {
+   "id": "CP04-110",
+   "printings": [
+    "CP04-110",
+    "CP04-SL26"
+   ],
+   "name": "Omniscient Kaiser",
+   "names": {
+    "en": "Omniscient Kaiser",
+    "cn": "霸瞳皇帝",
+    "ja": "カイザーインサイト"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 7,
+   "defense": 7,
+   "text": {
+    "en": "{[ub]} On Evolve - Deal 7 damage to each enemy follower on the field.",
+    "cn": "《UB》【进化时】给予敌方场上的全体从者各7点伤害。",
+    "ja": "UB【進化時】相手の場のフォロワーすべてに7ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "七冠"
+   ]
+  },
+  {
+   "id": "CP04-111",
+   "printings": [
+    "CP04-111",
+    "CP04-SL27"
+   ],
+   "name": "Misora",
+   "names": {
+    "en": "Misora",
+    "cn": "美空",
+    "ja": "ミソラ"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 6,
+   "attack": 6,
+   "defense": 6,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select any number of enemy followers on the field and deal 8 damage divided between them.\n--------\n{[lastwords]} Search your deck for a 4-cost PriConne follower, put it into your EX area, then shuffle.",
+    "cn": "《UB》《入场曲》选择敌方场上的从者任意张数。给予其合计8点伤害、任意分配。\n----------\n《谢幕曲》从自己的牌堆之中搜寻原始消费为4的1张公主连结类型·从者卡，并置于EX区域。",
+    "ja": "UBファンファーレ相手の場のフォロワーを好きな枚数選ぶ。それに8ダメージを割りふる。\n----------\nラストワード自分のデッキから元のコスト4のプリコネ・フォロワー1枚を探し、EXエリアに置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈レイジ・レギオン〉"
+   ]
+  },
+  {
+   "id": "CP04-112",
+   "printings": [
+    "CP04-112",
+    "CP04-SL28",
+    "CP04-SP13",
+    "CP04-U13"
+   ],
+   "name": "Lyrael",
+   "names": {
+    "en": "Lyrael",
+    "cn": "莱拉耶尔",
+    "ja": "ライラエル"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 7,
+   "attack": 3,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Select up to 3 followers in your cemetery with different names that cost 2 or less and summon them.\n-------\nWhenever a {[ub]} ability of another follower on your field is executed, give that follower {[attack]}+1/{[defense]}+1.",
+    "cn": "《UB》《入场曲》选择自己的墓场中的原始消费为2及以下的、卡片名各不相同的从者卡最多3张。将其召唤到场上。\n----------\n当自己场上的其他的从者的《UB》能力发动时，使其《攻击力》+1/《生命值》+1。",
+    "ja": "UBファンファーレ自分の墓場の元のコスト2以下のフォロワーをカード名が異なるように3枚まで選ぶ。それを場に出す。\n----------\n自分の場の他のフォロワーのUB能力が発動したとき、それは攻撃力+1/体力+1する。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈ジオ・テオゴニア〉"
+   ]
+  },
+  {
+   "id": "CP04-113",
+   "printings": [
+    "CP04-113",
+    "CP04-P85",
+    "PCS01-050"
+   ],
+   "name": "Ameth",
+   "names": {
+    "en": "Ameth",
+    "cn": "爱梅斯",
+    "ja": "アメス"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Look at the top card of your deck. If it's a PriConne card, you may reveal it and add it to your hand.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》查看自己的牌堆顶1张卡。从那之中，可以将1张公主连结类型·卡片公开并加入手牌。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ自分のデッキの上1枚を見る。その中から、プリコネ・カード1枚を公開して手札に加えてよい。"
+   },
+   "traits": [
+    "プリコネ"
+   ]
+  },
+  {
+   "id": "CP04-114",
+   "printings": [
+    "CP04-114",
+    "CP04-P86",
+    "PR-510"
+   ],
+   "name": "Ameth",
+   "names": {
+    "en": "Ameth",
+    "cn": "爱梅斯",
+    "ja": "アメス"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 3,
+   "defense": 3,
+   "text": {
+    "en": "{[ub]} On Evolve - Choose 1. (1) Select another follower on your field and give it Ward. (2) Select a PriConne follower on your field not named Ameth and, if {[ub]} abilities you control have executed at least 2 other times this turn, execute 1 of its {[ub]} abilities without paying its cost.",
+    "cn": "《UB》【进化时】从下述之中抉择1项。\n【1】选择自己场上的其他的1个从者。使其获得【守护】能力。\n【2】选择自己场上的1个「与这张卡不同名的公主连结类型·从者」。如果不包含这个能力，这个回合中自己的《UB》能力已发动2次及以上的话，不支付原始消费、将其的《UB》能力发动1次。",
+    "ja": "UB【進化時】下記から1つチョイスする。【1】自分の場の他のフォロワー1体を選ぶ。それは【守護】を持つ。【2】自分の場の「これと同名を除くプリコネ・フォロワー」1体を選ぶ。これを含めず、このターン中に自分のUB能力が2回以上発動していたなら、それのUB能力1つを元のコストを支払わずに発動する。"
+   },
+   "traits": [
+    "プリコネ"
+   ]
+  },
+  {
+   "id": "CP04-115",
+   "printings": [
+    "CP04-115",
+    "CP04-P87"
+   ],
+   "name": "Croce",
+   "names": {
+    "en": "Croce",
+    "cn": "克萝茜",
+    "ja": "クローチェ"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]}{[fanfare]} Place X battery counters on this. X equals your max play points.\n----------\nThis can't have more than 7 battery counters.\nActivate {[costX]}, engage this, remove X battery counters from this: Search your deck for a Geo Theogonia follower not named Croce that costs X or less, summon it, then shuffle.",
+    "cn": "《UB》《入场曲》将X个电池指示物置于到这张卡上。X为「自己的PP最大值」。\n----------\n置于到这张卡上的电池指示物最多可有7个。\n《起动》《消费X》将这张卡《横置》将这张卡的X个电池指示物取除：从自己的牌堆之中搜寻1张「与这张卡不同名的原始消费为X及以下的〈吉奥·特尔哥尼亚〉类型·从者卡」，并召唤到场上。",
+    "ja": "UBファンファーレこれにバッテリーカウンターX個を置く。Xは「自分のPP最大値」である。\n----------\nこれにバッテリーカウンターは7個まで置ける。\n起動コストXこれをアクトこれのバッテリーカウンターX個を取る：自分のデッキから「これと同名を除く元のコストX以下の〈ジオ・テオゴニア〉・フォロワー」1枚を探し、場に出す。"
+   },
+   "traits": [
+    "プリコネ",
+    "〈ジオ・テオゴニア〉"
+   ]
+  },
+  {
+   "id": "CP04-116",
+   "printings": [
+    "CP04-116",
+    "CP04-P88",
+    "PR-504"
+   ],
+   "name": "Kasumi",
+   "names": {
+    "en": "Kasumi",
+    "cn": "香澄",
+    "ja": "カスミ"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 1,
+   "defense": 3,
+   "text": {
+    "en": "{[evolve]} {[cost01]}: Evolve this.\n{[fanfare]} Put a PriConne card from your hand into your EX area: Look at the top 2 cards of your deck. Put any number of them on the top of your deck in any order. Put the rest on the bottom in any order.",
+    "cn": "《进化》《消费1》：使这张卡进化。\n《入场曲》将手牌中的1张公主连结类型·卡片置于EX区域：查看自己的牌堆顶2张卡。从那之中，将卡任意张数以任意顺序置于牌堆顶。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "進化コスト1：これは進化する。\nファンファーレ手札のプリコネ・カード1枚をEXエリアに置く：自分のデッキの上2枚を見る。その中から、好きな枚数を好きな順にデッキの上に置く。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "カォン"
+   ]
+  },
+  {
+   "id": "CP04-117",
+   "printings": [
+    "CP04-117",
+    "CP04-P89"
+   ],
+   "name": "Kasumi",
+   "names": {
+    "en": "Kasumi",
+    "cn": "香澄",
+    "ja": "カスミ"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": true,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": 2,
+   "defense": 4,
+   "text": {
+    "en": "{[ub]} On Evolve - Select an enemy follower on the field and engage it. It doesn't refresh during its controller's next start phase.",
+    "cn": "《UB》【进化时】选择敌方场上的1个从者。将其横置。使其在下个其玩家的开始阶段中不能竖置。",
+    "ja": "UB【進化時】相手の場のフォロワー1体を選ぶ。それをアクトする。それは次のそれのプレイヤーのスタートフェイズにスタンドしない。"
+   },
+   "traits": [
+    "プリコネ",
+    "カォン"
+   ]
+  },
+  {
+   "id": "CP04-118",
+   "printings": [
+    "CP04-118",
+    "CP04-P90"
+   ],
+   "name": "Call of the Guild",
+   "names": {
+    "en": "Call of the Guild",
+    "cn": "公会召唤",
+    "ja": "コールオブギルド"
+   },
+   "class": "Neutral",
+   "type": "spell",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "Look at the top 4 cards of your deck. You may put a PriConne follower from among them into your EX area. Put the rest on the bottom of your deck in any order.",
+    "cn": "查看自己的牌堆顶4张卡。从那之中，可以将1张公主连结类型·从者卡置于EX区域。将剩余的卡以任意顺序置于牌堆底。",
+    "ja": "自分のデッキの上4枚を見る。その中から、プリコネ・フォロワー1枚をEXエリアに置いてよい。残りを好きな順にデッキの下に置く。"
+   },
+   "traits": [
+    "プリコネ",
+    "ギルド管理協会"
+   ]
+  },
+  {
+   "id": "CP04-119",
+   "printings": [
+    "CP04-119",
+    "CP04-P91"
+   ],
+   "name": "Ayumi",
+   "names": {
+    "en": "Ayumi",
+    "cn": "步美",
+    "ja": "アユミ"
+   },
+   "class": "Neutral",
+   "type": "follower",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 2,
+   "defense": 2,
+   "text": {
+    "en": "{[ub]} Strike - Select an enemy follower on the field. It doesn't refresh during its controller's next start phase.",
+    "cn": "《UB》【攻击时】选择敌方场上的1个从者。使其在下个其玩家的开始阶段中不能竖置。",
+    "ja": "UB【攻撃時】相手の場のフォロワー1体を選ぶ。それは次のそれのプレイヤーのスタートフェイズにスタンドしない。"
+   },
+   "traits": [
+    "プリコネ",
+    "ヴァイスフリューゲル"
+   ]
+  },
+  {
+   "id": "CP04-PR01",
+   "printings": [
+    "CP04-PR01",
+    "CP04-PR08"
+   ],
+   "name": "Kokkoro [Princess Form]",
+   "names": {
+    "en": "Kokkoro [Princess Form]",
+    "cn": "[公主形态]可可萝",
+    "ja": "〔プリンセスフォーム〕コッコロ"
+   },
+   "class": "Forestcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP04-PR02",
+   "printings": [
+    "CP04-PR02",
+    "CP04-PR09"
+   ],
+   "name": "Pecorine [Princess Form]",
+   "names": {
+    "en": "Pecorine [Princess Form]",
+    "cn": "[公主形态]佩可莉姆",
+    "ja": "〔プリンセスフォーム〕ぺコリーヌ"
+   },
+   "class": "Swordcraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP04-PR03",
+   "printings": [
+    "CP04-PR03",
+    "CP04-PR10"
+   ],
+   "name": "Karyl [Princess Form]",
+   "names": {
+    "en": "Karyl [Princess Form]",
+    "cn": "[公主形态]凯露",
+    "ja": "〔プリンセスフォーム〕キャル"
+   },
+   "class": "Runecraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP04-PR04",
+   "printings": [
+    "CP04-PR04",
+    "CP04-PR11"
+   ],
+   "name": "Sheffy [Princess Form]",
+   "names": {
+    "en": "Sheffy [Princess Form]",
+    "cn": "[公主形态]雪菲",
+    "ja": "〔プリンセスフォーム〕シェフィ"
+   },
+   "class": "Dragoncraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP04-PR05",
+   "printings": [
+    "CP04-PR05",
+    "CP04-PR12"
+   ],
+   "name": "Hiyori [Princess Form]",
+   "names": {
+    "en": "Hiyori [Princess Form]",
+    "cn": "[公主形态]日和莉",
+    "ja": "〔プリンセスフォーム〕ヒヨリ"
+   },
+   "class": "Dragoncraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP04-PR06",
+   "printings": [
+    "CP04-PR06",
+    "CP04-PR13"
+   ],
+   "name": "Rei [Princess Form]",
+   "names": {
+    "en": "Rei [Princess Form]",
+    "cn": "[公主形态]怜",
+    "ja": "〔プリンセスフォーム〕レイ"
+   },
+   "class": "Abysscraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP04-PR07",
+   "printings": [
+    "CP04-PR07",
+    "CP04-PR14"
+   ],
+   "name": "Yui [Princess Form]",
+   "names": {
+    "en": "Yui [Princess Form]",
+    "cn": "[公主形态]优衣",
+    "ja": "〔プリンセスフォーム〕ユイ"
+   },
+   "class": "Havencraft",
+   "type": "leader",
+   "evolved": false,
+   "token": false,
+   "universe": "princessConnect",
+   "cost": null,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "",
+    "cn": "",
+    "ja": ""
+   },
+   "traits": []
+  },
+  {
+   "id": "CP04-T01",
+   "printings": [
+    "CP04-T01",
+    "CP04-PR15",
+    "CP04-PR27"
+   ],
+   "name": "Ameth Amulet",
+   "names": {
+    "en": "Ameth Amulet",
+    "cn": "爱梅斯守护符",
+    "ja": "アメスアミュレット"
+   },
+   "class": "Forestcraft",
+   "type": "equipment",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "The equipped follower has \"Activate {[engage]} this: Give each follower on your field {[attack]}+1/{[defense]}+1.\"\n----------\n(Place this beneath the equipped follower.)",
+    "cn": "使装备这张卡的从者获得「《起动》将这张卡《横置》：使自己场上的全体从者各《攻击力》+1/《生命值》+1」能力。\n----------\n（将这张卡置于装备从者的下方）",
+    "ja": "これを装備しているフォロワーは「起動これをアクト：自分の場のフォロワーすべては攻撃力+1/体力+1する」を持つ。\n----------\n（これは装備するフォロワーの下に置く）"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-T02",
+   "printings": [
+    "CP04-T02",
+    "CP04-PR16",
+    "CP04-PR28"
+   ],
+   "name": "Princess Sword",
+   "names": {
+    "en": "Princess Sword",
+    "cn": "公主之剑",
+    "ja": "プリンセスソード"
+   },
+   "class": "Swordcraft",
+   "type": "equipment",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "If the equipped follower would deal damage, it deals that much +2 instead.\nIf the equipped follower would take damage, it takes that much -2 instead.\n----------\n(Place this beneath the equipped follower.)",
+    "cn": "使装备这张卡的从者给予的伤害+2。\n使装备这张卡的从者受到的伤害各-2。\n----------\n（将这张卡置于装备从者的下方）",
+    "ja": "これを装備しているフォロワーが与えるダメージを+2する。\nこれを装備しているフォロワーが受けるダメージを-2する。\n----------\n（これは装備するフォロワーの下に置く）"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-T03",
+   "printings": [
+    "CP04-T03",
+    "CP04-PR17",
+    "CP04-PR29"
+   ],
+   "name": "Sanctum Blade Avalon",
+   "names": {
+    "en": "Sanctum Blade Avalon",
+    "cn": "圣域剑阿瓦隆",
+    "ja": "聖域剣アヴァロン"
+   },
+   "class": "Swordcraft",
+   "type": "equipment",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "The equipped follower has \"Strike - Refresh this. Draw a card. Perform only once per turn.\"\n----------\n(Place this beneath the equipped follower.)",
+    "cn": "使装备这张卡的从者获得「【攻击时】将这张卡竖置。抽取1张卡。这个能力在1回合仅限发动1次」能力。\n----------\n（将这张卡置于装备从者的下方）",
+    "ja": "これを装備しているフォロワーは「【攻撃時】これをスタンドする。1枚引く。この能力は1ターンに1回働く」を持つ。\n----------\n（これは装備するフォロワーの下に置く）"
+   },
+   "traits": [
+    "プリコネ",
+    "NIGHTMARE",
+    "七冠"
+   ]
+  },
+  {
+   "id": "CP04-T04",
+   "printings": [
+    "CP04-T04",
+    "CP04-PR18",
+    "CP04-PR30"
+   ],
+   "name": "Queen's Console",
+   "names": {
+    "en": "Queen's Console",
+    "cn": "女王操作台",
+    "ja": "クイーンズコンソール"
+   },
+   "class": "Swordcraft",
+   "type": "equipment",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "The equipped follower has \"{[ub]} Activate {[cost01]}, engage this: Give each 1-cost follower on your field {[attack]}+1.\"\n----------\n(Place this beneath the equipped follower.)",
+    "cn": "使装备这张卡的从者获得「《UB》《起动》《消费1》将这张卡《横置》：使自己场上的原始消费为1的全体从者各《攻击力》+1」能力。\n----------\n（将这张卡置于装备从者的下方）",
+    "ja": "これを装備しているフォロワーは「UB起動コスト1これをアクト：自分の場の元のコスト1のフォロワーすべては攻撃力+1する」を持つ。\n----------\n（これは装備するフォロワーの下に置く）"
+   },
+   "traits": [
+    "プリコネ",
+    "ラビリンス",
+    "七冠"
+   ]
+  },
+  {
+   "id": "CP04-T05",
+   "printings": [
+    "CP04-T05",
+    "CP04-PR19",
+    "CP04-PR31"
+   ],
+   "name": "Mirror Image Neneka",
+   "names": {
+    "en": "Mirror Image Neneka",
+    "cn": "魔镜幻象·似似花",
+    "ja": "ミラーイメージ・ネネカ"
+   },
+   "class": "Runecraft",
+   "type": "follower",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": 0,
+   "defense": 1,
+   "text": {
+    "en": "Ward.\nActivate {[engage]} this: Select an enemy follower on the field and deal it 1 damage.",
+    "cn": "【守护】\n《起动》将这张卡《横置》：选择敌方场上的1个从者。给予其1点伤害。",
+    "ja": "【守護】\n起動これをアクト：相手の場のフォロワー1体を選ぶ。それに1ダメージ。"
+   },
+   "traits": [
+    "プリコネ",
+    "七冠"
+   ]
+  },
+  {
+   "id": "CP04-T06",
+   "printings": [
+    "CP04-T06",
+    "CP04-PR20",
+    "CP04-PR32"
+   ],
+   "name": "Chaos Grimoire",
+   "names": {
+    "en": "Chaos Grimoire",
+    "cn": "混沌魔法书",
+    "ja": "ケイオスグリモワール"
+   },
+   "class": "Runecraft",
+   "type": "equipment",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "The equipped follower has \"2 times per turn, when you play a spell, deal each enemy leader damage equal to half this follower's attack (rounded up).\"\n----------\n(Place this beneath the equipped follower.)",
+    "cn": "使装备这张卡的从者获得「每个回合2次，当自己将法术卡使用时，给予敌方的全体主战者各与「这张卡的攻击力的一半（小数点后进位）」等量的伤害」能力。\n----------\n（将这张卡置于装备从者的下方）",
+    "ja": "これを装備しているフォロワーは「ターンごとに2回、自分がスペルをプレイしたとき、相手のリーダーすべてに「これの攻撃力の半分（端数切り上げ）」と同じダメージ」を持つ。\n----------\n（これは装備するフォロワーの下に置く）"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-T07",
+   "printings": [
+    "CP04-T07",
+    "CP04-PR21",
+    "CP04-PR33"
+   ],
+   "name": "Mirage Wand",
+   "names": {
+    "en": "Mirage Wand",
+    "cn": "幻影之杖",
+    "ja": "ワンドオブミラージュ"
+   },
+   "class": "Runecraft",
+   "type": "equipment",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "The equipped follower has \"If this or a Mirror Image Neneka on your field would deal ability damage, it deals that much +1 instead.\"\n----------\n(Place this beneath the equipped follower.)",
+    "cn": "使装备这张卡的从者获得「只要有这张卡在场上存在，使自己场上的这张卡与『魔镜幻象·似似花』给予的能力伤害+1」能力。\n----------\n（将这张卡置于装备从者的下方）",
+    "ja": "これを装備しているフォロワーは「これが場にいる限り、自分の場のこれと『ミラーイメージ・ネネカ』が与える能力ダメージを+1する」を持つ。\n----------\n（これは装備するフォロワーの下に置く）"
+   },
+   "traits": [
+    "プリコネ",
+    "七冠"
+   ]
+  },
+  {
+   "id": "CP04-T08",
+   "printings": [
+    "CP04-T08",
+    "CP04-PR22",
+    "CP04-PR34"
+   ],
+   "name": "Eisdrache",
+   "names": {
+    "en": "Eisdrache",
+    "cn": "冰龙剑",
+    "ja": "氷竜剣"
+   },
+   "class": "Dragoncraft",
+   "type": "equipment",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "When a follower equips this, select an enemy follower on the field. {[engage]} it and give the equipped follower {[attack]}+2/{[defense]}+2.\n----------\n(Place this beneath the equipped follower.)",
+    "cn": "当将这张卡装备时，选择敌方场上的1个从者。将其横置。使装备这张卡的从者《攻击力》+2/《生命值》+2。\n----------\n（将这张卡置于装备从者的下方）",
+    "ja": "これを装備したとき、相手の場のフォロワー1体を選ぶ。それをアクトする。これを装備したフォロワーは攻撃力+2/体力+2する。\n----------\n（これは装備するフォロワーの下に置く）"
+   },
+   "traits": [
+    "プリコネ",
+    "美食殿"
+   ]
+  },
+  {
+   "id": "CP04-T09",
+   "printings": [
+    "CP04-T09",
+    "CP04-PR23",
+    "CP04-PR35"
+   ],
+   "name": "Precious Memento",
+   "names": {
+    "en": "Precious Memento",
+    "cn": "情谊之证",
+    "ja": "絆の証"
+   },
+   "class": "Dragoncraft",
+   "type": "equipment",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "The equipped follower has Storm and \"Strike - Select up to 2 enemy followers on the field and deal them 3 damage.\"\n----------\n(Place this beneath the equipped follower.)",
+    "cn": "使装备这张卡的从者获得【疾驰】与「【攻击时】选择敌方场上的从者最多2个。给予其3点伤害」能力。\n----------\n（将这张卡置于装备从者的下方）",
+    "ja": "これを装備しているフォロワーは【疾走】と「【攻撃時】相手の場のフォロワー2体まで選ぶ。それに3ダメージ」を持つ。\n----------\n（これは装備するフォロワーの下に置く）"
+   },
+   "traits": [
+    "プリコネ"
+   ]
+  },
+  {
+   "id": "CP04-T10",
+   "printings": [
+    "CP04-T10",
+    "CP04-PR24",
+    "CP04-PR36"
+   ],
+   "name": "Skullfather",
+   "names": {
+    "en": "Skullfather",
+    "cn": "骷髅老爸",
+    "ja": "ドクロ親父"
+   },
+   "class": "Abysscraft",
+   "type": "follower",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 1,
+   "attack": 2,
+   "defense": 1,
+   "text": {
+    "en": "Rush.\n{[lastwords]} Select up to 2 Diabolos followers on your field and give them {[attack]}+1.",
+    "cn": "【突进】\n《谢幕曲》选择自己场上的恶魔伪王国军类型·从者最多2个。使其《攻击力》+1。",
+    "ja": "【突進】\nラストワード自分の場のディアボロス・フォロワー2体まで選ぶ。それは攻撃力+1する。"
+   },
+   "traits": [
+    "プリコネ",
+    "ディアボロス"
+   ]
+  },
+  {
+   "id": "CP04-T11",
+   "printings": [
+    "CP04-T11",
+    "CP04-PR25",
+    "CP04-PR37"
+   ],
+   "name": "Dark Axe Nachtfang",
+   "names": {
+    "en": "Dark Axe Nachtfang",
+    "cn": "夜之牙暗斧",
+    "ja": "闇斧ナハトファング"
+   },
+   "class": "Abysscraft",
+   "type": "equipment",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "The equipped follower has \"Whenever this deals ability damage to 1 or more enemy followers on the field, deal 3 damage to each enemy leader.\"\n----------\n(Place this beneath the equipped follower.)",
+    "cn": "使装备这张卡的从者获得「当这张卡给予敌方场上的从者能力伤害时，给予敌方的全体主战者各3点伤害」能力。\n----------\n（将这张卡置于装备从者的下方）",
+    "ja": "これを装備しているフォロワーは「これが相手の場のフォロワー1体以上に能力ダメージを与えたとき、相手のリーダーすべてに3ダメージ」を持つ。\n----------\n（これは装備するフォロワーの下に置く）"
+   },
+   "traits": [
+    "プリコネ",
+    "ディアボロス"
+   ]
+  },
+  {
+   "id": "CP04-T12",
+   "printings": [
+    "CP04-T12",
+    "CP04-PR26",
+    "CP04-PR38"
+   ],
+   "name": "Glorious Feather",
+   "names": {
+    "en": "Glorious Feather",
+    "cn": "辉煌羽饰",
+    "ja": "グロリアスフェザー"
+   },
+   "class": "Havencraft",
+   "type": "equipment",
+   "evolved": false,
+   "token": true,
+   "universe": "princessConnect",
+   "cost": 2,
+   "attack": null,
+   "defense": null,
+   "text": {
+    "en": "The equipped follower has \"At the start of your end phase, give your leader {[defense]}+3.\"\nIf the equipped follower would deal damage, it deals that much +1 instead.\n----------\n(Place this beneath the equipped follower.)",
+    "cn": "使装备这张卡的从者获得「当自己的结束阶段到来时，使自己的主战者《生命值》+3」能力。\n使装备这张卡的从者给予的伤害+1。\n----------\n（将这张卡置于装备从者的下方）",
+    "ja": "これを装備しているフォロワーは「自分のエンドフェイズが来たとき、自分のリーダーは体力+3する」を持つ。\nこれを装備しているフォロワーが与えるダメージを+1する。\n----------\n（これは装備するフォロワーの下に置く）"
+   },
+   "traits": [
+    "プリコネ",
+    "サレンディア救護院"
+   ]
+  }
+ ]
+}

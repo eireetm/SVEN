@@ -125,6 +125,14 @@ export interface CardScript {
    * this card applies to, by key (`fx.nextPlayCostsLess(key, n)`, BP03-038).
    */
   nextPlay?: Readonly<Record<string, (game: GameReader, card: CardId, player: PlayerId) => boolean>>;
+  /**
+   * CR 14.5.2 — an equipment token (CP04): what the follower that equips it has ("The equipped follower has ..."). These
+   * are that follower's abilities (its activated and automatic abilities, and keyword abilities): lost with its
+   * abilities, and one set per token (CP04-T09 rulings; CP04-114 Q11). The token's own abilities — "when a follower
+   * equips this" (CP04-T08), "if the equipped follower would deal damage" (CP04-T02) — are its `abilities` and `field`
+   * passives, valid in the equipment zone (14.5.2.1.2).
+   */
+  equipment?: { abilities?: readonly AbilityDef[]; keywords?: readonly Keyword[] };
 }
 
 export type ScriptRegistry = Readonly<Record<DefId, CardScript>>;
@@ -232,6 +240,12 @@ export interface FieldPassives {
    * its controller chooses 1 to all of the performable options (ruling) whenever they choose.
    */
   chooseAnyNumberOfOptions?: boolean;
+  /**
+   * "Each enemy follower on the field must attack once per turn if able" while this holds (CP04-012, while engaged
+   * during the opponent's next turn): the active player can't end their main phase while a follower of theirs that
+   * hasn't attacked this turn can attack (rulings; CR 1.3.2 — not if it can't).
+   */
+  forcesEnemyAttacks?(game: GameReader, self: CardId): boolean;
 }
 
 /** A cost the engine cannot express with the standard parts (select and move cards, counters...). */
@@ -271,13 +285,22 @@ export interface EarthRiteSpec {
  * targets. "Select up to N": 0..N. (Confirmed interpretation, docs/open-questions.md.)
  * Opponent's cards with Aura on the field are removed from the candidates (CR 12.15).
  */
+/**
+ * How a card or ability is being played, for target selections that depend on it: `free` — a Union Burst ability
+ * executed "without paying its cost" (CR 14.5.1.4), whose X is 0 (14.5.1.5), e.g. CP04-096 "{[costX]}: Select a
+ * PriConne follower in your cemetery that costs X or less".
+ */
+export interface PlayContext {
+  free?: boolean;
+}
+
 export interface TargetSpec {
   /**
    * Legal targets for the given controller. `self` is the card with the ability.
    * Must return the candidates as they will be when the selection is made (e.g. a spell is
    * already in the resolution zone then), because playability is decided from it.
    */
-  candidates(game: GameReader, controller: PlayerId, self: CardId): CardId[];
+  candidates(game: GameReader, controller: PlayerId, self: CardId, play?: PlayContext): CardId[];
   /** Number of targets. */
   count: number;
   /** "up to [count]" (CR 10.6.2.3.2) — zero is allowed. */
@@ -287,7 +310,7 @@ export interface TargetSpec {
    * BP03-007 "deal X damage divided between up to 2": each selected follower must get at least
    * 1 damage (rulings BP08-028 / EBD02-015), so at most X can be selected.
    */
-  max?(game: GameReader, controller: PlayerId, self: CardId): number;
+  max?(game: GameReader, controller: PlayerId, self: CardId, play?: PlayContext): number;
   /** The selection is only part of the effect when this holds (e.g. "Combo (3): Select ..."). */
   when?(game: GameReader, controller: PlayerId, self: CardId): boolean;
   /**
@@ -377,6 +400,8 @@ export interface ActivatedAbility {
    * evolve or equivalent ability per turn; BP14-018 ruling).
    */
   advanced?: boolean;
+  /** CR 14.5.1 — a Union Burst ability ({[ub]}, CP04): valid only in a deck based on Princess Connect! Re: Dive (14.5.1.2). */
+  unionBurst?: boolean;
   cost: CostSpec;
   /** "This ability can be activated once per turn." */
   oncePerTurn?: boolean;
@@ -447,6 +472,12 @@ export interface AutomaticAbility {
   /** See SpellAbility.modeCount. */
   modeCount?(game: GameReader, controller: PlayerId, self: CardId, playOption?: string | null): number;
   targets?: readonly TargetSpec[];
+  /**
+   * CR 14.5.1 — a Union Burst ability ({[ub]}, CP04): valid only in a deck based on Princess Connect! Re: Dive (14.5.1.2).
+   * An "if" in its effect goes into `resolve`, not `condition`: played and resolved, it has executed even if the condition
+   * doesn't hold (14.5.1.3).
+   */
+  unionBurst?: boolean;
   resolve?(fx: EffectContext): Proc<void>;
 }
 

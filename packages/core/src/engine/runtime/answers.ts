@@ -9,9 +9,10 @@ import { randomInt, shuffleInPlace, type RngState } from "../../rng/rng";
  */
 
 /**
- * A cheap, always legal answer that never prolongs the game: end the main phase, pass, decline,
- * keep the hand, select or choose as few as allowed (forced cards first, CR 1.3.2.3). A player
- * who keeps answering this way stops any cycle they could stop (CR 15.2.1.1).
+ * A cheap, always legal answer that never prolongs the game: end the main phase (or attack, while a
+ * follower must attack first, CP04-012), pass, decline, keep the hand, select or choose as few as
+ * allowed (forced cards first, CR 1.3.2.3). A player who keeps answering this way stops any cycle
+ * they could stop (CR 15.2.1.1).
  */
 export function defaultAnswer(d: Decision): Answer {
   switch (d.type) {
@@ -20,7 +21,10 @@ export function defaultAnswer(d: Decision): Answer {
     case "mulligan":
       return { type: "mulligan", redraw: false };
     case "mainPhase":
-      return { type: "mainPhase", action: d.actions.find((a) => a.type === "endMainPhase") ?? d.actions[0]! };
+      return {
+        type: "mainPhase",
+        action: d.actions.find((a) => a.type === "endMainPhase") ?? d.actions.find((a) => a.type === "attack") ?? d.actions[0]!,
+      };
     case "quick":
       return { type: "quick", action: d.actions.find((a) => a.type === "pass") ?? d.actions[0]! };
     case "selectPending":

@@ -81,6 +81,9 @@ export function parseCardType(cardNo: string, raw: readonly string[]): {
       case "Crest":
         primaries.push("crest");
         break;
+      case "Equipment":
+        primaries.push("equipment");
+        break;
       case "Evolved":
         evolved = true;
         break;
@@ -105,6 +108,10 @@ export function parseCardType(cardNo: string, raw: readonly string[]): {
   // CR 9.1.4.2 — crests exist only as tokens (BP20). A crest that is not a token fails until one appears.
   if (type === "crest" && (!token || evolved || advanced)) {
     throw new CardDataError(`${cardNo}: a crest must be a token in the supported sets`);
+  }
+  // CR 14.5.2.1 — equipment exists only as tokens (CP04).
+  if (type === "equipment" && (!token || evolved || advanced)) {
+    throw new CardDataError(`${cardNo}: equipment must be a token`);
   }
   // CR 9.2 — advanced cards are followers (BP10) or spells (BP13). Other kinds fail until they appear.
   if (advanced && (evolved || token || (type !== "follower" && type !== "spell"))) {
@@ -166,6 +173,11 @@ function checkStats(
   if (type === "leader" || type === "crest") {
     // CR 2.5 — neither is played, so neither has a cost (crests: 9.1.4.2, BP20).
     if (cost !== null || atk !== null || def !== null) fail(`${type} must not have cost/atk/def`);
+    return;
+  }
+  if (type === "equipment") {
+    // CR 14.5.2 — an equipment token has a printed cost (CP04-T01 … T12: 2) but is never played; no attack or defense.
+    if (atk !== null || def !== null) fail("equipment must not have atk/def");
     return;
   }
   if (type === "follower") {

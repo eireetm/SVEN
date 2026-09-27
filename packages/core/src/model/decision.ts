@@ -86,6 +86,8 @@ export type ChooseReason =
    * its player as the resulting damage (only offered when the order changes it).
    */
   | "damageOrder"
+  /** CR 14.5.1.4 — which Union Burst ability of `subject` to execute without paying its cost (CP04-114). */
+  | "unionBurst"
   /** Any other choice made while an effect resolves. */
   | "effect";
 

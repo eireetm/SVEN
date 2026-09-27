@@ -208,3 +208,105 @@ describe("CR 14.4 — Cardfight!! Vanguard: Triggers, drive checks, Ride and Dri
     expect(problems([...base, "CP03-097"])).toEqual([]);
   });
 });
+
+describe("CR 14.5 — Princess Connect! Re: Dive: Union Burst and equipment", () => {
+  // CP04-001 Kokkoro (1c 1/1; UB Fanfare: leader +1; Fanfare (2): equip an Ameth Amulet), CP04-097 Clear (2c 3/2; UB Fanfare: 1
+  // damage to the enemy leader; whenever another follower's UB ability executes: 1 damage to the enemy leader), CP04-107 Kurumi
+  // (1c; UB Fanfare: engage an enemy follower), CP04-101 Misato (1c, Ward; UB Fanfare, bury an amulet: leader +2), CP04-015 Aoi (1c;
+  // UB Activate engage: -1/-1), CP04-003 Eris (4c; UB Activate engage: another PriConne follower +1/+1, and Storm after 3 other UB
+  // executions this turn), CP04-088 Io (5c; UB Activate (1), once per turn: each opponent buries a follower), CP04-113 / 114 Ameth,
+  // CP04-095 / 096 Yui, CP04-019 Pecorine (3c 3/3 Ward; Fanfare (2): equip a Princess Sword), CP04-055 Sheffy (2c 2/2; UB Fanfare:
+  // an enemy follower skips its refresh; Fanfare with Overflow: equip an Eisdrache), CP04-058 Muimi (2c 2/3), CP04-053 Chellerific
+  // Carnival (2c Quick: 3 damage), CP04-T02 Princess Sword, CP04-T08 Eisdrache, CP04-T09 Precious Memento. BP05-060 / 061 Cursed
+  // Stone: its On Evolve makes an enemy follower lose all abilities.
+  const PC = { universe: "princessConnect" as const };
+  const ubs = (t: ReturnType<typeof d>) => t.game.reader().unionBurstsThisTurn(0);
+  /** Two more Union Burst abilities executed this turn. */
+  const twoBefore = (t: ReturnType<typeof d>) => {
+    const ps = t.game.state.players[0];
+    const now = ps.thisTurn.turn === t.game.state.turn ? ps.thisTurn.unionBursts : 0;
+    ps.thisTurn = { ...ps.thisTurn, turn: t.game.state.turn, unionBursts: now + 2 };
+    return t;
+  };
+
+  it("14.5.1.2 — Union Burst abilities are valid only in a deck based on the universe", () => {
+    expect(d({ me: { hand: ["CP04-001"], playPoints: 1 } }).play("CP04-001").flush().leader()).toBe(20);
+    expect(d({ me: { ...PC, hand: ["CP04-001"], playPoints: 1 } }).play("CP04-001").flush().leader()).toBe(21);
+    expect(d({ me: { field: ["CP04-015"] }, opp: { field: ["V5"] } }).canActivate("CP04-015")).toBe(false);
+    expect(d({ me: { ...PC, field: ["CP04-015"] }, opp: { field: ["V5"] } }).canActivate("CP04-015")).toBe(true);
+  });
+
+  it("14.5.1.3 — executed once played and resolved: counted for the turn, and other followers' abilities see it", () => {
+    const t = d({ me: { ...PC, field: ["CP04-097"], hand: ["CP04-001"], playPoints: 1 } }).play("CP04-001").flush();
+    expect([ubs(t), t.leader(), t.leader("opp")]).toEqual([1, 21, 19]);
+    // Without a target it can't be played; not paying its cost it isn't played: neither is executed (rulings).
+    const k = d({ me: { ...PC, field: ["CP04-097"], hand: ["CP04-107"], playPoints: 1 } }).play("CP04-107");
+    expect([ubs(k), k.leader("opp")]).toEqual([0, 20]);
+    const m = d({ me: { ...PC, field: ["CP04-097", "AMULET"], hand: ["CP04-101"], playPoints: 1 } }).play("CP04-101").none().no();
+    expect([ubs(m), m.leader(), m.field()]).toEqual([0, 20, ["CP04-097", "AMULET", "CP04-101"]]);
+  });
+
+  it("14.5.1.4 — executing another follower's Union Burst ability without paying its cost; both count (CP04-114 rulings)", () => {
+    const t = twoBefore(d({ me: { ...PC, field: ["CP04-113", "CP04-097", "CP04-001"], evolveDeck: ["CP04-114"], playPoints: 1 }, opp: { field: ["V5"] } }));
+    t.evolve("CP04-113").choose("2").pick("CP04-001").flush();
+    // Ameth's own execution and Kokkoro's: 4 in all; Clear triggered twice; Kokkoro's Fanfare gave +1.
+    expect([ubs(t), t.leader(), t.leader("opp")]).toEqual([4, 21, 18]);
+    // With fewer than 2 other executions, nothing is executed (Ameth's own counts).
+    const few = d({ me: { ...PC, field: ["CP04-113", "CP04-001"], evolveDeck: ["CP04-114"], playPoints: 1 } });
+    few.evolve("CP04-113").choose("2").flush();
+    expect([ubs(few), few.leader()]).toEqual([1, 20]);
+  });
+
+  it("14.5.1.4 — costs are not paid, a used 'once per turn' doesn't matter, and the condition sees the outer execution", () => {
+    const t = twoBefore(d({ me: { ...PC, field: ["CP04-113", { card: "CP04-003", engaged: true }, "CP04-001"], evolveDeck: ["CP04-114"], playPoints: 1 } }));
+    t.evolve("CP04-113").choose("2").pick("CP04-003").pick("CP04-001");
+    // Eris is engaged (its cost not paid) and sees 3 other executions (the 2 before and Ameth's) — ruling Q14.
+    expect([t.stats("CP04-001"), t.keywords("CP04-001"), t.engaged("CP04-003")]).toEqual([[2, 2], ["storm"], true]);
+    const io = d({ me: { ...PC, field: ["CP04-113", "CP04-088"], evolveDeck: ["CP04-114"], playPoints: 2 }, opp: { field: ["V5", "V1"] } });
+    io.activate("CP04-088").pick("opp:V1");
+    expect(io.canActivate("CP04-088")).toBe(false);
+    twoBefore(io).evolve("CP04-113").choose("2");
+    expect([io.field("opp"), ubs(io)]).toEqual([[], 5]);
+  });
+
+  it("14.5.1.5 — X is 0: Yui (Evolved) executed this way can't select a 1-cost follower (CP04-114 ruling Q10)", () => {
+    const yui = { card: "CP04-095", evolvedInto: "CP04-096" };
+    const t = twoBefore(d({ me: { ...PC, field: ["CP04-113", yui], cemetery: ["CP04-001"], evolveDeck: ["CP04-114"], playPoints: 5 } }));
+    t.evolve("CP04-113").choose("2").flush();
+    expect([t.cemetery(), t.pp(), ubs(t)]).toEqual([["CP04-001"], 4, 3]);
+  });
+
+  it("14.5.2.2 — equipping creates the token in the equipment zone, linked; 'when a follower equips this' triggers", () => {
+    const t = d({ me: { ...PC, hand: ["CP04-019"], playPoints: 5 } }).play("CP04-019").none().yes();
+    const [token] = t.game.state.players[0].zones.equipmentZone;
+    expect([t.zone("me", "equipmentZone"), t.game.state.cards[token!]!.linkedTo, t.pp()]).toEqual([["CP04-T02"], t.id("CP04-019"), 0]);
+    const s = d({ me: { ...PC, hand: ["CP04-055"], playPoints: 2, maxPlayPoints: 7 }, opp: { field: ["V5", "V1"] } }).play("CP04-055");
+    s.flush().pick("opp:V1").pick("opp:V5");
+    expect([s.zone("me", "equipmentZone"), s.stats("CP04-055"), s.engaged("opp:V5")]).toEqual([["CP04-T08"], [4, 4], true]);
+  });
+
+  it("14.5.2 — Princess Sword: the equipped follower deals 2 more and takes 2 less (rulings: combat damage too)", () => {
+    const t = d({ me: { field: [{ card: "CP04-019", equipped: ["CP04-T02"] }] }, opp: { field: [{ card: "V3", engaged: true }] } });
+    t.attack("CP04-019", "opp:V3");
+    expect([t.field("opp"), t.stats("CP04-019")]).toEqual([[], [3, 2]]);
+  });
+
+  it("11.11.1 — when the equipped follower leaves the field, its equipment is eliminated", () => {
+    const t = d({ me: { field: [{ card: "CP04-019", equipped: ["CP04-T02", "CP04-T09"] }, "V1"], hand: ["QUICK-SAC"] } });
+    t.play("QUICK-SAC").pick("CP04-019");
+    expect([t.zone("me", "equipmentZone"), Object.values(t.game.state.cards).some((c) => c.zone === "equipmentZone")]).toEqual([[], false]);
+  });
+
+  it("14.5.2 — what a token gives the follower is the follower's (lost with its abilities); the token's own abilities stay", () => {
+    const t = d({
+      me: { field: ["BP05-060"], evolveDeck: ["BP05-061"], hand: ["CP04-053"], playPoints: 3 },
+      opp: { field: [{ card: "CP04-058", equipped: ["CP04-T09", "CP04-T02"] }] },
+    });
+    expect(t.keywords("opp:CP04-058")).toEqual(["storm"]);
+    t.evolve("BP05-060");
+    expect(t.keywords("opp:CP04-058")).toEqual([]);
+    // Princess Sword still takes 2 off: Chellerific Carnival's 3 damage leaves Muimi at 2 defense.
+    t.play("CP04-053");
+    expect(t.stats("opp:CP04-058")).toEqual([2, 2]);
+  });
+});

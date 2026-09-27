@@ -80,10 +80,11 @@ const DEFAULT_FACE_UP: Readonly<Record<ZoneName, boolean>> = {
 /**
  * CR 9.1.4 — may a token of this type exist in this zone? Followers and amulets: EX area, field,
  * resolution zone (9.1.4.1); crests: only the EX area (9.1.4.2); spells: EX area, resolution zone
- * (9.1.4.3).
+ * (9.1.4.3); equipment: only the equipment zone (14.5.2.1.1).
  */
 export function tokenMayExist(type: CardType, zone: ZoneName): boolean {
   if (type === "crest") return zone === "ex";
+  if (type === "equipment") return zone === "equipmentZone";
   if (type === "spell") return zone === "ex" || zone === "resolution";
   return zone === "ex" || zone === "field" || zone === "resolution";
 }
@@ -383,8 +384,10 @@ export function eliminateTokens(g: G, ids: readonly CardId[]): void {
 export interface CreateSpec {
   def: DefId;
   player: PlayerId;
-  to: "field" | "ex";
+  to: "field" | "ex" | "equipmentZone";
   engaged?: boolean;
+  /** An equipment token is linked to the follower that equips it (CR 14.5.2.2.2). */
+  linkTo?: CardId;
 }
 
 /**
@@ -397,6 +400,7 @@ export function createCards(g: G, specs: readonly CreateSpec[], reason: MoveReas
     const def = g.db.get(spec.def);
     const card = freshInstance(g.state, def.printings[0]!, def.id, spec.player, spec.player, spec.to, spec);
     if (spec.to === "field") card.enteredByAbility = true; // a summoned token (CR 5.5.2.1; BP21-023)
+    if (spec.linkTo !== undefined) card.linkedTo = spec.linkTo;
     initFieldCounters(g, card);
     attach(g.state, card, undefined);
     moves.push({

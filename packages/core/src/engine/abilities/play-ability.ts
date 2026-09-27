@@ -1,6 +1,6 @@
 import type { DefId } from "../../model/card";
 import type { CardId, PlayerId } from "../../model/ids";
-import type { AbilityDef, ActivatedAbility, EarthRiteSpec, Mode } from "../../script/types";
+import type { AbilityDef, ActivatedAbility, AutomaticAbility, EarthRiteSpec, Mode } from "../../script/types";
 import { buryCards, setEngaged } from "../actions/cards";
 import { canPayLeaderDefense, changeLeaderDefense } from "../actions/leader";
 import { canPayPlayPoints, payPlayPoints, spendPoints } from "../actions/points";
@@ -11,24 +11,31 @@ import { chooseModes, chooseModeTargets, resolveModes } from "./modes";
 import { evolveAbilityUsedThisTurn } from "./evolve";
 import { performableModes } from "../flow/play-card";
 import type { G } from "../runtime/context";
-import { confirm } from "../runtime/decide";
+import { chooseOptions, confirm } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
 import { abilityZones, characteristics } from "../state/characteristics";
 import { makeReader } from "../query";
 import { KEYWORD_ABILITIES, KEYWORD_DEF_PREFIX } from "./keyword-abilities";
 import { GRANT_ABILITIES, GRANT_PREFIX } from "./grants";
 import { chooseTargets, targetsAvailable } from "./targets";
+import { EQUIP_PREFIX } from "./equipment";
+import { recordUnionBurst, unionBurstValid } from "./union-burst";
 import { activationBlocked } from "../state/effects";
 import { recordUse, usesThisTurn } from "../state/access";
 import type { GrantedAbilityId } from "../../model/state";
 
-/** The ability `index` of a definition (or of a keyword, for "kw:<keyword>" ids). */
+/**
+ * The ability `index` of a definition (or of a keyword, for "kw:<keyword>" ids; a given one, "grant:<id>"; one an equipment
+ * token gives its equipped follower, "equip:<token definition>", CR 14.5.2).
+ */
 export function getAbility(g: G, def: DefId, index: number): AbilityDef {
   const ability = def.startsWith(KEYWORD_DEF_PREFIX)
     ? KEYWORD_ABILITIES[def.slice(KEYWORD_DEF_PREFIX.length) as keyof typeof KEYWORD_ABILITIES]?.[index]
     : def.startsWith(GRANT_PREFIX)
       ? GRANT_ABILITIES[def.slice(GRANT_PREFIX.length) as GrantedAbilityId]
-      : g.scripts[def]?.abilities?.[index];
+      : def.startsWith(EQUIP_PREFIX)
+        ? g.scripts[def.slice(EQUIP_PREFIX.length)]?.equipment?.abilities?.[index]
+        : g.scripts[def]?.abilities?.[index];
   if (!ability) throw new EngineError(`${def} has no ability #${index}`);
   return ability;
 }
@@ -109,6 +116,7 @@ export function* playPendingAbility(g: G, pendingId: string): Proc<void> {
   if (earthRite) yield* payEarthRite(g, ctrl, ability.earthRite?.count ?? 1, self);
   // 10.6.2.7
   g.emit({ type: "abilityPlayed", player: ctrl, source: self, sourceDef: pending.sourceDef, ability: pending.ability });
+  if (ability.unionBurst) recordUnionBurst(g, ctrl, self, pending.sourceDef, pending.ability); // CR 14.5.1.3
   // 10.6.2.8.2 — resolved even if the source has changed zones (10.6.2.8.2.1, 10.7.7); chosen
   // options in listed order (5.18.1)
   if (modes.length > 0) {
@@ -157,6 +165,7 @@ export function canPlayActivated(
   // 10.3.6 — a crest's only in the EX area.
   if (!abilityZones(g, def, ability).includes(c.zone)) return false;
   if (timing === "quick" && !ability.quick) return false; // CR 12.3.3
+  if (ability.unionBurst && !unionBurstValid(g, card)) return false; // CR 14.5.1.2
   const perTurn = activationsPerTurn(ability);
   if (perTurn !== null && usesThisTurn(g.state, c, abilityKey(def, index)) >= perTurn) return false;
   if (activationBlocked(g.state, card, false)) return false; // BP03-039/040
@@ -240,6 +249,7 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
   // 10.6.2.7 — an advanced activated ability counts as this turn's evolve ability (12.16.3, 8.3.2.1)
   if (ability.advanced) g.state.players[player].evolveAbilityTurn = g.state.turn;
   g.emit({ type: "abilityPlayed", player, source: card, sourceDef: def, ability: index });
+  if (ability.unionBurst) recordUnionBurst(g, player, card, def, index); // CR 14.5.1.3
   // 10.6.2.8.2 — chosen options in listed order (5.18.1)
   if (modes.length > 0) {
     yield* resolveModes(modes, (m, i) => makeEffectContext(g, { ...init, self, targets: modeTargets[i]!, mode: m.id }));
@@ -247,4 +257,60 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
     yield* ability.resolve(makeEffectContext(g, { ...init, self }));
   }
   g.state.revealed = []; // CR 5.21.1.1
+}
+
+/**
+ * The Union Burst abilities of `card` that `player` could execute without paying their costs now (CR 14.5.1.4): valid ones
+ * (14.5.1.2) whose targets can be selected with X = 0 (10.6.2.3.3, 14.5.1.5). Timing, "once per turn" and "Activate only if"
+ * don't apply: the ability is not activated by its controller (CP04-114 ruling Q4: a "once per turn" one already used this
+ * turn can be executed).
+ */
+function freeUnionBursts(g: G, player: PlayerId, card: CardId): { def: DefId; index: number; ability: ActivatedAbility | AutomaticAbility }[] {
+  const c = g.state.cards[card];
+  if (!c || c.zone !== "field" || !unionBurstValid(g, card)) return [];
+  const out: { def: DefId; index: number; ability: ActivatedAbility | AutomaticAbility }[] = [];
+  for (const ref of characteristics(g, card).abilities) {
+    const ability = ref.ability;
+    if (ability.kind === "spell" || !ability.unionBurst || (ability.kind === "activated" && ability.evolve)) continue;
+    const playable = ability.modes
+      ? performableModes(g, ability.modes, player, card).length > 0
+      : targetsAvailable(g, ability.targets, player, card, { free: true });
+    if (playable) out.push({ def: ref.def, index: ref.index, ability });
+  }
+  return out;
+}
+
+/**
+ * CR 14.5.1.4 — execute one of `card`'s Union Burst abilities without paying its cost (CP04-114): its controller chooses one
+ * that can be played and plays it (10.6.2) as if its original cost did not exist — an automatic one ignoring its trigger
+ * condition (14.5.1.4.1), with X = 0 (14.5.1.5). Nothing happens if none can be played (the selected follower has none, lost
+ * its abilities, or has no targets — rulings Q2, Q5, Q7). Returns whether one was executed.
+ */
+export function* executeUnionBurst(g: G, player: PlayerId, card: CardId, source: CardId | null): Proc<boolean> {
+  const playable = freeUnionBursts(g, player, card);
+  if (playable.length === 0) return false;
+  let chosen = playable[0]!;
+  if (playable.length > 1) {
+    const options = playable.map((p, i) => ({ id: String(i), label: `${p.def} ability ${p.index + 1} (${p.ability.kind === "activated" ? "activated" : p.ability.timing})` }));
+    const [pick] = yield* chooseOptions(g, player, "unionBurst", options, 1, 1, source, card);
+    chosen = playable[Number(pick ?? 0)]!;
+  }
+  const { ability, def, index } = chosen;
+  // 10.6.2.2 options, 10.6.2.3 targets; no costs (10.6.2.5), so nothing is paid and X stays 0.
+  const modes = ability.modes ? yield* chooseModes(g, player, ability, card) : [];
+  if (modes === null) throw new EngineError("Union Burst ability executed without a performable option");
+  const targets = modes.length === 0 ? yield* chooseTargets(g, ability.targets, player, card, { free: true }) : [];
+  const modeTargets = yield* chooseModeTargets(g, player, modes, card);
+  if (targets === null || modeTargets === null) throw new EngineError("Union Burst ability executed without legal targets");
+  const init: EffectInit = { controller: player, self: card, sourceDef: def, targets, event: null, data: null, mode: null, memory: { x: 0 } };
+  // 10.6.2.7
+  g.emit({ type: "abilityPlayed", player, source: card, sourceDef: def, ability: index });
+  recordUnionBurst(g, player, card, def, index); // CR 14.5.1.3
+  if (modes.length > 0) {
+    yield* resolveModes(modes, (m, i) => makeEffectContext(g, { ...init, targets: modeTargets[i]!, mode: m.id }));
+  } else if (ability.resolve) {
+    yield* ability.resolve(makeEffectContext(g, init));
+  }
+  g.state.revealed = []; // CR 5.21.1.1
+  return true;
 }
