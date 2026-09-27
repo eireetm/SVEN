@@ -1,0 +1,171 @@
+// The basic deck editor: deck files in decks/, edited as text ("3 BP01-001"), cards added from a search, and checked by
+// the engine (CR 6.1). A picture-based builder comes later; this is enough to make test decks quickly.
+import { useEffect, useMemo, useState } from "react";
+import { cardName } from "../app/catalog";
+import { useSettings } from "../app/settings";
+import { engine, reportError, useApp } from "../app/store";
+import { CardDetails } from "../game/card/CardDetails";
+import { setHover } from "../game/focus";
+import { hostApi, type DeckFileEntry } from "../host/api";
+import { useT } from "../i18n";
+import { cardCount, deckFromText, deckToText, emptyDeck, toDeckList } from "./format";
+
+export function DeckEditor() {
+  const t = useT();
+  const catalog = useApp((s) => s.catalog)!;
+  const { cardLang } = useSettings();
+  const [files, setFiles] = useState<DeckFileEntry[]>([]);
+  const [file, setFile] = useState("my-deck.json");
+  const [text, setText] = useState(() => deckToText(emptyDeck("My deck")));
+  const [check, setCheck] = useState<string[] | null>(null);
+  const [message, setMessage] = useState("");
+  const [query, setQuery] = useState("");
+  const parsed = useMemo(() => deckFromText(text), [text]);
+  // Card names go into the text as comments, in the card-text language.
+  const nameOf = (id: string) => {
+    const card = catalog.printing(id);
+    return card ? cardName(card, cardLang) : undefined;
+  };
+  const deck = parsed.deck;
+  const unknown = [...Object.keys(deck.main), ...Object.keys(deck.evolve), ...(deck.leader ? [deck.leader] : [])].filter((id) => !catalog.printing(id));
+  const results = useMemo(() => catalog.search(query), [catalog, query]);
+
+  const refresh = () => hostApi.listDecks().then(setFiles, (err: unknown) => reportError(String(err)));
+  useEffect(() => {
+    void refresh();
+  }, []);
+
+  const open = (name: string) =>
+    hostApi.loadDeck(name).then(
+      (loaded) => {
+        setFile(name);
+        setText(deckToText(loaded, nameOf));
+        setCheck(null);
+        setMessage("");
+      },
+      (err: unknown) => reportError(`${name}: ${err instanceof Error ? err.message : String(err)}`),
+    );
+
+  const save = () => {
+    if (!file.endsWith(".json")) return reportError(`${file}: the file name must end with .json`);
+    hostApi.saveDeck(file, deck).then(
+      () => {
+        setMessage(t("decks.saved", { file }));
+        void refresh();
+      },
+      (err: unknown) => reportError(err instanceof Error ? err.message : String(err)),
+    );
+  };
+
+  const add = (id: string, section: "main" | "evolve" | "leader") => {
+    const next = deckFromText(text).deck;
+    if (section === "leader") next.leader = id;
+    else next[section][id] = (next[section][id] ?? 0) + 1;
+    setText(deckToText(next, nameOf));
+    setCheck(null);
+  };
+
+  return (
+    <div className="sve-decks">
+      <section className="sve-decks-files">
+        <h3>{t("decks.files")}</h3>
+        <button
+          type="button"
+          onClick={() => {
+            setFile("my-deck.json");
+            setText(deckToText(emptyDeck("My deck")));
+            setCheck(null);
+          }}
+        >
+          {t("decks.new")}
+        </button>
+        <ul>
+          {files.map((f) => (
+            <li key={f.file}>
+              <button type="button" className={f.file === file ? "sve-tab-active" : undefined} onClick={() => void open(f.file)} title={f.file}>
+                {f.name}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section className="sve-decks-editor">
+        <label className="sve-field">
+          <span>{t("decks.file")}</span>
+          <input value={file} onChange={(e) => setFile(e.target.value)} />
+        </label>
+        <p className="sve-hint">{t("decks.textHelp")}</p>
+        <textarea className="sve-deck-text" value={text} spellCheck={false} onChange={(e) => (setText(e.target.value), setCheck(null))} />
+        <div className="sve-note">{t("decks.counts", { main: cardCount(deck.main), evolve: cardCount(deck.evolve) })}</div>
+        {[...parsed.errors, ...unknown.map((id) => t("decks.unknownCard", { card: id }))].map((e) => (
+          <div key={e} className="sve-problem">
+            {e}
+          </div>
+        ))}
+        <div className="sve-setup-actions">
+          <button type="button" onClick={() => void engine.validateDeck(toDeckList(deck), true).then(setCheck)}>
+            {t("decks.check")}
+          </button>
+          <button type="button" onClick={() => setText(deckToText(deck, nameOf))} title={t("decks.tidyHelp")}>
+            {t("decks.tidy")}
+          </button>
+          <button type="button" className="sve-primary" onClick={save}>
+            {t("decks.save")}
+          </button>
+          {message ? <span className="sve-ok">{message}</span> : null}
+        </div>
+        {check !== null ? (
+          check.length === 0 ? (
+            <div className="sve-ok">{t("decks.legal")}</div>
+          ) : (
+            <ul className="sve-problems">
+              {check.map((e) => (
+                <li key={e}>{e}</li>
+              ))}
+            </ul>
+          )
+        ) : null}
+      </section>
+      <section className="sve-decks-search">
+        <input className="sve-search" placeholder={t("decks.search")} value={query} onChange={(e) => setQuery(e.target.value)} />
+        <div className="sve-search-results">
+          {query && results.length === 0 ? <p className="sve-hint">{t("decks.noResults")}</p> : null}
+          {results.map((card) => (
+            <div
+              key={card.id}
+              className="sve-search-result"
+              onMouseEnter={() => setHover({ def: card.id, printing: card.printings[0] ?? card.id })}
+              onMouseLeave={() => setHover(null)}
+            >
+              <span className="sve-search-name">
+                {cardName(card, cardLang)} <small>{card.id}</small>
+              </span>
+              <span className="sve-search-meta">
+                {t(`class.${card.class}` as const)} · {t(`type.${card.type}` as const)}
+                {card.cost !== null ? ` · ${card.cost}` : ""}
+              </span>
+              <span className="sve-search-buttons">
+                {card.type === "leader" ? (
+                  <button type="button" onClick={() => add(card.id, "leader")}>
+                    {t("decks.setLeader")}
+                  </button>
+                ) : card.evolved || card.advanced ? (
+                  <button type="button" onClick={() => add(card.id, "evolve")}>
+                    {t("decks.addEvolve")}
+                  </button>
+                ) : card.token ? null : (
+                  <button type="button" onClick={() => add(card.id, "main")}>
+                    {t("decks.addMain")}
+                  </button>
+                )}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="sve-decks-details">
+          <CardDetails />
+        </div>
+      </section>
+    </div>
+  );
+}

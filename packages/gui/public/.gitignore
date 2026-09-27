@@ -1,0 +1,8 @@
+# The player's own resources stay out of the repository: nothing official is ever shipped, and personal images and sounds
+# are the player's. Only the documentation, the theme template and the empty folders are tracked.
+*
+!*/
+!.gitignore
+!README.md
+!theme.example.css
+!**/.gitkeep

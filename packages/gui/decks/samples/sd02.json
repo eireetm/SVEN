@@ -1,0 +1,31 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "SD02 — Erika (sample)",
+  "leader": "SD02-LD01",
+  "main": {
+    "SD02-001": 2,
+    "SD02-002": 3,
+    "SD02-003": 2,
+    "SD02-005": 3,
+    "SD02-006": 2,
+    "SD02-007": 3,
+    "SD02-008": 3,
+    "SD02-009": 2,
+    "SD02-010": 3,
+    "SD02-012": 3,
+    "SD02-014": 2,
+    "SD02-015": 2,
+    "SD02-016": 3,
+    "SD02-017": 3,
+    "SD02-019": 2,
+    "SD02-020": 2
+  },
+  "evolve": {
+    "SD02-004": 2,
+    "SD02-011": 2,
+    "SD02-013": 2,
+    "SD02-018": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from SD02's own printings (not the official list)."
+}

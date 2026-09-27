@@ -1,0 +1,29 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "DSD01b — Forte, Duskwing Tyrant (sample)",
+  "leader": "DSD01b-LD01",
+  "main": {
+    "DSD01b-001": 3,
+    "DSD01b-003": 3,
+    "DSD01b-004": 3,
+    "DSD01b-006": 2,
+    "DSD01b-007": 3,
+    "DSD01b-008": 2,
+    "DSD01b-009": 3,
+    "DSD01b-010": 3,
+    "DSD01b-012": 3,
+    "DSD01b-013": 3,
+    "DSD01b-014": 3,
+    "DSD01b-016": 3,
+    "DSD01b-017": 3,
+    "DSD01b-018": 3
+  },
+  "evolve": {
+    "DSD01b-002": 2,
+    "DSD01b-005": 2,
+    "DSD01b-011": 2,
+    "DSD01b-015": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from DSD01b's own printings (not the official list)."
+}

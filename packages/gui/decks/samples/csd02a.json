@@ -1,0 +1,29 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "CSD02a — Uzuki Shimamura [Stage of Magic] (sample)",
+  "leader": "CSD02a-LD01",
+  "main": {
+    "CSD02a-001": 2,
+    "CSD02a-002": 3,
+    "CSD02a-003": 3,
+    "CSD02a-004": 3,
+    "CSD02a-005": 3,
+    "CSD02a-007": 3,
+    "CSD02a-009": 2,
+    "CSD02a-011": 3,
+    "CSD02a-012": 3,
+    "CSD02a-014": 3,
+    "CSD02a-015": 3,
+    "CSD02a-016": 3,
+    "CSD02a-017": 3,
+    "CSD02a-018": 3
+  },
+  "evolve": {
+    "CSD02a-006": 2,
+    "CSD02a-008": 2,
+    "CSD02a-010": 2,
+    "CSD02a-013": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from CSD02a's own printings (not the official list)."
+}

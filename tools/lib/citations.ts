@@ -17,7 +17,7 @@ const CLAUSE = /(?<![\w.])((?:1[0-5]|[1-9])(?:\.\d{1,2}){1,5})(?![\w]|\.\d)/g;
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {
     const p = join(dir, f);
-    return statSync(p).isDirectory() ? walk(p) : p.endsWith(".ts") ? [p] : [];
+    return statSync(p).isDirectory() ? walk(p) : /\.tsx?$/.test(p) ? [p] : [];
   });
 }
 
@@ -79,4 +79,6 @@ export const CITATION_DIRS: readonly CitationDir[] = [
   // Bot code has ordinary decimals (evaluation weights such as 1.5); only its comments cite rules.
   { path: "packages/bot/src", commentsOnly: true },
   { path: "packages/bot/test", commentsOnly: true },
+  // The GUI works out no rules, but its comments say which rule a display follows.
+  { path: "packages/gui/src", commentsOnly: true },
 ];

@@ -1,0 +1,31 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "SD06 — Eris (sample)",
+  "leader": "SD06-LD01",
+  "main": {
+    "SD06-001": 2,
+    "SD06-002": 3,
+    "SD06-003": 3,
+    "SD06-005": 2,
+    "SD06-006": 2,
+    "SD06-007": 2,
+    "SD06-008": 3,
+    "SD06-009": 3,
+    "SD06-011": 2,
+    "SD06-013": 3,
+    "SD06-014": 2,
+    "SD06-015": 3,
+    "SD06-016": 3,
+    "SD06-017": 2,
+    "SD06-018": 2,
+    "SD06-020": 3
+  },
+  "evolve": {
+    "SD06-004": 2,
+    "SD06-010": 2,
+    "SD06-012": 2,
+    "SD06-019": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from SD06's own printings (not the official list)."
+}

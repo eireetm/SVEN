@@ -1,0 +1,11 @@
+{
+  // GUI source (browser): the app in the main thread and the engine worker. Only this package may use the DOM; the core and
+  // the bot stay host independent (their own tsconfigs have no DOM types).
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

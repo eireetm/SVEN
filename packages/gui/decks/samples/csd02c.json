@@ -1,0 +1,29 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "CSD02c — Mio Honda [Stage of Magic] (sample)",
+  "leader": "CSD02c-LD01",
+  "main": {
+    "CSD02c-001": 3,
+    "CSD02c-002": 3,
+    "CSD02c-003": 2,
+    "CSD02c-004": 3,
+    "CSD02c-005": 3,
+    "CSD02c-007": 3,
+    "CSD02c-009": 3,
+    "CSD02c-010": 3,
+    "CSD02c-012": 2,
+    "CSD02c-013": 3,
+    "CSD02c-014": 3,
+    "CSD02c-016": 3,
+    "CSD02c-017": 3,
+    "CSD02c-018": 3
+  },
+  "evolve": {
+    "CSD02c-006": 2,
+    "CSD02c-008": 2,
+    "CSD02c-011": 2,
+    "CSD02c-015": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from CSD02c's own printings (not the official list)."
+}

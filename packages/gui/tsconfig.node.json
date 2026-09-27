@@ -1,0 +1,10 @@
+{
+  // Node side of the GUI: the Vite config, the local host (dev-server API), scripts and tests.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    // Vite loads its config with Node's own TypeScript support, which needs the ".ts" in relative imports.
+    "allowImportingTsExtensions": true
+  },
+  "include": ["vite.config.ts", "playwright.config.ts", "host/**/*.ts", "scripts/**/*.ts", "test/**/*.ts", "tests/**/*.ts"]
+}

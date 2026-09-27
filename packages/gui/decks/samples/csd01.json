@@ -1,0 +1,43 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "CSD01 — Special Week [The Brightest Star in Japan!] (sample)",
+  "leader": "CSD01-LD01",
+  "main": {
+    "CSD01-001": 1,
+    "CSD01-003": 1,
+    "CSD01-005": 2,
+    "CSD01-007": 1,
+    "CSD01-008": 1,
+    "CSD01-009": 2,
+    "CSD01-010": 2,
+    "CSD01-011": 2,
+    "CSD01-012": 1,
+    "CSD01-013": 1,
+    "CSD01-014": 2,
+    "CSD01-015": 2,
+    "CSD01-016": 2,
+    "CSD01-017": 1,
+    "CSD01-018": 2,
+    "CSD01-019": 1,
+    "CSD01-020": 2,
+    "CSD01-021": 1,
+    "CSD01-022": 1,
+    "CSD01-023": 1,
+    "CSD01-024": 2,
+    "CSD01-025": 2,
+    "CSD01-026": 1,
+    "CSD01-027": 1,
+    "CSD01-028": 2,
+    "CSD01-029": 1,
+    "CSD01-030": 1,
+    "CSD01-031": 1
+  },
+  "evolve": {
+    "CSD01-002": 2,
+    "CSD01-004": 2,
+    "CSD01-006": 2,
+    "CSD01-032": 3
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from CSD01's own printings (not the official list)."
+}

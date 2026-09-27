@@ -1,0 +1,26 @@
+{
+  "name": "@sve/gui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Web GUI for the Shadowverse: Evolve engine (personal and test use only; no card images are shipped).",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@sve/bot": "*",
+    "@sve/core": "*",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.1"
+  }
+}

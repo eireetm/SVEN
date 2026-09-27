@@ -1,0 +1,31 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "SD03 — Isabelle (sample)",
+  "leader": "SD03-LD01",
+  "main": {
+    "SD03-001": 2,
+    "SD03-002": 2,
+    "SD03-003": 2,
+    "SD03-005": 3,
+    "SD03-006": 3,
+    "SD03-007": 2,
+    "SD03-008": 3,
+    "SD03-010": 3,
+    "SD03-012": 3,
+    "SD03-013": 2,
+    "SD03-014": 2,
+    "SD03-015": 2,
+    "SD03-016": 3,
+    "SD03-017": 2,
+    "SD03-019": 3,
+    "SD03-020": 3
+  },
+  "evolve": {
+    "SD03-004": 2,
+    "SD03-009": 2,
+    "SD03-011": 2,
+    "SD03-018": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from SD03's own printings (not the official list)."
+}

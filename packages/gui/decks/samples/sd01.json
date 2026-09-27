@@ -1,0 +1,31 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "SD01 — Arisa (sample)",
+  "leader": "SD01-LD01",
+  "main": {
+    "SD01-001": 2,
+    "SD01-002": 3,
+    "SD01-003": 2,
+    "SD01-005": 2,
+    "SD01-006": 2,
+    "SD01-007": 3,
+    "SD01-008": 2,
+    "SD01-009": 2,
+    "SD01-011": 3,
+    "SD01-013": 2,
+    "SD01-014": 3,
+    "SD01-015": 3,
+    "SD01-016": 2,
+    "SD01-017": 3,
+    "SD01-019": 3,
+    "SD01-020": 3
+  },
+  "evolve": {
+    "SD01-004": 2,
+    "SD01-010": 2,
+    "SD01-012": 2,
+    "SD01-018": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from SD01's own printings (not the official list)."
+}

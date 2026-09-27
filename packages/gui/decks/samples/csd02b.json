@@ -1,0 +1,29 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "CSD02b — Rin Shibuya [Stage of Magic] (sample)",
+  "leader": "CSD02b-LD01",
+  "main": {
+    "CSD02b-001": 3,
+    "CSD02b-002": 3,
+    "CSD02b-003": 3,
+    "CSD02b-004": 3,
+    "CSD02b-005": 3,
+    "CSD02b-007": 3,
+    "CSD02b-009": 3,
+    "CSD02b-010": 3,
+    "CSD02b-012": 3,
+    "CSD02b-013": 3,
+    "CSD02b-014": 3,
+    "CSD02b-015": 2,
+    "CSD02b-016": 2,
+    "CSD02b-018": 3
+  },
+  "evolve": {
+    "CSD02b-006": 2,
+    "CSD02b-008": 2,
+    "CSD02b-011": 2,
+    "CSD02b-017": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from CSD02b's own printings (not the official list)."
+}

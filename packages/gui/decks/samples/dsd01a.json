@@ -1,0 +1,29 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "DSD01a — Anne & Grea, Bonds Everlasting (sample)",
+  "leader": "DSD01a-LD01",
+  "main": {
+    "DSD01a-001": 2,
+    "DSD01a-002": 3,
+    "DSD01a-004": 3,
+    "DSD01a-006": 3,
+    "DSD01a-007": 3,
+    "DSD01a-008": 2,
+    "DSD01a-009": 3,
+    "DSD01a-010": 3,
+    "DSD01a-012": 3,
+    "DSD01a-013": 3,
+    "DSD01a-014": 3,
+    "DSD01a-015": 3,
+    "DSD01a-016": 3,
+    "DSD01a-018": 3
+  },
+  "evolve": {
+    "DSD01a-003": 2,
+    "DSD01a-005": 2,
+    "DSD01a-011": 2,
+    "DSD01a-017": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from DSD01a's own printings (not the official list)."
+}

@@ -1,0 +1,31 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "SD04 — Rowen (sample)",
+  "leader": "SD04-LD01",
+  "main": {
+    "SD04-001": 2,
+    "SD04-002": 3,
+    "SD04-003": 3,
+    "SD04-005": 3,
+    "SD04-006": 2,
+    "SD04-007": 3,
+    "SD04-008": 2,
+    "SD04-009": 3,
+    "SD04-011": 2,
+    "SD04-012": 3,
+    "SD04-014": 2,
+    "SD04-015": 3,
+    "SD04-016": 2,
+    "SD04-017": 2,
+    "SD04-019": 2,
+    "SD04-020": 3
+  },
+  "evolve": {
+    "SD04-004": 2,
+    "SD04-010": 2,
+    "SD04-013": 2,
+    "SD04-018": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from SD04's own printings (not the official list)."
+}

@@ -1,0 +1,32 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "SD07 — マリア＝マリス (sample)",
+  "leader": "SD07-LD01",
+  "main": {
+    "SD07-001": 2,
+    "SD07-002": 2,
+    "SD07-004": 2,
+    "SD07-005": 3,
+    "SD07-006": 2,
+    "SD07-008": 2,
+    "SD07-010": 2,
+    "SD07-011": 2,
+    "SD07-012": 3,
+    "SD07-013": 3,
+    "SD07-015": 2,
+    "SD07-016": 3,
+    "SD07-017": 3,
+    "SD07-019": 3,
+    "SD07-020": 3,
+    "SD07-021": 3
+  },
+  "evolve": {
+    "SD07-003": 2,
+    "SD07-007": 2,
+    "SD07-009": 2,
+    "SD07-014": 2,
+    "SD07-018": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from SD07's own printings (not the official list)."
+}

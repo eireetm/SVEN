@@ -1,0 +1,31 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "SD08 — 伽藍 (sample)",
+  "leader": "SD08-LD01",
+  "main": {
+    "SD08-001": 3,
+    "SD08-002": 2,
+    "SD08-003": 2,
+    "SD08-005": 2,
+    "SD08-006": 3,
+    "SD08-007": 3,
+    "SD08-009": 2,
+    "SD08-010": 3,
+    "SD08-011": 2,
+    "SD08-012": 2,
+    "SD08-014": 3,
+    "SD08-016": 3,
+    "SD08-017": 2,
+    "SD08-018": 2,
+    "SD08-019": 3,
+    "SD08-020": 3
+  },
+  "evolve": {
+    "SD08-004": 2,
+    "SD08-008": 2,
+    "SD08-013": 2,
+    "SD08-015": 2
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts from SD08's own printings (not the official list)."
+}
