@@ -20,6 +20,28 @@ async function center(locator: Locator): Promise<{ x: number; y: number }> {
   return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
 }
 
+/**
+ * Start dragging `attacker`; if the table lights up attack targets, drop it on the first one. Otherwise cancel (Escape) and
+ * say so: the card may only have other actions (evolve, abilities).
+ */
+async function dragToTarget(page: Page, attacker: Locator): Promise<boolean> {
+  const a = await center(attacker);
+  await page.mouse.move(a.x, a.y);
+  await page.mouse.down();
+  await page.mouse.move(a.x + 10, a.y - 15);
+  await page.mouse.move(a.x + 20, a.y - 30);
+  const target = page.locator(".sve-card-target").first();
+  if ((await target.count()) === 0) {
+    await page.keyboard.press("Escape");
+    await page.mouse.up();
+    return false;
+  }
+  const b = await center(target);
+  for (let i = 1; i <= 10; i++) await page.mouse.move(a.x + ((b.x - a.x) * i) / 10, a.y + ((b.y - a.y) * i) / 10);
+  await page.mouse.up();
+  return true;
+}
+
 async function drag(page: Page, from: Locator, to: Locator): Promise<void> {
   const a = await center(from);
   const b = await center(to);
@@ -51,7 +73,8 @@ test("a person plays on the table: drags cards to play them and attacks from a m
     else if (kind === "quick") await page.getByTestId("table-pass").click();
     else if (kind === "mainPhase") {
       const handCard = page.locator(".sve-hand-own .sve-card-action").first();
-      const attacker = page.locator(".sve-mat-own .sve-field-row > .sve-card-action").first();
+      const lit = page.locator(".sve-mat-own .sve-field-row > .sve-card-action");
+      const attacker = lit.first();
       if ((await handCard.count()) > 0 && done.play < 3) {
         await drag(page, handCard, page.locator(".sve-mat-own .sve-mat-field"));
         action = "play";
@@ -63,8 +86,7 @@ test("a person plays on the table: drags cards to play them and attacks from a m
           action = "menuAttack";
         } else await page.keyboard.press("Escape");
       } else if ((await attacker.count()) > 0 && done.dragAttack === 0) {
-        await drag(page, attacker, page.locator(".sve-mat-opponent .sve-leader-card"));
-        action = "dragAttack";
+        for (let i = 0; i < (await lit.count()) && action === null; i++) if (await dragToTarget(page, lit.nth(i))) action = "dragAttack";
       }
       if (action === null) await page.getByTestId("table-end").click();
     } else {

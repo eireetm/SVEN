@@ -43,6 +43,11 @@ export const hostApi = {
     if (!res.ok) throw new Error(`saving ${file}: ${res.status} ${await res.text()}`);
   },
 
+  deleteDeck: async (file: string): Promise<void> => {
+    const res = await fetch(`/api/decks/${encodePath(file)}`, { method: "DELETE" });
+    if (!res.ok) throw new Error(`deleting ${file}: ${res.status} ${await res.text()}`);
+  },
+
   /** A Misc image of the assets folder ("field", "back", "unknown"); 404 when there is none. */
   miscUrl: (name: string): string => `/api/misc/${encodeURIComponent(name)}`,
 

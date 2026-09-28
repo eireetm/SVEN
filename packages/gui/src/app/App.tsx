@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { DeckBuilder } from "../decks/DeckBuilder";
 import { DeckEditor } from "../decks/DeckEditor";
 import { GameScreen } from "../game/GameScreen";
 import { useT } from "../i18n";
@@ -9,16 +10,24 @@ import { SettingsScreen } from "./SettingsScreen";
 import { useSettings } from "./settings";
 import { dismissError, useApp } from "./store";
 
-type Screen = "menu" | "settings" | "setup" | "decks" | "game";
+type Screen = "menu" | "settings" | "setup" | "builder" | "text" | "game";
 
 /**
- * The screens: the main menu first (play against the AI, settings); the game setup, from which the deck editor opens; the
- * game. The engine starts in the background while the menu shows.
+ * The screens: the main menu first (play against the AI, build decks, settings); the game setup; the deck builder (from
+ * the menu or the setup; its text editor from it); the game. The engine starts in the background while the menu shows.
  */
 export function App() {
   const settings = useSettings();
   const hasGame = useApp((s) => s.update !== null);
   const [screen, setScreen] = useState<Screen>("menu");
+  // Where the deck builder returns to, and the deck it opens / the text editor opens.
+  const [builderFrom, setBuilderFrom] = useState<"menu" | "setup">("menu");
+  const [deckFile, setDeckFile] = useState<string | null>(null);
+  const openBuilder = (from: "menu" | "setup", file: string | null) => {
+    setBuilderFrom(from);
+    setDeckFile(file);
+    setScreen("builder");
+  };
 
   useEffect(() => {
     void loadResources();
@@ -30,16 +39,35 @@ export function App() {
   let body;
   switch (screen) {
     case "menu":
-      body = <MainMenu onPlayAi={() => setScreen("setup")} onSettings={() => setScreen("settings")} onContinue={hasGame ? () => setScreen("game") : undefined} />;
+      body = (
+        <MainMenu
+          onPlayAi={() => setScreen("setup")}
+          onDeckBuilder={() => openBuilder("menu", null)}
+          onSettings={() => setScreen("settings")}
+          onContinue={hasGame ? () => setScreen("game") : undefined}
+        />
+      );
       break;
     case "settings":
       body = <SettingsScreen onBack={() => setScreen("menu")} />;
       break;
     case "setup":
-      body = <SetupScreen onStarted={() => setScreen("game")} onBack={() => setScreen("menu")} onEditDecks={() => setScreen("decks")} />;
+      body = <SetupScreen onStarted={() => setScreen("game")} onBack={() => setScreen("menu")} onEditDecks={() => openBuilder("setup", settings.setupDecks[0])} />;
       break;
-    case "decks":
-      body = <DeckEditor onBack={() => setScreen("setup")} />;
+    case "builder":
+      body = (
+        <DeckBuilder
+          initialFile={deckFile}
+          onBack={() => setScreen(builderFrom)}
+          onTextEditor={(file) => {
+            setDeckFile(file);
+            setScreen("text");
+          }}
+        />
+      );
+      break;
+    case "text":
+      body = <DeckEditor initialFile={deckFile} onBack={() => setScreen("builder")} />;
       break;
     case "game":
       body = <GameScreen onMenu={() => setScreen("menu")} onNewGame={() => setScreen("setup")} />;

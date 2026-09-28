@@ -82,7 +82,14 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
     engine.send({ kind: "settings", settings: { botDelayMs: settings.botDelayMs, paused: false } });
     engine.send({
       kind: "start",
-      options: { seed, decks: [toDeckList(a), toDeckList(b)], deckNames: [a.name, b.name], controllers, deckRestrictions: restrictions },
+      options: {
+        seed,
+        decks: [toDeckList(a), toDeckList(b)],
+        deckNames: [a.name, b.name],
+        controllers,
+        deckRestrictions: restrictions,
+        showEveryMainPhase: true,
+      },
     });
     setSeed(newSeed());
     onStarted();

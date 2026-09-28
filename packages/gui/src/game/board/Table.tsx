@@ -108,7 +108,7 @@ function TableCard({ update, card, side, marks, size, className, style, children
 }
 
 /** A pile's spot on the mat: its top card (face up) or a card back, and how many cards there are. */
-function Pile({ side, zone, count, top, back, note }: { side: PlayerSideView; zone: "deck" | "cemetery" | "banished" | "evolveDeck"; count: number; top?: CardView | null; back?: boolean; note?: string }) {
+function Pile({ side, zone, count, top, back }: { side: PlayerSideView; zone: "deck" | "cemetery" | "banished" | "evolveDeck"; count: number; top?: CardView | null; back?: boolean }) {
   const t = useT();
   const browsable = zone !== "deck" && count > 0;
   return (
@@ -122,7 +122,6 @@ function Pile({ side, zone, count, top, back, note }: { side: PlayerSideView; zo
       {count > 0 && top ? <CardTile card={top} side={side} className="sve-slot-card" /> : null}
       {count > 0 && !top && back ? <div className="sve-slot-back sve-card-back" /> : null}
       {count > 0 ? <span className="sve-pile-count">{count}</span> : null}
-      {note ? <span className="sve-pile-note">{note}</span> : null}
     </div>
   );
 }
@@ -142,8 +141,8 @@ function Mat({ update, side, opponent, marks }: { update: GameUpdate; side: Play
     const top = cards[cards.length - 1];
     return top && !top.hidden ? top : null;
   };
-  const faceDown = side.evolveDeck.filter((c) => c.hidden || !c.faceUp).length;
-  const faceUp = side.evolveDeck.length - faceDown;
+  // The evolve deck shows the card that last went into it face up (cards join a zone at its end), else its back.
+  const lastFaceUp = [...side.evolveDeck].reverse().find((c): c is CardView => !c.hidden && c.faceUp) ?? null;
   return (
     <div className={`sve-mat ${opponent ? "sve-mat-opponent" : "sve-mat-own"}`} data-drop={opponent ? undefined : "play"} data-player={side.id}>
       <div className="sve-mat-picture" />
@@ -162,14 +161,7 @@ function Mat({ update, side, opponent, marks }: { update: GameUpdate; side: Play
       {at("banished", <Pile side={side} zone="banished" count={side.banished.length} top={lastVisible(side.banished)} back />)}
       {at(
         "evolveDeck",
-        <Pile
-          side={side}
-          zone="evolveDeck"
-          count={side.evolveDeck.length}
-          back={faceDown > 0}
-          top={faceDown === 0 ? lastVisible(side.evolveDeck) : null}
-          note={faceUp > 0 ? t("game.evolveDeckFaceUp", { n: faceUp }) : undefined}
-        />,
+        <Pile side={side} zone="evolveDeck" count={side.evolveDeck.length} top={lastFaceUp} back />,
       )}
       {at(
         "field",

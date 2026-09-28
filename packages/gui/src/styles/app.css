@@ -22,6 +22,8 @@
   --sve-card-base: 84px;
   --sve-card-width: var(--sve-card-base);
   --sve-card-radius: 6px;
+  /* The card panel on the left of the game and the deck builder. */
+  --sve-left-width: clamp(220px, 19vw, 340px);
   /* Pictures from public/ or the assets' Misc folder (src/resources/resources.ts). */
   --sve-card-back-image: none;
   --sve-field-image: none;
@@ -541,7 +543,7 @@ textarea {
 /* Game screen: the card panel, the table, the decision and the log. */
 .sve-game {
   display: grid;
-  grid-template-columns: clamp(220px, 19vw, 340px) minmax(0, 1fr) clamp(280px, 22vw, 380px);
+  grid-template-columns: var(--sve-left-width) minmax(0, 1fr) clamp(280px, 22vw, 380px);
   height: 100%;
   background: #050b14;
 }
@@ -680,18 +682,6 @@ textarea {
   font-weight: 800;
   font-size: 13px;
   text-align: center;
-  pointer-events: none;
-}
-
-.sve-pile-note {
-  position: absolute;
-  top: 4%;
-  left: 4%;
-  padding: 0 4px;
-  border-radius: 4px;
-  background: #000c;
-  font-size: 10px;
-  color: var(--sve-accent);
   pointer-events: none;
 }
 
@@ -1386,9 +1376,10 @@ textarea {
 }
 
 /* Zone browser */
+/* A window over the screen dims everything but the card panel on the left, which shows the card under the pointer. */
 .sve-modal-backdrop {
   position: fixed;
-  inset: 0;
+  inset: 0 0 0 var(--sve-left-width);
   background: #000a;
   display: flex;
   align-items: center;
@@ -1418,6 +1409,23 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.sve-face-up-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.sve-face-up-tag {
+  padding: 0 6px;
+  border-radius: 4px;
+  background: rgba(240, 180, 41, 0.18);
+  border: 1px solid var(--sve-accent);
+  color: var(--sve-accent);
+  font-size: 11px;
+  font-weight: 700;
 }
 
 /* Setup */
@@ -1542,4 +1550,266 @@ textarea {
 .sve-decks-details {
   border-top: 1px solid var(--sve-border);
   padding-top: 6px;
+}
+
+/* Deck builder: the card panel, the deck (files, filters, main and evolve deck), the card pool. */
+.sve-builder {
+  display: grid;
+  grid-template-columns: var(--sve-left-width) minmax(0, 1fr) clamp(300px, 27vw, 470px);
+  height: 100%;
+  background: #050b14;
+}
+
+.sve-builder-center {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.sve-builder-top {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--sve-panel);
+  border-bottom: 1px solid var(--sve-border);
+}
+
+.sve-builder-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.sve-builder-files {
+  max-width: 280px;
+}
+
+.sve-builder-name {
+  width: 180px;
+}
+
+.sve-unsaved {
+  font-size: 12px;
+  color: var(--sve-accent);
+}
+
+.sve-leader-button {
+  border-color: var(--sve-accent);
+  font-weight: 700;
+}
+
+.sve-builder-filters input,
+.sve-builder-filters select {
+  max-width: 150px;
+}
+
+.sve-builder-search {
+  width: 190px;
+  max-width: none !important;
+}
+
+.sve-builder-trait {
+  width: 110px;
+}
+
+/* The deck: a table-like area the pool's cards are dropped on. */
+.sve-builder-deck {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 10px 12px 16px;
+  background: radial-gradient(ellipse at 50% 30%, #0b2540 0%, #041222 75%);
+}
+
+.sve-builder-deck.sve-drop-ok {
+  box-shadow: inset 0 0 0 2px var(--sve-good), inset 0 0 30px rgba(76, 195, 138, 0.25);
+}
+
+.sve-deck-section + .sve-deck-section {
+  margin-top: 14px;
+}
+
+.sve-deck-section h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #cfe3f5;
+}
+
+.sve-deck-count {
+  font-size: 18px;
+  color: var(--sve-accent);
+}
+
+.sve-deck-grid {
+  display: grid;
+  gap: 6px;
+  min-height: calc(var(--sve-card-width) * 88 / 63);
+  padding: 6px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(110, 200, 255, 0.15);
+}
+
+.sve-deck-tile,
+.sve-pool-tile {
+  position: relative;
+  cursor: grab;
+}
+
+.sve-deck-tile:hover .sve-card-face,
+.sve-pool-tile:hover .sve-card-face {
+  box-shadow: 0 0 0 2px var(--sve-action), 0 4px 12px #000a;
+}
+
+.sve-deck-empty {
+  grid-column: 1 / -1;
+  align-self: center;
+  justify-self: center;
+  color: var(--sve-muted);
+  font-size: 12px;
+}
+
+/* The card pool on the right. */
+.sve-builder-pool {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--sve-panel);
+  border-left: 1px solid var(--sve-border);
+}
+
+.sve-builder-pool-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px 6px;
+  border-bottom: 1px solid var(--sve-border);
+}
+
+.sve-builder-pool-grid {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 8px 12px;
+}
+
+.sve-pool-count {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--sve-accent);
+  color: #1a1300;
+  font-size: 12px;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.sve-pool-sentinel {
+  grid-column: 1 / -1;
+  height: 1px;
+}
+
+/* The leader window. */
+.sve-leader-picker {
+  width: min(1100px, calc(100vw - var(--sve-left-width) - 60px));
+}
+
+.sve-leader-picker .sve-modal-header {
+  align-items: center;
+}
+
+.sve-leader-grid {
+  --sve-card-width: 96px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 10px;
+}
+
+.sve-leader-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sve-leader-option:hover {
+  background: rgba(88, 166, 255, 0.12);
+}
+
+.sve-leader-current {
+  background: rgba(240, 180, 41, 0.18);
+  box-shadow: inset 0 0 0 2px var(--sve-accent);
+}
+
+.sve-leader-none {
+  justify-content: center;
+  min-height: 120px;
+  font-size: 14px;
+}
+
+.sve-leader-name {
+  max-width: 100%;
+  font-size: 11px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The main deck's summary: counts by type and the cost curve. */
+.sve-deck-stats {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-left: 14px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--sve-muted);
+}
+
+.sve-curve {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 30px;
+}
+
+.sve-curve-bar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 14px;
+  height: 100%;
+  padding-bottom: 12px;
+}
+
+.sve-curve-fill {
+  display: block;
+  min-height: 1px;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(#7fd1ff, #2d6a8f);
+}
+
+.sve-curve-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 9px;
+  text-align: center;
 }

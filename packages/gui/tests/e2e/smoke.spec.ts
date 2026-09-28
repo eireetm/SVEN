@@ -84,7 +84,9 @@ test("a person plays a whole game against the random bot by clicking", async ({ 
 
 test("the deck editor opens a sample deck with card names, and the engine checks it", async ({ page }) => {
   await openSetup(page);
+  // The setup opens the deck builder; its "Edit as text" opens the text editor.
   await page.getByRole("button", { name: /^Edit decks…$/ }).click();
+  await page.getByRole("button", { name: /^Edit as text$/ }).click();
   await page.locator(".sve-decks-files li button", { hasText: /^SD01 —/ }).click();
   const text = page.locator(".sve-deck-text");
   await expect(text).toHaveValue(/leader: SD01-LD01 {2}; \S/);

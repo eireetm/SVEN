@@ -10,7 +10,8 @@ import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
 import { cardCount, deckFromText, deckToText, emptyDeck, toDeckList } from "./format";
 
-export function DeckEditor({ onBack }: { onBack: () => void }) {
+/** `initialFile`: open this deck file first (the deck builder's "edit as text"). */
+export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initialFile?: string | null }) {
   const t = useT();
   const catalog = useApp((s) => s.catalog)!;
   const { cardLang } = useSettings();
@@ -33,6 +34,8 @@ export function DeckEditor({ onBack }: { onBack: () => void }) {
   const refresh = () => hostApi.listDecks().then(setFiles, (err: unknown) => reportError(String(err)));
   useEffect(() => {
     void refresh();
+    if (initialFile) void open(initialFile);
+    // Once, when the editor opens.
   }, []);
 
   const open = (name: string) =>

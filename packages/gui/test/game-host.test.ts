@@ -116,6 +116,37 @@ describe("GameHost (engine worker logic)", () => {
     expect(h.errors()).toEqual([]);
   });
 
+  it("with showEveryMainPhase, asks a person for a main phase they can only end, and bots answer theirs at once", () => {
+    const messages: FromWorker[] = [];
+    const queue: (() => void)[] = [];
+    const delays: number[] = [];
+    const host = new GameHost(engine, (m) => messages.push(m), {
+      schedule: (fn, ms) => {
+        delays.push(ms);
+        queue.push(fn);
+        return () => {};
+      },
+    });
+    const h = harness(["human", "greedy"]);
+    host.handle({ kind: "settings", settings: { botDelayMs: 500 } });
+    host.handle({ kind: "start", options: { ...h.options, controllers: ["human", "greedy"], showEveryMainPhase: true } });
+    expect(host.session!.state.config.autoResolve).not.toContain("mainPhase");
+    const rng = seedRng("only-end");
+    let onlyEnd = 0;
+    for (let step = 0; step < 3000 && !host.session!.isOver; step++) {
+      const decision = host.session!.decision!;
+      if (decision.player === 0) {
+        if (decision.type === "mainPhase" && decision.actions.length === 1) onlyEnd += 1;
+        host.handle({ kind: "answer", seat: 0, answer: randomAnswer(rng, decision) });
+      } else queue.shift()!();
+    }
+    expect(messages.filter((m) => m.kind === "error")).toEqual([]);
+    expect(onlyEnd).toBeGreaterThan(0);
+    // The greedy bot's own main phases with only "end" were answered without its pause.
+    expect(delays).toContain(0);
+    expect(delays).toContain(500);
+  });
+
   it("checks decks with the engine (CR 6.1) and reports a deck it refuses as an error", () => {
     const h = harness(["human", "human"]);
     h.host.handle({ kind: "validateDeck", requestId: 7, deck: { main: ["SD01-001"], evolve: [] }, deckRestrictions: true });

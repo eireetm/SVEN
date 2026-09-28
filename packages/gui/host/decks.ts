@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import type { HostConfig } from "./config.ts";
 
@@ -46,6 +46,11 @@ function deckName(full: string): string | null {
 
 export function readDeckText(full: string): string {
   return readFileSync(full, "utf8");
+}
+
+/** Delete a deck file (the deck builder's "delete", after the person confirmed it). */
+export function deleteDeckFile(full: string): void {
+  rmSync(full);
 }
 
 export function writeDeckText(full: string, text: string): void {

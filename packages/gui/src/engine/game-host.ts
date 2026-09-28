@@ -4,7 +4,9 @@
 // docs/architecture.md).
 import { GreedyBot } from "@sve/bot";
 import {
+  ALL_AUTO_RESOLVABLE,
   defaultAnswer,
+  forcedAnswer,
   opponentOf,
   randomAnswer,
   redactEvent,
@@ -154,7 +156,8 @@ export class GameHost {
     this.stopTimer();
     let game: GameSession;
     try {
-      game = this.engine.newGame({ seed: options.seed, players: options.decks, config: { deckRestrictions: options.deckRestrictions } });
+      const autoResolve = options.showEveryMainPhase ? ALL_AUTO_RESOLVABLE.filter((type) => type !== "mainPhase") : ALL_AUTO_RESOLVABLE;
+      game = this.engine.newGame({ seed: options.seed, players: options.decks, config: { deckRestrictions: options.deckRestrictions, autoResolve } });
     } catch (err) {
       return this.error(err);
     }
@@ -222,7 +225,8 @@ export class GameHost {
     const decision = game.decision;
     const thinking = decision !== null && this.bots[decision.player] !== null && !this.settings.paused;
     this.publish(thinking);
-    if (thinking) this.cancelTimer = this.scheduler.schedule(() => this.stepBot(), this.settings.botDelayMs);
+    // A bot answers a decision with a single answer (a main phase it can only end) without the pause.
+    if (thinking) this.cancelTimer = this.scheduler.schedule(() => this.stepBot(), forcedAnswer(decision) ? 0 : this.settings.botDelayMs);
   }
 
   /** One bot answer (also the debug "step" while bots are paused). A failing bot gives the core's safe default answer. */

@@ -29,6 +29,12 @@ export interface GameOptions {
   controllers: [SeatController, SeatController];
   /** GameConfig.deckRestrictions (CLAUDE.md: the "deck restrictions" switch). */
   deckRestrictions: boolean;
+  /**
+   * Ask for every main phase, also when ending it is all that is left, so a person has time to look before the turn
+   * moves on (the core's autoResolve without "mainPhase": pacing only, the rules are the same). Bots answer those at
+   * once. Replays saved without it replay as the core decides by default.
+   */
+  showEveryMainPhase?: boolean;
 }
 
 /** One input of a game, with the seat that gave it (null: not given by a seat). */

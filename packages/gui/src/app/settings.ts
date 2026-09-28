@@ -19,6 +19,8 @@ export interface Settings {
   setupDecks: [string, string];
   setupControllers: [SeatController, SeatController];
   setupRestrictions: boolean;
+  /** The deck file the deck builder edited last. */
+  builderDeck: string | null;
 }
 
 const KEY = "sve-gui-settings";
@@ -31,6 +33,7 @@ const DEFAULTS: Settings = {
   setupDecks: ["samples/sd01.json", "samples/sd02.json"],
   setupControllers: ["human", "greedy"],
   setupRestrictions: true,
+  builderDeck: null,
 };
 
 function load(): Settings {

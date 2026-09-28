@@ -3,7 +3,7 @@ import { extname } from "node:path";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
 import { hostConfig, type HostConfig } from "./config.ts";
-import { deckPath, listDecks, readDeckText, writeDeckText } from "./decks.ts";
+import { deckPath, deleteDeckFile, listDecks, readDeckText, writeDeckText } from "./decks.ts";
 import { CONTENT_TYPES, findCardArt, findMisc, listMisc, listResources } from "./resources.ts";
 
 /** Information about the local files, for the GUI's settings and debug panel (GET /api/host). */
@@ -70,6 +70,7 @@ function readBody(req: IncomingMessage): Promise<string> {
  *  GET  /api/decks                         { decks }: deck files
  *  GET  /api/decks/<file>                  a deck file
  *  PUT  /api/decks/<file>                  save a deck file (JSON body)
+ *  DELETE /api/decks/<file>                delete a deck file
  */
 export function hostPlugin(cfg: HostConfig = hostConfig()): Plugin {
   const handle = async (req: IncomingMessage, res: ServerResponse, next: Next): Promise<void> => {
@@ -110,6 +111,11 @@ export function hostPlugin(cfg: HostConfig = hostConfig()): Plugin {
           res.setHeader("Cache-Control", "no-store");
           res.end(readDeckText(full));
           return;
+        }
+        if (req.method === "DELETE") {
+          if (!existsSync(full)) return sendJson(res, 404, { error: "no such deck" });
+          deleteDeckFile(full);
+          return sendJson(res, 200, { ok: true });
         }
         if (req.method === "PUT") {
           const text = await readBody(req);

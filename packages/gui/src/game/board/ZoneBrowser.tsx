@@ -46,9 +46,17 @@ export function ZoneBrowser({ update }: { update: GameUpdate }) {
         </header>
         <div className="sve-modal-cards">
           {cards.length === 0 ? <span className="sve-hint">{t("game.empty")}</span> : null}
-          {cards.map((card) => (
-            <CardTile key={card.id} card={card} side={side} />
-          ))}
+          {cards.map((card) =>
+            // In the evolve deck, the face-up cards (CR 4.6.3) are marked; face-down ones aren't.
+            open.zone === "evolveDeck" && !card.hidden && card.faceUp ? (
+              <div key={card.id} className="sve-face-up-card">
+                <CardTile card={card} side={side} />
+                <span className="sve-face-up-tag">{t("game.faceUp")}</span>
+              </div>
+            ) : (
+              <CardTile key={card.id} card={card} side={side} />
+            ),
+          )}
         </div>
       </div>
     </div>
