@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, statSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { basename, extname, join, relative, sep } from "node:path";
 import type { HostConfig } from "./config.ts";
 
 export const IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif"] as const;
@@ -43,6 +43,26 @@ export function findCardArt(cfg: HostConfig, printing: string, def: string | nul
     if (existsSync(file)) return file;
   }
   return null;
+}
+
+/** A Misc image (`field`, `back`, `unknown`, see HostConfig.miscDir) by its name without extension, or null. */
+export function findMisc(cfg: HostConfig, name: string): string | null {
+  if (!isSafeId(name)) return null;
+  for (const ext of IMAGE_EXTENSIONS) {
+    const file = join(cfg.miscDir, name + ext);
+    if (existsSync(file)) return file;
+  }
+  return null;
+}
+
+/** The names of the Misc images there are ("back", "field", ...). */
+export function listMisc(cfg: HostConfig): string[] {
+  if (!existsSync(cfg.miscDir)) return [];
+  const names = readdirSync(cfg.miscDir)
+    .filter((f) => (IMAGE_EXTENSIONS as readonly string[]).includes(extname(f).toLowerCase()))
+    .map((f) => basename(f, extname(f)))
+    .filter(isSafeId);
+  return [...new Set(names)].sort();
 }
 
 /** Every file under public/ (the customizable resources) as a URL path, e.g. "images/cards/BP01-001.png". */

@@ -8,6 +8,8 @@ import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
 
 const CONTROLLERS: readonly SeatController[] = ["human", "greedy", "random"];
+/** The opponent: an AI, or a second person at the same screen (hot seat). */
+const OPPONENTS: readonly SeatController[] = ["greedy", "random", "human"];
 
 interface DeckStatus {
   deck: DeckFile;
@@ -20,8 +22,17 @@ function newSeed(): string {
   return bytes[0]!.toString(36);
 }
 
-/** Choose the decks, who plays each seat, the seed and deck restrictions; or load a replay. */
-export function SetupScreen({ onStarted }: { onStarted: () => void }) {
+interface Props {
+  onStarted: () => void;
+  onBack: () => void;
+  onEditDecks: () => void;
+}
+
+/**
+ * Play against the AI: your deck, the opponent's deck and AI. Under "Advanced" (testing): who plays your seat (bots can
+ * play each other), the seed, deck restrictions, the bots' pace, and loading a replay.
+ */
+export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
   const t = useT();
   const settings = useSettings();
   const hasGame = useApp((s) => s.update !== null && s.update.result === null);
@@ -89,80 +100,83 @@ export function SetupScreen({ onStarted }: { onStarted: () => void }) {
     }
   };
 
+  const deckField = (seat: 0 | 1) => {
+    const s = status[seat];
+    return (
+      <>
+        <label className="sve-field">
+          <span>{t("setup.deck")}</span>
+          <select value={files[seat]} onChange={(e) => setSeat(seat, { deck: e.target.value })} data-testid={`setup-deck-${seat}`}>
+            {!decks?.some((d) => d.file === files[seat]) ? <option value={files[seat]}>{files[seat]}</option> : null}
+            {(decks ?? []).map((d) => (
+              <option key={d.file} value={d.file}>
+                {d.name} ({d.file})
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="sve-deck-status">
+          {s === null ? (
+            <span className="sve-note">{t("setup.loadingDeck")}</span>
+          ) : (
+            <>
+              <span>{t("setup.deckSummary", { main: cardCount(s.deck.main), evolve: cardCount(s.deck.evolve) })}</span>
+              {s.errors && s.errors.length === 0 ? <span className="sve-ok">{t("setup.deckOk")}</span> : null}
+              {s.errors && s.errors.length > 0 ? (
+                <div className="sve-problems">
+                  {t("setup.deckProblems")}
+                  <ul>
+                    {s.errors.map((e) => (
+                      <li key={e}>{e}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </>
+          )}
+        </div>
+      </>
+    );
+  };
+
+  const controllerField = (seat: 0 | 1, label: string, options: readonly SeatController[]) => (
+    <label className="sve-field">
+      <span>{label}</span>
+      <select value={controllers[seat]} onChange={(e) => setSeat(seat, { controller: e.target.value as SeatController })} data-testid={`setup-controller-${seat}`}>
+        {options.map((c) => (
+          <option key={c} value={c}>
+            {t(`controller.${c}` as const)}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+
   return (
     <div className="sve-setup">
-      <h2>{t("setup.title")}</h2>
+      <header className="sve-screen-header">
+        <button type="button" onClick={onBack}>
+          {t("common.back")}
+        </button>
+        <h2>{t("setup.title")}</h2>
+      </header>
       {decks !== null && decks.length === 0 ? <p className="sve-note">{t("setup.noDecks")}</p> : null}
       <div className="sve-seats">
-        {([0, 1] as const).map((seat) => {
-          const s = status[seat];
-          return (
-            <section key={seat} className="sve-seat" data-seat={seat}>
-              <h3>{t("setup.player", { n: seat + 1 })}</h3>
-              <label className="sve-field">
-                <span>{t("setup.deck")}</span>
-                <select value={files[seat]} onChange={(e) => setSeat(seat, { deck: e.target.value })}>
-                  {!decks?.some((d) => d.file === files[seat]) ? <option value={files[seat]}>{files[seat]}</option> : null}
-                  {(decks ?? []).map((d) => (
-                    <option key={d.file} value={d.file}>
-                      {d.name} ({d.file})
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="sve-field">
-                <span>{t("setup.controller")}</span>
-                <select value={controllers[seat]} onChange={(e) => setSeat(seat, { controller: e.target.value as SeatController })}>
-                  {CONTROLLERS.map((c) => (
-                    <option key={c} value={c}>
-                      {t(`controller.${c}` as const)}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <div className="sve-deck-status">
-                {s === null ? (
-                  <span className="sve-note">{t("setup.loadingDeck")}</span>
-                ) : (
-                  <>
-                    <span>{t("setup.deckSummary", { main: cardCount(s.deck.main), evolve: cardCount(s.deck.evolve) })}</span>
-                    {s.errors && s.errors.length === 0 ? <span className="sve-ok">{t("setup.deckOk")}</span> : null}
-                    {s.errors && s.errors.length > 0 ? (
-                      <div className="sve-problems">
-                        {t("setup.deckProblems")}
-                        <ul>
-                          {s.errors.map((e) => (
-                            <li key={e}>{e}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    ) : null}
-                  </>
-                )}
-              </div>
-            </section>
-          );
-        })}
-      </div>
-      <div className="sve-setup-options">
-        <label className="sve-field">
-          <span>{t("setup.seed")}</span>
-          <input value={seed} onChange={(e) => setSeed(e.target.value)} />
-          <button type="button" onClick={() => setSeed(newSeed())}>
-            {t("setup.randomSeed")}
+        <section className="sve-seat" data-seat={0}>
+          <h3>{t("setup.you")}</h3>
+          {deckField(0)}
+          <button type="button" className="sve-link-button" onClick={onEditDecks}>
+            {t("setup.editDecks")}
           </button>
-        </label>
-        <label className="sve-check">
-          <input type="checkbox" checked={restrictions} onChange={(e) => updateSettings({ setupRestrictions: e.target.checked })} />
-          {t("setup.restrictions")}
-        </label>
-        <label className="sve-range">
-          {t("setup.botDelay")}: {settings.botDelayMs} ms
-          <input type="range" min={0} max={3000} step={100} value={settings.botDelayMs} onChange={(e) => updateSettings({ botDelayMs: Number(e.target.value) })} />
-        </label>
+        </section>
+        <section className="sve-seat" data-seat={1}>
+          <h3>{t("setup.opponent")}</h3>
+          {deckField(1)}
+          {controllerField(1, t("setup.aiType"), OPPONENTS)}
+        </section>
       </div>
       <div className="sve-setup-actions">
-        <button type="button" className="sve-primary" disabled={!ready} onClick={start} data-testid="start-game">
+        <button type="button" className="sve-primary sve-big-button" disabled={!ready} onClick={start} data-testid="start-game">
           {t("setup.start")}
         </button>
         {hasGame ? (
@@ -170,11 +184,32 @@ export function SetupScreen({ onStarted }: { onStarted: () => void }) {
             {t("setup.continue")}
           </button>
         ) : null}
-        <label className="sve-file-button">
-          {t("setup.loadReplay")}
-          <input type="file" accept=".json,application/json" hidden onChange={(e) => void loadReplay(e.target.files?.[0])} />
-        </label>
       </div>
+      <details className="sve-advanced">
+        <summary>{t("setup.advanced")}</summary>
+        <div className="sve-advanced-body">
+          {controllerField(0, t("setup.youPlayedBy"), CONTROLLERS)}
+          <label className="sve-field">
+            <span>{t("setup.seed")}</span>
+            <input value={seed} onChange={(e) => setSeed(e.target.value)} data-testid="setup-seed" />
+            <button type="button" onClick={() => setSeed(newSeed())}>
+              {t("setup.randomSeed")}
+            </button>
+          </label>
+          <label className="sve-check">
+            <input type="checkbox" checked={restrictions} onChange={(e) => updateSettings({ setupRestrictions: e.target.checked })} />
+            {t("setup.restrictions")}
+          </label>
+          <label className="sve-range">
+            {t("setup.botDelay")}: {settings.botDelayMs} ms
+            <input type="range" min={0} max={3000} step={100} value={settings.botDelayMs} onChange={(e) => updateSettings({ botDelayMs: Number(e.target.value) })} />
+          </label>
+          <label className="sve-file-button">
+            {t("setup.loadReplay")}
+            <input type="file" accept=".json,application/json" hidden onChange={(e) => void loadReplay(e.target.files?.[0])} />
+          </label>
+        </div>
+      </details>
     </div>
   );
 }

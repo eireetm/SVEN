@@ -17,15 +17,16 @@ export interface HostConfig {
    * overrides the default, the `assets` folder next to the repository (D:\SVE\assets).
    */
   assetsDir: string;
+  /**
+   * Local images of the game's look that the project doesn't ship either: `<assetsDir>/Misc/` — `field` (one player's
+   * playmat; the opponent's is the same turned 180 degrees), `back` (the card back) and `unknown` (for a missing image).
+   */
+  miscDir: string;
 }
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 export function hostConfig(root: string = packageRoot): HostConfig {
-  return {
-    root,
-    publicDir: join(root, "public"),
-    decksDir: join(root, "decks"),
-    assetsDir: resolve(process.env.SVE_ASSETS_DIR ?? join(root, "..", "..", "..", "assets")),
-  };
+  const assetsDir = resolve(process.env.SVE_ASSETS_DIR ?? join(root, "..", "..", "..", "assets"));
+  return { root, publicDir: join(root, "public"), decksDir: join(root, "decks"), assetsDir, miscDir: join(assetsDir, "Misc") };
 }

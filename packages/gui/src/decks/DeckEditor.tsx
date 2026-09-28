@@ -10,7 +10,7 @@ import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
 import { cardCount, deckFromText, deckToText, emptyDeck, toDeckList } from "./format";
 
-export function DeckEditor() {
+export function DeckEditor({ onBack }: { onBack: () => void }) {
   const t = useT();
   const catalog = useApp((s) => s.catalog)!;
   const { cardLang } = useSettings();
@@ -68,6 +68,9 @@ export function DeckEditor() {
   return (
     <div className="sve-decks">
       <section className="sve-decks-files">
+        <button type="button" onClick={onBack}>
+          {t("common.back")}
+        </button>
         <h3>{t("decks.files")}</h3>
         <button
           type="button"

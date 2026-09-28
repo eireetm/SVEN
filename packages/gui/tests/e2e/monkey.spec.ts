@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
+import { startGame } from "./helpers";
 
 // A person who clicks at random: every decision is answered through the decision bar with random choices, against the
 // random bot. Nothing may go wrong on the page (no page error, no error message, no decision the bar cannot answer), and
@@ -74,10 +75,7 @@ for (let game = 0; game < GAMES; game++) {
     });
     const settings = { botDelayMs: 0, setupControllers: ["human", "random"], setupDecks: [`samples/${a}.json`, `samples/${b}.json`] };
     await page.addInitScript((value) => localStorage.setItem("sve-gui-settings", value), JSON.stringify(settings));
-    await page.goto("/");
-    await expect(page.getByTestId("start-game")).toBeEnabled({ timeout: 120_000 });
-    await page.locator(".sve-setup-options input").first().fill(`monkey-${game}`);
-    await page.getByTestId("start-game").click();
+    await startGame(page, `monkey-${game}`);
     const bar = page.locator(".sve-decision");
     const pick = randomSource(game + 1);
     let answers = 0;

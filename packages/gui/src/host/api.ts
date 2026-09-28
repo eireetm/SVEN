@@ -7,6 +7,8 @@ export interface HostInfo {
   assetsFound: boolean;
   publicDir: string;
   decksDir: string;
+  /** The Misc images of the assets folder there are: "field", "back", "unknown". */
+  misc: string[];
 }
 
 export interface DeckFileEntry {
@@ -40,6 +42,9 @@ export const hostApi = {
     });
     if (!res.ok) throw new Error(`saving ${file}: ${res.status} ${await res.text()}`);
   },
+
+  /** A Misc image of the assets folder ("field", "back", "unknown"); 404 when there is none. */
+  miscUrl: (name: string): string => `/api/misc/${encodeURIComponent(name)}`,
 
   /** The image of a printing: the player's own (public/images/cards) or the scraped one; 404 when there is none. */
   cardArtUrl: (printing: string, def: string, back = false): string =>

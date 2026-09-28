@@ -90,5 +90,6 @@ describe("card pool (all supported sets)", () => {
       }
     }
     expect(checked).toBeGreaterThanOrEqual(8);
-  });
+    // Reads every script file: about a second alone, much longer while the whole suite runs in parallel.
+  }, 60_000);
 });

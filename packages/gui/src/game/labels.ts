@@ -1,8 +1,8 @@
 // Names for players, cards and abilities in buttons and the log.
-import type { CardId, PlayerId } from "@sve/core";
+import type { CardId, MainAction, PlayerId, QuickAction } from "@sve/core";
 import { cardName, type Catalog } from "../app/catalog";
 import type { CardLang } from "../app/settings";
-import type { AbilitySummary, GameUpdate } from "../engine/protocol";
+import type { AbilitySummary, DecisionInfo, GameUpdate } from "../engine/protocol";
 import { findCard } from "../engine/view-utils";
 import type { MessageKey, Translate } from "../i18n";
 import { displayOf } from "./card/display";
@@ -23,6 +23,41 @@ export function cardLabel(id: CardId, update: GameUpdate, catalog: Catalog, lang
   }
   const info = update.decision?.cards[id];
   return info ? cardName(catalog.def(info.def), lang) : t("log.aCard");
+}
+
+/** How one action of a main phase or quick decision reads in a card's menu ("Play", "Evolve → X · with EP", "Attack → Y"). */
+export function actionLabel(
+  action: MainAction | QuickAction,
+  info: DecisionInfo,
+  update: GameUpdate,
+  catalog: Catalog,
+  lang: CardLang,
+  t: Translate,
+): string {
+  switch (action.type) {
+    case "play":
+      return t("decision.play");
+    case "evolve": {
+      const def = catalog.def(info.cards[action.evolveCard]?.def ?? "");
+      const shown = action.backFace && def?.backFace ? catalog.def(def.backFace) : def;
+      return [
+        `${t("decision.evolve")} → ${cardName(shown, lang)}`,
+        action.useEvolutionPoint ? t("decision.withEp") : null,
+        action.superEvolve ? t("decision.superEvolve") : null,
+        action.backFace ? t("decision.backFace") : null,
+      ]
+        .filter((part): part is string => part !== null)
+        .join(" · ");
+    }
+    case "activate":
+      return abilityLabel(info.abilities[`${action.card}:${action.ability}`], t) + ("useEvolutionPoint" in action && action.useEvolutionPoint ? ` · ${t("decision.withEp")}` : "");
+    case "attack":
+      return `${t("decision.attack")} → ${cardLabel(action.target, update, catalog, lang, t)}`;
+    case "endMainPhase":
+      return t("decision.endMain");
+    case "pass":
+      return t("decision.pass");
+  }
 }
 
 const TIMINGS = ["fanfare", "lastWords", "onEvolve", "onSuperEvolve", "strike", "onRace", "onDrive", "other"] as const;

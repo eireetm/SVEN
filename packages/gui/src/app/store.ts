@@ -34,6 +34,14 @@ export const engine = new EngineClient();
 
 let nextError = 1;
 
+const beforeUpdate = new Set<(update: GameUpdate) => void>();
+
+/** Run `fn` with each update just before it is shown (the table's animations note where the cards were). */
+export function onBeforeUpdate(fn: (update: GameUpdate) => void): () => void {
+  beforeUpdate.add(fn);
+  return () => beforeUpdate.delete(fn);
+}
+
 engine.subscribe((message) => {
   switch (message.kind) {
     case "ready":
@@ -41,6 +49,7 @@ engine.subscribe((message) => {
       break;
     case "update": {
       const update = message.update;
+      for (const fn of beforeUpdate) fn(update);
       if (!update.logReset) playEventSounds(update.log, update.perspective);
       setState({ update, log: update.logReset ? update.log : [...state.log, ...update.log] });
       break;

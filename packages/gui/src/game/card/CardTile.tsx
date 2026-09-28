@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, PointerEvent, ReactNode } from "react";
 import type { CardView, HiddenCardView, PlayerSideView } from "@sve/core";
 import { cardName } from "../../app/catalog";
 import { useSettings } from "../../app/settings";
@@ -9,7 +9,11 @@ import { pinCard, setHover, useFocusSelect, type FocusCard } from "../focus";
 import { CardArt } from "./CardArt";
 import { displayOf } from "./display";
 
-export type CardMark = "action" | "candidate" | "selected" | null;
+/**
+ * How the pending decision uses a card: it can act ("action"), may be chosen ("candidate") or is chosen ("selected"), is a
+ * target of the attack being dragged ("target", "target-over"), or its menu is open ("active").
+ */
+export type CardMark = "action" | "candidate" | "selected" | "target" | "target-over" | "active" | null;
 
 interface Props {
   /** A card of the game (a hidden one is drawn face down). */
@@ -21,13 +25,17 @@ interface Props {
   size?: "small" | "normal" | "large";
   mark?: CardMark;
   onClick?: () => void;
+  /** For dragging (the table): takes over the click when given. */
+  onPointerDown?: (e: PointerEvent<HTMLDivElement>) => void;
+  className?: string;
+  style?: CSSProperties;
   /** Linked cards (race / drive / equipment zones) or other notes under the card. */
   children?: ReactNode;
 }
 
 const MAX_KEYWORDS = 3;
 
-export function CardTile({ card, info, side, size = "normal", mark = null, onClick, children }: Props) {
+export function CardTile({ card, info, side, size = "normal", mark = null, onClick, onPointerDown, className, style, children }: Props) {
   const catalog = useApp((s) => s.catalog);
   const { cardLang } = useSettings();
   const t = useT();
@@ -35,10 +43,11 @@ export function CardTile({ card, info, side, size = "normal", mark = null, onCli
   const highlighted = useFocusSelect((f) => (id !== null ? f.highlight.includes(id) : false));
   if (!catalog || (!card && !info)) return null;
   const classes = ["sve-card", `sve-card-${size}`];
+  if (className) classes.push(className);
   if (card?.hidden) {
     classes.push("sve-card-hidden");
     return (
-      <div className={classes.join(" ")} data-hidden="true">
+      <div className={classes.join(" ")} data-hidden="true" data-card={card.id} style={style}>
         <div className="sve-card-frame">
           <div className="sve-card-face sve-card-back" />
         </div>
@@ -71,9 +80,11 @@ export function CardTile({ card, info, side, size = "normal", mark = null, onCli
       data-card={view?.id}
       data-def={shown.def}
       title={name}
+      style={style}
       onMouseEnter={() => setHover(focus)}
       onMouseLeave={() => setHover(null)}
-      onClick={onClick ?? (() => pinCard(focus))}
+      onPointerDown={onPointerDown}
+      onClick={onPointerDown ? undefined : (onClick ?? (() => pinCard(focus)))}
     >
       <div className="sve-card-frame">
         <div className="sve-card-face">

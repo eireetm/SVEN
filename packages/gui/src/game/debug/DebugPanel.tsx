@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { updateSettings } from "../../app/settings";
+import { updateSettings, useSettings } from "../../app/settings";
 import { engine, reportError } from "../../app/store";
 import type { GameUpdate } from "../../engine/protocol";
 import { hostApi, type HostInfo } from "../../host/api";
@@ -20,6 +20,7 @@ export function DebugPanel({ update }: { update: GameUpdate }) {
   }, [update.inputCount]);
   const lastHuman = update.humanInputs[update.humanInputs.length - 1];
   const settings = update.settings;
+  const { animations } = useSettings();
   const saveReplay = async () => {
     const replay = await engine.exportReplay();
     if (replay) downloadJson(`sve-replay-${replay.options.seed}-${replay.inputs.length}.json`, replay);
@@ -69,6 +70,10 @@ export function DebugPanel({ update }: { update: GameUpdate }) {
       <label className="sve-check">
         <input type="checkbox" checked={settings.paused} onChange={(e) => engine.send({ kind: "settings", settings: { paused: e.target.checked } })} />
         {t("debug.pauseBots")}
+      </label>
+      <label className="sve-check">
+        <input type="checkbox" checked={animations} onChange={(e) => updateSettings({ animations: e.target.checked })} />
+        {t("debug.animations")}
       </label>
       <div className="sve-debug-row">
         <button type="button" disabled={!settings.paused} onClick={() => engine.send({ kind: "step" })}>

@@ -1,6 +1,10 @@
-// The player's customizable resources in public/ (public/README.md). The host lists them once at start; each one is used
-// only if it exists, otherwise the built-in look stays. This is the "shell" layer: art, textures, sounds, fonts and CSS
-// are the player's, the game is the engine's.
+// The look of the game comes in three layers, the first one found wins (public/README.md):
+//  1. the player's own files in public/ (images, textures, sounds, fonts, theme.css);
+//  2. the local assets folder of this machine: card images, and Misc/ — field (one player's playmat; the opponent's is the
+//     same turned 180 degrees), back (the card back) and unknown (for any missing image). Never shipped;
+//  3. the built-in style (plain colors and text).
+// The host lists what there is once at start; nothing is requested that isn't there.
+import { useSyncExternalStore } from "react";
 import type { CardInfo } from "../engine/protocol";
 import { hostApi } from "../host/api";
 
@@ -8,15 +12,29 @@ const IMAGE = ["png", "jpg", "jpeg", "webp", "gif", "avif"];
 const AUDIO = ["mp3", "ogg", "wav", "m4a"];
 
 let files = new Set<string>();
+let misc = new Set<string>();
+let version = 0;
+const listeners = new Set<() => void>();
 
-/** Load the list of resources and apply the theme ones (theme.css, card back, board background). */
+/** Load the lists of resources (public/ and the Misc images) and apply the theme ones. */
 export async function loadResources(): Promise<void> {
-  try {
-    files = new Set(await hostApi.resources());
-  } catch {
-    files = new Set();
-  }
+  const [resources, info] = await Promise.allSettled([hostApi.resources(), hostApi.info()]);
+  files = new Set(resources.status === "fulfilled" ? resources.value : []);
+  misc = new Set(info.status === "fulfilled" ? info.value.misc : []);
   applyTheme();
+  version++;
+  for (const listener of listeners) listener();
+}
+
+/** Re-render when the resource lists arrive (images known only then). */
+export function useResourcesVersion(): number {
+  return useSyncExternalStore(
+    (listener) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    () => version,
+  );
 }
 
 /** "/images/backs/default.png" for the base path "images/backs/default", or null. */
@@ -26,6 +44,28 @@ function find(base: string, extensions: readonly string[]): string | null {
     if (files.has(path)) return `/${path.split("/").map(encodeURIComponent).join("/")}`;
   }
   return null;
+}
+
+const miscUrl = (name: string): string | null => (misc.has(name) ? hostApi.miscUrl(name) : null);
+
+/** One player's playmat: public/textures/board/field.*, else Misc/field. The opponent's is the same turned around. */
+export function fieldImageUrl(): string | null {
+  return find("textures/board/field", IMAGE) ?? miscUrl("field");
+}
+
+/** The card back: public/images/backs/default.*, else Misc/back. */
+export function cardBackUrl(): string | null {
+  return find("images/backs/default", IMAGE) ?? miscUrl("back");
+}
+
+/** The picture for a card whose image is missing: public/images/cards/unknown.*, else Misc/unknown. */
+export function unknownImageUrl(): string | null {
+  return find("images/cards/unknown", IMAGE) ?? miscUrl("unknown");
+}
+
+/** The main menu's background: public/textures/menu/background.*, else the playmat. */
+export function menuImageUrl(): string | null {
+  return find("textures/menu/background", IMAGE) ?? fieldImageUrl();
 }
 
 /** An icon for a card-text token ("fanfare", "cost02", ...), from public/textures/icons/. */
@@ -43,12 +83,14 @@ export function soundUrl(event: string, card?: CardInfo): string | null {
   return find(`audio/sfx/${event}`, AUDIO);
 }
 
+const cssUrl = (url: string | null): string => (url ? `url("${url}")` : "none");
+
 function applyTheme(): void {
   const root = document.documentElement;
-  const back = find("images/backs/default", IMAGE);
-  if (back) root.style.setProperty("--sve-card-back-image", `url("${back}")`);
-  const board = find("textures/board/background", IMAGE);
-  if (board) root.style.setProperty("--sve-board-image", `url("${board}")`);
+  root.style.setProperty("--sve-card-back-image", cssUrl(cardBackUrl()));
+  root.style.setProperty("--sve-field-image", cssUrl(fieldImageUrl()));
+  root.style.setProperty("--sve-unknown-image", cssUrl(unknownImageUrl()));
+  root.style.setProperty("--sve-menu-image", cssUrl(menuImageUrl()));
   // The player's CSS comes last, so it overrides the built-in style.
   if (files.has("theme.css") && !document.getElementById("sve-theme")) {
     const link = document.createElement("link");

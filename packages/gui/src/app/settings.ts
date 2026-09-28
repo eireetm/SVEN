@@ -13,6 +13,8 @@ export interface Settings {
   botDelayMs: number;
   /** 0–1; sounds play only when the player provided them (public/audio). */
   volume: number;
+  /** The table's animations (cards flying, numbers, ...). */
+  animations: boolean;
   /** The last game setup (deck files, who plays each seat, deck restrictions). */
   setupDecks: [string, string];
   setupControllers: [SeatController, SeatController];
@@ -25,6 +27,7 @@ const DEFAULTS: Settings = {
   cardLang: "en",
   botDelayMs: 600,
   volume: 0.6,
+  animations: true,
   setupDecks: ["samples/sd01.json", "samples/sd02.json"],
   setupControllers: ["human", "greedy"],
   setupRestrictions: true,

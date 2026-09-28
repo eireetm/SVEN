@@ -4,18 +4,21 @@ import { GameScreen } from "../game/GameScreen";
 import { useT } from "../i18n";
 import { loadResources } from "../resources/resources";
 import { SetupScreen } from "../setup/SetupScreen";
-import { updateSettings, useSettings, type CardLang, type UiLang } from "./settings";
+import { MainMenu } from "./MainMenu";
+import { SettingsScreen } from "./SettingsScreen";
+import { useSettings } from "./settings";
 import { dismissError, useApp } from "./store";
 
-type Screen = "setup" | "game" | "decks";
+type Screen = "menu" | "settings" | "setup" | "decks" | "game";
 
+/**
+ * The screens: the main menu first (play against the AI, settings); the game setup, from which the deck editor opens; the
+ * game. The engine starts in the background while the menu shows.
+ */
 export function App() {
-  const t = useT();
   const settings = useSettings();
-  const ready = useApp((s) => s.ready);
-  const startError = useApp((s) => s.startError);
   const hasGame = useApp((s) => s.update !== null);
-  const [screen, setScreen] = useState<Screen>("setup");
+  const [screen, setScreen] = useState<Screen>("menu");
 
   useEffect(() => {
     void loadResources();
@@ -25,61 +28,26 @@ export function App() {
   }, [settings.uiLang]);
 
   let body;
-  if (startError && !ready) {
-    body = (
-      <div className="sve-fatal">
-        <h2>{t("app.engineFailed")}</h2>
-        <pre>{startError}</pre>
-      </div>
-    );
-  } else if (!ready) {
-    body = (
-      <div className="sve-loading">
-        <p>{t("app.loading")}</p>
-        <small>{t("app.loadingNote")}</small>
-      </div>
-    );
-  } else if (screen === "setup") {
-    body = <SetupScreen onStarted={() => setScreen("game")} />;
-  } else if (screen === "decks") {
-    body = <DeckEditor />;
-  } else {
-    body = <GameScreen onNewGame={() => setScreen("setup")} />;
+  switch (screen) {
+    case "menu":
+      body = <MainMenu onPlayAi={() => setScreen("setup")} onSettings={() => setScreen("settings")} onContinue={hasGame ? () => setScreen("game") : undefined} />;
+      break;
+    case "settings":
+      body = <SettingsScreen onBack={() => setScreen("menu")} />;
+      break;
+    case "setup":
+      body = <SetupScreen onStarted={() => setScreen("game")} onBack={() => setScreen("menu")} onEditDecks={() => setScreen("decks")} />;
+      break;
+    case "decks":
+      body = <DeckEditor onBack={() => setScreen("setup")} />;
+      break;
+    case "game":
+      body = <GameScreen onMenu={() => setScreen("menu")} onNewGame={() => setScreen("setup")} />;
+      break;
   }
 
   return (
     <div className="sve-app">
-      <header className="sve-topbar">
-        <span className="sve-logo">SVE</span>
-        <nav className="sve-nav">
-          <button type="button" className={screen === "setup" ? "sve-tab-active" : undefined} onClick={() => setScreen("setup")}>
-            {t("nav.setup")}
-          </button>
-          <button type="button" className={screen === "game" ? "sve-tab-active" : undefined} disabled={!hasGame} onClick={() => setScreen("game")}>
-            {t("nav.game")}
-          </button>
-          <button type="button" className={screen === "decks" ? "sve-tab-active" : undefined} onClick={() => setScreen("decks")}>
-            {t("nav.decks")}
-          </button>
-        </nav>
-        <div className="sve-topbar-settings">
-          <label>
-            {t("nav.uiLang")}{" "}
-            <select value={settings.uiLang} onChange={(e) => updateSettings({ uiLang: e.target.value as UiLang })}>
-              <option value="en">English</option>
-              <option value="zh">中文</option>
-            </select>
-          </label>
-          <label>
-            {t("nav.cardLang")}{" "}
-            <select value={settings.cardLang} onChange={(e) => updateSettings({ cardLang: e.target.value as CardLang })}>
-              <option value="en">English</option>
-              <option value="cn">中文</option>
-              <option value="ja">日本語</option>
-            </select>
-          </label>
-        </div>
-      </header>
       <main className="sve-screen">{body}</main>
       <ErrorToasts />
     </div>

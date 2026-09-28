@@ -17,13 +17,16 @@
   --sve-selected: #4cc38a;
   --sve-evolved: #b48cff;
   --sve-superevolved: #ffd166;
-  /* A card on the field; the hand, the EX area and small cards are fractions of it. It follows the window's height so
-     that both sides fit above the decision bar. */
-  --sve-card-base: clamp(56px, min(calc((100vh - 330px) / 5.6), 6.6vw), 120px);
+  --sve-target: #ff5a5a;
+  /* A card's width outside the table (the table sets it from the playmat's size). */
+  --sve-card-base: 84px;
   --sve-card-width: var(--sve-card-base);
   --sve-card-radius: 6px;
+  /* Pictures from public/ or the assets' Misc folder (src/resources/resources.ts). */
   --sve-card-back-image: none;
-  --sve-board-image: none;
+  --sve-field-image: none;
+  --sve-unknown-image: none;
+  --sve-menu-image: none;
   color-scheme: dark;
   font-family: system-ui, "Segoe UI", "Microsoft YaHei", "Yu Gothic UI", sans-serif;
   font-size: 14px;
@@ -91,32 +94,6 @@ textarea {
   height: 100vh;
 }
 
-.sve-topbar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 6px 12px;
-  background: var(--sve-panel);
-  border-bottom: 1px solid var(--sve-border);
-}
-
-.sve-logo {
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: var(--sve-accent);
-}
-
-.sve-nav,
-.sve-topbar-settings {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.sve-topbar-settings {
-  margin-left: auto;
-}
-
 .sve-tab-active {
   border-color: var(--sve-accent) !important;
   background: #3a3322;
@@ -177,7 +154,7 @@ textarea {
   flex-direction: column;
   gap: 6px;
   max-width: 520px;
-  z-index: 50;
+  z-index: 90;
 }
 
 .sve-toast {
@@ -191,6 +168,134 @@ textarea {
   font-size: 12px;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+/* Main menu and settings: a panel in the middle of the window, over the playmat (or the player's menu background). */
+.sve-menu {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(rgba(6, 10, 18, 0.55), rgba(6, 10, 18, 0.8)),
+    var(--sve-menu-image) center / cover no-repeat,
+    var(--sve-bg);
+}
+
+.sve-menu-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  min-width: 340px;
+  padding: 36px 44px;
+  border-radius: 16px;
+  background: rgba(20, 26, 36, 0.82);
+  border: 1px solid rgba(120, 170, 230, 0.25);
+  box-shadow: 0 20px 60px #000a;
+  backdrop-filter: blur(4px);
+}
+
+.sve-menu-title {
+  margin: 0;
+  font-size: 34px;
+  letter-spacing: 1px;
+  color: #eaf3ff;
+  text-shadow: 0 0 18px rgba(80, 170, 255, 0.55);
+}
+
+.sve-menu-subtitle {
+  margin: 0 0 10px;
+  color: var(--sve-muted);
+  font-size: 13px;
+}
+
+.sve-menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.sve-menu-button {
+  justify-content: center;
+  width: 100%;
+  min-width: 240px;
+  padding: 12px 20px;
+  font-size: 17px;
+  border-radius: 10px;
+  background: rgba(42, 48, 59, 0.9);
+}
+
+.sve-menu-primary {
+  background: linear-gradient(#2d6a8f, #1d4a6c);
+  border-color: #6cc4ff;
+  font-weight: 700;
+}
+
+.sve-menu-status {
+  font-size: 12px;
+  color: var(--sve-muted);
+}
+
+.sve-settings h2 {
+  margin: 0;
+}
+
+.sve-settings-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sve-settings-group h3 {
+  margin: 0;
+  font-size: 15px;
+  color: var(--sve-accent);
+}
+
+.sve-settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sve-settings-row select {
+  min-width: 140px;
+}
+
+.sve-screen-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sve-screen-header h2 {
+  margin: 0;
+}
+
+.sve-link-button {
+  align-self: flex-start;
+}
+
+.sve-big-button {
+  padding: 10px 26px;
+  font-size: 16px;
+}
+
+.sve-advanced summary {
+  cursor: pointer;
+  color: var(--sve-muted);
+}
+
+.sve-advanced-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  padding: 10px 0;
 }
 
 /* Cards */
@@ -353,19 +458,61 @@ textarea {
 }
 
 .sve-card-action .sve-card-face {
-  box-shadow: 0 0 0 2px var(--sve-action);
+  box-shadow: 0 0 0 2px var(--sve-action), 0 0 10px rgba(88, 166, 255, 0.55);
 }
 
 .sve-card-candidate .sve-card-face {
-  box-shadow: 0 0 0 2px var(--sve-candidate);
+  box-shadow: 0 0 0 2px var(--sve-candidate), 0 0 10px rgba(240, 180, 41, 0.5);
 }
 
 .sve-card-selected .sve-card-face {
-  box-shadow: 0 0 0 3px var(--sve-selected), 0 0 10px var(--sve-selected);
+  box-shadow: 0 0 0 3px var(--sve-selected), 0 0 12px var(--sve-selected);
+}
+
+.sve-card-target .sve-card-face {
+  box-shadow: 0 0 0 2px var(--sve-target), 0 0 12px rgba(255, 90, 90, 0.6);
+}
+
+.sve-card-target-over .sve-card-face {
+  box-shadow: 0 0 0 4px var(--sve-target), 0 0 22px var(--sve-target);
+}
+
+.sve-card-active .sve-card-face {
+  box-shadow: 0 0 0 3px #fff, 0 0 16px var(--sve-action);
 }
 
 .sve-card-highlight .sve-card-face {
   box-shadow: 0 0 0 3px var(--sve-accent), 0 0 14px var(--sve-accent);
+}
+
+/* The card being dragged stays in place, faded, while its copy follows the pointer. */
+.sve-card-dragged {
+  opacity: 0.35;
+}
+
+/* An opponent's card back is turned around (the table is seen from your side). */
+.sve-card-opponent .sve-card-back {
+  transform: rotate(180deg);
+}
+
+/* A card whose picture is missing: the "unknown" picture with its name. */
+.sve-card-unknown {
+  position: relative;
+  justify-content: flex-end;
+  padding: 0;
+}
+
+.sve-card-unknown-art {
+  position: absolute;
+  inset: 0;
+}
+
+.sve-card-unknown .sve-card-placeholder-name,
+.sve-card-unknown .sve-card-placeholder-sub {
+  position: relative;
+  width: 100%;
+  padding: 2px 3px;
+  background: #000b;
 }
 
 .sve-card-evolved .sve-card-face {
@@ -391,138 +538,303 @@ textarea {
   --w: calc(var(--sve-card-width) * 0.4);
 }
 
-/* Game screen */
+/* Game screen: the card panel, the table, the decision and the log. */
 .sve-game {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-columns: clamp(220px, 19vw, 340px) minmax(0, 1fr) clamp(280px, 22vw, 380px);
+  height: 100%;
+  background: #050b14;
+}
+
+.sve-game-left,
+.sve-game-right {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--sve-panel);
+}
+
+.sve-game-left {
+  border-right: 1px solid var(--sve-border);
+}
+
+.sve-game-right {
+  border-left: 1px solid var(--sve-border);
+}
+
+.sve-game-left-top {
+  padding: 8px;
+  border-bottom: 1px solid var(--sve-border);
+}
+
+/* The table: the opponent's hand, the two mats, your hand; the side panels beside the mats. */
+.sve-table {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, #0b2540 0%, #041222 70%, #020a14 100%);
+  user-select: none;
+}
+
+.sve-mats {
+  position: relative;
+  width: var(--mat-width);
+  flex: none;
+}
+
+.sve-mat {
+  --sve-card-width: var(--sve-card-base);
+  position: relative;
+  width: var(--mat-width);
+  height: var(--mat-height);
+}
+
+/* The playmat picture; the opponent's is the same turned 180 degrees. Without one, a plain mat with its line. */
+.sve-mat-picture {
+  position: absolute;
+  inset: 0;
+  background:
+    var(--sve-field-image) center / 100% 100% no-repeat,
+    linear-gradient(transparent 57.8%, rgba(110, 200, 255, 0.5) 57.8%, rgba(110, 200, 255, 0.5) 58.2%, transparent 58.2%),
+    radial-gradient(ellipse at 50% 45%, #0f4b7a 0%, #062443 45%, #021a30 80%);
+  box-shadow: 0 0 0 1px rgba(110, 200, 255, 0.15);
+}
+
+.sve-mat-opponent .sve-mat-picture {
+  transform: rotate(180deg);
+}
+
+.sve-mat-zone {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sve-mat-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--mat-width) * 0.008);
+  width: 100%;
   height: 100%;
 }
 
-.sve-game-main {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
+/* Field cards stand by the line where the mats meet. */
+.sve-mat-opponent .sve-field-row {
+  align-items: flex-end;
 }
 
-.sve-board {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  background-image: var(--sve-board-image);
-  background-size: cover;
-  background-position: center;
-}
-
-.sve-side {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 6px;
-  border-radius: 10px;
-  background: #0003;
-}
-
-.sve-row {
-  display: flex;
-  gap: 6px;
+.sve-mat-own .sve-field-row {
   align-items: flex-start;
-  overflow-x: auto;
-  min-height: calc(var(--sve-card-width) * 88 / 63 + 4px);
-  padding: 2px;
 }
 
-.sve-row-empty {
-  color: var(--sve-muted);
+.sve-ex-row {
+  --sve-card-width: calc(var(--sve-card-base) * 0.82);
+}
+
+/* A card that fills a slot of the mat (leader, piles). */
+.sve-slot-card,
+.sve-mat-zone .sve-slot-back {
+  --w: calc(var(--mat-width) * 0.115);
+}
+
+.sve-slot-back {
+  width: var(--w);
+  height: calc(var(--w) * 88 / 63);
+  border-radius: var(--sve-card-radius);
+  box-shadow: 0 2px 6px #000a;
+}
+
+.sve-mat-opponent .sve-slot-back {
+  transform: rotate(180deg);
+}
+
+.sve-pile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.sve-pile-browsable {
+  cursor: zoom-in;
+}
+
+.sve-pile-count {
+  position: absolute;
+  bottom: 4%;
+  right: 4%;
+  min-width: 26px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #000c;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-weight: 800;
+  font-size: 13px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.sve-pile-note {
+  position: absolute;
+  top: 4%;
+  left: 4%;
+  padding: 0 4px;
+  border-radius: 4px;
+  background: #000c;
+  font-size: 10px;
+  color: var(--sve-accent);
+  pointer-events: none;
+}
+
+.sve-leader-card .sve-stat-def {
+  display: none;
+}
+
+.sve-leader-defense {
+  position: absolute;
+  left: 50%;
+  bottom: -8%;
+  transform: translateX(-50%);
+  min-width: 42%;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: linear-gradient(#a52a2a, #6d1414);
+  border: 2px solid #ffd7d7;
+  box-shadow: 0 2px 8px #000c;
+  font-size: calc(var(--w) * 0.24);
+  font-weight: 900;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* The hands: yours fanned under the mats, the opponent's backs above them. */
+.sve-hand-strip {
+  position: relative;
+  flex: none;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.sve-hand-own {
+  height: var(--hand-height);
+  align-items: flex-end;
+}
+
+.sve-hand-opponent {
+  height: var(--opponent-hand-height);
+  align-items: flex-start;
+}
+
+.sve-hand-cards {
+  position: relative;
+  height: 100%;
+}
+
+.sve-hand-card {
+  position: absolute;
+  z-index: 1;
+  transition: transform 0.14s ease-out;
+}
+
+.sve-hand-own .sve-hand-card {
+  --sve-card-width: var(--hand-card-width);
+  bottom: 4px;
+  transform-origin: 50% 100%;
+  transform: translateY(var(--fan-sink, 0px)) rotate(var(--fan-tilt, 0deg));
+}
+
+/* The card under the pointer rises out of the hand. */
+.sve-hand-own .sve-hand-card:hover {
+  transform: translateY(-22%) scale(1.28);
+  z-index: 60 !important;
+}
+
+.sve-hand-opponent .sve-hand-card {
+  --sve-card-width: var(--opponent-hand-card-width);
+  top: 3px;
+}
+
+/* Beside the mats: each player's panel, the turn and the buttons that finish a decision. */
+.sve-player-panel {
+  position: absolute;
+  width: min(190px, var(--side-width, 190px));
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(14, 24, 38, 0.88);
+  border: 1px solid rgba(110, 200, 255, 0.22);
   font-size: 12px;
-  align-self: center;
 }
 
-.sve-side-row {
-  display: flex;
-  gap: 8px;
-  align-items: stretch;
-  min-width: 0;
+.sve-player-opponent {
+  right: calc(100% + 12px);
+  bottom: calc(50% + 64px);
 }
 
-.sve-side-row > .sve-row {
-  flex: 1;
-  min-width: 0;
+.sve-player-own {
+  left: calc(100% + 12px);
+  top: calc(50% + 64px);
 }
 
-.sve-hand {
-  --sve-card-width: calc(var(--sve-card-base) * 0.9);
+.sve-player-panel.sve-active {
+  border-color: var(--sve-accent);
+  box-shadow: 0 0 14px rgba(240, 180, 41, 0.35);
 }
 
-/* A hand the viewer cannot see only shows how many cards it has. */
-.sve-hand-hidden {
-  --sve-card-width: calc(var(--sve-card-base) * 0.5);
-}
-
-.sve-leader-panel {
-  display: flex;
-  gap: 8px;
-  padding: 6px;
-  border-radius: 8px;
-  background: var(--sve-panel);
-  min-width: 230px;
-}
-
-.sve-leader-panel.sve-active {
-  box-shadow: inset 0 0 0 2px var(--sve-accent);
-}
-
-.sve-leader-panel.sve-deciding .sve-player-name::after {
+.sve-player-panel.sve-deciding .sve-player-name::after {
   content: " ●";
   color: var(--sve-accent);
 }
 
-.sve-leader-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
 .sve-player-name {
-  font-weight: 600;
-  font-size: 12px;
+  font-weight: 700;
 }
 
-.sve-leader-defense {
+.sve-player-defense {
   font-size: 30px;
-  font-weight: 800;
+  font-weight: 900;
   line-height: 1;
+  color: #ffb3b3;
 }
 
-.sve-resources {
+.sve-player-pp strong {
+  font-size: 18px;
+  color: #7fd1ff;
+}
+
+.sve-player-label {
+  margin-right: 4px;
+  color: var(--sve-muted);
+}
+
+.sve-player-points {
   display: flex;
-  gap: 8px;
-  font-size: 12px;
+  gap: 10px;
+}
+
+.sve-player-points strong {
+  color: #ffe08a;
+}
+
+.sve-player-counts {
   color: var(--sve-muted);
 }
 
 .sve-universe {
   font-size: 11px;
   color: var(--sve-accent);
-}
-
-.sve-ex {
-  flex: 0 1 auto;
-  min-width: 160px;
-  max-width: 48%;
-  display: flex;
-  flex-direction: column;
-  padding: 4px 6px;
-  border-radius: 8px;
-  background: var(--sve-panel);
-}
-
-.sve-ex-row {
-  --sve-card-width: calc(var(--sve-card-base) * 0.7);
 }
 
 .sve-zone-label {
@@ -532,88 +844,269 @@ textarea {
 
 .sve-trigger {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 4px;
-  border-radius: 8px;
-  background: var(--sve-panel);
-}
-
-.sve-piles {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(88px, 1fr));
+  flex-wrap: wrap;
+  align-items: center;
   gap: 4px;
 }
 
-.sve-pile {
+.sve-center-status,
+.sve-center-actions {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(190px, var(--side-width, 190px));
+  display: flex;
   flex-direction: column;
-  gap: 0;
-  min-width: 88px;
-  padding: 3px 6px;
+  gap: 4px;
 }
 
-.sve-pile-label {
-  font-size: 11px;
+.sve-center-status {
+  right: calc(100% + 12px);
+  font-size: 12px;
+  color: #cfe3f5;
+}
+
+.sve-center-turn strong {
+  font-size: 15px;
+  color: #fff;
+}
+
+.sve-center-prompt {
+  color: var(--sve-muted);
+  line-height: 1.35;
+}
+
+.sve-center-prompt.sve-your-move {
+  color: #ffe6a8;
+}
+
+.sve-center-actions {
+  left: calc(100% + 12px);
+  align-items: stretch;
+}
+
+.sve-center-actions button {
+  justify-content: center;
+  padding: 8px 10px;
+  font-weight: 700;
+}
+
+.sve-center-actions .sve-primary {
+  font-size: 15px;
+  padding: 12px 10px;
+  background: linear-gradient(#2f7a52, #1f5a3b);
+  box-shadow: 0 0 14px rgba(76, 195, 138, 0.35);
+}
+
+/* The card being played or resolved, over the middle of the table. */
+.sve-resolution-zone {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  display: flex;
+  gap: 8px;
+  --sve-card-width: calc(var(--sve-card-base) * 0.55);
+  filter: drop-shadow(0 0 18px rgba(110, 200, 255, 0.55));
+  pointer-events: none;
+}
+
+/* A card's menu on the table. */
+.sve-card-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+}
+
+.sve-card-menu {
+  position: fixed;
+  z-index: 71;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 180px;
+  max-width: 320px;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(20, 26, 36, 0.97);
+  border: 1px solid var(--sve-action);
+  box-shadow: 0 10px 30px #000c;
+}
+
+.sve-card-menu-title {
+  padding: 0 4px 4px;
+  font-size: 12px;
+  color: var(--sve-muted);
+  border-bottom: 1px solid var(--sve-border);
+}
+
+.sve-card-menu button {
+  justify-content: flex-start;
+  text-align: left;
+  padding: 6px 10px;
+}
+
+/* Dragging: the card follows the pointer; an attack draws an arrow. */
+.sve-drag-ghost {
+  position: fixed;
+  z-index: 80;
+  pointer-events: none;
+  transform: translate(-50%, -60%) scale(1.08) rotate(-3deg);
+  filter: drop-shadow(0 12px 18px #000c);
+  opacity: 0.92;
+}
+
+.sve-drag-ghost.sve-drag-ok {
+  filter: drop-shadow(0 0 14px var(--sve-good));
+}
+
+.sve-arrow {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.sve-arrow path {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.sve-arrow-drag path {
+  stroke: rgba(255, 90, 90, 0.9);
+  filter: drop-shadow(0 0 6px rgba(255, 90, 90, 0.9));
+}
+
+.sve-arrow-attack path {
+  stroke: rgba(255, 140, 60, 0.85);
+  stroke-dasharray: 14 8;
+  filter: drop-shadow(0 0 6px rgba(255, 140, 60, 0.8));
+}
+
+.sve-arrow marker path {
+  stroke: none;
+  fill: rgba(255, 110, 70, 0.95);
+}
+
+/* Effects (animation/effects.ts): card copies in flight, rising numbers. */
+.sve-fx-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 78;
+  pointer-events: none;
+}
+
+.sve-ghost {
+  position: fixed !important;
+  margin: 0 !important;
+  transform-origin: 0 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sve-float {
+  position: fixed;
+  font-size: 30px;
+  font-weight: 900;
+  -webkit-text-stroke: 1px #000;
+  text-shadow: 0 2px 6px #000;
+  pointer-events: none;
+}
+
+.sve-float-damage {
+  color: #ff5a5a;
+}
+
+.sve-float-heal {
+  color: #6dffb0;
+}
+
+/* A card the opponent plays, shown large for a moment beside the mats (the fields stay in view). */
+.sve-play-reveal {
+  position: absolute;
+  left: calc((100% - var(--mat-width)) / 4);
+  top: 50%;
+  z-index: 36;
+  --sve-card-width: min(calc(var(--side-width) * 0.92), 180px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 0 30px rgba(110, 200, 255, 0.7));
+  animation: sve-reveal 1.4s ease-out forwards;
+}
+
+@keyframes sve-reveal {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) perspective(900px) rotateY(90deg) scale(0.8);
+  }
+  22% {
+    opacity: 1;
+    transform: translate(-50%, -50%) perspective(900px) rotateY(0deg) scale(1);
+  }
+  78% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+/* The result over the table. */
+.sve-result-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 8, 16, 0.6);
+}
+
+.sve-result-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 40px;
+  border-radius: 16px;
+  background: rgba(20, 26, 36, 0.95);
+  border: 1px solid var(--sve-accent);
+  box-shadow: 0 20px 60px #000c;
+}
+
+.sve-result-panel h2 {
+  margin: 0;
+  font-size: 32px;
+  color: var(--sve-accent);
+}
+
+.sve-result-panel p {
+  margin: 0;
   color: var(--sve-muted);
 }
 
-.sve-pile-count {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.sve-pile-note {
-  font-size: 10px;
-  color: var(--sve-accent);
-}
-
-.sve-center {
+.sve-result-buttons {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
-  min-height: 34px;
-  padding: 4px 8px;
-  border-radius: 8px;
-  background: #0006;
+  gap: 10px;
 }
 
-.sve-status {
-  display: flex;
-  gap: 12px;
-}
-
-.sve-thinking {
-  color: var(--sve-accent);
-}
-
-.sve-attack-line {
-  color: var(--sve-bad);
-  font-weight: 600;
-}
-
-.sve-resolution {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.sve-result {
-  font-weight: 700;
-  color: var(--sve-accent);
-}
-
-/* Decision bar */
+/* The decision panel (right column): every option of the pending decision as a button. */
 .sve-decision {
+  --sve-card-width: 66px;
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 8px 12px;
-  max-height: 44vh;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  max-height: 52%;
   overflow: auto;
   background: var(--sve-panel);
-  border-top: 1px solid var(--sve-border);
+  border-bottom: 1px solid var(--sve-border);
 }
 
 .sve-decision.sve-busy {
@@ -649,8 +1142,8 @@ textarea {
 
 .sve-action-group {
   display: flex;
-  gap: 6px;
-  align-items: baseline;
+  flex-direction: column;
+  gap: 4px;
   width: 100%;
 }
 
@@ -700,6 +1193,7 @@ textarea {
 }
 
 .sve-concede {
+  align-self: flex-end;
   border-color: #6b3030;
 }
 
@@ -708,18 +1202,10 @@ textarea {
   color: var(--sve-accent);
 }
 
-/* Sidebar */
-.sve-sidebar {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  border-left: 1px solid var(--sve-border);
-  background: var(--sve-panel);
-}
-
+/* Side columns: the card panel (left), the log and debug tabs (right). */
 .sve-sidebar-card {
-  flex: 0 1 auto;
-  max-height: 58%;
+  flex: 1;
+  min-height: 0;
   overflow: auto;
   padding: 8px;
   border-bottom: 1px solid var(--sve-border);

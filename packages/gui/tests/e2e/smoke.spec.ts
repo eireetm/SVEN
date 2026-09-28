@@ -1,20 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
+import { openSetup, startGame, useSettings } from "./helpers";
 
-// End-to-end: the page starts the engine worker, a game is set up and played through the decision bar by clicking, and
+// End-to-end: the page starts the engine worker, a game is set up and played through the decision panel by clicking, and
 // no error appears. Screenshots go to test-results/ for a look.
-const SETTINGS_KEY = "sve-gui-settings";
-
-async function useSettings(page: Page, settings: Record<string, unknown>): Promise<void> {
-  await page.addInitScript(([key, value]) => localStorage.setItem(key, value), [SETTINGS_KEY, JSON.stringify(settings)] as const);
-}
-
-async function startGame(page: Page): Promise<void> {
-  await page.goto("/");
-  const start = page.getByTestId("start-game");
-  await expect(start).toBeEnabled({ timeout: 120_000 });
-  await start.click();
-  await expect(page.locator(".sve-board")).toBeVisible();
-}
 
 /** Answer whatever the decision bar asks with the simplest button. Returns false once the game is over. */
 async function answerOnce(page: Page): Promise<boolean> {
@@ -76,7 +64,7 @@ test("a person plays a whole game against the random bot by clicking", async ({ 
   let shot = false;
   for (let i = 0; i < 1500 && (await answerOnce(page)); i++) {
     if (!shot && (await page.locator(".sve-decision").getAttribute("data-decision")) === "mainPhase") {
-      const turn = await page.locator(".sve-status").innerText();
+      const turn = await page.locator(".sve-center-turn").innerText();
       if (/Turn [4-9]/.test(turn)) {
         await page.screenshot({ path: "test-results/02-midgame.png" });
         shot = true;
@@ -91,13 +79,12 @@ test("a person plays a whole game against the random bot by clicking", async ({ 
   await page.getByRole("button", { name: /^Debug$/ }).click();
   await page.getByRole("button", { name: /^Undo my last answer$/ }).click();
   await expect(page.locator(".sve-decision")).not.toHaveAttribute("data-decision", /^(over|waiting)$/);
-  await expect(page.locator(".sve-status")).not.toContainText("Game over");
+  await expect(page.locator(".sve-center-turn")).not.toContainText("Game over");
 });
 
 test("the deck editor opens a sample deck with card names, and the engine checks it", async ({ page }) => {
-  await page.goto("/");
-  await expect(page.getByTestId("start-game")).toBeVisible({ timeout: 120_000 });
-  await page.getByRole("button", { name: /^Decks$/ }).click();
+  await openSetup(page);
+  await page.getByRole("button", { name: /^Edit decks…$/ }).click();
   await page.locator(".sve-decks-files li button", { hasText: /^SD01 —/ }).click();
   const text = page.locator(".sve-deck-text");
   await expect(text).toHaveValue(/leader: SD01-LD01 {2}; \S/);

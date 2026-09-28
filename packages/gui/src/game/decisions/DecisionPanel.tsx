@@ -1,11 +1,12 @@
 // The pending decision of a person, one small form per decision type (the core's protocol, model/decision.ts). Every
 // option comes from the decision itself: the GUI never works out what is legal (the decision protocol in
 // docs/architecture.md).
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { Answer, CardId, Decision, MainAction, QuickAction } from "@sve/core";
 import { cardName } from "../../app/catalog";
 import { useSettings } from "../../app/settings";
 import { engine, useApp } from "../../app/store";
+import { sendAnswer, toggleChosen, useInteraction } from "../interaction";
 import type { DecisionInfo, GameUpdate } from "../../engine/protocol";
 import { findCard } from "../../engine/view-utils";
 import { useT, type MessageKey, type Translate } from "../../i18n";
@@ -30,7 +31,7 @@ function useLabel(update: GameUpdate): (id: CardId) => string {
   return (id) => cardLabel(id, update, catalog, cardLang, t);
 }
 
-function rangeLabel(min: number, max: number, t: Translate): string {
+export function rangeLabel(min: number, max: number, t: Translate): string {
   if (min === max) return t("decision.range.exact", { n: min });
   if (min === 0) return t("decision.range.upTo", { max });
   return t("decision.range.between", { min, max });
@@ -192,7 +193,7 @@ function SelectPending({ d, info, update, answer, busy }: PanelProps<"selectPend
   );
 }
 
-const SELECT_KEYS: Record<Of<"selectCards">["reason"], MessageKey> = {
+export const SELECT_KEYS: Record<Of<"selectCards">["reason"], MessageKey> = {
   target: "decision.select.target",
   cost: "decision.select.cost",
   wardEngage: "decision.select.wardEngage",
@@ -210,12 +211,13 @@ const SELECT_KEYS: Record<Of<"selectCards">["reason"], MessageKey> = {
 function SelectCards({ d, info, update, answer, busy }: PanelProps<"selectCards">) {
   const t = useT();
   const label = useLabel(update);
-  const [chosen, setChosen] = useState<CardId[]>([]);
+  // Shared with the table, where the same cards can be clicked.
+  const chosen = useInteraction((s) => s.chosen);
   const single = d.min === 1 && d.max === 1;
   const toggle = (id: CardId) => {
     if (busy) return;
     if (single) return answer({ type: "selectCards", cards: [id] });
-    setChosen((c) => (c.includes(id) ? c.filter((x) => x !== id) : d.max === 1 ? [id] : c.length < d.max ? [...c, id] : c));
+    toggleChosen(id, d.max);
   };
   const peekOnly = (d.peek ?? []).filter((p) => !d.candidates.includes(p.id));
   return (
@@ -455,22 +457,13 @@ function DecisionBody({ info, update, answer, busy }: { info: DecisionInfo; upda
   }
 }
 
-/** The bottom bar: the person's decision, else who the game waits for, else the result. */
+/** The decision panel (right column): the person's decision, else who the game waits for, else the result. */
 export function DecisionPanel({ update, onNewGame }: { update: GameUpdate; onNewGame: () => void }) {
   const t = useT();
-  const [sent, setSent] = useState(false);
-  const lastError = useApp((s) => s.errors[s.errors.length - 1]?.id ?? 0);
-  // A refused answer brings an error, not an update: the buttons work again.
-  useEffect(() => {
-    setSent(false);
-  }, [lastError]);
+  // Sent answers and refusals are tracked with the table's interaction state (one decision at a time).
+  const sent = useInteraction((s) => s.sent);
   const info = update.decision;
-  const answer = (a: Answer) => {
-    if (!info || sent) return;
-    setSent(true);
-    setHighlight([]);
-    engine.send({ kind: "answer", seat: info.decision.player, answer: a });
-  };
+  const answer = (a: Answer) => sendAnswer(update, a);
   const seat = update.controllers[update.perspective] === "human" ? update.perspective : null;
   const concede = () => {
     if (seat !== null && window.confirm(t("game.concedeConfirm"))) engine.send({ kind: "concede", seat });

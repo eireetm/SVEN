@@ -1,10 +1,10 @@
-import { createReadStream, existsSync } from "node:fs";
+import { createReadStream, existsSync, statSync } from "node:fs";
 import { extname } from "node:path";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
 import { hostConfig, type HostConfig } from "./config.ts";
 import { deckPath, listDecks, readDeckText, writeDeckText } from "./decks.ts";
-import { CONTENT_TYPES, findCardArt, listResources } from "./resources.ts";
+import { CONTENT_TYPES, findCardArt, findMisc, listMisc, listResources } from "./resources.ts";
 
 /** Information about the local files, for the GUI's settings and debug panel (GET /api/host). */
 export interface HostInfo {
@@ -12,6 +12,8 @@ export interface HostInfo {
   assetsFound: boolean;
   publicDir: string;
   decksDir: string;
+  /** The Misc images there are (HostConfig.miscDir): "field", "back", "unknown". */
+  misc: string[];
 }
 
 type Next = (err?: unknown) => void;
@@ -23,6 +25,23 @@ function sendJson(res: ServerResponse, status: number, value: unknown): void {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
   res.end(JSON.stringify(value));
+}
+
+/** Send an image file; the browser keeps it and asks again with If-Modified-Since (a changed file is picked up). */
+function sendFile(req: IncomingMessage, res: ServerResponse, file: string): void {
+  const modified = statSync(file).mtime;
+  modified.setMilliseconds(0);
+  res.setHeader("Last-Modified", modified.toUTCString());
+  res.setHeader("Cache-Control", "no-cache");
+  const since = req.headers["if-modified-since"];
+  if (since && new Date(since).getTime() >= modified.getTime()) {
+    res.statusCode = 304;
+    res.end();
+    return;
+  }
+  res.statusCode = 200;
+  res.setHeader("Content-Type", CONTENT_TYPES[extname(file).toLowerCase()] ?? "application/octet-stream");
+  createReadStream(file).pipe(res);
 }
 
 function readBody(req: IncomingMessage): Promise<string> {
@@ -46,6 +65,7 @@ function readBody(req: IncomingMessage): Promise<string> {
  *
  *  GET  /api/host                          HostInfo
  *  GET  /api/card-art/<printing>?def=&back= the card's image (the player's own first, then the scraped one), 404 if none
+ *  GET  /api/misc/<name>                   a Misc image of the assets folder (field, back, unknown), 404 if none
  *  GET  /api/resources                     { files }: everything under public/
  *  GET  /api/decks                         { decks }: deck files
  *  GET  /api/decks/<file>                  a deck file
@@ -58,18 +78,25 @@ export function hostPlugin(cfg: HostConfig = hostConfig()): Plugin {
     const path = decodeURIComponent(url.pathname.slice("/api/".length));
     try {
       if (path === "host" && req.method === "GET") {
-        const info: HostInfo = { assetsDir: cfg.assetsDir, assetsFound: existsSync(cfg.assetsDir), publicDir: cfg.publicDir, decksDir: cfg.decksDir };
+        const info: HostInfo = {
+          assetsDir: cfg.assetsDir,
+          assetsFound: existsSync(cfg.assetsDir),
+          publicDir: cfg.publicDir,
+          decksDir: cfg.decksDir,
+          misc: listMisc(cfg),
+        };
         return sendJson(res, 200, info);
       }
       if (path.startsWith("card-art/") && req.method === "GET") {
         const printing = path.slice("card-art/".length);
         const file = findCardArt(cfg, printing, url.searchParams.get("def"), url.searchParams.get("back") === "1");
         if (!file) return sendJson(res, 404, { error: "no image" });
-        res.statusCode = 200;
-        res.setHeader("Content-Type", CONTENT_TYPES[extname(file).toLowerCase()] ?? "application/octet-stream");
-        res.setHeader("Cache-Control", "no-cache");
-        createReadStream(file).pipe(res);
-        return;
+        return sendFile(req, res, file);
+      }
+      if (path.startsWith("misc/") && req.method === "GET") {
+        const file = findMisc(cfg, path.slice("misc/".length));
+        if (!file) return sendJson(res, 404, { error: "no image" });
+        return sendFile(req, res, file);
       }
       if (path === "resources" && req.method === "GET") return sendJson(res, 200, { files: listResources(cfg) });
       if (path === "decks" && req.method === "GET") return sendJson(res, 200, { decks: listDecks(cfg) });
