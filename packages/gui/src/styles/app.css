@@ -2632,6 +2632,8 @@ option {
 /* Online play (online/OnlineScreen.tsx): making or joining a room, codes by hand, the connection and its chat. */
 .sve-online {
   width: min(620px, 92vw);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
   align-items: stretch;
 }
 
@@ -2739,7 +2741,7 @@ option {
 }
 
 .sve-online-mine strong {
-  color: var(--sve-accent);
+  color: #8ec5ff;
 }
 
 .sve-online-theirs strong {
@@ -2768,4 +2770,129 @@ option {
 
 .sve-online-ok-text {
   color: #7be0a4;
+}
+
+/* The next game's preparation: the host's rules, this player's deck, the other player's. */
+.sve-online-prep {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--sve-border);
+  border-radius: 8px;
+}
+
+.sve-online-prep section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sve-online-prep h3 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--sve-muted);
+}
+
+.sve-online-prep .sve-field > span {
+  white-space: nowrap;
+}
+
+.sve-online-prep .sve-field select {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sve-online-prep section > .sve-field select {
+  flex: 1;
+}
+
+.sve-online-rules {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+
+.sve-online-rules:disabled {
+  opacity: 0.7;
+}
+
+.sve-online-game {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--sve-accent);
+  border-radius: 8px;
+}
+
+.sve-online-chat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.sve-tab-body > .sve-online-chat-box {
+  height: 100%;
+}
+
+.sve-tab-body > .sve-online-chat-box .sve-online-chat {
+  flex: 1;
+  max-height: none;
+}
+
+/* A game online: the connection under the menu button (lost: the game waits), the other player's new messages. */
+.sve-game-online {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #7be0a4;
+  border-bottom: 1px solid var(--sve-border);
+}
+
+.sve-game-online-lost {
+  color: #ff9a8a;
+}
+
+.sve-game-online button {
+  font-size: 12px;
+  padding: 2px 8px;
+}
+
+/* The two programs' games differ: nothing can be played any more. */
+.sve-desync {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 300;
+  transform: translate(-50%, -50%);
+  width: min(460px, 90vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 22px;
+  border-radius: 12px;
+  border: 1px solid #b04a4a;
+  background: var(--sve-panel);
+  box-shadow: 0 20px 60px #000c;
+  text-align: center;
+}
+
+.sve-desync p {
+  margin: 0;
+}
+
+.sve-menu-hint {
+  max-width: 320px;
+  margin: 0;
+  text-align: center;
 }

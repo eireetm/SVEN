@@ -1,4 +1,5 @@
 import { useT } from "../i18n";
+import { useOnline } from "../net/state";
 import { useApp } from "./store";
 
 interface Props {
@@ -13,12 +14,17 @@ interface Props {
   onContinue?: () => void;
 }
 
-/** The first screen, in the middle of the window: play against the AI, build decks, watch replays, or the settings. */
+/**
+ * The first screen, in the middle of the window: play against the AI or online, build decks, watch replays, or the settings.
+ * An online game in progress stays until it ends or its player leaves it: no other game starts meanwhile.
+ */
 export function MainMenu({ onPlayAi, onDeckBuilder, onReplays, onOnline, onSettings, onContinue }: Props) {
   const t = useT();
   const ready = useApp((s) => s.ready);
   const watching = useApp((s) => s.update?.watch != null);
   const startError = useApp((s) => s.startError);
+  const onlineGame = useApp((s) => s.update?.online != null && !s.update.result);
+  const connected = useOnline().phase.kind === "connected";
   return (
     <div className="sve-menu">
       <div className="sve-menu-panel">
@@ -30,22 +36,23 @@ export function MainMenu({ onPlayAi, onDeckBuilder, onReplays, onOnline, onSetti
               {t(watching ? "menu.continueWatching" : "menu.continue")}
             </button>
           ) : null}
-          <button type="button" className="sve-menu-button sve-menu-primary" disabled={!ready} onClick={onPlayAi} data-testid="menu-play">
+          <button type="button" className="sve-menu-button sve-menu-primary" disabled={!ready || onlineGame} onClick={onPlayAi} data-testid="menu-play">
             {t("menu.playAi")}
           </button>
           <button type="button" className="sve-menu-button" disabled={!ready} onClick={onOnline} data-testid="menu-online">
-            {t("menu.online")}
+            {t(connected ? "menu.onlineConnected" : "menu.online")}
           </button>
           <button type="button" className="sve-menu-button" disabled={!ready} onClick={onDeckBuilder} data-testid="menu-decks">
             {t("menu.deckBuilder")}
           </button>
-          <button type="button" className="sve-menu-button" onClick={onReplays} data-testid="menu-replays">
+          <button type="button" className="sve-menu-button" disabled={onlineGame} onClick={onReplays} data-testid="menu-replays">
             {t("menu.replays")}
           </button>
           <button type="button" className="sve-menu-button" onClick={onSettings} data-testid="menu-settings">
             {t("menu.settings")}
           </button>
         </nav>
+        {onlineGame ? <p className="sve-hint sve-menu-hint">{t("menu.onlineGameHint")}</p> : null}
         {startError ? (
           <div className="sve-menu-status sve-problem">
             {t("app.engineFailed")}: {startError}

@@ -1,5 +1,6 @@
-// The end of the game over the table: who won and why, then save its replay (docs/gui.md "录像"), a new game, the main
-// menu, or a last look at the board. The end of a replay being watched: watch it again, or back to the replays.
+// The end of the game over the table: who won and why, then save its replay (docs/gui.md "录像"), a new game (online:
+// another one with the same player), the main menu, or a last look at the board. The end of a replay being watched: watch
+// it again, or back to the replays.
 import { useState } from "react";
 import { errorText } from "../../app/errors";
 import { engine } from "../../app/store";
@@ -37,11 +38,12 @@ export function ResultOverlay({ update, onNewGame, onMenu, onReplays }: Props) {
     }
   };
   const done = saved !== null && saved.seed === update.seed ? saved : null;
+  // One person at this screen (against a bot, or online): their victory or defeat; else who won (hot seat, bots only).
   const person = update.controllers[update.perspective] === "human";
   const title =
     result.winner === null
       ? t("game.draw")
-      : person && update.controllers[result.winner === 0 ? 1 : 0] !== "human"
+      : person && update.controllers[update.perspective === 0 ? 1 : 0] !== "human"
         ? t(result.winner === update.perspective ? "result.victory" : "result.defeat")
         : t("game.win", { player: playerLabel(result.winner, update, t) });
   return (
@@ -64,8 +66,8 @@ export function ResultOverlay({ update, onNewGame, onMenu, onReplays }: Props) {
         ) : (
           <>
             <div className="sve-result-buttons">
-              <button type="button" className="sve-primary" onClick={onNewGame}>
-                {t("game.newGame")}
+              <button type="button" className="sve-primary" onClick={onNewGame} data-testid="result-new-game">
+                {t(update.online ? "result.rematch" : "game.newGame")}
               </button>
               <button type="button" disabled={done?.file !== undefined} onClick={() => void save()} data-testid="result-save-replay">
                 {t("result.saveReplay")}

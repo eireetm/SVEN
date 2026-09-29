@@ -24,6 +24,11 @@ export interface AppState {
 let state: AppState = { ready: false, startError: null, catalog: null, update: null, log: [], errors: [] };
 const listeners = new Set<() => void>();
 
+/** The state now, outside React (online play reads how far the game is). */
+export function getApp(): AppState {
+  return state;
+}
+
 function setState(change: Partial<AppState>): void {
   state = { ...state, ...change };
   for (const listener of listeners) listener();

@@ -130,6 +130,20 @@ interface Watching {
   stopped: string | null;
 }
 
+/**
+ * A short fingerprint of a game state (FNV-1a of its JSON, and its length). Online play: before each answer the two
+ * programs must have the same state; the answer carries the sender's, the receiver compares (docs/online.md).
+ */
+export function stateHash(state: unknown): string {
+  const text = JSON.stringify(state);
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return `${(h >>> 0).toString(16).padStart(8, "0")}-${text.length.toString(16)}`;
+}
+
 /** A quick window where passing is all its player can do (asked only with GameOptions.askEveryQuickWindow). */
 const onlyPass = (decision: Decision): boolean => decision.type === "quick" && decision.actions.every((a) => a.type === "pass");
 
@@ -180,6 +194,9 @@ export class GameHost {
   private passing = false;
   /** The replay being watched (null: a game being played). */
   private watching: Watching | null = null;
+  /** Online play: the other program's answers waiting for this game to reach them, by index; why the two games differ. */
+  private remoteQueue = new Map<number, { input: Input; hash: string }>();
+  private desync: string | null = null;
 
   constructor(
     private readonly engine: Engine,
@@ -198,11 +215,19 @@ export class GameHost {
         return this.watching ? undefined : this.concede(message.seat);
       case "rewind":
         if (this.watching) return this.seek(message.inputs, false);
+        // Online, both programs play the same game: nobody takes an answer back.
+        if (this.remoteSeat() !== null) return;
         if (this.options) this.begin(this.options, this.inputs.slice(0, Math.max(0, message.inputs)));
         return;
-      case "loadReplay":
+      case "remoteInput":
+        return this.remoteInput(message.index, message.input, message.hash);
+      case "loadReplay": {
         this.watching = null;
-        return this.begin(message.replay.options, message.replay.inputs.slice(0, message.inputs ?? message.replay.inputs.length));
+        // An online game's replay goes on here with a person at each seat: the other program isn't there.
+        const options = message.replay.options;
+        const controllers = options.controllers.map((c) => (c === "remote" ? "human" : c)) as GameOptions["controllers"];
+        return this.begin({ ...options, controllers }, message.replay.inputs.slice(0, message.inputs ?? message.replay.inputs.length));
+      }
       case "watch":
         return this.startWatching(message.replay);
       case "watchControl":
@@ -272,6 +297,8 @@ export class GameHost {
     this.lastPerspective = this.humans()[0] ?? 0;
     this.quick = null;
     this.announcement = null;
+    this.remoteQueue = new Map();
+    this.desync = null;
     this.record(game.startupEvents);
     this.replaying = true;
     for (const recorded of replay) {
@@ -294,26 +321,72 @@ export class GameHost {
     if (!game || !decision) return this.error("there is no decision to answer");
     // A manual operation (testing by hand) may come from a person at any main phase decision, a bot's too (bots paused).
     const manual = isManualInput(answer);
-    if (manual ? this.bots[seat] !== null : decision.player !== seat || this.bots[seat]) return this.error(`it is not player ${seat + 1}'s decision`);
+    const notYours = manual ? this.bots[seat] !== null : decision.player !== seat || this.bots[seat];
+    if (notYours || seat === this.remoteSeat() || this.desync) return this.error(`it is not player ${seat + 1}'s decision`);
     const problem = manual && answer.action.type === "manual" ? game.manualOpError(answer.action.op) : validateAnswer(decision, answer);
     if (problem) return this.error(`illegal answer: ${problem}`);
     this.announcement = null; // whoever answers has seen the table
+    const sent = this.outgoing();
     try {
       this.apply(answer, seat);
     } catch (err) {
       return this.error(err);
     }
+    sent?.(answer);
     this.pump();
   }
 
   private concede(seat: PlayerId): void {
     const game = this.game;
-    if (!game || game.isOver) return;
+    if (!game || game.isOver || seat === this.remoteSeat()) return;
+    const input: Input = { type: "concede", player: seat };
+    const sent = this.outgoing();
     try {
-      this.apply({ type: "concede", player: seat }, seat);
+      this.apply(input, seat);
     } catch (err) {
       return this.error(err);
     }
+    sent?.(input);
+    this.pump();
+  }
+
+  /** Online play: the seat the other program plays (null: a local game). */
+  private remoteSeat(): PlayerId | null {
+    const controllers = this.options?.controllers;
+    if (!controllers || this.watching) return null;
+    return controllers[0] === "remote" ? 0 : controllers[1] === "remote" ? 1 : null;
+  }
+
+  /** Online play: before this person's answer, where it goes and the state it follows; once played, it is sent. */
+  private outgoing(): ((input: Input) => void) | null {
+    const game = this.game;
+    if (!game || this.remoteSeat() === null) return null;
+    const index = this.inputs.length;
+    const hash = stateHash(game.state);
+    return (input) => this.send({ kind: "localInput", index, input, hash });
+  }
+
+  /**
+   * Online play: an answer of the other program's person. Played once this game has reached it (the host's own passes and
+   * pauses come first, the same on both sides), after checking that both games are the same there. Conceding comes at once.
+   */
+  private remoteInput(index: number, input: Input, hash: string): void {
+    const game = this.game;
+    const remote = this.remoteSeat();
+    if (!game || remote === null || this.desync) return;
+    if (input.type === "concede") {
+      // CR 1.2.3: a player may concede at any time.
+      if (!game.isOver) {
+        try {
+          this.apply({ type: "concede", player: remote }, remote);
+        } catch (err) {
+          return this.error(err);
+        }
+      }
+      return this.pump();
+    }
+    if (index < this.inputs.length) return; // played already (sent again after reconnecting)
+    this.remoteQueue.set(index, { input, hash });
     this.pump();
   }
 
@@ -341,27 +414,52 @@ export class GameHost {
     this.passing = false;
     this.settleQuick();
     if (game.isOver) this.announcement = null;
-    while (!this.announcement && game.decision && onlyPass(game.decision)) {
-      // After an attack is declared (CR 8.4.5-8.4.7), the table shows it a moment before its combat.
-      if (game.decision.type === "quick" && game.decision.timing === "attack" && this.settings.attackPauseMs > 0) {
-        this.passing = true;
-        this.publish(false);
-        this.cancelTimer = this.scheduler.schedule(() => {
-          this.cancelTimer = null;
-          this.passing = false;
-          try {
-            this.apply({ type: "quick", action: { type: "pass" } }, null);
-          } catch (err) {
-            return this.error(err);
-          }
-          this.pump();
-        }, this.settings.attackPauseMs);
-        return;
+    const remote = this.remoteSeat();
+    for (;;) {
+      const decision = game.decision;
+      if (this.announcement || this.desync || !decision) break;
+      if (onlyPass(decision)) {
+        // After an attack is declared (CR 8.4.5-8.4.7), the table shows it a moment before its combat.
+        if (decision.type === "quick" && decision.timing === "attack" && this.settings.attackPauseMs > 0) {
+          this.passing = true;
+          this.publish(false);
+          this.cancelTimer = this.scheduler.schedule(() => {
+            this.cancelTimer = null;
+            this.passing = false;
+            try {
+              this.apply({ type: "quick", action: { type: "pass" } }, null);
+            } catch (err) {
+              return this.error(err);
+            }
+            this.pump();
+          }, this.settings.attackPauseMs);
+          return;
+        }
+        try {
+          this.apply({ type: "quick", action: { type: "pass" } }, null);
+        } catch (err) {
+          return this.error(err);
+        }
+        this.settleQuick();
+        continue;
+      }
+      // Online: the other program's answer for this decision, if it has come.
+      if (remote === null || decision.player !== remote) break;
+      const index = this.inputs.length;
+      const next = this.remoteQueue.get(index);
+      if (!next) break;
+      this.remoteQueue.delete(index);
+      if (next.hash !== stateHash(game.state)) {
+        this.desync = `${index + 1}`;
+        break;
       }
       try {
-        this.apply({ type: "quick", action: { type: "pass" } }, null);
+        this.apply(next.input, remote);
       } catch (err) {
-        return this.error(err);
+        // The same state, and still an answer this engine refuses: the two programs differ after all.
+        this.desync = `${index + 1}`;
+        this.error(err, `online input ${index + 1}`);
+        break;
       }
       this.settleQuick();
     }
@@ -519,6 +617,11 @@ export class GameHost {
     this.pump();
   }
 
+  private onlineState(): GameUpdate["online"] {
+    const remote = this.remoteSeat();
+    return remote === null ? null : { seat: opponentOf(remote), remote, desync: this.desync };
+  }
+
   private watchState(): WatchState | null {
     const watching = this.watching;
     if (!watching) return null;
@@ -620,8 +723,9 @@ export class GameHost {
     };
   }
 
+  /** The seats played by a person at this screen (not a bot, not the other program online). */
   private humans(): PlayerId[] {
-    return ([0, 1] as const).filter((p) => this.bots[p] === null);
+    return ([0, 1] as const).filter((p) => this.bots[p] === null && (this.watching || this.options?.controllers[p] !== "remote"));
   }
 
   /** Whose view to show: the only person; in hot seat, the player who must decide; with bots only, player 1; watching, the one chosen. */
@@ -640,6 +744,8 @@ export class GameHost {
   /** Everything is shown with bots only (watching them) and when debugging ("reveal all"); a replay as its watcher chose. */
   private seesAll(): boolean {
     if (this.watching) return this.settings.revealAll;
+    // Online, a person sees their own side's hidden cards only (CR 4.1.2), whatever the debug settings say.
+    if (this.remoteSeat() !== null) return false;
     return this.settings.revealAll || this.humans().length === 0;
   }
 
@@ -664,7 +770,7 @@ export class GameHost {
   private decisionInfo(): DecisionInfo | null {
     const game = this.game!;
     const decision = game.decision;
-    if (!decision || this.bots[decision.player] || this.passing || this.watching) return null;
+    if (!decision || this.bots[decision.player] || this.passing || this.watching || decision.player === this.remoteSeat()) return null;
     const visible = new Map<CardId, CardInfo>();
     forEachCard(game.view(decision.player), (card) => visible.set(card.id, { def: card.def, printing: card.printing }));
     const cards: Record<CardId, CardInfo> = {};
@@ -816,13 +922,14 @@ export class GameHost {
       manual: this.manualInfo(),
       announcement: this.announcement,
       watch: this.watchState(),
+      online: this.onlineState(),
       perspective,
       view: this.view(perspective),
       decision: this.decisionInfo(),
       waitingFor: this.passing || this.watching ? null : (game.decision?.player ?? null),
       thinking,
       inputCount: this.inputs.length,
-      humanInputs: this.inputs.flatMap((r, i) => (r.by !== null && this.bots[r.by] === null && r.input.type !== "concede" ? [i] : [])),
+      humanInputs: this.inputs.flatMap((r, i) => (r.by !== null && this.bots[r.by] === null && r.by !== this.remoteSeat() && r.input.type !== "concede" ? [i] : [])),
       result: game.result,
       log: this.log,
       logReset: this.logReset,

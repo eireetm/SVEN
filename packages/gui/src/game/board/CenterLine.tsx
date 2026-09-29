@@ -70,6 +70,8 @@ export function CenterLine({ update, placing = null }: { update: GameUpdate; pla
   } else if (update.waitingFor !== null && !update.result) {
     prompt = update.thinking ? t("game.thinking", { player: playerLabel(update.waitingFor, update, t) }) : null;
     if (update.settings.paused && update.controllers[update.waitingFor] !== "human") prompt = t("game.paused");
+    // Online: the other program's person answers (pausing the bots changes nothing there).
+    if (update.online?.remote === update.waitingFor) prompt = t("game.waitingForOpponent", { player: playerLabel(update.waitingFor, update, t) });
   }
   return (
     <>

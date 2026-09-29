@@ -3,6 +3,7 @@ import { DeckBuilder } from "../decks/DeckBuilder";
 import { DeckEditor } from "../decks/DeckEditor";
 import { GameScreen } from "../game/GameScreen";
 import { htmlLang, useT } from "../i18n";
+import { onGameStart } from "../net/state";
 import { applyUiTransparency, loadResources, useResourcesVersion } from "../resources/resources";
 import { installClickSound, playBgm } from "../resources/sound";
 import type { BgmName } from "../resources/sound-plan";
@@ -30,9 +31,9 @@ export function App() {
   const hasGame = useApp((s) => s.update !== null);
   const [screen, setScreen] = useState<Screen>("menu");
   // Where the deck builder returns to, and the deck it opens / the text editor opens.
-  const [builderFrom, setBuilderFrom] = useState<"menu" | "setup">("menu");
+  const [builderFrom, setBuilderFrom] = useState<"menu" | "setup" | "online">("menu");
   const [deckFile, setDeckFile] = useState<string | null>(null);
-  const openBuilder = (from: "menu" | "setup", file: string | null) => {
+  const openBuilder = (from: "menu" | "setup" | "online", file: string | null) => {
     setBuilderFrom(from);
     setDeckFile(file);
     setScreen("builder");
@@ -51,6 +52,8 @@ export function App() {
     if (resources > 0) playBgm(MUSIC[screen]);
   }, [screen, resources]);
   useEffect(() => installClickSound(), []);
+  // A game over the connection starts when both players are ready, wherever this one is (docs/online.md).
+  useEffect(() => onGameStart(() => setScreen("game")), []);
 
   let body;
   switch (screen) {
@@ -93,12 +96,12 @@ export function App() {
     case "online":
       body = (
         <Suspense fallback={null}>
-          <OnlineScreen onBack={() => setScreen("menu")} />
+          <OnlineScreen onBack={() => setScreen("menu")} onGame={() => setScreen("game")} onEditDecks={() => openBuilder("online", settings.setupDecks[0])} />
         </Suspense>
       );
       break;
     case "game":
-      body = <GameScreen onMenu={() => setScreen("menu")} onNewGame={() => setScreen("setup")} onReplays={() => setScreen("replays")} />;
+      body = <GameScreen onMenu={() => setScreen("menu")} onNewGame={() => setScreen("setup")} onReplays={() => setScreen("replays")} onOnline={() => setScreen("online")} />;
       break;
   }
 

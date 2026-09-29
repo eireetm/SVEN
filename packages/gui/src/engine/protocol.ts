@@ -19,8 +19,11 @@ import type {
   PrintingId,
 } from "@sve/core";
 
-/** Who plays a seat: a person at this screen, or a bot run by the worker. */
-export type SeatController = "human" | "greedy" | "random";
+/**
+ * Who plays a seat: a person at this screen, a bot run by the worker, or a person at another program (online play,
+ * docs/online.md: their answers come as "remoteInput").
+ */
+export type SeatController = "human" | "greedy" | "random" | "remote";
 
 /**
  * How decks are built (the GUI checks them, formats/formats.ts): standard (CR 6.1, and a restriction list), Cross Craft (two
@@ -151,6 +154,11 @@ export type ToWorker =
   | { kind: "step" }
   /** A person has seen the announcement `seq`: the game goes on. */
   | { kind: "acknowledge"; seq: number }
+  /**
+   * Online play: an answer of the remote seat, the `index`th input of the game (0 = the first); `hash` is the other program's
+   * state before it (stateHash), which this game must have too. Applied once this game has reached it, in order.
+   */
+  | { kind: "remoteInput"; index: number; input: Input; hash: string }
   /** Watch a replay from its start (nobody plays: its inputs are played back, docs/gui.md "录像"). */
   | { kind: "watch"; replay: Replay }
   /**
@@ -246,6 +254,8 @@ export interface GameUpdate {
   announcement: QuickAnnouncement | null;
   /** A replay being watched (null: a game being played). */
   watch: WatchState | null;
+  /** Online play (null: a local game): whose seat is played by the other program, and whether the two games differ. */
+  online: { seat: PlayerId; remote: PlayerId; desync: string | null } | null;
   /** Whose view this is (the human's seat; in hot seat, the player who must decide). */
   perspective: PlayerId;
   view: PlayerView;
@@ -267,6 +277,8 @@ export type CatalogCard = CardDefinition & { status: ImplementationStatus };
 
 export type FromWorker =
   | { kind: "ready"; catalog: CatalogCard[] }
+  /** Online play: an answer of this program's person, the `index`th input, with the state before it: for the other program. */
+  | { kind: "localInput"; index: number; input: Input; hash: string }
   | { kind: "update"; update: GameUpdate }
   | { kind: "replay"; requestId: number; replay: Replay | null }
   | { kind: "deckValidation"; requestId: number; errors: string[] }

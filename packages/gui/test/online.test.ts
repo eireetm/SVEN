@@ -54,11 +54,46 @@ describe("connection codes (by hand)", () => {
 
 describe("messages", () => {
   it("accept only what the protocol says, trimmed to size", () => {
-    expect(parseMessage({ t: "hello", version: "online-1", cards: "abc" })).toEqual({ t: "hello", version: "online-1", cards: "abc" });
+    expect(parseMessage({ t: "hello", version: "online-2", cards: "abc", engine: "def" })).toEqual({ t: "hello", version: "online-2", cards: "abc", engine: "def" });
     expect(parseMessage({ t: "chat", text: "x".repeat(900) })).toEqual({ t: "chat", text: "x".repeat(500) });
     expect(parseMessage({ t: "ping", n: 3 })).toEqual({ t: "ping", n: 3 });
     expect(parseMessage({ t: "select", extra: 1 })).toEqual({ t: "select" });
-    for (const bad of [null, "hi", 3, { t: "chat" }, { t: "ping", n: "3" }, { t: "hello", version: 1 }, { t: "unknown" }]) expect(parseMessage(bad)).toBeNull();
+    for (const bad of [null, "hi", 3, { t: "chat" }, { t: "ping", n: "3" }, { t: "hello", version: 1 }, { t: "hello", version: "online-2", cards: "abc" }, { t: "unknown" }]) {
+      expect(parseMessage(bad)).toBeNull();
+    }
+  });
+
+  it("carry a game's preparation and answers, checked field by field", () => {
+    const rules = { format: "crossCraft", list: "01_26_EN_CROSS", turnOrder: "random" };
+    expect(parseMessage({ t: "rules", rules })).toEqual({ t: "rules", rules });
+    expect(parseMessage({ t: "rules", rules: { ...rules, list: null } })).toEqual({ t: "rules", rules: { ...rules, list: null } });
+    for (const bad of [{ ...rules, format: "modern" }, { ...rules, turnOrder: "me" }, { ...rules, list: 3 }, null]) expect(parseMessage({ t: "rules", rules: bad })).toBeNull();
+    const deck = { name: "Mine", deck: { leader: "SD01-LD01", main: ["SD01-001", "SD01-001"], evolve: ["SD01-016"] }, leader2: null };
+    expect(parseMessage({ t: "ready", deck })).toEqual({ t: "ready", deck });
+    expect(parseMessage({ t: "ready", deck: null })).toEqual({ t: "ready", deck: null });
+    // No leader (unlimited games may leave it out); a deck too big or of other things is refused.
+    const { leader: _, ...leaderless } = deck.deck;
+    expect(parseMessage({ t: "ready", deck: { ...deck, deck: leaderless } })).toEqual({ t: "ready", deck: { ...deck, deck: leaderless } });
+    expect(parseMessage({ t: "ready", deck: { ...deck, deck: { ...deck.deck, main: Array(201).fill("SD01-001") } } })).toBeNull();
+    expect(parseMessage({ t: "ready", deck: { ...deck, deck: { ...deck.deck, evolve: [7] } } })).toBeNull();
+    expect(parseMessage({ t: "ready", deck: { ...deck, leader2: 7 } })).toBeNull();
+    expect(parseMessage({ t: "commit", hash: "ab".repeat(32) })).toEqual({ t: "commit", hash: "ab".repeat(32) });
+    expect(parseMessage({ t: "nonce", value: "cd" })).toEqual({ t: "nonce", value: "cd" });
+    expect(parseMessage({ t: "start", secret: "ef" })).toEqual({ t: "start", secret: "ef" });
+    expect(parseMessage({ t: "commit", hash: "x".repeat(200) })).toBeNull();
+    const input = { type: "mainPhase", action: { type: "endMainPhase" } };
+    expect(parseMessage({ t: "input", index: 12, input, hash: "0a1b2c3d-99" })).toEqual({ t: "input", index: 12, input, hash: "0a1b2c3d-99" });
+    for (const bad of [
+      { t: "input", index: -1, input, hash: "h" },
+      { t: "input", index: 1.5, input, hash: "h" },
+      { t: "input", index: 1, input: { action: 1 }, hash: "h" },
+      { t: "input", index: 1, input: { type: "x", junk: "y".repeat(5000) }, hash: "h" },
+      { t: "input", index: 1, input },
+    ]) {
+      expect(parseMessage(bad)).toBeNull();
+    }
+    expect(parseMessage({ t: "resume", game: "seed", have: 40 })).toEqual({ t: "resume", game: "seed", have: 40 });
+    expect(parseMessage({ t: "resume", game: "seed", have: "40" })).toBeNull();
   });
 });
 
