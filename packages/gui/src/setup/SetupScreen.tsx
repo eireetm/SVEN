@@ -93,7 +93,14 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
     const [la, lb] = [leadersFor(a, format, catalog), leadersFor(b, format, catalog)];
     engine.send({
       kind: "settings",
-      settings: { botDelayMs: settings.botDelayMs, paused: false, manualDebug: settings.manualDebug, announceQuick: settings.announceQuick },
+      settings: {
+        botDelayMs: settings.botDelayMs,
+        paused: false,
+        manualDebug: settings.manualDebug,
+        announceQuick: settings.announceQuick,
+        // An attack's arrow stands before its combat, as long as the bots' pause (at most half a second).
+        attackPauseMs: Math.min(settings.botDelayMs, 500),
+      },
     });
     engine.send({
       kind: "start",
@@ -120,7 +127,10 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
     if (!file) return;
     try {
       const replay = await readReplayFile(file);
-      engine.send({ kind: "settings", settings: { paused: false, manualDebug: settings.manualDebug, announceQuick: settings.announceQuick } });
+      engine.send({
+        kind: "settings",
+        settings: { paused: false, manualDebug: settings.manualDebug, announceQuick: settings.announceQuick, attackPauseMs: Math.min(settings.botDelayMs, 500) },
+      });
       engine.send({ kind: "loadReplay", replay });
       onStarted();
     } catch (err) {

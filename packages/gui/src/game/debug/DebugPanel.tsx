@@ -104,7 +104,7 @@ export function DebugPanel({ update }: { update: GameUpdate }) {
           onChange={(e) => {
             const botDelayMs = Number(e.target.value);
             updateSettings({ botDelayMs });
-            engine.send({ kind: "settings", settings: { botDelayMs } });
+            engine.send({ kind: "settings", settings: { botDelayMs, attackPauseMs: Math.min(botDelayMs, 500) } });
           }}
         />
       </label>

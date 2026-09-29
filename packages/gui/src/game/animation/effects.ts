@@ -30,15 +30,18 @@ function ghostOf(element: HTMLElement, box: DOMRect, w: string): HTMLElement {
   return ghost;
 }
 
-/** The card element has just arrived: a copy flies from `from` to it while it stays see-through. */
-export function flyIn(element: HTMLElement, from: DOMRect, duration = 380): void {
+/**
+ * The card element has just arrived: a copy flies from `from` to it while it stays see-through. After `delay` ms: until
+ * then the copy waits where the card was (a card being hit is seen there first).
+ */
+export function flyIn(element: HTMLElement, from: DOMRect, duration = 380, delay = 0): void {
   const to = element.getBoundingClientRect();
   if (to.width === 0 || (Math.abs(to.left - from.left) < 2 && Math.abs(to.top - from.top) < 2)) return;
   const ghost = ghostOf(element, to, getComputedStyle(element).getPropertyValue("--w"));
   element.style.opacity = "0";
   const animation = ghost.animate(
     [{ transform: `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width})` }, { transform: "translate(0, 0) scale(1)" }],
-    { duration, easing: EASE },
+    { duration, delay, easing: EASE, fill: "backwards" },
   );
   const done = () => {
     ghost.remove();
@@ -48,8 +51,8 @@ export function flyIn(element: HTMLElement, from: DOMRect, duration = 380): void
   animation.oncancel = done;
 }
 
-/** A card went where it isn't shown (a deck, a pile's back): its old picture flies to that place and fades. */
-export function flyOut(shot: CardShot, to: DOMRect, duration = 420): void {
+/** A card went where it isn't shown (a deck, a pile's back): its old picture flies to that place and fades (after `delay` ms). */
+export function flyOut(shot: CardShot, to: DOMRect, duration = 420, delay = 0): void {
   const from = shot.rect;
   if (from.width === 0) return;
   const ghost = ghostOf(shot.element, from, shot.width);
@@ -61,7 +64,7 @@ export function flyOut(shot: CardShot, to: DOMRect, duration = 420): void {
       { transform: "translate(0, 0) scale(1)", opacity: 1 },
       { transform: `translate(${dx}px, ${dy}px) scale(${scale})`, opacity: 0.25 },
     ],
-    { duration, easing: EASE },
+    { duration, delay, easing: EASE, fill: "backwards" },
   );
   animation.onfinish = () => ghost.remove();
   animation.oncancel = () => ghost.remove();

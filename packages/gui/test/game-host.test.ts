@@ -222,6 +222,38 @@ describe("GameHost (engine worker logic)", () => {
     expect(announced).toBeGreaterThan(0);
   });
 
+  it("after an attack is declared, shows it a moment before its combat when passing is all the other player can do", () => {
+    const messages: FromWorker[] = [];
+    const queue: { fn: () => void; ms: number }[] = [];
+    const host = new GameHost(engine, (m) => messages.push(m), {
+      schedule: (fn, ms) => {
+        const job = { fn, ms };
+        queue.push(job);
+        return () => queue.splice(queue.indexOf(job), 1);
+      },
+    });
+    const last = (): GameUpdate => (messages.filter((m) => m.kind === "update").at(-1) as { update: GameUpdate }).update;
+    host.handle({ kind: "settings", settings: { botDelayMs: 0, attackPauseMs: 400 } });
+    host.handle({ kind: "start", options: { seed: "pause", decks: [deck("sd01"), deck("sd02")], deckNames: ["a", "b"], controllers: ["random", "random"], deckRestrictions: true, askEveryQuickWindow: true } });
+    let paused = 0;
+    for (let step = 0; step < 5000 && queue.length > 0; step++) {
+      const job = queue.shift()!;
+      if (job.ms === 400) {
+        // The attack is on the table (its arrow), nobody is asked anything, and nothing has been dealt yet.
+        const update = last();
+        expect(update.view.attack).not.toBeNull();
+        expect(update.decision).toBeNull();
+        expect(update.waitingFor).toBeNull();
+        expect(update.log.some((e) => e.event.type === "attackEnded" || e.event.type === "fought")).toBe(false);
+        paused += 1;
+      }
+      job.fn();
+    }
+    expect(messages.filter((m) => m.kind === "error")).toEqual([]);
+    expect(last().result).not.toBeNull();
+    expect(paused).toBeGreaterThan(0);
+  });
+
   it("announces nothing when the setting is off, and the game goes on by itself", () => {
     const h = harness(["human", "random"], "quick-1");
     h.host.handle({ kind: "settings", settings: { announceQuick: false, botDelayMs: 0 } });

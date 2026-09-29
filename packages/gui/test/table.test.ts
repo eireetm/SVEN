@@ -2,7 +2,7 @@ import type { CardMove, Decision, GameEvent } from "@sve/core";
 import { describe, expect, it } from "vitest";
 import type { LogEntry } from "../src/engine/protocol";
 import { actionsFor, answerFor, attackTargets, dragKind, inDialog } from "../src/game/actions";
-import { planFlights } from "../src/game/animation/plan";
+import { attacksIn, planFlights, playedCards, selectionsIn } from "../src/game/animation/plan";
 import { computeLayout, ENGAGED_WIDTH, MAT_BOX_HEIGHT, PIECES, SLOT_COUNT, SLOT_PITCH, WIDE_WIDTH, pileRect, slotRect, type PileZone, type Rect } from "../src/game/board/layout";
 import { NO_SLOTS, placeWaiting, reconcileSlots } from "../src/game/board/slots";
 
@@ -186,5 +186,31 @@ describe("animation flights", () => {
       { origin: { card: null, zone: null }, to: "0:ex", card: "t1" },
       { origin: { card: "f3", zone: "0:field" }, to: "0:deck", card: null },
     ]);
+  });
+
+  it("finds the played cards to show in their corners, but a Quick one its announcement shows", () => {
+    const log = [
+      entry({ type: "cardPlayed", player: 1, card: "r1", def: "SD01-016", from: "hand" }, 1),
+      { ...entry({ type: "cardPlayed", player: 0, card: "r2", def: "SD03-005", from: "hand" }, 2), cards: { r2: { def: "SD03-005", printing: "PR-008" } } },
+    ];
+    expect(playedCards(log)).toEqual([
+      { id: "r1", player: 1, card: { def: "SD01-016", printing: null } },
+      { id: "r2", player: 0, card: { def: "SD03-005", printing: "PR-008" } },
+    ]);
+    expect(playedCards(log, "r1").map((p) => p.id)).toEqual(["r2"]);
+  });
+
+  it("finds what effects selected (CR 10.6.2.3), and the attacks that were declared and ended in one update", () => {
+    const log = [
+      entry({ type: "cardsSelected", player: 0, cards: ["e1", "e2"], source: "r1" }, 1),
+      entry({ type: "cardsSelected", player: 0, cards: ["x"], source: null }, 2),
+      entry({ type: "cardsSelected", player: 1, cards: ["f9"], source: "q1" }, 3),
+      entry({ type: "attackDeclared", player: 0, attacker: "a1", target: "l2" }, 4),
+      entry({ type: "attackEnded", attacker: "a1" }, 5),
+      entry({ type: "attackDeclared", player: 0, attacker: "a2", target: "f3" }, 6),
+    ];
+    expect(selectionsIn(log, "q1")).toEqual([{ source: "r1", targets: ["e1", "e2"] }]);
+    // a2's attack goes on (its combat comes later): it has its own arrow on the table.
+    expect(attacksIn(log)).toEqual([{ attacker: "a1", target: "l2" }]);
   });
 });

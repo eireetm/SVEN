@@ -139,7 +139,7 @@ export class GameHost {
   private options: GameOptions | null = null;
   private inputs: RecordedInput[] = [];
   private bots: [Bot | null, Bot | null] = [null, null];
-  private settings: HostSettings = { botDelayMs: 600, revealAll: false, paused: false, manualDebug: false, announceQuick: false };
+  private settings: HostSettings = { botDelayMs: 600, revealAll: false, paused: false, manualDebug: false, announceQuick: false, attackPauseMs: 0 };
   private cancelTimer: (() => void) | null = null;
   /** Log entries not sent yet. */
   private log: LogEntry[] = [];
@@ -154,6 +154,8 @@ export class GameHost {
   private announcementSeq = 0;
   /** Inputs played again (rewind, replays) are not announced. */
   private replaying = false;
+  /** A quick window after an attack is being shown before the host passes it (HostSettings.attackPauseMs). */
+  private passing = false;
 
   constructor(
     private readonly engine: Engine,
@@ -298,9 +300,26 @@ export class GameHost {
     this.stopTimer();
     const game = this.game;
     if (!game) return;
+    this.passing = false;
     this.settleQuick();
     if (game.isOver) this.announcement = null;
     while (!this.announcement && game.decision && onlyPass(game.decision)) {
+      // After an attack is declared (CR 8.4.5-8.4.7), the table shows it a moment before its combat.
+      if (game.decision.type === "quick" && game.decision.timing === "attack" && this.settings.attackPauseMs > 0) {
+        this.passing = true;
+        this.publish(false);
+        this.cancelTimer = this.scheduler.schedule(() => {
+          this.cancelTimer = null;
+          this.passing = false;
+          try {
+            this.apply({ type: "quick", action: { type: "pass" } }, null);
+          } catch (err) {
+            return this.error(err);
+          }
+          this.pump();
+        }, this.settings.attackPauseMs);
+        return;
+      }
       try {
         this.apply({ type: "quick", action: { type: "pass" } }, null);
       } catch (err) {
@@ -432,7 +451,7 @@ export class GameHost {
       player: quick.player,
       card: quick.info,
       ability: quick.ability,
-      played: quick.resolving,
+      source: quick.resolving ?? quick.card,
       targets: quick.targets,
       choices: quick.choices,
     };
@@ -479,7 +498,7 @@ export class GameHost {
   private decisionInfo(): DecisionInfo | null {
     const game = this.game!;
     const decision = game.decision;
-    if (!decision || this.bots[decision.player]) return null;
+    if (!decision || this.bots[decision.player] || this.passing) return null;
     const visible = new Map<CardId, CardInfo>();
     forEachCard(game.view(decision.player), (card) => visible.set(card.id, { def: card.def, printing: card.printing }));
     const cards: Record<CardId, CardInfo> = {};
@@ -633,7 +652,7 @@ export class GameHost {
       perspective,
       view: this.view(perspective),
       decision: this.decisionInfo(),
-      waitingFor: game.decision?.player ?? null,
+      waitingFor: this.passing ? null : (game.decision?.player ?? null),
       thinking,
       inputCount: this.inputs.length,
       humanInputs: this.inputs.flatMap((r, i) => (r.by !== null && this.bots[r.by] === null && r.input.type !== "concede" ? [i] : [])),

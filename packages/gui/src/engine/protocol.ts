@@ -100,6 +100,11 @@ export interface HostSettings {
   manualDebug: boolean;
   /** After each Quick card or ability, the game waits until a person has seen it (GameUpdate.announcement). */
   announceQuick: boolean;
+  /**
+   * After an attack is declared, the quick window where passing is all its player can do (CR 8.4.7) is shown this long
+   * before the host passes it: the attack's arrow stands before its combat (0: at once). Needs askEveryQuickWindow.
+   */
+  attackPauseMs: number;
 }
 
 export type ToWorker =
@@ -176,8 +181,8 @@ export interface QuickAnnouncement {
   card: CardInfo;
   /** Null: the card was played; else the index of its activated ability. */
   ability: number | null;
-  /** The played card's id in the resolution zone (CR 4.1.4), for the animations to know it. */
-  played: CardId | null;
+  /** The played card's id in the resolution zone (CR 4.1.4), or the card whose ability it is: the animations leave it to the announcement. */
+  source: CardId;
   targets: { id: CardId; card: CardInfo }[];
   choices: ChoiceMade[];
 }

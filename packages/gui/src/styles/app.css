@@ -1194,9 +1194,45 @@ option {
 }
 
 .sve-arrow-attack path {
-  stroke: rgba(255, 140, 60, 0.85);
-  stroke-dasharray: 14 8;
-  filter: drop-shadow(0 0 6px rgba(255, 140, 60, 0.8));
+  stroke: rgba(255, 72, 72, 0.92);
+  stroke-dasharray: 12 8;
+  filter: drop-shadow(0 0 6px rgba(255, 72, 72, 0.85));
+}
+
+.sve-arrow-attack marker path {
+  fill: rgba(255, 84, 84, 0.95);
+}
+
+/* Dashed arrows (an attack, an effect's targets) flow toward what they point at. */
+.sve-arrow-attack > path,
+.sve-arrow-target > path {
+  animation: sve-dash-flow 0.7s linear infinite;
+}
+
+@keyframes sve-dash-flow {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+/* The animations' arrows (animation/AnimationLayer.tsx): they appear, stay a moment and fade (duration set inline). */
+.sve-arrow-flash {
+  animation: sve-arrow-flash 700ms ease-out both;
+}
+
+@keyframes sve-arrow-flash {
+  0% {
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .sve-arrow marker path {
@@ -1237,35 +1273,76 @@ option {
   color: #6dffb0;
 }
 
-/* A card the opponent plays, shown large for a moment beside the mats (the fields stay in view). */
-.sve-play-reveal {
+/*
+ * A played card (animation/AnimationLayer.tsx) shows a moment in its player's corner beside the mats once it has landed:
+ * the opponent's at the top right, one's own at the bottom left (where a Quick one's announcement stands). It wipes in
+ * with a slight zoom and wipes out, like a slide show; it takes no clicks.
+ */
+.sve-showcase {
   position: absolute;
-  left: calc((100% - var(--mat-width)) / 4);
-  top: 50%;
-  z-index: 36;
-  --sve-card-width: min(calc(var(--side-width) * 0.92), 180px);
-  transform: translate(-50%, -50%);
+  z-index: 34;
+  width: min(270px, calc(var(--side-width, 270px) - 20px));
+  display: flex;
+  justify-content: center;
   pointer-events: none;
-  filter: drop-shadow(0 0 30px rgba(110, 200, 255, 0.7));
-  animation: sve-reveal 1.4s ease-out forwards;
+  filter: drop-shadow(0 0 16px rgba(110, 200, 255, 0.55));
 }
 
-@keyframes sve-reveal {
+.sve-showcase-opponent {
+  top: 60px;
+  left: calc(50% + var(--mat-width) / 2 + 10px);
+}
+
+.sve-showcase-own {
+  bottom: 28px;
+  right: calc(50% + var(--mat-width) / 2 + 10px);
+}
+
+.sve-showcase-card {
+  --sve-card-width: min(calc(var(--side-width, 270px) * 0.62), 170px);
+  animation: sve-showcase-wipe-right 900ms cubic-bezier(0.2, 0.7, 0.25, 1) both;
+  animation-delay: inherit;
+}
+
+.sve-showcase-opponent .sve-showcase-card {
+  animation-name: sve-showcase-wipe-left;
+}
+
+@keyframes sve-showcase-wipe-right {
   0% {
-    opacity: 0;
-    transform: translate(-50%, -50%) perspective(900px) rotateY(90deg) scale(0.8);
+    clip-path: inset(0 100% 0 0);
+    transform: scale(1.1);
   }
-  22% {
-    opacity: 1;
-    transform: translate(-50%, -50%) perspective(900px) rotateY(0deg) scale(1);
+  20% {
+    clip-path: inset(0 0 0 0);
+    transform: scale(1);
   }
   78% {
+    clip-path: inset(0 0 0 0);
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
   }
   100% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
+    clip-path: inset(0 0 0 100%);
+    opacity: 0.5;
+  }
+}
+
+@keyframes sve-showcase-wipe-left {
+  0% {
+    clip-path: inset(0 0 0 100%);
+    transform: scale(1.1);
+  }
+  20% {
+    clip-path: inset(0 0 0 0);
+    transform: scale(1);
+  }
+  78% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.5;
   }
 }
 
@@ -1342,7 +1419,7 @@ option {
 
 .sve-arrow-target path {
   stroke: rgba(110, 200, 255, 0.9);
-  stroke-dasharray: 10 7;
+  stroke-dasharray: 12 8;
   filter: drop-shadow(0 0 6px rgba(110, 200, 255, 0.8));
 }
 
