@@ -11,7 +11,7 @@ test("the main menu leads to the settings, where the interface language changes"
   await page.getByTestId("menu-settings").click();
   await page.getByTestId("settings-ui-lang").selectOption("zh");
   // The interface's transparency: 30% makes panels 0.7 opaque; "default" gives the style's own back.
-  const alpha = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sve-ui-alpha").trim());
+  const alpha = () => page.evaluate<string>("getComputedStyle(document.documentElement).getPropertyValue('--sve-ui-alpha').trim()");
   await page.getByTestId("settings-ui-transparency").fill("0.3");
   await expect.poll(alpha).toBe("0.7");
   await page.getByRole("button", { name: "默认" }).click();
@@ -79,10 +79,10 @@ test("a person plays on the table: drags cards to play them and attacks from a m
     else if (kind === "quick") await page.getByTestId("table-pass").click();
     else if (kind === "mainPhase") {
       const handCard = page.locator(".sve-hand-own .sve-card-action").first();
-      const lit = page.locator(".sve-mat-own .sve-field-row > .sve-card-action");
+      const lit = page.locator(".sve-mat-own .sve-field-slot .sve-card-action");
       const attacker = lit.first();
       if ((await handCard.count()) > 0 && done.play < 3) {
-        await drag(page, handCard, page.locator(".sve-mat-own .sve-mat-field"));
+        await drag(page, handCard, page.locator(".sve-mat-own .sve-field-slot").nth(2));
         action = "play";
       } else if ((await attacker.count()) > 0 && done.menuAttack === 0) {
         await attacker.click();
@@ -113,4 +113,39 @@ test("a person plays on the table: drags cards to play them and attacks from a m
   expect(done.menuAttack).toBe(1);
   expect(done.dragAttack).toBe(1);
   await expect(page.locator(".sve-toast")).toHaveCount(0);
+});
+
+test("with card spots chosen by hand, a follower waits for its slot and goes where it is clicked", async ({ page }) => {
+  const problems: string[] = [];
+  page.on("pageerror", (e) => problems.push(`page error: ${e.message}`));
+  await useSettings(page, { uiLang: "en", botDelayMs: 0, manualSlots: true, setupControllers: ["human", "greedy"], setupDecks: ["samples/sd01.json", "samples/sd02.json"] });
+  await startGame(page, "slots-test");
+  const bar = page.locator(".sve-decision");
+  const prompt = page.getByTestId("table-choose-slot");
+  for (let step = 0; step < 200 && (await prompt.count()) === 0; step++) {
+    const kind = (await bar.getAttribute("data-decision"))!;
+    if (kind === "over") break;
+    if (kind === "waiting" || (await bar.getAttribute("class"))!.includes("sve-busy")) {
+      await page.waitForTimeout(30);
+      continue;
+    }
+    if (kind === "chooseTurnOrder") await page.getByTestId("table-first").click();
+    else if (kind === "mulligan") await page.getByTestId("table-keep").click();
+    else if (kind === "quick") await page.getByTestId("table-pass").click();
+    else if (kind === "mainPhase") {
+      const handCard = page.locator(".sve-hand-own .sve-card-action").first();
+      if ((await handCard.count()) > 0) await drag(page, handCard, page.locator(".sve-mat-own .sve-field-slot").nth(2));
+      else await page.getByTestId("table-end").click();
+    } else await bar.locator(".sve-decision-body button:not([disabled])").first().click();
+    await page.waitForTimeout(150);
+  }
+  // The new card waits in the first free slot; the free slots light up; a click puts it in slot 3.
+  await expect(prompt).toBeVisible();
+  const waiting = page.locator(".sve-mat-own .sve-slot-waiting .sve-card");
+  await expect(waiting).toHaveCount(1);
+  const card = await waiting.getAttribute("data-card");
+  await page.getByTestId("slot-field-3").click();
+  await expect(page.locator(`.sve-mat-own .sve-field-slot[data-slot="3"] [data-card="${card}"]`)).toHaveCount(1);
+  await expect(prompt).toHaveCount(0);
+  expect(problems).toEqual([]);
 });

@@ -40,15 +40,20 @@ export function copiesOf(deck: DeckFile, section: DeckSection): string[] {
 
 const TYPE_ORDER: Record<string, number> = { follower: 0, spell: 1, amulet: 2 };
 
+export type DeckOrder = "type" | "cost";
+
 /**
- * The deck sorted like a deck list: by type (followers, spells, amulets), then cost, then number. `defOf` gives a
- * printing's definition (unknown printings go last, in their order).
+ * The deck sorted like a deck list: by type (followers, spells, amulets), then cost, then number; or by cost, then type.
+ * `defOf` gives a printing's definition (unknown printings go last, in their order).
  */
-export function sortDeck(deck: DeckFile, defOf: (printing: string) => Pick<CardDefinition, "id" | "type" | "cost"> | undefined): DeckFile {
+export function sortDeck(deck: DeckFile, defOf: (printing: string) => Pick<CardDefinition, "id" | "type" | "cost"> | undefined, by: DeckOrder = "type"): DeckFile {
   const sorted = (cards: Record<string, number>): Record<string, number> => {
     const key = (printing: string): [number, number, string] => {
       const def = defOf(printing);
-      return def ? [TYPE_ORDER[def.type] ?? 3, def.cost ?? 99, def.id] : [9, 99, printing];
+      if (!def) return [9, 99, printing];
+      const type = TYPE_ORDER[def.type] ?? 3;
+      const cost = def.cost ?? 99;
+      return by === "type" ? [type, cost, def.id] : [cost, type, def.id];
     };
     const entries = Object.entries(cards).sort(([a], [b]) => {
       const [ta, ca, ia] = key(a);

@@ -24,10 +24,45 @@ export interface PoolFilters {
   universe: string;
   /** Part of a trait's name, in any language (the card data's are Japanese; app/traits.ts has English and Chinese). */
   trait: string;
+  /** "any" or an ability the card text names (ABILITY_TAGS). */
+  ability: "any" | AbilityTag;
   sort: "number" | "cost" | "name";
 }
 
-export const NO_FILTERS: PoolFilters = { text: "", class: "any", type: "any", cost: "any", set: "any", universe: "any", trait: "", sort: "number" };
+export const NO_FILTERS: PoolFilters = { text: "", class: "any", type: "any", cost: "any", set: "any", universe: "any", trait: "", ability: "any", sort: "number" };
+
+/**
+ * Abilities the pool can be filtered by, as the official English card text writes them (their keyword or icon, CR 12–14),
+ * whether the card has the ability or gives it: a filter for building around it. In the order the filter lists them.
+ */
+export const ABILITY_TAGS = {
+  fanfare: /\{\[fanfare\]\}/,
+  lastWords: /\{\[lastwords\]\}/,
+  act: /\{\[act\]\}|\bActivate\b/,
+  evolve: /\{\[evolve\]\}/,
+  onEvolve: /\bOn Evolve\b/,
+  onSuperEvolve: /\bOn Super-Evolve\b/,
+  strike: /\bStrike\b/,
+  storm: /\bStorm\b/,
+  rush: /\bRush\b/,
+  ward: /\bWard\b/,
+  drain: /\bDrain\b/,
+  bane: /\bBane\b/,
+  assail: /\bAssail\b/,
+  intimidate: /\bIntimidate\b/,
+  aura: /\bAura\b/,
+  combo: /\bCombo\b/,
+  sanguine: /\bSanguine\b/,
+  overflow: /\bOverflow\b/,
+  necrocharge: /\bNecrocharge\b/,
+  spellchain: /\bSpellchain\b/,
+  stack: /\bStack\b/,
+  earthRite: /\bEarth Rite\b/,
+  quick: /\{\[q(?:uick)?\]\}/,
+} as const;
+
+export type AbilityTag = keyof typeof ABILITY_TAGS;
+export const ABILITIES = Object.keys(ABILITY_TAGS) as AbilityTag[];
 
 /** The set code of a printing number ("BP01-001" -> "BP01", "BP03-LDⓈ01" -> "BP03"). */
 export const setOf = (printing: string): string => printing.split("-")[0] ?? printing;
@@ -81,6 +116,7 @@ export function filterPool(cards: readonly PoolCard[], f: PoolFilters, nameOf: (
     if (f.set !== "any" && !card.printings.some((p) => setOf(p) === f.set)) return false;
     if (f.universe === "none" ? card.universe !== undefined : f.universe !== "any" && card.universe !== f.universe) return false;
     if (trait !== "" && !card.traits.some((t) => traitNames(t).some((name) => name.toLowerCase().includes(trait)))) return false;
+    if (f.ability !== "any" && !ABILITY_TAGS[f.ability].test(card.text.en)) return false;
     return matchesText(card, words, [card.id, ...card.printings]);
   });
   if (f.sort === "cost") return out.sort((a, b) => (a.cost ?? 99) - (b.cost ?? 99) || a.id.localeCompare(b.id));

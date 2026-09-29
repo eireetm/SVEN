@@ -25,6 +25,8 @@ export interface Settings {
   builderAllPrintings: boolean;
   /** How see-through the interface is, 0–0.6 (null: the style's own, public/theme.css or the built-in one). */
   uiTransparency: number | null;
+  /** A person picks the mat slot of each card they put on the field or into the EX area (the look only). */
+  manualSlots: boolean;
 }
 
 const KEY = "sve-gui-settings";
@@ -40,6 +42,7 @@ const DEFAULTS: Settings = {
   builderDeck: null,
   builderAllPrintings: false,
   uiTransparency: null,
+  manualSlots: false,
 };
 
 function load(): Settings {

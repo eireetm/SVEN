@@ -17,7 +17,7 @@ import { CardTile } from "../game/card/CardTile";
 import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
 import { DeckStats } from "./DeckStats";
-import { NO_FILTERS, poolEntries, setsOf, traitsOf, type PoolFilters, type TypeFilter } from "./filters";
+import { ABILITIES, NO_FILTERS, poolEntries, setsOf, traitsOf, type AbilityTag, type PoolFilters, type TypeFilter } from "./filters";
 import { cardCount, emptyDeck, type DeckFile } from "./format";
 import { LeaderPicker } from "./LeaderPicker";
 import { addCard, clearDeck, copiesOf, copiesOfDefinition, fileNameFor, removeCard, sectionOf, sortDeck, type DeckSection } from "./model";
@@ -301,8 +301,11 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
             <button type="button" className="sve-leader-button" onClick={() => setChoosingLeader(true)} data-testid="builder-leader">
               {t("builder.leader", { name: leader ? cardName(leader, cardLang) : t("builder.noLeader") })}
             </button>
-            <button type="button" onClick={() => setDeck((d) => sortDeck(d, defOf))}>
-              {t("builder.sort")}
+            <button type="button" onClick={() => setDeck((d) => sortDeck(d, defOf, "type"))} data-testid="builder-sort-type">
+              {t("builder.sortByType")}
+            </button>
+            <button type="button" onClick={() => setDeck((d) => sortDeck(d, defOf, "cost"))} data-testid="builder-sort-cost">
+              {t("builder.sortByCost")}
             </button>
             <button type="button" onClick={() => (cardCount(deck.main) + cardCount(deck.evolve) === 0 || window.confirm(t("builder.confirmClear"))) && setDeck(clearDeck)}>
               {t("builder.clear")}
@@ -384,6 +387,14 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
               ))}
             </select>
             <input list="sve-traits" placeholder={t("builder.trait")} value={filters.trait} onChange={(e) => setFilter("trait", e.target.value)} aria-label={t("builder.trait")} />
+            <select value={filters.ability} onChange={(e) => setFilter("ability", e.target.value as "any" | AbilityTag)} aria-label={t("builder.ability")} data-testid="builder-ability">
+              <option value="any">{t("builder.anyAbility")}</option>
+              {ABILITIES.map((a) => (
+                <option key={a} value={a}>
+                  {t(`abilityTag.${a}` as const)}
+                </option>
+              ))}
+            </select>
             <datalist id="sve-traits">
               {traits.map((trait) => (
                 <option key={trait} value={trait} />

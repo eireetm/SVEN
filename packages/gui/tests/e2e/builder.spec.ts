@@ -48,6 +48,12 @@ test("builds a deck: filters, click and drag to add, right-click and drag back t
   await page.locator("[data-section=main] .sve-deck-tile").first().dragTo(page.locator(".sve-builder-top"));
   expect(await count(page, "main")).toBe(2);
 
+  // Sorted by cost; the ability filter keeps cards whose text names the ability.
+  await page.getByTestId("builder-sort-cost").click();
+  await page.getByTestId("builder-ability").selectOption("ward");
+  await expect(page.locator(".sve-builder-pool-header strong")).not.toHaveText("0 cards");
+  await page.getByTestId("builder-ability").selectOption("any");
+
   // The search needs every word; "-word" excludes.
   await page.getByRole("button", { name: /^Clear filters$/ }).click();
   await page.getByTestId("builder-search").fill("fairy -fanfare");

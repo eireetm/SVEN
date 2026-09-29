@@ -1,7 +1,12 @@
 // The table: the opponent's hand, the two playmats facing each other, your hand. Cards the pending decision lets you use
 // are lit; click one for its menu, drag a card from your hand onto your mat to play it, drag a follower onto an enemy to
-// attack, click the cards a selection asks for. Every option comes from the decision (the GUI works out no rules).
+// attack, click the cards a selection asks for. Every option comes from the decision (the GUI works out no rules). Cards on
+// the field and in the EX area stand in the mat's drawn slots (slots.ts: only the look, the rules have none).
 import { opponentOf, type CardId, type CardView, type HiddenCardView, type PlayerSideView } from "@sve/core";
+import { cardName } from "../../app/catalog";
+import { useSettings } from "../../app/settings";
+import { useApp } from "../../app/store";
+import { findCard } from "../../engine/view-utils";
 import { useMemo, useRef, type CSSProperties, type ReactNode } from "react";
 import type { GameUpdate } from "../../engine/protocol";
 import { useT } from "../../i18n";
@@ -12,9 +17,10 @@ import { AttackArrow } from "./AttackArrow";
 import { CardMenu } from "./CardMenu";
 import { CenterLine } from "./CenterLine";
 import { DragLayer } from "./DragLayer";
-import { rectStyle, zoneRect, type MatZone, type TableLayout } from "./layout";
+import { PIECES, pieceStyle, pileRect, rectStyle, rowRect, slotRect, type PileZone, type SlotZone, type TableLayout } from "./layout";
 import { pressCard } from "./pointer";
 import { ResultOverlay } from "./ResultOverlay";
+import { EMPTY_ROW, chooseSlot, rowKey, useSlots, type Slots } from "./slots";
 import { useTableLayout } from "./useTableLayout";
 import { openZone } from "./zone-browser";
 
@@ -128,15 +134,68 @@ function Pile({ side, zone, count, top, back }: { side: PlayerSideView; zone: "d
 
 const PILE_LABELS = { deck: "game.deck", cemetery: "game.cemetery", banished: "game.banished", evolveDeck: "game.evolveDeck" } as const;
 
-/** One player's playmat: the leader and the piles at their spots, the field above the line, the EX area below. */
-function Mat({ update, side, opponent, marks }: { update: GameUpdate; side: PlayerSideView; opponent: boolean; marks: Map<CardId, CardMark> }) {
+/**
+ * One player's playmat: the picture's pieces (layout.ts), the leader and the piles at their spots, the field's slots above
+ * the line and the EX area's below.
+ */
+function Mat({ update, side, opponent, marks, slots }: { update: GameUpdate; side: PlayerSideView; opponent: boolean; marks: Map<CardId, CardMark>; slots: Slots }) {
   const t = useT();
   const linked = [...side.raceZone, ...side.driveZone, ...side.equipmentZone];
-  const at = (zone: MatZone, content: ReactNode) => (
-    <div className={`sve-mat-zone sve-mat-${zone}`} style={rectStyle(zoneRect(zone, opponent))}>
+  const at = (zone: PileZone, content: ReactNode) => (
+    <div className={`sve-mat-zone sve-mat-${zone}`} style={rectStyle(pileRect(zone, opponent))}>
       {content}
     </div>
   );
+  const fieldCard = (card: CardView | HiddenCardView) => {
+    const attached = card.hidden ? [] : linked.filter((l) => l.linkedTo === card.id);
+    return (
+      <TableCard key={card.id} update={update} card={card} side={side} marks={marks}>
+        {attached.length > 0 ? (
+          <div className="sve-attached">
+            {attached.map((a) => (
+              <CardTile key={a.id} card={a} side={side} size="small" />
+            ))}
+          </div>
+        ) : null}
+      </TableCard>
+    );
+  };
+  const exCard = (card: CardView | HiddenCardView) => <TableCard key={card.id} update={update} card={card} side={side} marks={marks} className="sve-ex-card" />;
+  // A row's cards in their slots; the slot a waiting card may take lights up (the waiting card's own slot too).
+  const row = (zone: SlotZone, show: (card: CardView | HiddenCardView) => ReactNode) => {
+    const cards = side[zone];
+    const key = rowKey(side.id, zone);
+    const ids = slots.rows[key] ?? EMPTY_ROW;
+    const byId = new Map(cards.map((c) => [c.id, c]));
+    const waiting = slots.waiting[0];
+    const choosing = waiting !== undefined && ids.includes(waiting);
+    return (
+      <>
+        <div className="sve-mat-row-zone" style={rectStyle(rowRect(zone, opponent))} data-zone={`${side.id}:${zone}`} />
+        {cards.every((c) => ids.includes(c.id)) ? (
+          ids.map((id, i) => {
+            const card = id === null ? undefined : byId.get(id);
+            const choosable = choosing && (id === null || id === waiting);
+            return (
+              <div
+                key={i}
+                className={`sve-slot sve-${zone}-slot${choosable ? " sve-slot-choosable" : ""}${id !== null && id === waiting ? " sve-slot-waiting" : ""}`}
+                style={rectStyle(slotRect(zone, i, opponent))}
+                data-slot={i}
+              >
+                {card ? show(card) : null}
+                {choosable ? <div className="sve-slot-pick" role="button" title={t("table.slotHere")} onClick={() => chooseSlot(i)} data-testid={`slot-${zone}-${i}`} /> : null}
+              </div>
+            );
+          })
+        ) : (
+          <div className={`sve-mat-row sve-${zone}-row`} style={rectStyle(rowRect(zone, opponent))}>
+            {cards.map(show)}
+          </div>
+        )}
+      </>
+    );
+  };
   const lastVisible = (cards: readonly (CardView | HiddenCardView)[]): CardView | null => {
     const top = cards[cards.length - 1];
     return top && !top.hidden ? top : null;
@@ -145,7 +204,11 @@ function Mat({ update, side, opponent, marks }: { update: GameUpdate; side: Play
   const lastFaceUp = [...side.evolveDeck].reverse().find((c): c is CardView => !c.hidden && c.faceUp) ?? null;
   return (
     <div className={`sve-mat ${opponent ? "sve-mat-opponent" : "sve-mat-own"}`} data-drop={opponent ? undefined : "play"} data-player={side.id}>
-      <div className="sve-mat-picture" />
+      <div className="sve-mat-picture">
+        {PIECES.map((piece, i) => (
+          <div key={i} className={`sve-mat-piece sve-mat-piece-${piece.kind}`} style={pieceStyle(piece)} />
+        ))}
+      </div>
       {at(
         "leader",
         side.leader ? (
@@ -163,33 +226,8 @@ function Mat({ update, side, opponent, marks }: { update: GameUpdate; side: Play
         "evolveDeck",
         <Pile side={side} zone="evolveDeck" count={side.evolveDeck.length} top={lastFaceUp} back />,
       )}
-      {at(
-        "field",
-        <div className="sve-mat-row sve-field-row" data-zone={`${side.id}:field`}>
-          {side.field.map((card) => {
-            const attached = card.hidden ? [] : linked.filter((l) => l.linkedTo === card.id);
-            return (
-              <TableCard key={card.id} update={update} card={card} side={side} marks={marks}>
-                {attached.length > 0 ? (
-                  <div className="sve-attached">
-                    {attached.map((a) => (
-                      <CardTile key={a.id} card={a} side={side} size="small" />
-                    ))}
-                  </div>
-                ) : null}
-              </TableCard>
-            );
-          })}
-        </div>,
-      )}
-      {at(
-        "ex",
-        <div className="sve-mat-row sve-ex-row" data-zone={`${side.id}:ex`}>
-          {side.ex.map((card) => (
-            <TableCard key={card.id} update={update} card={card} side={side} marks={marks} className="sve-ex-card" />
-          ))}
-        </div>,
-      )}
+      {row("field", fieldCard)}
+      {row("ex", exCard)}
     </div>
   );
 }
@@ -274,10 +312,16 @@ export function Table({ update, onNewGame, onMenu }: { update: GameUpdate; onNew
   const ref = useRef<HTMLDivElement>(null);
   const layout = useTableLayout(ref);
   const marks = useMarks(update);
+  const slots = useSlots(update);
+  const catalog = useApp((s) => s.catalog);
+  const { cardLang } = useSettings();
   const t = useT();
   const me = update.perspective;
   const opponent = opponentOf(me);
   const view = update.view;
+  // The card waiting for its slot (choose card spots by hand).
+  const waiting = slots.waiting[0] !== undefined ? findCard(view, slots.waiting[0]) : null;
+  const placing = waiting ? cardName(catalog?.def(waiting.def), cardLang, waiting.name) : null;
   const vars = {
     "--mat-width": `${layout.matWidth}px`,
     "--mat-height": `${layout.matHeight}px`,
@@ -292,11 +336,11 @@ export function Table({ update, onNewGame, onMenu }: { update: GameUpdate; onNew
     <div className="sve-table" ref={ref} style={vars}>
       <HandStrip update={update} side={view.players[opponent]} opponent marks={marks} layout={layout} />
       <div className="sve-mats">
-        <Mat update={update} side={view.players[opponent]} opponent marks={marks} />
-        <Mat update={update} side={view.players[me]} opponent={false} marks={marks} />
+        <Mat update={update} side={view.players[opponent]} opponent marks={marks} slots={slots} />
+        <Mat update={update} side={view.players[me]} opponent={false} marks={marks} slots={slots} />
         <PlayerPanel update={update} side={view.players[opponent]} opponent />
         <PlayerPanel update={update} side={view.players[me]} opponent={false} />
-        <CenterLine update={update} />
+        <CenterLine update={update} placing={placing} />
         {view.resolution.length > 0 ? (
           <div className="sve-resolution-zone" data-zone="resolution" title={t("game.resolution")}>
             {view.resolution.map((c) => (

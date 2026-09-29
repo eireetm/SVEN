@@ -671,15 +671,34 @@ option {
   height: var(--mat-height);
 }
 
-/* The playmat picture; the opponent's is the same turned 180 degrees. Without one, a plain mat with its line. */
+/*
+ * The playmat: its picture's pieces (game/board/layout.ts), only the picture itself, so its see-through parts show the
+ * battlefield behind. The opponent's is the same turned 180 degrees. Without a picture, a plain mat with its line and the
+ * slots as outlines.
+ */
 .sve-mat-picture {
   position: absolute;
   inset: 0;
+}
+
+:root:not([data-field-image]) .sve-mat-picture {
   background:
-    var(--sve-field-image) center / 100% 100% no-repeat,
-    linear-gradient(transparent 57.8%, rgba(110, 200, 255, 0.5) 57.8%, rgba(110, 200, 255, 0.5) 58.2%, transparent 58.2%),
+    linear-gradient(transparent 57.9%, rgba(110, 200, 255, 0.5) 57.9%, rgba(110, 200, 255, 0.5) 58.2%, transparent 58.2%),
     radial-gradient(ellipse at 50% 45%, #0f4b7a 0%, #062443 45%, #021a30 80%);
   box-shadow: 0 0 0 1px rgba(110, 200, 255, 0.15);
+}
+
+.sve-mat-piece {
+  position: absolute;
+  background-image: var(--sve-field-image);
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+:root:not([data-field-image]) .sve-mat-piece-slot,
+:root:not([data-field-image]) .sve-mat-piece-pile {
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px rgba(110, 200, 255, 0.3);
 }
 
 .sve-mat-opponent .sve-mat-picture {
@@ -693,13 +712,57 @@ option {
   justify-content: center;
 }
 
+/* A row's zone (where animations fly to), and the row itself when it holds more cards than its slots. */
+.sve-mat-row-zone {
+  position: absolute;
+  pointer-events: none;
+}
+
 .sve-mat-row {
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: calc(var(--mat-width) * 0.008);
-  width: 100%;
-  height: 100%;
+}
+
+/* A drawn slot of the field or the EX area and its card; an engaged card lies across the room between the slots. */
+.sve-slot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Choose card spots by hand: the slots the waiting card may take light up, the waiting card pulses. */
+.sve-slot-choosable {
+  border-radius: 10px;
+  box-shadow: 0 0 0 2px var(--sve-accent), 0 0 18px rgba(240, 180, 41, 0.55);
+}
+
+.sve-slot-pick {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.sve-slot-pick:hover {
+  background: rgba(240, 180, 41, 0.18);
+}
+
+.sve-slot-waiting .sve-card-face {
+  animation: sve-waiting 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes sve-waiting {
+  from {
+    box-shadow: 0 0 0 2px var(--sve-accent);
+  }
+  to {
+    box-shadow: 0 0 0 3px var(--sve-accent), 0 0 20px var(--sve-accent);
+  }
 }
 
 /* Field cards stand by the line where the mats meet. */
@@ -715,10 +778,10 @@ option {
   --sve-card-width: calc(var(--sve-card-base) * 0.82);
 }
 
-/* A card that fills a slot of the mat (leader, piles). */
+/* A card that fills a pile's spot on the mat (leader, piles). */
 .sve-slot-card,
 .sve-mat-zone .sve-slot-back {
-  --w: calc(var(--mat-width) * 0.115);
+  --w: var(--sve-card-base);
 }
 
 .sve-slot-back {
@@ -926,6 +989,9 @@ option {
 }
 
 .sve-center-status {
+  /* Just under the opponent's panel, growing downwards (a long prompt never covers the panel). */
+  top: calc(50% - 56px);
+  transform: none;
   right: calc(100% + 12px);
   padding: 6px 10px;
   border-radius: 10px;

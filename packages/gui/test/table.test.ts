@@ -3,12 +3,13 @@ import { describe, expect, it } from "vitest";
 import type { LogEntry } from "../src/engine/protocol";
 import { actionsFor, answerFor, attackTargets, dragKind } from "../src/game/actions";
 import { planFlights } from "../src/game/animation/plan";
-import { computeLayout, MAT_HEIGHT, MAT_WIDTH, MAT_ZONES, zoneRect } from "../src/game/board/layout";
+import { computeLayout, ENGAGED_WIDTH, MAT_HEIGHT, PIECES, SLOT_COUNT, SLOT_PITCH, WIDE_WIDTH, pileRect, slotRect, type PileZone, type Rect } from "../src/game/board/layout";
+import { NO_SLOTS, placeWaiting, reconcileSlots } from "../src/game/board/slots";
 
 // The table's pure parts: the layout of the mats, the options of a card, and the flights of the animations.
 
 describe("table layout", () => {
-  it("fits both mats, the hands and the side panels in the table area, at the playmat's aspect", () => {
+  it("fits both mats, the hands and the side panels in the table area, at the wide mat's aspect", () => {
     for (const [width, height] of [
       [945, 900],
       [1240, 1080],
@@ -16,7 +17,7 @@ describe("table layout", () => {
       [600, 1000],
     ] as const) {
       const l = computeLayout(width, height);
-      expect(l.matWidth / l.matHeight).toBeCloseTo(MAT_WIDTH / MAT_HEIGHT, 5);
+      expect(l.matWidth / l.matHeight).toBeCloseTo(WIDE_WIDTH / MAT_HEIGHT, 5);
       expect(l.opponentHandHeight + 2 * l.matHeight + l.handHeight).toBeLessThanOrEqual(height);
       expect(l.matWidth + 2 * Math.min(l.sideWidth, 120)).toBeLessThanOrEqual(width);
       // Your hand's cards fit in their strip.
@@ -24,20 +25,68 @@ describe("table layout", () => {
     }
   });
 
-  it("puts the opponent's zones at the same spots turned 180 degrees", () => {
-    const own = MAT_ZONES.leader;
-    const theirs = zoneRect("leader", true);
+  it("puts the opponent's zones at the same spots turned 180 degrees, all on the mat", () => {
+    const own = pileRect("leader", false);
+    const theirs = pileRect("leader", true);
     expect(theirs.left).toBeCloseTo(100 - own.left - own.width, 5);
     expect(theirs.top).toBeCloseTo(100 - own.top - own.height, 5);
-    // Every zone stays on the mat.
-    for (const zone of Object.keys(MAT_ZONES) as (keyof typeof MAT_ZONES)[]) {
-      for (const r of [zoneRect(zone, false), zoneRect(zone, true)]) {
-        expect(r.left).toBeGreaterThanOrEqual(0);
-        expect(r.top).toBeGreaterThanOrEqual(0);
-        expect(r.left + r.width).toBeLessThanOrEqual(100.01);
-        expect(r.top + r.height).toBeLessThanOrEqual(100.01);
-      }
+    const piles: PileZone[] = ["leader", "deck", "cemetery", "evolveDeck", "banished"];
+    const rects: Rect[] = piles.flatMap((p) => [pileRect(p, false), pileRect(p, true)]);
+    for (const zone of ["field", "ex"] as const) for (let i = 0; i < SLOT_COUNT; i++) rects.push(slotRect(zone, i, false), slotRect(zone, i, true));
+    for (const r of rects) {
+      expect(r.left).toBeGreaterThanOrEqual(0);
+      expect(r.top).toBeGreaterThanOrEqual(0);
+      expect(r.left + r.width).toBeLessThanOrEqual(100.01);
+      expect(r.top + r.height).toBeLessThanOrEqual(100.01);
     }
+  });
+
+  it("spreads the slots so that engaged cards overlap neither each other nor the piles, drawn parts keeping their size", () => {
+    expect(SLOT_PITCH - ENGAGED_WIDTH).toBeGreaterThanOrEqual(10);
+    // In picture pixels: an engaged card in the first slot stays right of the left piles, in the last left of the right ones.
+    const px = (r: Rect) => ({ left: (r.left / 100) * WIDE_WIDTH, right: ((r.left + r.width) / 100) * WIDE_WIDTH });
+    const first = px(slotRect("field", 0, false));
+    const last = px(slotRect("field", SLOT_COUNT - 1, false));
+    const middle = (s: { left: number; right: number }) => (s.left + s.right) / 2;
+    expect(middle(first) - ENGAGED_WIDTH / 2).toBeGreaterThan(px(pileRect("evolveDeck", false)).right);
+    expect(middle(last) + ENGAGED_WIDTH / 2).toBeLessThan(px(pileRect("deck", false)).left);
+    // Slots and piles are shown at the size they are drawn; only the divider's plain ends stretch.
+    for (const piece of PIECES) {
+      const width = (piece.dst.width / 100) * WIDE_WIDTH;
+      if (piece.kind === "line" && Math.abs(width - piece.src.w) > 1) expect(width).toBeGreaterThan(piece.src.w);
+      else expect(width).toBeCloseTo(piece.src.w, 5);
+    }
+  });
+});
+
+describe("the mat's slots", () => {
+  const side = (id: 0 | 1, field: string[], ex: string[] = []) => ({ id, field: field.map((c) => ({ id: c })), ex: ex.map((c) => ({ id: c })) });
+  const view = (own: string[], theirs: string[] = [], ex: string[] = []) => ({ players: [side(0, own, ex), side(1, theirs)] }) as never;
+
+  it("gives a new card the first free slot and keeps every card in its slot while it stays", () => {
+    let slots = reconcileSlots(NO_SLOTS, view(["a", "b"]), () => false);
+    expect(slots.rows["0:field"]).toEqual(["a", "b", null, null, null]);
+    slots = reconcileSlots(slots, view(["b", "c"], ["x"], ["e"]), () => false);
+    expect(slots.rows["0:field"]).toEqual(["c", "b", null, null, null]);
+    expect(slots.rows["1:field"]).toEqual(["x", null, null, null, null]);
+    expect(slots.rows["0:ex"]).toEqual(["e", null, null, null, null]);
+    // Nothing changed: the same object (the table then does not redraw).
+    expect(reconcileSlots(slots, view(["b", "c"], ["x"], ["e"]), () => false)).toBe(slots);
+    expect(slots.waiting).toEqual([]);
+  });
+
+  it("lets a person pick the slot of each new card when placing by hand", () => {
+    let slots = reconcileSlots(NO_SLOTS, view(["a"]), (p) => p === 0);
+    expect(slots.waiting).toEqual(["a"]);
+    slots = reconcileSlots(slots, view(["a", "b"], ["x"]), (p) => p === 0);
+    expect(slots.waiting).toEqual(["a", "b"]);
+    slots = placeWaiting(slots, 3);
+    expect(slots.rows["0:field"]).toEqual([null, "b", null, "a", null]);
+    // A taken slot can't be picked; the card's own slot can.
+    expect(placeWaiting(slots, 3)).toBe(slots);
+    slots = placeWaiting(slots, 1);
+    expect(slots.waiting).toEqual([]);
+    expect(slots.rows["1:field"]).toEqual(["x", null, null, null, null]);
   });
 });
 

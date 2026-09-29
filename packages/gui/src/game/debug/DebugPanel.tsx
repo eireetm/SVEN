@@ -20,7 +20,7 @@ export function DebugPanel({ update }: { update: GameUpdate }) {
   }, [update.inputCount]);
   const lastHuman = update.humanInputs[update.humanInputs.length - 1];
   const settings = update.settings;
-  const { animations } = useSettings();
+  const { animations, manualSlots } = useSettings();
   const saveReplay = async () => {
     const replay = await engine.exportReplay();
     if (replay) downloadJson(`sve-replay-${replay.options.seed}-${replay.inputs.length}.json`, replay);
@@ -74,6 +74,10 @@ export function DebugPanel({ update }: { update: GameUpdate }) {
       <label className="sve-check">
         <input type="checkbox" checked={animations} onChange={(e) => updateSettings({ animations: e.target.checked })} />
         {t("debug.animations")}
+      </label>
+      <label className="sve-check" title={t("debug.manualSlotsHelp")}>
+        <input type="checkbox" checked={manualSlots} onChange={(e) => updateSettings({ manualSlots: e.target.checked })} data-testid="debug-manual-slots" />
+        {t("debug.manualSlots")}
       </label>
       <div className="sve-debug-row">
         <button type="button" disabled={!settings.paused} onClick={() => engine.send({ kind: "step" })}>

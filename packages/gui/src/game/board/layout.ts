@@ -1,11 +1,25 @@
-// The table: two playmats (Misc/field, one player's half of the table) facing each other — the opponent's is the same
-// picture turned 180 degrees — with a hand outside each. Zones are placed at their spots on the picture, in percent of the
-// mat, so any window size (and any player-made field picture of the same layout) lines up.
+// The table: two playmats (one player's half of the table each) facing each other — the opponent's is the same picture
+// turned 180 degrees — with a hand outside each. The picture (Misc/field.png, or public/textures/board/field.*) has drawn
+// slots: the leader and four piles at the sides, five field slots above the divider and five EX area slots below it.
+//
+// The table shows the picture wider than it is drawn, without stretching anything drawn: the picture is cut into its pieces
+// (each pile and slot, the divider's ornament and its two ends), and the room between the piles and the slots grows by
+// SPREAD, so that engaged cards (lying sideways, as wide as a card is tall, CR 4.2.2) never overlap each other or a pile.
+// Positions are in percent of that wide mat, so any window size (and any player-made picture of the same layout) lines up.
 
-/** The playmat picture's size (Misc/field.png); a custom field picture should keep this aspect and layout. */
+/** The playmat picture's size; a custom field picture should keep this size and layout. */
 export const MAT_WIDTH = 1586;
 export const MAT_HEIGHT = 992;
 
+/** A rectangle in the picture's pixels, glow included (measured on the alpha channel of Misc/field.png). */
+export interface PictureRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** A rectangle on the wide mat, in percent of it. */
 export interface Rect {
   left: number;
   top: number;
@@ -13,32 +27,132 @@ export interface Rect {
   height: number;
 }
 
-/** Where things are on the viewer's own mat, in percent (measured on Misc/field.png: its slots and the divider). */
-export const MAT_ZONES = {
-  leader: { left: 86.76, top: 6.35, width: 11.79, height: 25.5 },
-  deck: { left: 86.76, top: 34.38, width: 11.79, height: 25.6 },
-  cemetery: { left: 86.7, top: 63.81, width: 11.92, height: 26.31 },
-  evolveDeck: { left: 1.45, top: 34.27, width: 11.85, height: 25.81 },
-  banished: { left: 1.45, top: 64.42, width: 11.92, height: 26.61 },
-  // Above the divider (58%): the field. Below it: the EX area.
-  field: { left: 14.3, top: 2, width: 71.4, height: 54 },
-  ex: { left: 14.3, top: 60, width: 71.4, height: 38.5 },
-} satisfies Record<string, Rect>;
+const PILES = {
+  leader: { x: 1375, y: 62, w: 190, h: 255 },
+  deck: { x: 1375, y: 339, w: 191, h: 258 },
+  cemetery: { x: 1375, y: 632, w: 190, h: 264 },
+  evolveDeck: { x: 22, y: 339, w: 191, h: 258 },
+  banished: { x: 22, y: 638, w: 192, h: 267 },
+} satisfies Record<string, PictureRect>;
 
-export type MatZone = keyof typeof MAT_ZONES;
+export type PileZone = keyof typeof PILES;
 
-/** A zone of the opponent's mat: the same spot turned 180 degrees around the mat's center. */
-export function zoneRect(zone: MatZone, opponent: boolean): Rect {
-  const r = MAT_ZONES[zone];
-  return opponent ? { left: 100 - r.left - r.width, top: 100 - r.top - r.height, width: r.width, height: r.height } : r;
+/** The field (CR 4.4) above the divider and the EX area (CR 4.8) below it: five slots each, their limits (4.4.4.1, 4.8.3.1). */
+export type SlotZone = "field" | "ex";
+export const SLOT_COUNT = 5;
+const SLOT_XS = [234, 465, 696, 928, 1159];
+const SLOT_Y: Record<SlotZone, number> = { field: 195, ex: 635 };
+const SLOT_W = 196;
+const SLOT_H = 273;
+
+const DIVIDER = { x: 238, y: 564, w: 1111, h: 24 };
+/** The divider's ornament, in the middle: kept at its size; the plain line on each side of it is stretched. */
+const ORNAMENT = { x: 645, w: 295 };
+
+/** The middle of the picture (between the left piles' right edge and the right piles' left edge) is shown SPREAD wider. */
+const LEFT = 214;
+const RIGHT = 1375;
+const SPREAD = 1.17;
+const EXTRA = (RIGHT - LEFT) * (SPREAD - 1);
+
+/** The wide mat's width, in picture pixels. */
+export const WIDE_WIDTH = MAT_WIDTH + EXTRA;
+
+/** A card on the mat, in picture pixels: it fits inside a slot's outline. */
+export const CARD_WIDTH = 182;
+const CARD_RATIO = 88 / 63;
+
+/** Where a picture x goes on the wide mat: the left piles stay, the right ones move by EXTRA, the middle spreads. */
+function wideX(x: number): number {
+  if (x <= LEFT) return x;
+  if (x >= RIGHT) return x + EXTRA;
+  return LEFT + (x - LEFT) * SPREAD;
+}
+
+const toRect = (x: number, y: number, w: number, h: number): Rect => ({
+  left: (x / WIDE_WIDTH) * 100,
+  top: (y / MAT_HEIGHT) * 100,
+  width: (w / WIDE_WIDTH) * 100,
+  height: (h / MAT_HEIGHT) * 100,
+});
+
+/** A piece kept at its size, its middle moved to where the middle goes. */
+const kept = (r: PictureRect): Rect => toRect(wideX(r.x + r.w / 2) - r.w / 2, r.y, r.w, r.h);
+
+/** The same spot on the opponent's mat: turned 180 degrees around the mat's center. */
+const turned = (r: Rect, opponent: boolean): Rect => (opponent ? { left: 100 - r.left - r.width, top: 100 - r.top - r.height, width: r.width, height: r.height } : r);
+
+/** Where the leader or a pile is. */
+export function pileRect(zone: PileZone, opponent: boolean): Rect {
+  return turned(kept(PILES[zone]), opponent);
+}
+
+/** Where slot `index` of the field or the EX area is (0 is the player's own leftmost). */
+export function slotRect(zone: SlotZone, index: number, opponent: boolean): Rect {
+  return turned(kept({ x: SLOT_XS[index]!, y: SLOT_Y[zone], w: SLOT_W, h: SLOT_H }), opponent);
+}
+
+/** The whole row of the field or the EX area: the zone's outline, and where cards go when there are more than slots. */
+export function rowRect(zone: SlotZone, opponent: boolean): Rect {
+  const first = kept({ x: SLOT_XS[0]!, y: SLOT_Y[zone], w: SLOT_W, h: SLOT_H });
+  const last = kept({ x: SLOT_XS[SLOT_COUNT - 1]!, y: SLOT_Y[zone], w: SLOT_W, h: SLOT_H });
+  return turned({ left: first.left, top: first.top, width: last.left + last.width - first.left, height: first.height }, opponent);
+}
+
+/** A piece of the picture and where it goes on the wide mat. */
+export interface Piece {
+  src: PictureRect;
+  dst: Rect;
+  /** A slot or a pile (drawn with an outline when there is no picture). */
+  kind: "slot" | "pile" | "line";
+}
+
+function dividerPieces(): Piece[] {
+  const middle = wideX(ORNAMENT.x + ORNAMENT.w / 2);
+  const ornamentLeft = middle - ORNAMENT.w / 2;
+  const ornamentRight = middle + ORNAMENT.w / 2;
+  const start = wideX(DIVIDER.x);
+  const end = wideX(DIVIDER.x + DIVIDER.w);
+  const { y, h } = DIVIDER;
+  return [
+    { src: { x: DIVIDER.x, y, w: ORNAMENT.x - DIVIDER.x, h }, dst: toRect(start, y, ornamentLeft - start, h), kind: "line" },
+    { src: { x: ORNAMENT.x, y, w: ORNAMENT.w, h }, dst: toRect(ornamentLeft, y, ORNAMENT.w, h), kind: "line" },
+    { src: { x: ORNAMENT.x + ORNAMENT.w, y, w: DIVIDER.x + DIVIDER.w - ORNAMENT.x - ORNAMENT.w, h }, dst: toRect(ornamentRight, y, end - ornamentRight, h), kind: "line" },
+  ];
+}
+
+/** The picture's pieces on the viewer's own mat (the opponent's picture is turned as a whole). */
+export const PIECES: readonly Piece[] = [
+  ...Object.values(PILES).map((src): Piece => ({ src, dst: kept(src), kind: "pile" })),
+  ...(["field", "ex"] as const).flatMap((zone) =>
+    SLOT_XS.map((x): Piece => {
+      const src = { x, y: SLOT_Y[zone], w: SLOT_W, h: SLOT_H };
+      return { src, dst: kept(src), kind: "slot" };
+    }),
+  ),
+  ...dividerPieces(),
+];
+
+/** A piece's box and the part of the picture it shows (background size and position in percent of the box). */
+export function pieceStyle(piece: Piece): Record<string, string> {
+  const { src, dst } = piece;
+  return {
+    ...rectStyle(dst),
+    backgroundSize: `${(MAT_WIDTH / src.w) * 100}% ${(MAT_HEIGHT / src.h) * 100}%`,
+    backgroundPosition: `${(src.x / (MAT_WIDTH - src.w)) * 100}% ${(src.y / (MAT_HEIGHT - src.h)) * 100}%`,
+  };
 }
 
 export const rectStyle = (r: Rect) => ({ left: `${r.left}%`, top: `${r.top}%`, width: `${r.width}%`, height: `${r.height}%` });
 
+/** The distance between two slots' middles and the room an engaged card needs, in picture pixels (for the tests). */
+export const SLOT_PITCH = (SLOT_XS[1]! - SLOT_XS[0]!) * SPREAD;
+export const ENGAGED_WIDTH = CARD_WIDTH * CARD_RATIO;
+
 export interface TableLayout {
   matWidth: number;
   matHeight: number;
-  /** A card on the field (the mat's slots are 11.8% of its width; a little less leaves gaps). */
+  /** A card on the mat. */
   cardWidth: number;
   /** Heights of the strips for the hands, outside the mats, and the width a hand may spread over. */
   handHeight: number;
@@ -52,11 +166,8 @@ export interface TableLayout {
 
 const clamp = (x: number, min: number, max: number): number => Math.max(min, Math.min(max, x));
 
-/** A field card is this part of the mat's width (the slots are 11.8%; a little less leaves gaps). */
-const CARD_OF_MAT = 0.108;
-/** Your hand's cards are this much larger than the field's. */
+/** Your hand's cards are this much larger than the mat's. */
 const HAND_SCALE = 1.3;
-const CARD_RATIO = 88 / 63;
 const HAND_MARGIN = 16;
 
 /**
@@ -65,14 +176,15 @@ const HAND_MARGIN = 16;
  */
 export function computeLayout(width: number, height: number): TableLayout {
   const opponentHandHeight = clamp(height * 0.06, 36, 72);
-  const side = clamp(width * 0.15, 120, 220);
-  // height = opponent hand + 2 mats + your hand (card height + margin), your cards sized from the mat.
-  const handPerMat = (MAT_WIDTH / MAT_HEIGHT) * CARD_OF_MAT * HAND_SCALE * CARD_RATIO;
+  const side = clamp(width * 0.13, 110, 220);
+  // height = opponent hand + 2 mats + your hand (card height + margin), cards sized from the mat's height.
+  const cardPerMat = CARD_WIDTH / MAT_HEIGHT;
+  const handPerMat = cardPerMat * HAND_SCALE * CARD_RATIO;
   const byHeight = (height - opponentHandHeight - HAND_MARGIN - 8) / (2 + handPerMat);
-  const byWidth = ((width - 2 * side) * MAT_HEIGHT) / MAT_WIDTH;
+  const byWidth = ((width - 2 * side) * MAT_HEIGHT) / WIDE_WIDTH;
   const matHeight = Math.max(120, Math.min(byHeight, byWidth));
-  const matWidth = (matHeight * MAT_WIDTH) / MAT_HEIGHT;
-  const cardWidth = matWidth * CARD_OF_MAT;
+  const matWidth = (matHeight * WIDE_WIDTH) / MAT_HEIGHT;
+  const cardWidth = matHeight * cardPerMat;
   const handCardWidth = cardWidth * HAND_SCALE;
   return {
     matWidth,

@@ -1,6 +1,6 @@
 import { ALL_CARDS } from "@sve/core/sets";
 import { describe, expect, it } from "vitest";
-import { NO_FILTERS, filterPool, poolEntries, setOf, setsOf, type PoolCard } from "../src/decks/filters";
+import { ABILITIES, NO_FILTERS, filterPool, poolEntries, setOf, setsOf, type PoolCard } from "../src/decks/filters";
 import { emptyDeck } from "../src/decks/format";
 import { addCard, clearDeck, copiesOf, copiesOfDefinition, fileNameFor, isDeckCard, removeCard, sectionOf, sortDeck } from "../src/decks/model";
 
@@ -40,6 +40,15 @@ describe("editing a deck", () => {
     let deck = emptyDeck("Sort");
     for (const card of [spell, dear, cheap]) deck = addCard(deck, "main", card.id);
     expect(Object.keys(sortDeck(deck, defOf).main)).toEqual([cheap.id, dear.id, spell.id]);
+  });
+
+  it("sorts by cost, then type (followers, spells, amulets)", () => {
+    const spell = ALL_CARDS.find((c) => c.type === "spell" && !c.token && !c.evolved && c.cost === 1)!;
+    const cheap = ALL_CARDS.find((c) => c.type === "follower" && !c.token && !c.evolved && c.cost === 1)!;
+    const dear = ALL_CARDS.find((c) => c.type === "follower" && !c.token && !c.evolved && c.cost === 5)!;
+    let deck = emptyDeck("Sort");
+    for (const card of [dear, spell, cheap]) deck = addCard(deck, "main", card.id);
+    expect(Object.keys(sortDeck(deck, defOf, "cost").main)).toEqual([cheap.id, spell.id, dear.id]);
   });
 
   it("counts a card's copies over its printings, and makes file names from deck names", () => {
@@ -90,6 +99,16 @@ describe("the card pool", () => {
     expect(wardOnly.some((c) => ward.includes(c))).toBe(false);
     const byCost = filterPool(pool, { ...NO_FILTERS, class: "Swordcraft", sort: "cost" });
     expect(byCost.map((c) => c.cost ?? 99)).toEqual([...byCost.map((c) => c.cost ?? 99)].sort((a, b) => a - b));
+  });
+
+  it("filters by an ability the card text names, and every ability finds cards", () => {
+    const byAbility = (ability: (typeof ABILITIES)[number]) => filterPool(pool, { ...NO_FILTERS, ability });
+    const fanfare = byAbility("fanfare");
+    expect(fanfare.length).toBeGreaterThan(500);
+    expect(fanfare.every((c) => c.text.en.includes("{[fanfare]}"))).toBe(true);
+    expect(byAbility("ward").map((c) => c.id)).toContain("BP10-105");
+    expect(byAbility("sanguine").map((c) => c.id)).toContain("BP01-112");
+    for (const ability of ABILITIES) expect(byAbility(ability).length, ability).toBeGreaterThan(0);
   });
 
   it("lists one tile per card, or every printing of it (alternate arts) next to each other", () => {

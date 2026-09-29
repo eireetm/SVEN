@@ -51,6 +51,9 @@ function applyTheme(): void {
   const root = document.documentElement;
   root.style.setProperty("--sve-card-back-image", cssUrl(cardBackUrl()));
   root.style.setProperty("--sve-field-image", cssUrl(fieldImageUrl()));
+  // With a playmat picture, the mat shows only the picture (its see-through parts too); without, a built-in mat.
+  if (fieldImageUrl()) root.dataset.fieldImage = "true";
+  else delete root.dataset.fieldImage;
   root.style.setProperty("--sve-unknown-image", cssUrl(unknownImageUrl()));
   root.style.setProperty("--sve-menu-image", cssUrl(menuImageUrl()));
   root.style.setProperty("--sve-builder-image", cssUrl(builderImageUrl()));

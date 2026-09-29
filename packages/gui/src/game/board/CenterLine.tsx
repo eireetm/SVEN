@@ -17,7 +17,8 @@ const PHASE_KEYS: Record<string, MessageKey> = {
   over: "game.phase.over",
 };
 
-export function CenterLine({ update }: { update: GameUpdate }) {
+/** `placing`: a card waiting for the person to pick its slot (choose card spots by hand), by name. */
+export function CenterLine({ update, placing = null }: { update: GameUpdate; placing?: string | null }) {
   const t = useT();
   const view = update.view;
   const decision = update.decision?.decision;
@@ -73,7 +74,13 @@ export function CenterLine({ update }: { update: GameUpdate }) {
           <strong>{t("game.turn", { n: view.turn })}</strong> · {t(PHASE_KEYS[view.phase] ?? "game.phase.main")}
         </div>
         {view.phase !== "over" ? <div>{t("game.activePlayer", { player: playerLabel(view.activePlayer, update, t) })}</div> : null}
-        {prompt ? <div className={`sve-center-prompt${decision ? " sve-your-move" : ""}`}>{prompt}</div> : null}
+        {placing ? (
+          <div className="sve-center-prompt sve-your-move" data-testid="table-choose-slot">
+            {t("table.chooseSlot", { card: placing })}
+          </div>
+        ) : prompt ? (
+          <div className={`sve-center-prompt${decision ? " sve-your-move" : ""}`}>{prompt}</div>
+        ) : null}
       </div>
       <div className="sve-center-actions">{buttons}</div>
     </>
