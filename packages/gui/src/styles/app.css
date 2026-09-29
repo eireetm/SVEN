@@ -2500,3 +2500,131 @@ option {
   font-weight: 700;
   color: var(--sve-accent);
 }
+
+/* Replays (replays/ReplaysScreen.tsx): the saved replays, newest first, each with its buttons. */
+.sve-replays {
+  width: min(760px, 92vw);
+  align-items: stretch;
+}
+
+.sve-replays h2 {
+  text-align: center;
+}
+
+.sve-replay-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 56vh;
+  overflow: auto;
+}
+
+.sve-replay-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--sve-panel-2);
+  border: 1px solid var(--sve-border);
+}
+
+.sve-replay-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sve-replay-buttons,
+.sve-replays-actions {
+  display: flex;
+  gap: 6px;
+  flex: none;
+}
+
+.sve-replays-actions {
+  justify-content: center;
+}
+
+.sve-replays-folder {
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.sve-file-button.sve-disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Watching a replay (game/watch/WatchBar.tsx): its playback bar under the card panel on the left. */
+.sve-watch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--sve-border);
+  background: rgb(14 24 38 / var(--sve-ui-alpha));
+}
+
+.sve-watch-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sve-watch-progress {
+  position: relative;
+}
+
+.sve-watch-progress input[type="range"] {
+  width: 100%;
+  margin: 0;
+}
+
+/* A mark under the progress bar where each turn begins. */
+.sve-watch-turns {
+  position: relative;
+  height: 6px;
+  margin: 0 7px;
+}
+
+.sve-watch-turns span {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 6px;
+  background: var(--sve-accent);
+  opacity: 0.7;
+}
+
+.sve-watch-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 6px;
+}
+
+.sve-watch-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.sve-watch-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* A replay's Quick announcement only tells: the table's cards can still be pointed at. */
+.sve-announce-backdrop.sve-announce-watch {
+  pointer-events: none;
+  background: transparent;
+}

@@ -43,6 +43,7 @@ import type {
   Replay,
   SeatController,
   ToWorker,
+  WatchState,
 } from "./protocol";
 import { forEachCard } from "./view-utils";
 
@@ -108,6 +109,27 @@ export function firstPlayerOf(options: Pick<GameOptions, "seed" | "turnOrder">):
   }
 }
 
+/** The engine's configuration for a game's options (pacing and testing choices; the rules are the same). */
+function configOf(options: GameOptions) {
+  const autoResolve = ALL_AUTO_RESOLVABLE.filter(
+    (type) => !(type === "mainPhase" && options.showEveryMainPhase) && !(type === "quick" && options.askEveryQuickWindow),
+  );
+  return { deckRestrictions: options.deckRestrictions, autoResolve, manualActions: options.manualActions === true, firstPlayer: firstPlayerOf(options) };
+}
+
+/** A replay being watched: its inputs, played back one by one (docs/gui.md "录像"). */
+interface Watching {
+  inputs: RecordedInput[];
+  playing: boolean;
+  speed: number;
+  perspective: PlayerId;
+  /** Inputs the engine can play (all, or up to the one it refused: `stopped`). */
+  total: number;
+  turns: number[];
+  stops: number[];
+  stopped: string | null;
+}
+
 /** A quick window where passing is all its player can do (asked only with GameOptions.askEveryQuickWindow). */
 const onlyPass = (decision: Decision): boolean => decision.type === "quick" && decision.actions.every((a) => a.type === "pass");
 
@@ -156,6 +178,8 @@ export class GameHost {
   private replaying = false;
   /** A quick window after an attack is being shown before the host passes it (HostSettings.attackPauseMs). */
   private passing = false;
+  /** The replay being watched (null: a game being played). */
+  private watching: Watching | null = null;
 
   constructor(
     private readonly engine: Engine,
@@ -166,23 +190,35 @@ export class GameHost {
   handle(message: ToWorker): void {
     switch (message.kind) {
       case "start":
+        this.watching = null;
         return this.begin(message.options, []);
       case "answer":
-        return this.answer(message.seat, message.answer);
+        return this.watching ? undefined : this.answer(message.seat, message.answer);
       case "concede":
-        return this.concede(message.seat);
+        return this.watching ? undefined : this.concede(message.seat);
       case "rewind":
+        if (this.watching) return this.seek(message.inputs, false);
         if (this.options) this.begin(this.options, this.inputs.slice(0, Math.max(0, message.inputs)));
         return;
       case "loadReplay":
+        this.watching = null;
         return this.begin(message.replay.options, message.replay.inputs.slice(0, message.inputs ?? message.replay.inputs.length));
+      case "watch":
+        return this.startWatching(message.replay);
+      case "watchControl":
+        return this.controlWatch(message);
       case "exportReplay":
         return this.send({ kind: "replay", requestId: message.requestId, replay: this.replay() });
-      case "settings":
+      case "settings": {
+        const reveal = message.settings.revealAll !== undefined && message.settings.revealAll !== this.settings.revealAll;
         this.settings = { ...this.settings, ...message.settings };
         if (!this.settings.announceQuick) this.announcement = null;
+        // Watching, the log is written for its viewer: showing the hidden cards or not writes it again.
+        if (this.watching && reveal) return this.seek(this.inputs.length, this.watching.playing);
         return this.pump();
+      }
       case "step": {
+        if (this.watching) return this.controlWatch({ step: 1 });
         // Stepping on is also seeing the announcement; then a bot's answer, or the host's pass of a quick window.
         const decision = this.game?.decision;
         this.announcement = null;
@@ -201,9 +237,11 @@ export class GameHost {
     }
   }
 
-  /** The current game as a replay (seed, decks, inputs), or null before any game. */
+  /** The current game as a replay (seed, decks, inputs, how it ended), or null before any game. */
   replay(): Replay | null {
-    return this.options ? { format: "sve-replay", version: 1, options: this.options, inputs: [...this.inputs] } : null;
+    const game = this.game;
+    if (!this.options || !game) return null;
+    return { format: "sve-replay", version: 1, options: this.options, inputs: [...this.inputs], info: { result: game.result, turn: game.state.turn } };
   }
 
   /** The session (tests). */
@@ -216,18 +254,17 @@ export class GameHost {
     this.stopTimer();
     let game: GameSession;
     try {
-      const autoResolve = ALL_AUTO_RESOLVABLE.filter(
-        (type) => !(type === "mainPhase" && options.showEveryMainPhase) && !(type === "quick" && options.askEveryQuickWindow),
-      );
-      const config = { deckRestrictions: options.deckRestrictions, autoResolve, manualActions: options.manualActions === true, firstPlayer: firstPlayerOf(options) };
-      game = this.engine.newGame({ seed: options.seed, players: options.decks, config });
+      game = this.engine.newGame({ seed: options.seed, players: options.decks, config: configOf(options) });
     } catch (err) {
       return this.error(err);
     }
     this.game = game;
     this.options = options;
     this.inputs = [];
-    this.bots = [makeBot(this.engine, options.controllers[0], options.seed, 0), makeBot(this.engine, options.controllers[1], options.seed, 1)];
+    // Watching, nobody plays: the replay's inputs are its answers.
+    this.bots = this.watching
+      ? [null, null]
+      : [makeBot(this.engine, options.controllers[0], options.seed, 0), makeBot(this.engine, options.controllers[1], options.seed, 1)];
     this.known.clear();
     this.log = [];
     this.logSeq = 0;
@@ -300,6 +337,7 @@ export class GameHost {
     this.stopTimer();
     const game = this.game;
     if (!game) return;
+    if (this.watching) return this.pumpWatch();
     this.passing = false;
     this.settleQuick();
     if (game.isOver) this.announcement = null;
@@ -361,6 +399,131 @@ export class GameHost {
   private stopTimer(): void {
     this.cancelTimer?.();
     this.cancelTimer = null;
+  }
+
+  /**
+   * Watch a replay: play it through once at once (where its turns begin, where a step goes, and whether the engine can play
+   * it all: a replay from another version of the engine or the cards may stop), then from its start, input by input.
+   */
+  private startWatching(replay: Replay): void {
+    const speed = this.watching?.speed ?? 1;
+    let checked: Pick<Watching, "total" | "turns" | "stops" | "stopped">;
+    try {
+      checked = this.checkReplay(replay);
+    } catch (err) {
+      return this.error(err);
+    }
+    this.watching = { inputs: replay.inputs, playing: true, speed, perspective: 0, ...checked };
+    this.begin(replay.options, []);
+  }
+
+  private checkReplay(replay: Replay): Pick<Watching, "total" | "turns" | "stops" | "stopped"> {
+    const game = this.engine.newGame({ seed: replay.options.seed, players: replay.options.decks, config: configOf(replay.options) });
+    const turns = game.startupEvents.some((e) => e.type === "turnStarted") ? [0] : [];
+    const stops: number[] = [];
+    let total = 0;
+    let stopped: string | null = null;
+    for (const [i, { input, by }] of replay.inputs.entries()) {
+      const decision = game.decision;
+      if (!decision || game.isOver) break;
+      // A step goes to after each answer of a player, and after the quick window of each attack (its combat).
+      const stop = by !== null || (decision.type === "quick" && decision.timing === "attack");
+      let events: readonly GameEvent[];
+      try {
+        events = game.act(input, by ?? undefined);
+      } catch (err) {
+        stopped = `${i + 1}: ${err instanceof Error ? err.message : String(err)}`;
+        break;
+      }
+      total = i + 1;
+      if (stop) stops.push(total);
+      if (events.some((e) => e.type === "turnStarted")) turns.push(total);
+    }
+    if (stops.at(-1) !== total) stops.push(total);
+    return { total, turns, stops, stopped };
+  }
+
+  /** Watching: publish, then the next input after the pause its kind deserves (none at the end, or paused). */
+  private pumpWatch(): void {
+    const watching = this.watching!;
+    const game = this.game!;
+    this.settleQuick();
+    if (this.inputs.length >= watching.total || !game.decision) watching.playing = false;
+    this.publish(false);
+    if (!watching.playing) return;
+    const next = watching.inputs[this.inputs.length]!;
+    this.cancelTimer = this.scheduler.schedule(() => this.watchInputs(this.inputs.length + 1), this.watchPause(next) / watching.speed);
+  }
+
+  /** How long the table stays before the next input is played (at the normal speed). */
+  private watchPause(next: RecordedInput): number {
+    const decision = this.game!.decision;
+    if (this.announcement) return 1800; // a Quick play: time to read its window
+    if (next.by === null) return decision?.type === "quick" && decision.timing === "attack" ? 600 : 0; // the attack stands a moment
+    return decision?.type === "mainPhase" || decision?.type === "quick" ? 1100 : 700;
+  }
+
+  /** Play the replay's inputs up to `position` (with the animations of what they do). */
+  private watchInputs(position: number): void {
+    this.cancelTimer = null;
+    const watching = this.watching;
+    const game = this.game;
+    if (!watching || !game) return;
+    this.announcement = null;
+    while (this.inputs.length < Math.min(position, watching.total) && game.decision) {
+      const next = watching.inputs[this.inputs.length]!;
+      try {
+        this.apply(next.input, next.by);
+      } catch (err) {
+        // The dry run passed it: nothing should differ; stop rather than go on with another game.
+        watching.stopped = `${this.inputs.length + 1}: ${err instanceof Error ? err.message : String(err)}`;
+        watching.total = this.inputs.length;
+        break;
+      }
+      if (this.inputs.length < position) this.settleQuick();
+    }
+    this.pump();
+  }
+
+  /** Go to a position of the replay at once (no animations: the table and the log are shown as they are there). */
+  private seek(position: number, playing: boolean): void {
+    const watching = this.watching;
+    if (!watching || !this.options) return;
+    watching.playing = playing;
+    this.begin(this.options, watching.inputs.slice(0, Math.max(0, Math.min(position, watching.total))));
+  }
+
+  /** The playback's buttons: play, pause, speed, go to, one step forward or back, whose view. */
+  private controlWatch(control: Extract<ToWorker, { kind: "watchControl" }> | { step: 1 | -1 }): void {
+    const watching = this.watching;
+    if (!watching) return;
+    const position = this.inputs.length;
+    if ("speed" in control && control.speed !== undefined) watching.speed = Math.min(8, Math.max(0.25, control.speed));
+    if ("perspective" in control && control.perspective !== undefined && control.perspective !== watching.perspective) {
+      watching.perspective = control.perspective;
+      // The log is written for its viewer: from this side's view again.
+      return this.seek(position, control.playing ?? watching.playing);
+    }
+    if ("seek" in control && control.seek !== undefined) return this.seek(control.seek, control.playing ?? watching.playing);
+    if (control.step === 1) {
+      watching.playing = false;
+      this.stopTimer();
+      return this.watchInputs(watching.stops.find((stop) => stop > position) ?? watching.total);
+    }
+    if (control.step === -1) return this.seek([...watching.stops].reverse().find((stop) => stop < position) ?? 0, false);
+    if ("playing" in control && control.playing !== undefined) {
+      // Play at the end: from the start again.
+      if (control.playing && position >= watching.total) return this.seek(0, true);
+      watching.playing = control.playing;
+    }
+    this.pump();
+  }
+
+  private watchState(): WatchState | null {
+    const watching = this.watching;
+    if (!watching) return null;
+    const { playing, speed, total, turns, stops, stopped } = watching;
+    return { position: this.inputs.length, total, playing, speed, turns, stops, stopped };
   }
 
   /** Start following a Quick card or ability played at quick timing (CR 7.4.5 / 8.4.7); note the choices made for it. */
@@ -461,8 +624,9 @@ export class GameHost {
     return ([0, 1] as const).filter((p) => this.bots[p] === null);
   }
 
-  /** Whose view to show: the only person; in hot seat, the player who must decide; with bots only, player 1. */
+  /** Whose view to show: the only person; in hot seat, the player who must decide; with bots only, player 1; watching, the one chosen. */
   private perspective(): PlayerId {
+    if (this.watching) return this.watching.perspective;
     const humans = this.humans();
     if (humans.length === 1) return humans[0]!;
     if (humans.length === 2) {
@@ -473,13 +637,15 @@ export class GameHost {
     return 0;
   }
 
-  /** Everything is shown with bots only (watching) and when debugging ("reveal all"). */
+  /** Everything is shown with bots only (watching them) and when debugging ("reveal all"); a replay as its watcher chose. */
   private seesAll(): boolean {
+    if (this.watching) return this.settings.revealAll;
     return this.settings.revealAll || this.humans().length === 0;
   }
 
-  /** Whose information the log shows: the one person, else everything (hot seat, watching, debugging). */
+  /** Whose information the log shows: the one person, else everything (hot seat, watching bots, debugging); a replay's viewer. */
   private logViewer(): PlayerId | "all" {
+    if (this.watching) return this.settings.revealAll ? "all" : this.watching.perspective;
     const humans = this.humans();
     return this.seesAll() || humans.length !== 1 ? "all" : humans[0]!;
   }
@@ -498,7 +664,7 @@ export class GameHost {
   private decisionInfo(): DecisionInfo | null {
     const game = this.game!;
     const decision = game.decision;
-    if (!decision || this.bots[decision.player] || this.passing) return null;
+    if (!decision || this.bots[decision.player] || this.passing || this.watching) return null;
     const visible = new Map<CardId, CardInfo>();
     forEachCard(game.view(decision.player), (card) => visible.set(card.id, { def: card.def, printing: card.printing }));
     const cards: Record<CardId, CardInfo> = {};
@@ -649,10 +815,11 @@ export class GameHost {
       secondLeaders: options.secondLeaders ?? [null, null],
       manual: this.manualInfo(),
       announcement: this.announcement,
+      watch: this.watchState(),
       perspective,
       view: this.view(perspective),
       decision: this.decisionInfo(),
-      waitingFor: this.passing ? null : (game.decision?.player ?? null),
+      waitingFor: this.passing || this.watching ? null : (game.decision?.player ?? null),
       thinking,
       inputCount: this.inputs.length,
       humanInputs: this.inputs.flatMap((r, i) => (r.by !== null && this.bots[r.by] === null && r.input.type !== "concede" ? [i] : [])),
@@ -669,7 +836,7 @@ export class GameHost {
   /** What can be done by hand now, when manual debugging is on (the core's options, the abilities' summaries, the decks). */
   private manualInfo(): ManualInfo | null {
     const game = this.game;
-    const options = this.settings.manualDebug ? game?.manualOptions() : null;
+    const options = this.settings.manualDebug && !this.watching ? game?.manualOptions() : null;
     if (!game || !options) return null;
     const abilities: ManualInfo["abilities"] = {};
     for (const key of options.activatable) {

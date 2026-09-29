@@ -12,6 +12,8 @@ export interface HostConfig {
   publicDir: string;
   /** Deck files (decks/*.json, any sub-folder). */
   decksDir: string;
+  /** Saved replays (replays/*.json: "保存录像" at the end of a game, "观看录像" in the main menu). */
+  replaysDir: string;
   /**
    * The scraped card data and images: `<assetsDir>/<printing>/<printing>.webp`. The environment variable SVE_ASSETS_DIR
    * overrides the default, the `assets` folder next to the repository (D:\SVE\assets).
@@ -29,5 +31,12 @@ const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 export function hostConfig(root: string = packageRoot): HostConfig {
   const assetsDir = resolve(process.env.SVE_ASSETS_DIR ?? join(root, "..", "..", "..", "assets"));
-  return { root, publicDir: join(root, "public"), decksDir: join(root, "decks"), assetsDir, miscDir: join(assetsDir, "Misc") };
+  return {
+    root,
+    publicDir: join(root, "public"),
+    decksDir: join(root, "decks"),
+    replaysDir: join(root, "replays"),
+    assetsDir,
+    miscDir: join(assetsDir, "Misc"),
+  };
 }

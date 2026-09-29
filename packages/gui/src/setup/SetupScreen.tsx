@@ -96,6 +96,8 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
       settings: {
         botDelayMs: settings.botDelayMs,
         paused: false,
+        // A replay watched before may have shown both hands: a game shows its player's own only.
+        revealAll: false,
         manualDebug: settings.manualDebug,
         announceQuick: settings.announceQuick,
         // An attack's arrow stands before its combat, as long as the bots' pause (at most half a second).
@@ -129,7 +131,13 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
       const replay = await readReplayFile(file);
       engine.send({
         kind: "settings",
-        settings: { paused: false, manualDebug: settings.manualDebug, announceQuick: settings.announceQuick, attackPauseMs: Math.min(settings.botDelayMs, 500) },
+        settings: {
+          paused: false,
+          revealAll: false,
+          manualDebug: settings.manualDebug,
+          announceQuick: settings.announceQuick,
+          attackPauseMs: Math.min(settings.botDelayMs, 500),
+        },
       });
       engine.send({ kind: "loadReplay", replay });
       onStarted();

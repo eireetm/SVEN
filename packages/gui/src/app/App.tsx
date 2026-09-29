@@ -6,16 +6,17 @@ import { htmlLang, useT } from "../i18n";
 import { applyUiTransparency, loadResources, useResourcesVersion } from "../resources/resources";
 import { installClickSound, playBgm } from "../resources/sound";
 import type { BgmName } from "../resources/sound-plan";
+import { ReplaysScreen } from "../replays/ReplaysScreen";
 import { SetupScreen } from "../setup/SetupScreen";
 import { MainMenu } from "./MainMenu";
 import { SettingsScreen } from "./SettingsScreen";
 import { useSettings } from "./settings";
 import { dismissError, useApp } from "./store";
 
-type Screen = "menu" | "settings" | "setup" | "builder" | "text" | "game";
+type Screen = "menu" | "settings" | "setup" | "builder" | "text" | "replays" | "game";
 
 /** Each screen's background music (public/audio/bgm, docs/resources.md): the menus', the deck builder's, a game's. */
-const MUSIC: Record<Screen, BgmName> = { menu: "menu", settings: "menu", setup: "menu", builder: "deck", text: "deck", game: "battle" };
+const MUSIC: Record<Screen, BgmName> = { menu: "menu", settings: "menu", setup: "menu", builder: "deck", text: "deck", replays: "menu", game: "battle" };
 
 /**
  * The screens: the main menu first (play against the AI, build decks, settings); the game setup; the deck builder (from
@@ -55,6 +56,7 @@ export function App() {
         <MainMenu
           onPlayAi={() => setScreen("setup")}
           onDeckBuilder={() => openBuilder("menu", null)}
+          onReplays={() => setScreen("replays")}
           onSettings={() => setScreen("settings")}
           onContinue={hasGame ? () => setScreen("game") : undefined}
         />
@@ -81,8 +83,11 @@ export function App() {
     case "text":
       body = <DeckEditor initialFile={deckFile} onBack={() => setScreen("builder")} />;
       break;
+    case "replays":
+      body = <ReplaysScreen onWatch={() => setScreen("game")} onBack={() => setScreen("menu")} />;
+      break;
     case "game":
-      body = <GameScreen onMenu={() => setScreen("menu")} onNewGame={() => setScreen("setup")} />;
+      body = <GameScreen onMenu={() => setScreen("menu")} onNewGame={() => setScreen("setup")} onReplays={() => setScreen("replays")} />;
       break;
   }
 

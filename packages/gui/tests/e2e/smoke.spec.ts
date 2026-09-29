@@ -72,7 +72,7 @@ test("two bots play a game to the end, and the debug panel saves a replay", asyn
   await showSidebar(page);
   await page.getByRole("button", { name: /^Debug$/ }).click();
   const download = page.waitForEvent("download");
-  await page.getByRole("button", { name: /^Save replay$/ }).click();
+  await page.getByRole("button", { name: /^Save a bug report file$/ }).click();
   const file = await download;
   expect(file.suggestedFilename()).toMatch(/^sve-replay-.*\.json$/);
   await page.screenshot({ path: "test-results/04-bots.png" });

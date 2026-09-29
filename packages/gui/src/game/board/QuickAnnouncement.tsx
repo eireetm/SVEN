@@ -61,7 +61,7 @@ function AnnouncementWindow({ update, announcement: a }: { update: GameUpdate; a
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") ok();
+      if (e.key === "Escape" && !update.watch) ok();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -88,8 +88,10 @@ function AnnouncementWindow({ update, announcement: a }: { update: GameUpdate; a
     });
   });
   const player = playerLabel(a.player, update, t);
+  // Watching a replay, it only tells: the playback goes on by itself, and the table's cards can still be pointed at.
+  const watching = update.watch !== null;
   return (
-    <div className="sve-announce-backdrop" onClick={(e) => e.stopPropagation()} data-testid="announcement">
+    <div className={`sve-announce-backdrop${watching ? " sve-announce-watch" : ""}`} onClick={(e) => e.stopPropagation()} data-testid="announcement">
       <div className={`sve-announce ${own ? "sve-announce-own" : "sve-announce-opponent"}`} role="alertdialog" aria-labelledby="sve-announce-text">
         <div ref={cardRef} className="sve-announce-card">
           <CardTile info={a.card} />
@@ -109,9 +111,11 @@ function AnnouncementWindow({ update, announcement: a }: { update: GameUpdate; a
               {t("announce.chose", { choice: item(text) })}
             </p>
           ))}
-          <button type="button" className="sve-primary" onClick={ok} autoFocus data-testid="announcement-ok">
-            {t("announce.ok")}
-          </button>
+          {watching ? null : (
+            <button type="button" className="sve-primary" onClick={ok} autoFocus data-testid="announcement-ok">
+              {t("announce.ok")}
+            </button>
+          )}
         </div>
       </div>
       {arrows.map((arrow, i) => (

@@ -269,6 +269,72 @@ describe("GameHost (engine worker logic)", () => {
     expect(h.errors()).toEqual([]);
   });
 
+  it("saves a game with how it ended, and plays it back input by input: the same game, paused, stepped, sought, from either side", () => {
+    const h = harness(["random", "random"], "watch");
+    h.host.handle({ kind: "settings", settings: { botDelayMs: 0 } });
+    h.host.handle({ kind: "start", options: { ...h.options, askEveryQuickWindow: true } });
+    h.scheduler.run();
+    const replay = h.host.replay()!;
+    expect(replay.info).toEqual({ result: h.host.session!.result, turn: h.host.session!.state.turn });
+    expect(replay.info!.result).not.toBeNull();
+    const final = JSON.stringify(h.host.session!.state);
+
+    const w = harness(["human", "human"], "unused");
+    w.host.handle({ kind: "watch", replay: JSON.parse(JSON.stringify(replay)) as Replay });
+    let update = w.last();
+    expect(update.watch).toMatchObject({ position: 0, total: replay.inputs.length, playing: true, speed: 1, stopped: null });
+    // Nobody is asked anything; the recorded players' names stay.
+    expect(update.decision).toBeNull();
+    expect(update.controllers).toEqual(["random", "random"]);
+    const { stops, turns } = update.watch!;
+    expect(stops.at(-1)).toBe(replay.inputs.length);
+    expect(turns.length).toBeGreaterThan(2);
+    expect([...turns].sort((a, b) => a - b)).toEqual(turns);
+    // Played to its end, it is the same game.
+    w.scheduler.run();
+    update = w.last();
+    expect(update.watch).toMatchObject({ position: replay.inputs.length, playing: false });
+    expect(update.result).not.toBeNull();
+    expect(JSON.stringify(w.host.session!.state)).toBe(final);
+    // Go to the middle, a step forward and one back.
+    const middle = stops[Math.floor(stops.length / 2)]!;
+    w.host.handle({ kind: "watchControl", seek: middle, playing: false });
+    expect(w.last().watch!.position).toBe(middle);
+    w.host.handle({ kind: "watchControl", step: 1 });
+    expect(w.last().watch!.position).toBe(stops.find((s) => s > middle));
+    w.host.handle({ kind: "watchControl", step: -1 });
+    expect(w.last().watch!.position).toBe(middle);
+    // Player 2's view without the hidden cards: player 1's hand is hidden, the log is player 2's.
+    w.host.handle({ kind: "settings", settings: { revealAll: false } });
+    w.host.handle({ kind: "watchControl", perspective: 1 });
+    update = w.last();
+    expect(update.perspective).toBe(1);
+    expect(update.watch!.position).toBe(middle);
+    expect(update.logReset).toBe(true);
+    expect(update.view.players[0].hand.every((c) => c.hidden)).toBe(true);
+    // Play at the end starts it again.
+    w.host.handle({ kind: "watchControl", seek: replay.inputs.length, playing: false });
+    w.host.handle({ kind: "watchControl", playing: true });
+    expect(w.last().watch).toMatchObject({ position: 0, playing: true });
+    expect(w.errors()).toEqual([]);
+  });
+
+  it("stops watching a replay at an input the engine refuses (a replay from another version)", () => {
+    const h = harness(["random", "random"], "watch-bad");
+    h.host.handle({ kind: "settings", settings: { botDelayMs: 0 } });
+    h.host.handle({ kind: "start", options: h.options });
+    h.scheduler.run(40);
+    const replay = h.host.replay()!;
+    const bad = 20;
+    replay.inputs[bad] = { input: { type: "choose", ids: ["no such option"] }, by: replay.inputs[bad]!.by };
+    const w = harness(["human", "human"], "unused");
+    w.host.handle({ kind: "watch", replay });
+    expect(w.last().watch).toMatchObject({ total: bad, stopped: expect.stringMatching(/^21: /) });
+    w.scheduler.run();
+    expect(w.last().watch).toMatchObject({ position: bad, playing: false });
+    expect(w.errors()).toEqual([]);
+  });
+
   it("checks decks with the engine (CR 6.1) and reports a deck it refuses as an error", () => {
     const h = harness(["human", "human"]);
     h.host.handle({ kind: "validateDeck", requestId: 7, deck: { main: ["SD01-001"], evolve: [] }, deckRestrictions: true });

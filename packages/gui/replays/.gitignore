@@ -1,0 +1,4 @@
+# Saved replays are the player's own: only this file and the README are tracked.
+*
+!.gitignore
+!README.md

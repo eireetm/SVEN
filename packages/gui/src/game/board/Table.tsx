@@ -376,7 +376,7 @@ function PlayerPanel({ update, side, opponent, marks }: { update: GameUpdate; si
   );
 }
 
-export function Table({ update, onNewGame, onMenu }: { update: GameUpdate; onNewGame: () => void; onMenu: () => void }) {
+export function Table({ update, onNewGame, onMenu, onReplays }: { update: GameUpdate; onNewGame: () => void; onMenu: () => void; onReplays: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const layout = useTableLayout(ref);
   const marks = useMarks(update);
@@ -424,7 +424,7 @@ export function Table({ update, onNewGame, onMenu }: { update: GameUpdate; onNew
       <ManualDialog update={update} />
       <DecisionDialog key={update.inputCount} update={update} />
       <QuickAnnouncement update={update} />
-      <ResultOverlay update={update} onNewGame={onNewGame} onMenu={onMenu} />
+      <ResultOverlay update={update} onNewGame={onNewGame} onMenu={onMenu} onReplays={onReplays} />
     </div>
   );
 }

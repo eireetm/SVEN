@@ -328,12 +328,12 @@ export function DecisionDialog({ update }: { update: GameUpdate }) {
   const info = update.decision;
   // A quick play being announced comes first (QuickAnnouncement): the decision waits until it has been seen.
   const announcing = update.announcement !== null;
-  const open = !announcing && !!info && inDialog(info.decision, (id) => isOnTable(update.view, id));
+  const open = !announcing && !update.watch && !!info && inDialog(info.decision, (id) => isOnTable(update.view, id));
   const answer = (a: Answer) => sendAnswer(update, a);
   return (
     <div
       className={`sve-decision${sent ? " sve-busy" : ""}${open && !folded ? " sve-decision-open" : ""}`}
-      data-decision={announcing ? "announcement" : (info?.decision.type ?? (update.result ? "over" : "waiting"))}
+      data-decision={announcing && !update.watch ? "announcement" : (info?.decision.type ?? (update.result ? "over" : update.watch ? "watching" : "waiting"))}
       data-announcement={update.announcement?.seq}
       data-inputs={update.inputCount}
     >

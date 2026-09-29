@@ -4,6 +4,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
 import { hostConfig, type HostConfig } from "./config.ts";
 import { deckPath, deleteDeckFile, listDecks, readDeckText, writeDeckText } from "./decks.ts";
+import { deleteReplayFile, listReplays, readReplayText, replayPath, writeReplayText } from "./replays.ts";
 import { CONTENT_TYPES, findCardArt, findMisc, listMisc, listResources } from "./resources.ts";
 
 /** Information about the local files, for the GUI's settings and debug panel (GET /api/host). */
@@ -12,13 +13,15 @@ export interface HostInfo {
   assetsFound: boolean;
   publicDir: string;
   decksDir: string;
+  replaysDir: string;
   /** The Misc images there are (HostConfig.miscDir): "field", "back", "unknown", "background_m" ... */
   misc: string[];
 }
 
 type Next = (err?: unknown) => void;
 
-const MAX_BODY = 1 << 20;
+/** A deck file or a replay (a long game's replay is some hundreds of KB). */
+const MAX_BODY = 8 << 20;
 
 function sendJson(res: ServerResponse, status: number, value: unknown): void {
   res.statusCode = status;
@@ -71,6 +74,10 @@ function readBody(req: IncomingMessage): Promise<string> {
  *  GET  /api/decks/<file>                  a deck file
  *  PUT  /api/decks/<file>                  save a deck file (JSON body)
  *  DELETE /api/decks/<file>                delete a deck file
+ *  GET  /api/replays                       { replays }: saved replays, newest first, with their summaries
+ *  GET  /api/replays/<file>                a replay file
+ *  PUT  /api/replays/<file>                save a replay (JSON body)
+ *  DELETE /api/replays/<file>              delete a replay
  */
 export function hostPlugin(cfg: HostConfig = hostConfig()): Plugin {
   const handle = async (req: IncomingMessage, res: ServerResponse, next: Next): Promise<void> => {
@@ -84,6 +91,7 @@ export function hostPlugin(cfg: HostConfig = hostConfig()): Plugin {
           assetsFound: existsSync(cfg.assetsDir),
           publicDir: cfg.publicDir,
           decksDir: cfg.decksDir,
+          replaysDir: cfg.replaysDir,
           misc: listMisc(cfg),
         };
         return sendJson(res, 200, info);
@@ -121,6 +129,30 @@ export function hostPlugin(cfg: HostConfig = hostConfig()): Plugin {
           const text = await readBody(req);
           JSON.parse(text); // refuse what isn't JSON
           writeDeckText(full, text);
+          return sendJson(res, 200, { ok: true });
+        }
+      }
+      if (path === "replays" && req.method === "GET") return sendJson(res, 200, { replays: listReplays(cfg) });
+      if (path.startsWith("replays/")) {
+        const full = replayPath(cfg, path.slice("replays/".length));
+        if (!full) return sendJson(res, 400, { error: "bad replay file name" });
+        if (req.method === "GET") {
+          if (!existsSync(full)) return sendJson(res, 404, { error: "no such replay" });
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json; charset=utf-8");
+          res.setHeader("Cache-Control", "no-store");
+          res.end(readReplayText(full));
+          return;
+        }
+        if (req.method === "DELETE") {
+          if (!existsSync(full)) return sendJson(res, 404, { error: "no such replay" });
+          deleteReplayFile(full);
+          return sendJson(res, 200, { ok: true });
+        }
+        if (req.method === "PUT") {
+          const text = await readBody(req);
+          JSON.parse(text); // refuse what isn't JSON
+          writeReplayText(full, text);
           return sendJson(res, 200, { ok: true });
         }
       }

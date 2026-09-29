@@ -4,15 +4,18 @@ import { useApp } from "./store";
 interface Props {
   onPlayAi: () => void;
   onDeckBuilder: () => void;
+  /** The saved replays, to watch (docs/gui.md "录像"). */
+  onReplays: () => void;
   onSettings: () => void;
-  /** Back to the game in progress (shown only while there is one). */
+  /** Back to the game in progress, or to the replay being watched (shown only while there is one). */
   onContinue?: () => void;
 }
 
-/** The first screen, in the middle of the window: play against the AI, build decks, or the settings. */
-export function MainMenu({ onPlayAi, onDeckBuilder, onSettings, onContinue }: Props) {
+/** The first screen, in the middle of the window: play against the AI, build decks, watch replays, or the settings. */
+export function MainMenu({ onPlayAi, onDeckBuilder, onReplays, onSettings, onContinue }: Props) {
   const t = useT();
   const ready = useApp((s) => s.ready);
+  const watching = useApp((s) => s.update?.watch != null);
   const startError = useApp((s) => s.startError);
   return (
     <div className="sve-menu">
@@ -22,7 +25,7 @@ export function MainMenu({ onPlayAi, onDeckBuilder, onSettings, onContinue }: Pr
         <nav className="sve-menu-buttons">
           {onContinue ? (
             <button type="button" className="sve-menu-button" onClick={onContinue} data-testid="menu-continue">
-              {t("menu.continue")}
+              {t(watching ? "menu.continueWatching" : "menu.continue")}
             </button>
           ) : null}
           <button type="button" className="sve-menu-button sve-menu-primary" disabled={!ready} onClick={onPlayAi} data-testid="menu-play">
@@ -30,6 +33,9 @@ export function MainMenu({ onPlayAi, onDeckBuilder, onSettings, onContinue }: Pr
           </button>
           <button type="button" className="sve-menu-button" disabled={!ready} onClick={onDeckBuilder} data-testid="menu-decks">
             {t("menu.deckBuilder")}
+          </button>
+          <button type="button" className="sve-menu-button" onClick={onReplays} data-testid="menu-replays">
+            {t("menu.replays")}
           </button>
           <button type="button" className="sve-menu-button" onClick={onSettings} data-testid="menu-settings">
             {t("menu.settings")}

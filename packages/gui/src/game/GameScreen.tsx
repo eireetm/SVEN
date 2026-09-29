@@ -7,13 +7,15 @@ import { ZoneBrowser } from "./board/ZoneBrowser";
 import { CardDetails } from "./card/CardDetails";
 import { DebugPanel } from "./debug/DebugPanel";
 import { LogPanel } from "./log/LogPanel";
+import { WatchBar } from "./watch/WatchBar";
 
 /**
  * The game: the card under the pointer on the left, the table taking the rest. Every decision is answered on the table
  * (lit cards, their menus, the buttons beside the mats) or in the decision window over it. The log and debug tabs are a
- * sidebar, hidden unless shown: it then covers the right of the table, which keeps its size.
+ * sidebar, hidden unless shown: it then covers the right of the table, which keeps its size. A replay being watched has its
+ * playback bar under the card on the left (nobody answers anything).
  */
-export function GameScreen({ onMenu, onNewGame }: { onMenu: () => void; onNewGame: () => void }) {
+export function GameScreen({ onMenu, onNewGame, onReplays }: { onMenu: () => void; onNewGame: () => void; onReplays: () => void }) {
   const update = useApp((s) => s.update);
   const t = useT();
   const [tab, setTab] = useState<"log" | "debug">("log");
@@ -28,7 +30,7 @@ export function GameScreen({ onMenu, onNewGame }: { onMenu: () => void; onNewGam
       </div>
     );
   }
-  const seat = update.controllers[update.perspective] === "human" ? update.perspective : null;
+  const seat = update.controllers[update.perspective] === "human" && !update.watch ? update.perspective : null;
   const concede = () => {
     if (seat !== null && window.confirm(t("game.concedeConfirm"))) engine.send({ kind: "concede", seat });
   };
@@ -48,8 +50,9 @@ export function GameScreen({ onMenu, onNewGame }: { onMenu: () => void; onNewGam
         <section className="sve-sidebar-card">
           <CardDetails />
         </section>
+        {update.watch ? <WatchBar update={update} onExit={onReplays} /> : null}
       </aside>
-      <Table update={update} onNewGame={onNewGame} onMenu={onMenu} />
+      <Table update={update} onNewGame={onNewGame} onMenu={onMenu} onReplays={onReplays} />
       {sidebar ? (
         <aside className="sve-game-right" data-testid="game-sidebar">
           <nav className="sve-tabs">

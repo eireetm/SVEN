@@ -81,12 +81,43 @@ export interface RecordedInput {
   by: PlayerId | null;
 }
 
-/** Everything needed to play a game again exactly: the core is deterministic (seed + decks + inputs). */
+/** A replay's summary, for the list of saved replays and its window (Replay.info). */
+export interface ReplayInfo {
+  /** When it was saved (ISO 8601, the saving computer's clock). */
+  savedAt?: string;
+  /** How the game ended (null: saved before its end). */
+  result: GameResult | null;
+  /** The turn it was in when saved. */
+  turn: number;
+}
+
+/**
+ * Everything needed to play a game again exactly: the core is deterministic (seed + decks + inputs). The same file is a
+ * replay to watch (docs/gui.md "录像") and a bug report to load and play on from (the debug panel's "复现包").
+ */
 export interface Replay {
   format: "sve-replay";
   version: 1;
   options: GameOptions;
   inputs: RecordedInput[];
+  /** A summary (absent from files saved before 2026-09-29). */
+  info?: ReplayInfo;
+}
+
+/** Watching a replay (GameUpdate.watch): where the playback is and how it goes. */
+export interface WatchState {
+  /** Inputs played so far, of `total` (those of the replay the engine can play). */
+  position: number;
+  total: number;
+  playing: boolean;
+  /** 1 = the normal pace; 2 = twice as fast. */
+  speed: number;
+  /** Where each turn begins (turn n at turns[n - 1]), for the progress bar. */
+  turns: number[];
+  /** The positions a step goes to: after each answer of a player, and after each attack's quick window. */
+  stops: number[];
+  /** Why the playback ends early: an input the engine refused (a replay from another version of the engine or cards). */
+  stopped: string | null;
 }
 
 export interface HostSettings {
@@ -120,6 +151,13 @@ export type ToWorker =
   | { kind: "step" }
   /** A person has seen the announcement `seq`: the game goes on. */
   | { kind: "acknowledge"; seq: number }
+  /** Watch a replay from its start (nobody plays: its inputs are played back, docs/gui.md "录像"). */
+  | { kind: "watch"; replay: Replay }
+  /**
+   * The playback of the replay being watched: play or pause, its speed, go to a position (0: the start), one step forward
+   * or back, whose view (with or without both players' hidden cards: HostSettings.revealAll).
+   */
+  | { kind: "watchControl"; playing?: boolean; speed?: number; seek?: number; step?: 1 | -1; perspective?: PlayerId }
   | { kind: "validateDeck"; requestId: number; deck: DeckList; deckRestrictions: boolean };
 
 /** A card's definition and printing, for cards the viewer may see. */
@@ -206,6 +244,8 @@ export interface GameUpdate {
   manual: ManualInfo | null;
   /** A Quick card or ability just resolved: the game waits until a person has seen it (null: nothing to see). */
   announcement: QuickAnnouncement | null;
+  /** A replay being watched (null: a game being played). */
+  watch: WatchState | null;
   /** Whose view this is (the human's seat; in hot seat, the player who must decide). */
   perspective: PlayerId;
   view: PlayerView;
