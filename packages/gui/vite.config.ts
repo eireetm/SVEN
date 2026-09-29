@@ -11,4 +11,7 @@ export default defineConfig({
   },
   worker: { format: "es" },
   build: { target: "es2022", chunkSizeWarningLimit: 10_000 },
+  // Online play loads when first opened (src/online): its libraries are prepared when the server starts, else the dev
+  // server finds them only then and reloads every open page.
+  optimizeDeps: { include: ["trystero", "@trystero-p2p/mqtt", "@trystero-p2p/torrent"] },
 });

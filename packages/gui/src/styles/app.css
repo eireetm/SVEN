@@ -2628,3 +2628,144 @@ option {
   pointer-events: none;
   background: transparent;
 }
+
+/* Online play (online/OnlineScreen.tsx): making or joining a room, codes by hand, the connection and its chat. */
+.sve-online {
+  width: min(620px, 92vw);
+  align-items: stretch;
+}
+
+.sve-online h2 {
+  text-align: center;
+}
+
+.sve-online-step {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sve-online-step p {
+  margin: 0;
+}
+
+.sve-online-join {
+  display: flex;
+  gap: 8px;
+}
+
+.sve-online-join input {
+  flex: 1;
+  min-width: 0;
+}
+
+.sve-online-code {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.sve-online-code textarea {
+  flex: 1;
+  min-width: 0;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.sve-online-room-code {
+  align-items: center;
+  justify-content: center;
+}
+
+.sve-online-room-code strong {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 34px;
+  letter-spacing: 0.18em;
+  color: var(--sve-accent);
+}
+
+.sve-online-manual {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--sve-border);
+  border-radius: 8px;
+}
+
+.sve-online-manual[open] {
+  display: flex;
+}
+
+.sve-online-manual > * + * {
+  margin-top: 6px;
+}
+
+.sve-online-manual textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+}
+
+.sve-online-ok {
+  font-size: 18px;
+  font-weight: 700;
+  color: #7be0a4;
+}
+
+.sve-online-facts {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sve-online-chat {
+  min-height: 90px;
+  max-height: 34vh;
+  overflow: auto;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--sve-panel-2);
+  border: 1px solid var(--sve-border);
+}
+
+.sve-online-chat p {
+  margin: 0 0 4px;
+  overflow-wrap: anywhere;
+}
+
+.sve-online-mine strong {
+  color: var(--sve-accent);
+}
+
+.sve-online-theirs strong {
+  color: #f0c36b;
+}
+
+/* "Check the network" (net/check.ts): what this computer can reach, to compare between two players. */
+.sve-online-check-button {
+  align-self: center;
+}
+
+.sve-online-check {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--sve-border);
+  border-radius: 8px;
+}
+
+.sve-online-check ul {
+  margin: 0;
+  padding-left: 18px;
+  overflow-wrap: anywhere;
+}
+
+.sve-online-ok-text {
+  color: #7be0a4;
+}

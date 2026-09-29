@@ -2,6 +2,7 @@
 // storage): the defaults are used.
 import { useSyncExternalStore } from "react";
 import type { FormatId, SeatController, TurnOrder } from "../engine/protocol";
+import type { TurnServer } from "../net/relays";
 
 export type UiLang = "en" | "zh" | "ja";
 export type CardLang = "en" | "cn" | "ja";
@@ -38,6 +39,8 @@ export interface Settings {
   manualDebug: boolean;
   /** After each Quick card or ability, the game waits until the person has seen it (who played what, its targets). */
   announceQuick: boolean;
+  /** Online play: the player's own TURN relay, for networks that can't connect directly (empty urls: none; docs/online.md). */
+  turn: TurnServer;
 }
 
 const KEY = "sve-gui-settings";
@@ -59,6 +62,7 @@ const DEFAULTS: Settings = {
   manualSlots: false,
   manualDebug: false,
   announceQuick: true,
+  turn: { urls: "", username: "", credential: "" },
 };
 
 /** Settings saved by an older version, brought up to date: "deck restrictions" off became the unlimited format. */

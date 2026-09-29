@@ -13,8 +13,11 @@
   "dependencies": {
     "@sve/bot": "*",
     "@sve/core": "*",
+    "@trystero-p2p/mqtt": "^0.25.4",
+    "@trystero-p2p/torrent": "^0.25.4",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "trystero": "^0.25.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

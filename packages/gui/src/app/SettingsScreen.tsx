@@ -101,6 +101,29 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
           </label>
           <p className="sve-hint">{t("settings.announceQuickHelp")}</p>
         </section>
+        <section className="sve-settings-group">
+          <h3>{t("settings.online")}</h3>
+          {(
+            [
+              ["urls", "settings.turnUrls", "turn:example.com:3478"],
+              ["username", "settings.turnUsername", ""],
+              ["credential", "settings.turnCredential", ""],
+            ] as const
+          ).map(([key, label, placeholder]) => (
+            <label key={key} className="sve-settings-row">
+              <span>{t(label)}</span>
+              <input
+                type={key === "credential" ? "password" : "text"}
+                value={settings.turn[key]}
+                placeholder={placeholder}
+                autoComplete="off"
+                onChange={(e) => updateSettings({ turn: { ...settings.turn, [key]: e.target.value } })}
+                data-testid={`settings-turn-${key}`}
+              />
+            </label>
+          ))}
+          <p className="sve-hint">{t("settings.turnHelp")}</p>
+        </section>
         <button type="button" className="sve-menu-button" onClick={onBack}>
           {t("common.back")}
         </button>

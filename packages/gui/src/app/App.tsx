@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { DeckBuilder } from "../decks/DeckBuilder";
 import { DeckEditor } from "../decks/DeckEditor";
 import { GameScreen } from "../game/GameScreen";
@@ -13,10 +13,13 @@ import { SettingsScreen } from "./SettingsScreen";
 import { useSettings } from "./settings";
 import { dismissError, useApp } from "./store";
 
-type Screen = "menu" | "settings" | "setup" | "builder" | "text" | "replays" | "game";
+type Screen = "menu" | "settings" | "setup" | "builder" | "text" | "replays" | "online" | "game";
+
+/** Online play loads when first opened: its connection libraries stay out of the start. */
+const OnlineScreen = lazy(() => import("../online/OnlineScreen").then((m) => ({ default: m.OnlineScreen })));
 
 /** Each screen's background music (public/audio/bgm, docs/resources.md): the menus', the deck builder's, a game's. */
-const MUSIC: Record<Screen, BgmName> = { menu: "menu", settings: "menu", setup: "menu", builder: "deck", text: "deck", replays: "menu", game: "battle" };
+const MUSIC: Record<Screen, BgmName> = { menu: "menu", settings: "menu", setup: "menu", builder: "deck", text: "deck", replays: "menu", online: "menu", game: "battle" };
 
 /**
  * The screens: the main menu first (play against the AI, build decks, settings); the game setup; the deck builder (from
@@ -57,6 +60,7 @@ export function App() {
           onPlayAi={() => setScreen("setup")}
           onDeckBuilder={() => openBuilder("menu", null)}
           onReplays={() => setScreen("replays")}
+          onOnline={() => setScreen("online")}
           onSettings={() => setScreen("settings")}
           onContinue={hasGame ? () => setScreen("game") : undefined}
         />
@@ -85,6 +89,13 @@ export function App() {
       break;
     case "replays":
       body = <ReplaysScreen onWatch={() => setScreen("game")} onBack={() => setScreen("menu")} />;
+      break;
+    case "online":
+      body = (
+        <Suspense fallback={null}>
+          <OnlineScreen onBack={() => setScreen("menu")} />
+        </Suspense>
+      );
       break;
     case "game":
       body = <GameScreen onMenu={() => setScreen("menu")} onNewGame={() => setScreen("setup")} onReplays={() => setScreen("replays")} />;
