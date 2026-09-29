@@ -37,3 +37,9 @@ export function findCard(view: PlayerView, id: string): CardView | null {
   });
   return found;
 }
+
+/** The side a visible card is on (undefined for the resolution zone's cards). */
+export function sideOf(view: PlayerView, id: string): PlayerSideView | undefined {
+  const here = (card: CardView | HiddenCardView | null): boolean => !!card && !card.hidden && card.id === id;
+  return view.players.find((side) => here(side.leader) || SIDE_ZONES.some((zone) => (side[zone] as readonly (CardView | HiddenCardView)[]).some(here)));
+}

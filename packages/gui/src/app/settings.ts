@@ -21,6 +21,10 @@ export interface Settings {
   setupRestrictions: boolean;
   /** The deck file the deck builder edited last. */
   builderDeck: string | null;
+  /** The deck builder's pool lists every printing (alternate arts) instead of one per card. */
+  builderAllPrintings: boolean;
+  /** How see-through the interface is, 0–0.6 (null: the style's own, public/theme.css or the built-in one). */
+  uiTransparency: number | null;
 }
 
 const KEY = "sve-gui-settings";
@@ -34,6 +38,8 @@ const DEFAULTS: Settings = {
   setupControllers: ["human", "greedy"],
   setupRestrictions: true,
   builderDeck: null,
+  builderAllPrintings: false,
+  uiTransparency: null,
 };
 
 function load(): Settings {

@@ -71,3 +71,33 @@ test("builds a deck: filters, click and drag to add, right-click and drag back t
   await expect(page.getByTestId("builder-file").locator(`option[value="${FILE}"]`)).toHaveCount(0);
   expect(problems).toEqual([]);
 });
+
+test("lists alternate printings, keeps the card panel on the last card, shows a large picture", async ({ page }) => {
+  const problems: string[] = [];
+  page.on("pageerror", (e) => problems.push(e.message));
+  await useSettings(page, { uiLang: "en", builderDeck: null, builderAllPrintings: false });
+  await openBuilder(page);
+  await page.getByRole("button", { name: /^New$/ }).click();
+
+  // All versions: Rose Queen's three printings side by side; the Ultimate one goes into the deck as itself.
+  await page.getByTestId("builder-all-printings").check();
+  await page.getByTestId("builder-search").fill("rose queen");
+  const ultimate = page.locator('.sve-pool-tile[data-printing="BP01-U01"]');
+  await expect(page.locator('.sve-pool-tile[data-printing="BP01-SL01"]')).toBeVisible();
+  await ultimate.click();
+  await expect(page.locator('[data-section=main] .sve-deck-tile[data-printing="BP01-U01"]')).toHaveCount(1);
+  await expect(page.locator('.sve-pool-tile[data-printing="BP01-001"] .sve-pool-count')).toHaveText("(1)");
+
+  // The card panel keeps the card the pointer left, and names its base card.
+  await ultimate.hover();
+  await page.mouse.move(5, 5);
+  await expect(page.locator(".sve-details-meta")).toContainText("a printing of BP01-001");
+  await expect(page.getByTestId("details-printings")).toContainText("BP01-SL01");
+
+  // Its picture, large; Escape closes it.
+  await page.getByTestId("details-art").click();
+  await expect(page.getByTestId("art-viewer")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByTestId("art-viewer")).toHaveCount(0);
+  expect(problems).toEqual([]);
+});

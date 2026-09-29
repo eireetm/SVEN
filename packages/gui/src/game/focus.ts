@@ -1,5 +1,5 @@
-// Which card the card panel shows (the one under the pointer, else the one clicked last) and which cards the board
-// highlights (while pointing at an action, a choice or a log line).
+// Which card the card panel shows (the last one the pointer went over: it stays until the pointer goes over another card)
+// and which cards the board highlights (while pointing at an action, a choice or a log line).
 import { useSyncExternalStore } from "react";
 import type { CardId, CardView } from "@sve/core";
 
@@ -9,17 +9,16 @@ export interface FocusCard {
   def: string;
   printing: string | null;
   back?: boolean;
-  /** The card as it is now, when it is visible in the game. */
+  /** The card as it was when shown, when it is visible in the game (the panel follows it while it stays in its zone). */
   view?: CardView;
 }
 
 interface FocusState {
-  hover: FocusCard | null;
-  pinned: FocusCard | null;
+  shown: FocusCard | null;
   highlight: readonly CardId[];
 }
 
-let state: FocusState = { hover: null, pinned: null, highlight: [] };
+let state: FocusState = { shown: null, highlight: [] };
 const listeners = new Set<() => void>();
 
 function set(change: Partial<FocusState>): void {
@@ -27,8 +26,8 @@ function set(change: Partial<FocusState>): void {
   for (const listener of listeners) listener();
 }
 
-export const setHover = (card: FocusCard | null): void => set({ hover: card });
-export const pinCard = (card: FocusCard | null): void => set({ pinned: card });
+/** Show a card in the card panel (the pointer went over it). */
+export const showCard = (card: FocusCard): void => set({ shown: card });
 export const setHighlight = (ids: readonly CardId[]): void => set({ highlight: ids });
 
 /** A part of the focus state (re-renders only when it changes; the selector must return a primitive or a stored value). */
@@ -39,15 +38,5 @@ export function useFocusSelect<T>(select: (s: FocusState) => T): T {
       return () => listeners.delete(listener);
     },
     () => select(state),
-  );
-}
-
-export function useFocus(): FocusState {
-  return useSyncExternalStore(
-    (listener) => {
-      listeners.add(listener);
-      return () => listeners.delete(listener);
-    },
-    () => state,
   );
 }

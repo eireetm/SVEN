@@ -5,7 +5,7 @@ import { useSettings } from "../../app/settings";
 import { useApp } from "../../app/store";
 import type { CardInfo } from "../../engine/protocol";
 import { useT } from "../../i18n";
-import { pinCard, setHover, useFocusSelect, type FocusCard } from "../focus";
+import { showCard, useFocusSelect, type FocusCard } from "../focus";
 import { CardArt } from "./CardArt";
 import { displayOf } from "./display";
 
@@ -81,10 +81,9 @@ export function CardTile({ card, info, side, size = "normal", mark = null, onCli
       data-def={shown.def}
       title={name}
       style={style}
-      onMouseEnter={() => setHover(focus)}
-      onMouseLeave={() => setHover(null)}
+      onMouseEnter={() => showCard(focus)}
       onPointerDown={onPointerDown}
-      onClick={onPointerDown ? undefined : (onClick ?? (() => pinCard(focus)))}
+      onClick={onPointerDown ? undefined : onClick}
     >
       <div className="sve-card-frame">
         <div className="sve-card-face">
@@ -92,7 +91,11 @@ export function CardTile({ card, info, side, size = "normal", mark = null, onCli
         </div>
         {/* Numbers and keywords stay upright when an engaged card lies sideways. */}
         <div className="sve-card-overlay">
-          {cost !== null && def?.type !== "leader" ? <span className="sve-stat sve-stat-cost">{cost}</span> : null}
+          {cost !== null && def?.type !== "leader" ? (
+            <span className="sve-stat sve-stat-cost" data-class={def?.class}>
+              {cost}
+            </span>
+          ) : null}
           {attack !== null ? <span className={`sve-stat sve-stat-atk${compare(attack, def?.attack)}`}>{attack}</span> : null}
           {defense !== null ? <span className={`sve-stat sve-stat-def${compare(defense, def?.defense)}`}>{defense}</span> : null}
           {keywords.length > 0 && size !== "small" ? (

@@ -1,19 +1,33 @@
+import { useState } from "react";
 import { cardName, cardText } from "../../app/catalog";
-import { useSettings } from "../../app/settings";
+import { type CardLang, useSettings } from "../../app/settings";
 import { useApp } from "../../app/store";
+import { traitName } from "../../app/traits";
+import { findCard, sideOf } from "../../engine/view-utils";
 import { useT } from "../../i18n";
-import { useFocus } from "../focus";
+import { useFocusSelect } from "../focus";
+import { ArtViewer, type ArtFace } from "./ArtViewer";
 import { CardArt } from "./CardArt";
 import { CardText } from "./CardText";
+import { displayOf } from "./display";
 
-/** The card under the pointer (or the one clicked last): picture, names, type, stats, text. */
+const LANGS: readonly CardLang[] = ["en", "cn", "ja"];
+
+/**
+ * The last card the pointer went over: picture (click it for a large one), names, type, traits, stats, text, printings. A
+ * card of the game is followed while it stays in its zone (it evolves, takes damage ...); once it moves it is a new card
+ * (CR 4.1.4) and the panel keeps what it was.
+ */
 export function CardDetails() {
-  const { hover, pinned } = useFocus();
+  const shown = useFocusSelect((f) => f.shown);
+  const update = useApp((s) => s.update);
   const catalog = useApp((s) => s.catalog);
   const { cardLang } = useSettings();
   const t = useT();
-  const focus = hover ?? pinned;
-  if (!focus || !catalog) return <p className="sve-hint">{t("card.hint")}</p>;
+  const [viewing, setViewing] = useState<readonly ArtFace[] | null>(null);
+  if (!shown || !catalog) return <p className="sve-hint">{t("card.hint")}</p>;
+  const now = shown.id && update ? findCard(update.view, shown.id) : null;
+  const focus = now && update ? { ...displayOf(now, sideOf(update.view, now.id), catalog), view: now } : shown;
   const def = catalog.def(focus.def);
   if (!def) return <p className="sve-hint">{focus.def}</p>;
   const view = focus.view;
@@ -27,11 +41,20 @@ export function CardDetails() {
       </div>
     );
   const text = cardText(def, cardLang);
+  // The physical card's printings (a back face has none: its front's).
+  const physical = def.frontFace ? catalog.def(def.frontFace) : def;
+  const printings = physical?.printings ?? [];
+  const printing = focus.printing ?? printings[0] ?? null;
+  const faces = (): ArtFace[] => {
+    const front = physical ?? def;
+    const face = (id: string, back: boolean): ArtFace => ({ def: id, printing, back, name: cardName(catalog.def(id), cardLang, id) });
+    return front.backFace ? [face(front.id, false), face(front.backFace, true)] : [face(def.id, focus.back ?? false)];
+  };
   return (
     <div className="sve-details">
-      <div className="sve-details-art">
+      <button type="button" className="sve-details-art" onClick={() => setViewing(faces())} title={t("card.enlarge")} data-testid="details-art">
         <CardArt printing={focus.printing} def={def.id} back={focus.back} name={def.name} subtitle={t(`type.${def.type}` as const)} />
-      </div>
+      </button>
       <h3 className="sve-details-name">{cardName(def, cardLang)}</h3>
       {names.length > 0 ? <div className="sve-details-names">{names.join(" / ")}</div> : null}
       <div className="sve-details-type">
@@ -39,7 +62,7 @@ export function CardDetails() {
           t(`class.${def.class}` as const),
           t(`type.${def.type}` as const),
           def.evolved ? t("card.evolved") : null,
-          def.token ? "token" : null,
+          def.token ? t("card.token") : null,
           def.universe ? t(`universe.${def.universe}` as const) : null,
         ]
           .filter(Boolean)
@@ -47,7 +70,14 @@ export function CardDetails() {
       </div>
       {def.traits.length > 0 ? (
         <div className="sve-details-traits">
-          {t("card.traits")}: {def.traits.join("・")}
+          {t("card.traits")}: {def.traits.map((trait) => traitName(trait, cardLang)).join("・")}
+          <span className="sve-details-other">
+            {" "}
+            ({LANGS.filter((l) => l !== cardLang)
+              .map((l) => def.traits.map((trait) => traitName(trait, l)).join("・"))
+              .join(" / ")}
+            )
+          </span>
         </div>
       ) : null}
       <div className="sve-details-stats">
@@ -80,9 +110,21 @@ export function CardDetails() {
       ) : null}
       {text ? <CardText text={text} lang={cardLang} /> : <p className="sve-hint">{t("card.noText")}</p>}
       <div className="sve-details-meta">
-        {def.id}
-        {focus.printing && focus.printing !== def.id ? ` · ${focus.printing}` : ""} · {t(`card.status.${def.status}` as const)}
+        {printing ?? def.id}
+        {printing && physical && printing !== physical.id ? ` · ${t("card.altPrinting", { card: physical.id })}` : ""} · {t(`card.status.${def.status}` as const)}
       </div>
+      {printings.length > 1 ? (
+        <div className="sve-details-printings" data-testid="details-printings">
+          {t("card.printings")}:{" "}
+          {printings.map((p, i) => (
+            <span key={p} className={p === printing ? "sve-current" : undefined}>
+              {i > 0 ? " · " : ""}
+              {p}
+            </span>
+          ))}
+        </div>
+      ) : null}
+      {viewing ? <ArtViewer faces={viewing} onClose={() => setViewing(null)} /> : null}
     </div>
   );
 }

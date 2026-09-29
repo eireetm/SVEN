@@ -10,6 +10,12 @@ test("the main menu leads to the settings, where the interface language changes"
   await expect(page.getByTestId("menu-play")).toHaveText("Play vs AI");
   await page.getByTestId("menu-settings").click();
   await page.getByTestId("settings-ui-lang").selectOption("zh");
+  // The interface's transparency: 30% makes panels 0.7 opaque; "default" gives the style's own back.
+  const alpha = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--sve-ui-alpha").trim());
+  await page.getByTestId("settings-ui-transparency").fill("0.3");
+  await expect.poll(alpha).toBe("0.7");
+  await page.getByRole("button", { name: "默认" }).click();
+  await expect.poll(alpha).toBe("0.88");
   await page.getByRole("button", { name: "返回" }).click();
   await expect(page.getByTestId("menu-play")).toHaveText("对战 AI");
   await expect(page.getByTestId("menu-settings")).toHaveText("设置");

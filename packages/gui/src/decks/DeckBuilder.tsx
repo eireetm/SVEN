@@ -1,11 +1,14 @@
 // Stage 5: the deck builder. Left: the card under the pointer. Middle: the deck files and the leader above the deck (main
 // deck and evolve deck). Right, as in YGOPro: the filters above the card pool they let through (no leaders, no tokens).
 // Click a card of the pool or drag it into the deck to add it (it goes into the right section); right-click a card of the
-// deck or drag it back onto the right column to remove it (dropped anywhere else, it stays, as in YGOPro). No
-// deck-building limits here for now: the engine checks decks when a game starts with them on.
+// deck or drag it back onto the right column to remove it (dropped anywhere else, it stays, as in YGOPro). "All versions"
+// lists every printing (alternate arts) of a card: the same card for the rules (CR 2.1.1; the engine counts copies by
+// name, 6.1.1.4), only the picture differs. No deck-building limits here for now: the engine checks decks when a game
+// starts with them on.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";
 import { cardName } from "../app/catalog";
 import { updateSettings, useSettings } from "../app/settings";
+import { traitName } from "../app/traits";
 import { reportError, useApp } from "../app/store";
 import { useElementWidth } from "../app/useElementWidth";
 import type { CatalogCard } from "../engine/protocol";
@@ -14,7 +17,7 @@ import { CardTile } from "../game/card/CardTile";
 import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
 import { DeckStats } from "./DeckStats";
-import { NO_FILTERS, filterPool, setsOf, traitsOf, type PoolFilters, type TypeFilter } from "./filters";
+import { NO_FILTERS, poolEntries, setsOf, traitsOf, type PoolFilters, type TypeFilter } from "./filters";
 import { cardCount, emptyDeck, type DeckFile } from "./format";
 import { LeaderPicker } from "./LeaderPicker";
 import { addCard, clearDeck, copiesOf, copiesOfDefinition, fileNameFor, removeCard, sectionOf, sortDeck, type DeckSection } from "./model";
@@ -41,7 +44,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
   const t = useT();
   const catalog = useApp((s) => s.catalog)!;
   const settings = useSettings();
-  const { cardLang } = settings;
+  const { cardLang, builderAllPrintings: allPrintings } = settings;
   const [files, setFiles] = useState<DeckFileEntry[]>([]);
   const [file, setFile] = useState<string | null>(null);
   const [deck, setDeck] = useState<DeckFile>(() => emptyDeck("New deck"));
@@ -98,18 +101,19 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
   // The card pool: filtered, sorted, shown a page at a time as the list scrolls.
   const poolCards = useMemo(() => catalog.cards, [catalog]);
   const sets = useMemo(() => setsOf(poolCards.filter((c) => c.type !== "leader")), [poolCards]);
-  const traits = useMemo(() => traitsOf(poolCards), [poolCards]);
+  // Trait suggestions in the card language (the filter matches any language).
+  const traits = useMemo(() => [...new Set(traitsOf(poolCards).map((trait) => traitName(trait, cardLang)))].sort((a, b) => a.localeCompare(b)), [poolCards, cardLang]);
   const universes = useMemo(() => [...new Set(poolCards.flatMap((c) => (c.universe ? [c.universe] : [])))], [poolCards]);
   // Typing stays smooth: the pool follows the filters a moment later.
   const deferredFilters = useDeferredValue(filters);
   const results = useMemo(
-    () => filterPool(poolCards, deferredFilters, (c) => cardName(c as CatalogCard, cardLang)) as CatalogCard[],
-    [poolCards, deferredFilters, cardLang],
+    () => poolEntries(poolCards, deferredFilters, allPrintings, (c) => cardName(c as CatalogCard, cardLang)) as { card: CatalogCard; printing: string }[],
+    [poolCards, deferredFilters, allPrintings, cardLang],
   );
   useEffect(() => {
     setLimit(POOL_PAGE);
     poolRef.current?.scrollTo({ top: 0 });
-  }, [filters]);
+  }, [filters, allPrintings]);
   useEffect(() => {
     const element = sentinel.current;
     if (!element) return;
@@ -214,6 +218,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
               <div
                 key={`${printing}:${i}`}
                 className="sve-deck-tile"
+                data-printing={printing}
                 draggable
                 onDragStart={(e) => startDrag(e, DECK_DATA, JSON.stringify({ section: key, printing }))}
                 onContextMenu={(e) => {
@@ -392,20 +397,27 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
             <button type="button" onClick={() => setFilters(NO_FILTERS)}>
               {t("builder.clearFilters")}
             </button>
+            <label className="sve-check sve-builder-all-printings" title={t("builder.allPrintingsHelp")}>
+              <input type="checkbox" checked={allPrintings} onChange={(e) => updateSettings({ builderAllPrintings: e.target.checked })} data-testid="builder-all-printings" />
+              {t("builder.allPrintings")}
+            </label>
           </div>
           <header className="sve-builder-pool-header">
-            <strong>{t("builder.results", { n: results.length })}</strong>
+            <strong>{t(allPrintings ? "builder.resultsPrintings" : "builder.results", { n: results.length })}</strong>
             <span className="sve-hint">{t("builder.addHint")}</span>
           </header>
         </div>
         <div ref={poolRef} className="sve-builder-pool-grid" style={{ "--sve-card-width": `${poolCard}px`, gridTemplateColumns: `repeat(${poolColumns}, ${poolCard}px)` } as CSSProperties} data-testid="builder-pool">
-          {results.slice(0, limit).map((card) => {
-            const printing = card.printings[0] ?? card.id;
-            const count = copiesOfDefinition(deck, card.printings);
+          {results.slice(0, limit).map(({ card, printing }) => {
+            // Copies of the card (any printing; the limit counts them together) and, listing printings, of this one.
+            const total = copiesOfDefinition(deck, card.printings);
+            const own = copiesOfDefinition(deck, [printing]);
+            const alt = printing !== card.printings[0];
             return (
-              <div key={card.id} className="sve-pool-tile" draggable onDragStart={(e) => startDrag(e, POOL_DATA, printing)} onClick={() => add(card, printing)}>
+              <div key={printing} className="sve-pool-tile" draggable onDragStart={(e) => startDrag(e, POOL_DATA, printing)} onClick={() => add(card, printing)} data-printing={printing}>
                 <CardTile info={{ def: card.id, printing }} />
-                {count > 0 ? <span className="sve-pool-count">×{count}</span> : null}
+                {total > 0 ? <PoolCount own={allPrintings ? own : total} total={total} /> : null}
+                {allPrintings && card.printings.length > 1 ? <span className={`sve-printing-label${alt ? " sve-alt" : ""}`}>{printing}</span> : null}
               </div>
             );
           })}
@@ -430,4 +442,10 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
       ) : null}
     </div>
   );
+}
+
+/** A pool tile's copies in the deck: of this printing, and of the card when other printings of it are in too ("(3)"). */
+function PoolCount({ own, total }: { own: number; total: number }) {
+  if (own === 0) return <span className="sve-pool-count sve-pool-count-other">({total})</span>;
+  return <span className="sve-pool-count">{own === total ? `×${own}` : `×${own} (${total})`}</span>;
 }

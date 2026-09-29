@@ -1,5 +1,6 @@
-// The deck builder's leader choice: every leader card in a window (the card panel on the left stays lit). The chosen
-// leader is saved in the deck file (CR 6.1.1.1); the builder's main view only names it.
+// The deck builder's leader choice: every leader card in a window, each of its printings (alternate arts: the same card,
+// CR 2.1.1), and the card panel on the left stays lit. The chosen printing is saved in the deck file (CR 6.1.1.1); the
+// builder's main view only names it.
 import { useEffect, useMemo, useState } from "react";
 import { cardName } from "../app/catalog";
 import { useSettings } from "../app/settings";
@@ -20,10 +21,15 @@ export function LeaderPicker({ current, onPick, onClose }: Props) {
   const catalog = useApp((s) => s.catalog)!;
   const { cardLang } = useSettings();
   const [query, setQuery] = useState("");
-  const currentDef = current ? catalog.printing(current)?.id : undefined;
-  const leaders = useMemo(() => catalog.cards.filter((c) => c.type === "leader"), [catalog]);
+  const leaders = useMemo(() => catalog.cards.filter((c) => c.type === "leader").flatMap((leader) => leader.printings.map((printing) => ({ leader, printing }))), [catalog]);
   const q = query.trim().toLowerCase();
-  const shown = leaders.filter((c) => q === "" || c.printings.some((p) => p.toLowerCase().startsWith(q)) || [c.name, c.names.cn, c.names.ja].some((n) => !!n && n.toLowerCase().includes(q)) || t(`class.${c.class}` as const).toLowerCase().includes(q));
+  const shown = leaders.filter(
+    ({ leader, printing }) =>
+      q === "" ||
+      printing.toLowerCase().startsWith(q) ||
+      [leader.name, leader.names.cn, leader.names.ja].some((n) => !!n && n.toLowerCase().includes(q)) ||
+      t(`class.${leader.class}` as const).toLowerCase().includes(q),
+  );
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -45,16 +51,11 @@ export function LeaderPicker({ current, onPick, onClose }: Props) {
           <button type="button" className={`sve-leader-option sve-leader-none${current === null ? " sve-leader-current" : ""}`} onClick={() => onPick(null)}>
             {t("builder.noLeader")}
           </button>
-          {shown.map((leader) => (
-            <div
-              key={leader.id}
-              className={`sve-leader-option${leader.id === currentDef ? " sve-leader-current" : ""}`}
-              role="button"
-              onClick={() => onPick(leader.printings[0] ?? leader.id)}
-              data-leader={leader.id}
-            >
-              <CardTile info={{ def: leader.id, printing: leader.printings[0] ?? leader.id }} />
+          {shown.map(({ leader, printing }) => (
+            <div key={printing} className={`sve-leader-option${printing === current ? " sve-leader-current" : ""}`} role="button" onClick={() => onPick(printing)} data-leader={printing}>
+              <CardTile info={{ def: leader.id, printing }} />
               <span className="sve-leader-name">{cardName(leader, cardLang)}</span>
+              {leader.printings.length > 1 ? <span className={`sve-printing-label${printing !== leader.printings[0] ? " sve-alt" : ""}`}>{printing}</span> : null}
             </div>
           ))}
         </div>

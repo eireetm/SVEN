@@ -3,7 +3,7 @@ import { DeckBuilder } from "../decks/DeckBuilder";
 import { DeckEditor } from "../decks/DeckEditor";
 import { GameScreen } from "../game/GameScreen";
 import { useT } from "../i18n";
-import { loadResources } from "../resources/resources";
+import { applyUiTransparency, loadResources } from "../resources/resources";
 import { SetupScreen } from "../setup/SetupScreen";
 import { MainMenu } from "./MainMenu";
 import { SettingsScreen } from "./SettingsScreen";
@@ -35,6 +35,7 @@ export function App() {
   useEffect(() => {
     document.documentElement.lang = settings.uiLang === "zh" ? "zh-CN" : "en";
   }, [settings.uiLang]);
+  useEffect(() => applyUiTransparency(settings.uiTransparency), [settings.uiTransparency]);
 
   let body;
   switch (screen) {

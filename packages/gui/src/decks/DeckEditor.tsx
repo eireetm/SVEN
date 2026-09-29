@@ -5,7 +5,7 @@ import { cardName } from "../app/catalog";
 import { useSettings } from "../app/settings";
 import { engine, reportError, useApp } from "../app/store";
 import { CardDetails } from "../game/card/CardDetails";
-import { setHover } from "../game/focus";
+import { showCard } from "../game/focus";
 import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
 import { cardCount, deckFromText, deckToText, emptyDeck, toDeckList } from "./format";
@@ -140,8 +140,7 @@ export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initia
             <div
               key={card.id}
               className="sve-search-result"
-              onMouseEnter={() => setHover({ def: card.id, printing: card.printings[0] ?? card.id })}
-              onMouseLeave={() => setHover(null)}
+              onMouseEnter={() => showCard({ def: card.id, printing: card.printings[0] ?? card.id })}
             >
               <span className="sve-search-name">
                 {cardName(card, cardLang)} <small>{card.id}</small>

@@ -1,5 +1,6 @@
 // The deck builder's card pool: which cards the filters let through, and in which order (pure functions: tested in Node).
 import type { CardDefinition } from "@sve/core";
+import { traitNames } from "../app/traits";
 import { isDeckCard } from "./model";
 
 export type PoolCard = Pick<CardDefinition, "id" | "printings" | "name" | "names" | "class" | "type" | "evolved" | "advanced" | "token" | "frontFace" | "universe" | "traits" | "cost" | "text">;
@@ -21,7 +22,7 @@ export interface PoolFilters {
   set: string;
   /** "any", "none" (class-based cards) or a universe. */
   universe: string;
-  /** Part of a trait (traits are Japanese, as in the card data). */
+  /** Part of a trait's name, in any language (the card data's are Japanese; app/traits.ts has English and Chinese). */
   trait: string;
   sort: "number" | "cost" | "name";
 }
@@ -47,20 +48,28 @@ export function traitsOf(cards: readonly PoolCard[]): string[] {
   return [...new Set(cards.flatMap((c) => c.traits))].sort((a, b) => a.localeCompare(b, "ja"));
 }
 
-function matchesWord(card: PoolCard, word: string): boolean {
-  if (card.id.toLowerCase().startsWith(word) || card.printings.some((p) => p.toLowerCase().startsWith(word))) return true;
+/** A word matches one of the card numbers by prefix, or a name (any language) or the card text. */
+function matchesWord(card: PoolCard, word: string, numbers: readonly string[]): boolean {
+  if (numbers.some((p) => p.toLowerCase().startsWith(word))) return true;
   const texts = [card.name, card.names.en, card.names.cn, card.names.ja, card.text.en, card.text.cn, card.text.ja];
   return texts.some((t) => !!t && t.toLowerCase().includes(word));
 }
 
-function matchesText(card: PoolCard, words: readonly string[]): boolean {
-  return words.every((w) => (w.startsWith("-") && w.length > 1 ? !matchesWord(card, w.slice(1)) : matchesWord(card, w)));
+function matchesText(card: PoolCard, words: readonly string[], numbers: readonly string[]): boolean {
+  return words.every((w) => (w.startsWith("-") && w.length > 1 ? !matchesWord(card, w.slice(1), numbers) : matchesWord(card, w, numbers)));
 }
+
+const wordsOf = (text: string): string[] =>
+  text
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((w) => w !== "" && w !== "-");
 
 /** The deck cards the filters let through, sorted. */
 export function filterPool(cards: readonly PoolCard[], f: PoolFilters, nameOf: (card: PoolCard) => string = (c) => c.name): PoolCard[] {
-  const words = f.text.trim().toLowerCase().split(/\s+/).filter((w) => w !== "" && w !== "-");
-  const trait = f.trait.trim();
+  const words = wordsOf(f.text);
+  const trait = f.trait.trim().toLowerCase();
   const out = cards.filter((card) => {
     if (!isDeckCard(card)) return false;
     if (f.class !== "any" && card.class !== f.class) return false;
@@ -71,10 +80,28 @@ export function filterPool(cards: readonly PoolCard[], f: PoolFilters, nameOf: (
     }
     if (f.set !== "any" && !card.printings.some((p) => setOf(p) === f.set)) return false;
     if (f.universe === "none" ? card.universe !== undefined : f.universe !== "any" && card.universe !== f.universe) return false;
-    if (trait !== "" && !card.traits.some((t) => t.includes(trait))) return false;
-    return matchesText(card, words);
+    if (trait !== "" && !card.traits.some((t) => traitNames(t).some((name) => name.toLowerCase().includes(trait)))) return false;
+    return matchesText(card, words, [card.id, ...card.printings]);
   });
   if (f.sort === "cost") return out.sort((a, b) => (a.cost ?? 99) - (b.cost ?? 99) || a.id.localeCompare(b.id));
   if (f.sort === "name") return out.sort((a, b) => nameOf(a).localeCompare(nameOf(b)) || a.id.localeCompare(b.id));
   return out;
+}
+
+/** A tile of the pool: a card and the printing it shows. */
+export interface PoolEntry {
+  card: PoolCard;
+  printing: string;
+}
+
+/**
+ * The pool's tiles: one per card, showing its first printing; or, with `allPrintings`, one per printing (alternate arts and
+ * reprints: the same card, CR 2.1.1), next to each other. Then the set filter and typed card numbers pick printings.
+ */
+export function poolEntries(cards: readonly PoolCard[], f: PoolFilters, allPrintings: boolean, nameOf?: (card: PoolCard) => string): PoolEntry[] {
+  if (!allPrintings) return filterPool(cards, f, nameOf).map((card) => ({ card, printing: card.printings[0] ?? card.id }));
+  const words = wordsOf(f.text);
+  return filterPool(cards, { ...f, text: "", set: "any" }, nameOf).flatMap((card) =>
+    card.printings.filter((p) => (f.set === "any" || setOf(p) === f.set) && matchesText(card, words, [p])).map((printing) => ({ card, printing })),
+  );
 }

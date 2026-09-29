@@ -34,6 +34,19 @@ export function useResourcesVersion(): number {
 
 const cssUrl = (url: string | null): string => (url ? `url("${url}")` : "none");
 
+/** The interface's transparency from the settings (null: the style's own --sve-ui-alpha, theme.css or built-in). */
+export function applyUiTransparency(transparency: number | null): void {
+  const root = document.documentElement.style;
+  if (transparency === null) root.removeProperty("--sve-ui-alpha");
+  else root.setProperty("--sve-ui-alpha", String(1 - transparency));
+}
+
+/** The interface's transparency now (1 - --sve-ui-alpha). */
+export function currentUiTransparency(): number {
+  const alpha = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--sve-ui-alpha"));
+  return Number.isFinite(alpha) ? Math.round((1 - alpha) * 100) / 100 : 0;
+}
+
 function applyTheme(): void {
   const root = document.documentElement;
   root.style.setProperty("--sve-card-back-image", cssUrl(cardBackUrl()));

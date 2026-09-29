@@ -31,6 +31,16 @@
   --sve-evolved: #b48cff;
   --sve-superevolved: #ffd166;
   --sve-target: #ff5a5a;
+  /* The numbers on a card: attack blue, defense red, the cost circle in the card's class color (like the class icons). */
+  --sve-attack: #2f7bd6;
+  --sve-defense: #c0342c;
+  --sve-class-neutral: #7a818c;
+  --sve-class-forestcraft: #3e9a4b;
+  --sve-class-swordcraft: #e0b22c;
+  --sve-class-runecraft: #2b3c9c;
+  --sve-class-dragoncraft: #95592a;
+  --sve-class-abysscraft: #bd2f80;
+  --sve-class-havencraft: #efe5c7;
   /* A card's width outside the table (the table sets it from the playmat's size). */
   --sve-card-base: 84px;
   --sve-card-width: var(--sve-card-base);
@@ -287,6 +297,17 @@ option {
   min-width: 140px;
 }
 
+.sve-settings-slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sve-settings-value {
+  min-width: 3em;
+  text-align: right;
+}
+
 .sve-screen-header {
   display: flex;
   align-items: center;
@@ -325,6 +346,13 @@ option {
   position: relative;
   flex: none;
   width: var(--w);
+}
+
+.sve-card-clickable,
+.sve-card-action,
+.sve-card-candidate,
+.sve-card-selected,
+.sve-card-target {
   cursor: pointer;
 }
 
@@ -422,19 +450,45 @@ option {
 .sve-stat-cost {
   top: 2px;
   left: 2px;
-  background: #1f4f93;
+  background: var(--sve-class-neutral);
+}
+
+.sve-stat-cost[data-class="Forestcraft"] {
+  background: var(--sve-class-forestcraft);
+}
+
+.sve-stat-cost[data-class="Swordcraft"] {
+  background: var(--sve-class-swordcraft);
+  color: #2b2003;
+}
+
+.sve-stat-cost[data-class="Runecraft"] {
+  background: var(--sve-class-runecraft);
+}
+
+.sve-stat-cost[data-class="Dragoncraft"] {
+  background: var(--sve-class-dragoncraft);
+}
+
+.sve-stat-cost[data-class="Abysscraft"] {
+  background: var(--sve-class-abysscraft);
+}
+
+.sve-stat-cost[data-class="Havencraft"] {
+  background: var(--sve-class-havencraft);
+  color: #3a311d;
 }
 
 .sve-stat-atk {
   bottom: 2px;
   left: 2px;
-  background: #8c5a12;
+  background: var(--sve-attack);
 }
 
 .sve-stat-def {
   bottom: 2px;
   right: 2px;
-  background: #7b2020;
+  background: var(--sve-defense);
 }
 
 .sve-stat.sve-up {
@@ -1246,11 +1300,42 @@ option {
 
 .sve-details-art {
   --w: 180px;
+  display: block;
   width: 180px;
   height: calc(180px * 88 / 63);
+  padding: 0;
   align-self: center;
+  border: none;
   border-radius: 8px;
   overflow: hidden;
+  background: #2a303b;
+  cursor: zoom-in;
+}
+
+.sve-details-other,
+.sve-details-printings {
+  color: var(--sve-muted);
+  font-size: 12px;
+}
+
+.sve-details-printings .sve-current {
+  color: var(--sve-accent);
+  font-weight: 700;
+}
+
+/* A card's picture, large (click the picture in the card panel). */
+.sve-art-viewer {
+  gap: 24px;
+  cursor: zoom-out;
+}
+
+.sve-art-viewer-card {
+  height: min(86vh, 1282px, calc((100vw - var(--sve-left-width) - 80px) / var(--faces, 1) * 88 / 63));
+  aspect-ratio: 63 / 88;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #2a303b;
+  box-shadow: 0 20px 60px #000c;
 }
 
 .sve-details-name {
@@ -1769,9 +1854,35 @@ option {
   pointer-events: none;
 }
 
+.sve-pool-count-other {
+  background: rgb(20 26 36 / 0.85);
+  color: var(--sve-accent);
+  border: 1px solid var(--sve-accent);
+}
+
 .sve-pool-sentinel {
   grid-column: 1 / -1;
   height: 1px;
+}
+
+/* "All versions": each printing's number under its picture; alternate printings in the accent color. */
+.sve-builder-all-printings {
+  grid-column: 1 / -1;
+  font-size: 12px;
+}
+
+.sve-printing-label {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  text-align: center;
+  color: var(--sve-muted);
+  text-shadow: 0 1px 2px #000;
+}
+
+.sve-printing-label.sve-alt {
+  color: var(--sve-accent);
+  font-weight: 700;
 }
 
 /* The leader window. */

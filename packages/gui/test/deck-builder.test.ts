@@ -1,6 +1,6 @@
 import { ALL_CARDS } from "@sve/core/sets";
 import { describe, expect, it } from "vitest";
-import { NO_FILTERS, filterPool, setOf, setsOf, type PoolCard } from "../src/decks/filters";
+import { NO_FILTERS, filterPool, poolEntries, setOf, setsOf, type PoolCard } from "../src/decks/filters";
 import { emptyDeck } from "../src/decks/format";
 import { addCard, clearDeck, copiesOf, copiesOfDefinition, fileNameFor, isDeckCard, removeCard, sectionOf, sortDeck } from "../src/decks/model";
 
@@ -90,5 +90,16 @@ describe("the card pool", () => {
     expect(wardOnly.some((c) => ward.includes(c))).toBe(false);
     const byCost = filterPool(pool, { ...NO_FILTERS, class: "Swordcraft", sort: "cost" });
     expect(byCost.map((c) => c.cost ?? 99)).toEqual([...byCost.map((c) => c.cost ?? 99)].sort((a, b) => a - b));
+  });
+
+  it("lists one tile per card, or every printing of it (alternate arts) next to each other", () => {
+    const rose = { ...NO_FILTERS, text: "BP01-001" };
+    expect(poolEntries(pool, rose, false).map((e) => e.printing)).toEqual(["BP01-001"]);
+    expect(poolEntries(pool, { ...NO_FILTERS, class: "Forestcraft" }, true).slice(0, 3).map((e) => e.printing)).toEqual(["BP01-001", "BP01-SL01", "BP01-U01"]);
+    // A typed number or the set picks printings; a name keeps them all.
+    expect(poolEntries(pool, { ...NO_FILTERS, text: "BP01-U01" }, true).map((e) => e.printing)).toEqual(["BP01-U01"]);
+    expect(poolEntries(pool, { ...NO_FILTERS, set: "PR" }, true).every((e) => setOf(e.printing) === "PR")).toBe(true);
+    const named = poolEntries(pool, { ...NO_FILTERS, text: "rose queen" }, true).filter((e) => e.card.id === "BP01-001");
+    expect(named.map((e) => e.printing)).toEqual(["BP01-001", "BP01-SL01", "BP01-U01"]);
   });
 });
