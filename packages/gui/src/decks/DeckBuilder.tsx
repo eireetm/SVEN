@@ -1,8 +1,8 @@
-// Stage 5: the deck builder. Left: the card under the pointer. Middle: the deck files and the leader, the filters, and the
-// deck (main deck and evolve deck). Right: the card pool the filters let through (no leaders, no tokens). Click a card of
-// the pool or drag it into the deck to add it (it goes into the right section); right-click a card of the deck or drag it
-// back onto the pool to remove it (dropped anywhere else, it stays, as in YGOPro). No deck-building limits here for now:
-// the engine checks decks when a game starts with them on.
+// Stage 5: the deck builder. Left: the card under the pointer. Middle: the deck files and the leader above the deck (main
+// deck and evolve deck). Right, as in YGOPro: the filters above the card pool they let through (no leaders, no tokens).
+// Click a card of the pool or drag it into the deck to add it (it goes into the right section); right-click a card of the
+// deck or drag it back onto the right column to remove it (dropped anywhere else, it stays, as in YGOPro). No
+// deck-building limits here for now: the engine checks decks when a game starts with them on.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";
 import { cardName } from "../app/catalog";
 import { updateSettings, useSettings } from "../app/settings";
@@ -307,14 +307,36 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
             </button>
             <span className="sve-hint">{t("builder.removeHint")}</span>
           </div>
-          <div className="sve-builder-row sve-builder-filters">
-            <input
-              className="sve-builder-search"
-              placeholder={t("builder.search")}
-              value={filters.text}
-              onChange={(e) => setFilter("text", e.target.value)}
-              data-testid="builder-search"
-            />
+        </div>
+        <div
+          ref={deckRef}
+          className={`sve-builder-deck${dropping ? " sve-drop-ok" : ""}`}
+          onDragOver={(e) => {
+            if (has(e, POOL_DATA) || has(e, DECK_DATA)) {
+              e.preventDefault();
+              e.dataTransfer.dropEffect = has(e, POOL_DATA) ? "copy" : "move";
+              if (has(e, POOL_DATA)) setDropping(true);
+            }
+          }}
+          onDragLeave={() => setDropping(false)}
+          onDrop={dropOnDeck}
+          data-testid="builder-deck"
+        >
+          {section("main", t("builder.main"))}
+          {section("evolve", t("builder.evolve"))}
+        </div>
+      </section>
+
+      <aside className="sve-builder-pool" onDragOver={(e) => has(e, DECK_DATA) && e.preventDefault()} onDrop={dropOnPool}>
+        <div className="sve-builder-filters">
+          <input
+            className="sve-builder-search"
+            placeholder={t("builder.search")}
+            value={filters.text}
+            onChange={(e) => setFilter("text", e.target.value)}
+            data-testid="builder-search"
+          />
+          <div className="sve-builder-filter-grid">
             <select value={filters.class} onChange={(e) => setFilter("class", e.target.value)} aria-label={t("builder.class")}>
               <option value="any">{t("builder.anyClass")}</option>
               {CLASSES.map((c) => (
@@ -356,7 +378,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
                 </option>
               ))}
             </select>
-            <input className="sve-builder-trait" list="sve-traits" placeholder={t("builder.trait")} value={filters.trait} onChange={(e) => setFilter("trait", e.target.value)} />
+            <input list="sve-traits" placeholder={t("builder.trait")} value={filters.trait} onChange={(e) => setFilter("trait", e.target.value)} aria-label={t("builder.trait")} />
             <datalist id="sve-traits">
               {traits.map((trait) => (
                 <option key={trait} value={trait} />
@@ -371,31 +393,11 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
               {t("builder.clearFilters")}
             </button>
           </div>
+          <header className="sve-builder-pool-header">
+            <strong>{t("builder.results", { n: results.length })}</strong>
+            <span className="sve-hint">{t("builder.addHint")}</span>
+          </header>
         </div>
-        <div
-          ref={deckRef}
-          className={`sve-builder-deck${dropping ? " sve-drop-ok" : ""}`}
-          onDragOver={(e) => {
-            if (has(e, POOL_DATA) || has(e, DECK_DATA)) {
-              e.preventDefault();
-              e.dataTransfer.dropEffect = has(e, POOL_DATA) ? "copy" : "move";
-              if (has(e, POOL_DATA)) setDropping(true);
-            }
-          }}
-          onDragLeave={() => setDropping(false)}
-          onDrop={dropOnDeck}
-          data-testid="builder-deck"
-        >
-          {section("main", t("builder.main"))}
-          {section("evolve", t("builder.evolve"))}
-        </div>
-      </section>
-
-      <aside className="sve-builder-pool" onDragOver={(e) => has(e, DECK_DATA) && e.preventDefault()} onDrop={dropOnPool}>
-        <header className="sve-builder-pool-header">
-          <strong>{t("builder.results", { n: results.length })}</strong>
-          <span className="sve-hint">{t("builder.addHint")}</span>
-        </header>
         <div ref={poolRef} className="sve-builder-pool-grid" style={{ "--sve-card-width": `${poolCard}px`, gridTemplateColumns: `repeat(${poolColumns}, ${poolCard}px)` } as CSSProperties} data-testid="builder-pool">
           {results.slice(0, limit).map((card) => {
             const printing = card.printings[0] ?? card.id;

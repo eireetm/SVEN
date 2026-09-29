@@ -19,7 +19,8 @@ export interface HostConfig {
   assetsDir: string;
   /**
    * Local images of the game's look that the project doesn't ship either: `<assetsDir>/Misc/` — `field` (one player's
-   * playmat; the opponent's is the same turned 180 degrees), `back` (the card back) and `unknown` (for a missing image).
+   * playmat; the opponent's is the same turned 180 degrees), `back` (the card back) and `unknown` (for a missing image);
+   * optionally the backgrounds `background_m` (main menu), `background_d` (deck builder) and `background_f` (battlefield).
    */
   miscDir: string;
 }

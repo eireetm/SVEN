@@ -12,7 +12,7 @@ export interface HostInfo {
   assetsFound: boolean;
   publicDir: string;
   decksDir: string;
-  /** The Misc images there are (HostConfig.miscDir): "field", "back", "unknown". */
+  /** The Misc images there are (HostConfig.miscDir): "field", "back", "unknown", "background_m" ... */
   misc: string[];
 }
 
@@ -65,7 +65,7 @@ function readBody(req: IncomingMessage): Promise<string> {
  *
  *  GET  /api/host                          HostInfo
  *  GET  /api/card-art/<printing>?def=&back= the card's image (the player's own first, then the scraped one), 404 if none
- *  GET  /api/misc/<name>                   a Misc image of the assets folder (field, back, unknown), 404 if none
+ *  GET  /api/misc/<name>                   a Misc image of the assets folder (field, back, unknown, background_m ...), 404 if none
  *  GET  /api/resources                     { files }: everything under public/
  *  GET  /api/decks                         { decks }: deck files
  *  GET  /api/decks/<file>                  a deck file

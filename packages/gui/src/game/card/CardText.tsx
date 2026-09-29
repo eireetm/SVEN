@@ -1,5 +1,5 @@
 import type { CardLang } from "../../app/settings";
-import { iconUrl } from "../../resources/resources";
+import { iconUrl } from "../../resources/lookup";
 
 // Labels of the {[...]} icons of card text, in the card text's language. A picture in public/textures/icons/<name>.png
 // replaces a label (public/README.md).

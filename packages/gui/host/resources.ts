@@ -45,7 +45,7 @@ export function findCardArt(cfg: HostConfig, printing: string, def: string | nul
   return null;
 }
 
-/** A Misc image (`field`, `back`, `unknown`, see HostConfig.miscDir) by its name without extension, or null. */
+/** A Misc image (`field`, `back`, `unknown`, `background_m` ..., see HostConfig.miscDir) by its name without extension, or null. */
 export function findMisc(cfg: HostConfig, name: string): string | null {
   if (!isSafeId(name)) return null;
   for (const ext of IMAGE_EXTENSIONS) {

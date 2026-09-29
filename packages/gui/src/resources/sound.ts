@@ -2,7 +2,7 @@
 import type { PlayerId } from "@sve/core";
 import { getSettings } from "../app/settings";
 import type { LogEntry } from "../engine/protocol";
-import { soundUrl } from "./resources";
+import { soundUrl } from "./lookup";
 
 function play(url: string | null): void {
   if (!url) return;

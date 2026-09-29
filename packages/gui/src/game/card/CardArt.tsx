@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { hostApi } from "../../host/api";
-import { unknownImageUrl, useResourcesVersion } from "../../resources/resources";
+import { unknownImageUrl } from "../../resources/lookup";
+import { useResourcesVersion } from "../../resources/resources";
 
 interface Props {
   printing: string | null;

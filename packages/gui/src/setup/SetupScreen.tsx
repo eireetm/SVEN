@@ -160,63 +160,65 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
   );
 
   return (
-    <div className="sve-setup">
-      <header className="sve-screen-header">
-        <button type="button" onClick={onBack}>
-          {t("common.back")}
-        </button>
-        <h2>{t("setup.title")}</h2>
-      </header>
-      {decks !== null && decks.length === 0 ? <p className="sve-note">{t("setup.noDecks")}</p> : null}
-      <div className="sve-seats">
-        <section className="sve-seat" data-seat={0}>
-          <h3>{t("setup.you")}</h3>
-          {deckField(0)}
-          <button type="button" className="sve-link-button" onClick={onEditDecks}>
-            {t("setup.editDecks")}
+    <div className="sve-menu">
+      <div className="sve-setup">
+        <header className="sve-screen-header">
+          <button type="button" onClick={onBack}>
+            {t("common.back")}
           </button>
-        </section>
-        <section className="sve-seat" data-seat={1}>
-          <h3>{t("setup.opponent")}</h3>
-          {deckField(1)}
-          {controllerField(1, t("setup.aiType"), OPPONENTS)}
-        </section>
-      </div>
-      <div className="sve-setup-actions">
-        <button type="button" className="sve-primary sve-big-button" disabled={!ready} onClick={start} data-testid="start-game">
-          {t("setup.start")}
-        </button>
-        {hasGame ? (
-          <button type="button" onClick={onStarted}>
-            {t("setup.continue")}
-          </button>
-        ) : null}
-      </div>
-      <details className="sve-advanced">
-        <summary>{t("setup.advanced")}</summary>
-        <div className="sve-advanced-body">
-          {controllerField(0, t("setup.youPlayedBy"), CONTROLLERS)}
-          <label className="sve-field">
-            <span>{t("setup.seed")}</span>
-            <input value={seed} onChange={(e) => setSeed(e.target.value)} data-testid="setup-seed" />
-            <button type="button" onClick={() => setSeed(newSeed())}>
-              {t("setup.randomSeed")}
+          <h2>{t("setup.title")}</h2>
+        </header>
+        {decks !== null && decks.length === 0 ? <p className="sve-note">{t("setup.noDecks")}</p> : null}
+        <div className="sve-seats">
+          <section className="sve-seat" data-seat={0}>
+            <h3>{t("setup.you")}</h3>
+            {deckField(0)}
+            <button type="button" className="sve-link-button" onClick={onEditDecks}>
+              {t("setup.editDecks")}
             </button>
-          </label>
-          <label className="sve-check">
-            <input type="checkbox" checked={restrictions} onChange={(e) => updateSettings({ setupRestrictions: e.target.checked })} />
-            {t("setup.restrictions")}
-          </label>
-          <label className="sve-range">
-            {t("setup.botDelay")}: {settings.botDelayMs} ms
-            <input type="range" min={0} max={3000} step={100} value={settings.botDelayMs} onChange={(e) => updateSettings({ botDelayMs: Number(e.target.value) })} />
-          </label>
-          <label className="sve-file-button">
-            {t("setup.loadReplay")}
-            <input type="file" accept=".json,application/json" hidden onChange={(e) => void loadReplay(e.target.files?.[0])} />
-          </label>
+          </section>
+          <section className="sve-seat" data-seat={1}>
+            <h3>{t("setup.opponent")}</h3>
+            {deckField(1)}
+            {controllerField(1, t("setup.aiType"), OPPONENTS)}
+          </section>
         </div>
-      </details>
+        <div className="sve-setup-actions">
+          <button type="button" className="sve-primary sve-big-button" disabled={!ready} onClick={start} data-testid="start-game">
+            {t("setup.start")}
+          </button>
+          {hasGame ? (
+            <button type="button" onClick={onStarted}>
+              {t("setup.continue")}
+            </button>
+          ) : null}
+        </div>
+        <details className="sve-advanced">
+          <summary>{t("setup.advanced")}</summary>
+          <div className="sve-advanced-body">
+            {controllerField(0, t("setup.youPlayedBy"), CONTROLLERS)}
+            <label className="sve-field">
+              <span>{t("setup.seed")}</span>
+              <input value={seed} onChange={(e) => setSeed(e.target.value)} data-testid="setup-seed" />
+              <button type="button" onClick={() => setSeed(newSeed())}>
+                {t("setup.randomSeed")}
+              </button>
+            </label>
+            <label className="sve-check">
+              <input type="checkbox" checked={restrictions} onChange={(e) => updateSettings({ setupRestrictions: e.target.checked })} />
+              {t("setup.restrictions")}
+            </label>
+            <label className="sve-range">
+              {t("setup.botDelay")}: {settings.botDelayMs} ms
+              <input type="range" min={0} max={3000} step={100} value={settings.botDelayMs} onChange={(e) => updateSettings({ botDelayMs: Number(e.target.value) })} />
+            </label>
+            <label className="sve-file-button">
+              {t("setup.loadReplay")}
+              <input type="file" accept=".json,application/json" hidden onChange={(e) => void loadReplay(e.target.files?.[0])} />
+            </label>
+          </div>
+        </details>
+      </div>
     </div>
   );
 }

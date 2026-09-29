@@ -1,11 +1,24 @@
 /*
  * The built-in look. Every size and color is a variable or a class (sve-...) so that public/theme.css (loaded after this
  * file) can change anything; public/theme.example.css shows the main variables.
+ *
+ * As in YGOPro, the interface is a little see-through, so it never hides the background picture completely: panels,
+ * windows, buttons and fields at 224/255 (--sve-ui-alpha), the deck builder's card areas at 64/255 (--sve-area-alpha).
  */
 :root {
+  --sve-ui-alpha: 0.88;
+  --sve-area-alpha: 0.25;
+  /* How much the background pictures (main menu, deck builder, battlefield) are darkened: 0 not at all, 1 black. */
+  --sve-background-dim: 0.2;
   --sve-bg: #14171d;
-  --sve-panel: #1f242d;
-  --sve-panel-2: #2a303b;
+  --sve-panel: rgb(31 36 45 / var(--sve-ui-alpha));
+  --sve-panel-2: rgb(42 48 59 / var(--sve-ui-alpha));
+  --sve-input: rgb(17 20 26 / var(--sve-ui-alpha));
+  /* A card area of the deck builder (the deck sections, the pool): blue to black, like YGOPro's. */
+  --sve-area: linear-gradient(rgb(24 72 170 / var(--sve-area-alpha)), rgb(0 0 0 / var(--sve-area-alpha)));
+  --sve-background-shade: linear-gradient(rgb(4 8 16 / var(--sve-background-dim)), rgb(4 8 16 / var(--sve-background-dim)));
+  /* Behind everything when there is no background picture. */
+  --sve-backdrop: radial-gradient(ellipse at center, #0b2540 0%, #041222 70%, #020a14 100%);
   --sve-border: #3a4252;
   --sve-text: #e6e9ef;
   --sve-muted: #98a1b1;
@@ -29,6 +42,8 @@
   --sve-field-image: none;
   --sve-unknown-image: none;
   --sve-menu-image: none;
+  --sve-builder-image: none;
+  --sve-battle-image: none;
   color-scheme: dark;
   font-family: system-ui, "Segoe UI", "Microsoft YaHei", "Yu Gothic UI", sans-serif;
   font-size: 14px;
@@ -75,7 +90,7 @@ button:disabled {
 }
 
 .sve-primary {
-  background: #2f5a3f;
+  background: rgb(47 90 63 / var(--sve-ui-alpha));
   border-color: var(--sve-good);
   font-weight: 600;
 }
@@ -83,10 +98,15 @@ button:disabled {
 input,
 select,
 textarea {
-  background: #11141a;
+  background: var(--sve-input);
   border: 1px solid var(--sve-border);
   border-radius: 4px;
   padding: 3px 6px;
+}
+
+/* A select's list is drawn on its own: an opaque color keeps its options readable. */
+option {
+  background: #161a21;
 }
 
 /* App frame */
@@ -98,7 +118,7 @@ textarea {
 
 .sve-tab-active {
   border-color: var(--sve-accent) !important;
-  background: #3a3322;
+  background: rgb(58 51 34 / var(--sve-ui-alpha));
 }
 
 .sve-screen {
@@ -163,7 +183,7 @@ textarea {
   display: flex;
   gap: 8px;
   align-items: flex-start;
-  background: #4a1d1d;
+  background: rgb(74 29 29 / var(--sve-ui-alpha));
   border: 1px solid var(--sve-bad);
   border-radius: 6px;
   padding: 8px;
@@ -172,16 +192,16 @@ textarea {
   word-break: break-word;
 }
 
-/* Main menu and settings: a panel in the middle of the window, over the playmat (or the player's menu background). */
+/* Main menu, settings and game setup: a panel in the middle of the window, over the main menu's background (background_m). */
 .sve-menu {
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   background:
-    linear-gradient(rgba(6, 10, 18, 0.55), rgba(6, 10, 18, 0.8)),
+    var(--sve-background-shade),
     var(--sve-menu-image) center / cover no-repeat,
-    var(--sve-bg);
+    var(--sve-backdrop);
 }
 
 .sve-menu-panel {
@@ -192,10 +212,9 @@ textarea {
   min-width: 340px;
   padding: 36px 44px;
   border-radius: 16px;
-  background: rgba(20, 26, 36, 0.82);
+  background: var(--sve-panel);
   border: 1px solid rgba(120, 170, 230, 0.25);
   box-shadow: 0 20px 60px #000a;
-  backdrop-filter: blur(4px);
 }
 
 .sve-menu-title {
@@ -226,11 +245,11 @@ textarea {
   padding: 12px 20px;
   font-size: 17px;
   border-radius: 10px;
-  background: rgba(42, 48, 59, 0.9);
+  background: var(--sve-panel-2);
 }
 
 .sve-menu-primary {
-  background: linear-gradient(#2d6a8f, #1d4a6c);
+  background: linear-gradient(rgb(45 106 143 / var(--sve-ui-alpha)), rgb(29 74 108 / var(--sve-ui-alpha)));
   border-color: #6cc4ff;
   font-weight: 700;
 }
@@ -328,7 +347,7 @@ textarea {
   inset: 0;
   border-radius: var(--sve-card-radius);
   overflow: hidden;
-  background: var(--sve-panel-2);
+  background: #2a303b;
   box-shadow: 0 1px 3px #000a;
 }
 
@@ -540,12 +559,15 @@ textarea {
   --w: calc(var(--sve-card-width) * 0.4);
 }
 
-/* Game screen: the card panel, the table, the decision and the log. */
+/* Game screen: the card panel, the table, the decision and the log, over the battlefield's background (background_f). */
 .sve-game {
   display: grid;
   grid-template-columns: var(--sve-left-width) minmax(0, 1fr) clamp(280px, 22vw, 380px);
   height: 100%;
-  background: #050b14;
+  background:
+    var(--sve-background-shade),
+    var(--sve-battle-image) center / cover no-repeat,
+    var(--sve-backdrop);
 }
 
 .sve-game-left,
@@ -579,7 +601,6 @@ textarea {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(ellipse at center, #0b2540 0%, #041222 70%, #020a14 100%);
   user-select: none;
 }
 
@@ -763,7 +784,7 @@ textarea {
   gap: 3px;
   padding: 8px 10px;
   border-radius: 10px;
-  background: rgba(14, 24, 38, 0.88);
+  background: rgb(14 24 38 / var(--sve-ui-alpha));
   border: 1px solid rgba(110, 200, 255, 0.22);
   font-size: 12px;
 }
@@ -852,6 +873,10 @@ textarea {
 
 .sve-center-status {
   right: calc(100% + 12px);
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgb(14 24 38 / var(--sve-ui-alpha));
+  border: 1px solid rgba(110, 200, 255, 0.22);
   font-size: 12px;
   color: #cfe3f5;
 }
@@ -884,7 +909,7 @@ textarea {
 .sve-center-actions .sve-primary {
   font-size: 15px;
   padding: 12px 10px;
-  background: linear-gradient(#2f7a52, #1f5a3b);
+  background: linear-gradient(rgb(47 122 82 / var(--sve-ui-alpha)), rgb(31 90 59 / var(--sve-ui-alpha)));
   box-shadow: 0 0 14px rgba(76, 195, 138, 0.35);
 }
 
@@ -920,7 +945,7 @@ textarea {
   max-width: 320px;
   padding: 8px;
   border-radius: 10px;
-  background: rgba(20, 26, 36, 0.97);
+  background: rgb(20 26 36 / var(--sve-ui-alpha));
   border: 1px solid var(--sve-action);
   box-shadow: 0 10px 30px #000c;
 }
@@ -1065,7 +1090,7 @@ textarea {
   gap: 10px;
   padding: 28px 40px;
   border-radius: 16px;
-  background: rgba(20, 26, 36, 0.95);
+  background: rgb(20 26 36 / var(--sve-ui-alpha));
   border: 1px solid var(--sve-accent);
   box-shadow: 0 20px 60px #000c;
 }
@@ -1095,7 +1120,6 @@ textarea {
   padding: 10px 12px;
   max-height: 52%;
   overflow: auto;
-  background: var(--sve-panel);
   border-bottom: 1px solid var(--sve-border);
 }
 
@@ -1371,7 +1395,7 @@ textarea {
   max-height: 260px;
   overflow: auto;
   font-size: 11px;
-  background: #11141a;
+  background: var(--sve-input);
   padding: 6px;
 }
 
@@ -1428,14 +1452,19 @@ textarea {
   font-weight: 700;
 }
 
-/* Setup */
+/* Setup: a large panel over the main menu's background. */
 .sve-setup {
-  height: 100%;
+  width: min(1040px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
   overflow: auto;
   padding: 16px 24px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  border-radius: 16px;
+  background: var(--sve-panel);
+  border: 1px solid rgba(120, 170, 230, 0.25);
+  box-shadow: 0 20px 60px #000a;
 }
 
 .sve-setup h2 {
@@ -1454,7 +1483,7 @@ textarea {
   gap: 8px;
   padding: 12px;
   border-radius: 10px;
-  background: var(--sve-panel);
+  background: var(--sve-panel-2);
 }
 
 .sve-seat h3 {
@@ -1481,13 +1510,17 @@ textarea {
   align-items: center;
 }
 
-/* Deck editor */
+/* Deck text editor: its three columns are panels over the deck builder's background. */
 .sve-decks {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
   height: 100%;
   padding: 12px;
+  background:
+    var(--sve-background-shade),
+    var(--sve-builder-image) center / cover no-repeat,
+    var(--sve-backdrop);
 }
 
 .sve-decks section {
@@ -1496,6 +1529,9 @@ textarea {
   gap: 6px;
   min-height: 0;
   overflow: auto;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--sve-panel);
 }
 
 .sve-decks-files ul {
@@ -1552,12 +1588,16 @@ textarea {
   padding-top: 6px;
 }
 
-/* Deck builder: the card panel, the deck (files, filters, main and evolve deck), the card pool. */
+/* Deck builder: the card panel, the deck (files and leader above the main and evolve deck), the filters and the card
+   pool, over the deck builder's background (background_d). */
 .sve-builder {
   display: grid;
   grid-template-columns: var(--sve-left-width) minmax(0, 1fr) clamp(300px, 27vw, 470px);
   height: 100%;
-  background: #050b14;
+  background:
+    var(--sve-background-shade),
+    var(--sve-builder-image) center / cover no-repeat,
+    var(--sve-backdrop);
 }
 
 .sve-builder-center {
@@ -1584,7 +1624,7 @@ textarea {
 }
 
 .sve-builder-files {
-  max-width: 280px;
+  max-width: 240px;
 }
 
 .sve-builder-name {
@@ -1601,27 +1641,12 @@ textarea {
   font-weight: 700;
 }
 
-.sve-builder-filters input,
-.sve-builder-filters select {
-  max-width: 150px;
-}
-
-.sve-builder-search {
-  width: 190px;
-  max-width: none !important;
-}
-
-.sve-builder-trait {
-  width: 110px;
-}
-
-/* The deck: a table-like area the pool's cards are dropped on. */
+/* The deck: the area the pool's cards are dropped on; each section a see-through card area under a title bar. */
 .sve-builder-deck {
   flex: 1;
   min-height: 0;
   overflow: auto;
   padding: 10px 12px 16px;
-  background: radial-gradient(ellipse at 50% 30%, #0b2540 0%, #041222 75%);
 }
 
 .sve-builder-deck.sve-drop-ok {
@@ -1636,7 +1661,12 @@ textarea {
   display: flex;
   align-items: baseline;
   gap: 8px;
+  width: fit-content;
   margin: 0 0 6px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--sve-panel);
+  border: 1px solid rgba(110, 200, 255, 0.15);
   font-size: 14px;
   color: #cfe3f5;
 }
@@ -1652,8 +1682,8 @@ textarea {
   min-height: calc(var(--sve-card-width) * 88 / 63);
   padding: 6px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(110, 200, 255, 0.15);
+  background: var(--sve-area);
+  border: 1px solid rgba(110, 200, 255, 0.25);
 }
 
 .sve-deck-tile,
@@ -1675,21 +1705,44 @@ textarea {
   font-size: 12px;
 }
 
-/* The card pool on the right. */
+/* The right column: the filters above the card pool, as in YGOPro's deck editor. */
 .sve-builder-pool {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  background: var(--sve-panel);
   border-left: 1px solid var(--sve-border);
+}
+
+.sve-builder-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px 8px;
+  background: var(--sve-panel);
+  border-bottom: 1px solid var(--sve-border);
+}
+
+.sve-builder-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 6px;
+}
+
+.sve-builder-filter-grid > *,
+.sve-builder-search {
+  width: 100%;
+  min-width: 0;
+}
+
+.sve-builder-filter-grid > button {
+  justify-content: center;
 }
 
 .sve-builder-pool-header {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 10px 12px 6px;
-  border-bottom: 1px solid var(--sve-border);
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
 }
 
 .sve-builder-pool-grid {
@@ -1700,6 +1753,7 @@ textarea {
   gap: 6px;
   align-content: start;
   padding: 8px 12px;
+  background: var(--sve-area);
 }
 
 .sve-pool-count {
