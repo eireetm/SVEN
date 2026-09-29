@@ -78,6 +78,11 @@ test("a person plays on the table: drags cards to play them and attacks from a m
       await page.waitForTimeout(30);
       continue;
     }
+    // The bot's Quick card, shown until OK (nothing is answered).
+    if (kind === "announcement") {
+      await answer(page, kind);
+      continue;
+    }
     const before = await inputs();
     let action: keyof typeof done | null = null;
     if (kind === "chooseTurnOrder") await page.getByTestId("table-first").click();

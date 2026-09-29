@@ -71,7 +71,8 @@ function animate(update: GameUpdate, snapshot: Snapshot): CardInfo | null {
         break;
       }
       case "cardPlayed":
-        if (event.player !== update.perspective) reveal = entry.cards[event.card] ?? { def: event.def, printing: null };
+        // A Quick card played at quick timing is shown by its announcement (board/QuickAnnouncement.tsx).
+        if (event.player !== update.perspective && update.announcement?.played !== event.card) reveal = entry.cards[event.card] ?? { def: event.def, printing: null };
         break;
       default:
         break;

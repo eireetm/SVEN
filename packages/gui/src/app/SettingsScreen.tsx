@@ -1,4 +1,5 @@
 import { useT } from "../i18n";
+import { engine } from "./store";
 import { applyUiTransparency, currentUiTransparency } from "../resources/resources";
 import { updateSettings, useSettings, type CardLang, type UiLang } from "./settings";
 
@@ -56,6 +57,22 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
               </button>
             </span>
           </div>
+        </section>
+        <section className="sve-settings-group">
+          <h3>{t("settings.game")}</h3>
+          <label className="sve-settings-row sve-check" title={t("settings.announceQuickHelp")}>
+            <input
+              type="checkbox"
+              checked={settings.announceQuick}
+              onChange={(e) => {
+                updateSettings({ announceQuick: e.target.checked });
+                engine.send({ kind: "settings", settings: { announceQuick: e.target.checked } });
+              }}
+              data-testid="settings-announce-quick"
+            />
+            <span>{t("settings.announceQuick")}</span>
+          </label>
+          <p className="sve-hint">{t("settings.announceQuickHelp")}</p>
         </section>
         <button type="button" className="sve-menu-button" onClick={onBack}>
           {t("common.back")}

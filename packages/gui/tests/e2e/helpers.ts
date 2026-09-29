@@ -58,6 +58,17 @@ export async function dialogBody(page: Page): Promise<Locator | null> {
   return (await dialog.count()) > 0 ? dialog.locator(".sve-decision-body") : null;
 }
 
+/**
+ * A Quick card or ability resolved and the game waits until it has been seen (board/QuickAnnouncement.tsx): OK, then wait
+ * until that announcement is gone (the next one may follow at once).
+ */
+export async function acknowledge(page: Page): Promise<void> {
+  const bar = page.locator(".sve-decision");
+  const seq = await bar.getAttribute("data-announcement");
+  await page.getByTestId("announcement-ok").click();
+  if (seq !== null) await expect(bar).not.toHaveAttribute("data-announcement", seq);
+}
+
 /** A random source: n -> 0..n-1. */
 export type Pick = (n: number) => number;
 
@@ -67,6 +78,7 @@ export type Pick = (n: number) => number;
  */
 export async function answer(page: Page, kind: string, pick?: Pick): Promise<string> {
   const choose = (n: number) => (pick ? pick(n) : 0);
+  if (kind === "announcement") return (await acknowledge(page), "OK");
   const click = async (id: string) => {
     const button = await tableButton(page, id);
     if (button) await button.click();

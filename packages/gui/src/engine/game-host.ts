@@ -10,12 +10,14 @@ import {
   isManualInput,
   opponentOf,
   randomAnswer,
+  randomInt,
   redactEvent,
   seedRng,
   validateAnswer,
   type AbilityDef,
   type Answer,
   type CardId,
+  type Decision,
   type DefId,
   type Engine,
   type GameEvent,
@@ -28,6 +30,7 @@ import {
 import type {
   AbilitySummary,
   CardInfo,
+  ChoiceMade,
   DecisionInfo,
   FromWorker,
   GameOptions,
@@ -35,6 +38,7 @@ import type {
   HostSettings,
   LogEntry,
   ManualInfo,
+  QuickAnnouncement,
   RecordedInput,
   Replay,
   SeatController,
@@ -90,6 +94,43 @@ export function summarizeAbility(ability: AbilityDef | undefined, def: DefId): A
   return { kind: "spell", ...granted };
 }
 
+/** GameConfig.firstPlayer for a game's turn order: a given player, one drawn from the seed ("random"), or null (CR 6.2.1.6). */
+export function firstPlayerOf(options: Pick<GameOptions, "seed" | "turnOrder">): PlayerId | null {
+  switch (options.turnOrder) {
+    case "player1":
+      return 0;
+    case "player2":
+      return 1;
+    case "random":
+      return randomInt(seedRng(`${options.seed}:turnOrder`), 2) as PlayerId;
+    default:
+      return null;
+  }
+}
+
+/** A quick window where passing is all its player can do (asked only with GameOptions.askEveryQuickWindow). */
+const onlyPass = (decision: Decision): boolean => decision.type === "quick" && decision.actions.every((a) => a.type === "pass");
+
+/** The choices told in an announcement (how damage is divided or ordered shows on the table and in the log). */
+const CHOICES_TOLD = new Set<ChoiceMade["reason"]>(["mode", "playOption", "token", "deckPosition", "unionBurst", "dieReroll", "effect"]);
+
+/** A Quick card or ability played at quick timing (CR 7.4.5 / 8.4.7), followed until it has resolved (its announcement). */
+interface QuickPlay {
+  player: PlayerId;
+  /** The card played (its id before it moved, CR 4.1.4), or the card whose ability is activated. */
+  card: CardId;
+  ability: number | null;
+  /** The played card's id in the resolution zone. */
+  resolving: CardId | null;
+  info: CardInfo | null;
+  /** CR 10.6.2.7 — it has been played. */
+  played: boolean;
+  /** The played card has left the resolution zone (CR 10.6.2.8: it has resolved). */
+  resolved: boolean;
+  targets: QuickAnnouncement["targets"];
+  choices: ChoiceMade[];
+}
+
 /** Event fields that hold card ids (for the names a log entry needs). */
 const CARD_KEYS = new Set(["card", "newCard", "target", "attacker", "defender", "source", "follower", "evolveCard", "token", "cards", "id"]);
 
@@ -98,7 +139,7 @@ export class GameHost {
   private options: GameOptions | null = null;
   private inputs: RecordedInput[] = [];
   private bots: [Bot | null, Bot | null] = [null, null];
-  private settings: HostSettings = { botDelayMs: 600, revealAll: false, paused: false, manualDebug: false };
+  private settings: HostSettings = { botDelayMs: 600, revealAll: false, paused: false, manualDebug: false, announceQuick: false };
   private cancelTimer: (() => void) | null = null;
   /** Log entries not sent yet. */
   private log: LogEntry[] = [];
@@ -107,6 +148,12 @@ export class GameHost {
   /** Cards the log's viewer has seen, by id (CR 4.1.4: a card gets a new id in each zone). */
   private readonly known = new Map<CardId, CardInfo>();
   private lastPerspective: PlayerId = 0;
+  /** The quick play being followed, and the one people are shown (the game waits until they have seen it). */
+  private quick: QuickPlay | null = null;
+  private announcement: QuickAnnouncement | null = null;
+  private announcementSeq = 0;
+  /** Inputs played again (rewind, replays) are not announced. */
+  private replaying = false;
 
   constructor(
     private readonly engine: Engine,
@@ -131,9 +178,18 @@ export class GameHost {
         return this.send({ kind: "replay", requestId: message.requestId, replay: this.replay() });
       case "settings":
         this.settings = { ...this.settings, ...message.settings };
+        if (!this.settings.announceQuick) this.announcement = null;
         return this.pump();
-      case "step":
-        return this.stepBot();
+      case "step": {
+        // Stepping on is also seeing the announcement; then a bot's answer, or the host's pass of a quick window.
+        const decision = this.game?.decision;
+        this.announcement = null;
+        return decision && this.bots[decision.player] ? this.stepBot() : this.pump();
+      }
+      case "acknowledge":
+        if (this.announcement?.seq !== message.seq) return;
+        this.announcement = null;
+        return this.pump();
       case "validateDeck":
         return this.send({
           kind: "deckValidation",
@@ -158,8 +214,10 @@ export class GameHost {
     this.stopTimer();
     let game: GameSession;
     try {
-      const autoResolve = options.showEveryMainPhase ? ALL_AUTO_RESOLVABLE.filter((type) => type !== "mainPhase") : ALL_AUTO_RESOLVABLE;
-      const config = { deckRestrictions: options.deckRestrictions, autoResolve, manualActions: options.manualActions === true };
+      const autoResolve = ALL_AUTO_RESOLVABLE.filter(
+        (type) => !(type === "mainPhase" && options.showEveryMainPhase) && !(type === "quick" && options.askEveryQuickWindow),
+      );
+      const config = { deckRestrictions: options.deckRestrictions, autoResolve, manualActions: options.manualActions === true, firstPlayer: firstPlayerOf(options) };
       game = this.engine.newGame({ seed: options.seed, players: options.decks, config });
     } catch (err) {
       return this.error(err);
@@ -173,7 +231,10 @@ export class GameHost {
     this.logSeq = 0;
     this.logReset = true;
     this.lastPerspective = this.humans()[0] ?? 0;
+    this.quick = null;
+    this.announcement = null;
     this.record(game.startupEvents);
+    this.replaying = true;
     for (const recorded of replay) {
       if (!game.decision) break;
       try {
@@ -183,6 +244,8 @@ export class GameHost {
         break;
       }
     }
+    this.replaying = false;
+    this.quick = null;
     this.pump();
   }
 
@@ -195,6 +258,7 @@ export class GameHost {
     if (manual ? this.bots[seat] !== null : decision.player !== seat || this.bots[seat]) return this.error(`it is not player ${seat + 1}'s decision`);
     const problem = manual && answer.action.type === "manual" ? game.manualOpError(answer.action.op) : validateAnswer(decision, answer);
     if (problem) return this.error(`illegal answer: ${problem}`);
+    this.announcement = null; // whoever answers has seen the table
     try {
       this.apply(answer, seat);
     } catch (err) {
@@ -216,19 +280,36 @@ export class GameHost {
 
   private apply(input: Input, by: PlayerId | null): void {
     const game = this.game!;
+    const decision = game.decision;
     this.rememberVisible();
+    this.followAnswer(decision, input);
     const events = game.act(input, by ?? undefined);
     this.inputs.push({ input, by });
     this.record(events);
+    this.followEvents(events);
   }
 
-  /** Publish the state; if a bot must answer, answer after the delay. */
+  /**
+   * Publish the state; if a bot must answer, answer after the delay. A quick play that has resolved is announced first, and
+   * everything waits until a person has seen it ("acknowledge"); quick windows where passing is all a player can do are
+   * passed here, as the core's autoResolve would (GameOptions.askEveryQuickWindow).
+   */
   private pump(): void {
     this.stopTimer();
     const game = this.game;
     if (!game) return;
+    this.settleQuick();
+    if (game.isOver) this.announcement = null;
+    while (!this.announcement && game.decision && onlyPass(game.decision)) {
+      try {
+        this.apply({ type: "quick", action: { type: "pass" } }, null);
+      } catch (err) {
+        return this.error(err);
+      }
+      this.settleQuick();
+    }
     const decision = game.decision;
-    const thinking = decision !== null && this.bots[decision.player] !== null && !this.settings.paused;
+    const thinking = decision !== null && !this.announcement && this.bots[decision.player] !== null && !this.settings.paused;
     this.publish(thinking);
     // A bot answers a decision with a single answer (a main phase it can only end) without the pause.
     if (thinking) this.cancelTimer = this.scheduler.schedule(() => this.stepBot(), forcedAnswer(decision) ? 0 : this.settings.botDelayMs);
@@ -261,6 +342,100 @@ export class GameHost {
   private stopTimer(): void {
     this.cancelTimer?.();
     this.cancelTimer = null;
+  }
+
+  /** Start following a Quick card or ability played at quick timing (CR 7.4.5 / 8.4.7); note the choices made for it. */
+  private followAnswer(decision: Decision | null, input: Input): void {
+    if (this.replaying || !decision) return;
+    if (decision.type === "quick" && input.type === "quick" && input.action.type !== "pass") {
+      const action = input.action;
+      const ability = action.type === "activate" ? action.ability : null;
+      this.quick = { player: decision.player, card: action.card, ability, resolving: null, info: null, played: false, resolved: false, targets: [], choices: [] };
+      return;
+    }
+    const quick = this.quick;
+    if (!quick || decision.type !== "choose" || input.type !== "choose" || decision.player !== quick.player || !CHOICES_TOLD.has(decision.reason)) return;
+    if (decision.source !== null && (decision.source === quick.resolving || decision.source === quick.card)) {
+      quick.choices.push({ reason: decision.reason, options: decision.options, ids: input.ids });
+    }
+  }
+
+  /** What the followed quick play's events tell: where the card went, that it was played, what it selected (public zones). */
+  private followEvents(events: readonly GameEvent[]): void {
+    const quick = this.quick;
+    if (!quick) return;
+    for (const event of events) {
+      switch (event.type) {
+        case "cardsMoved":
+          for (const move of event.moves) {
+            if (quick.ability === null && quick.resolving === null && move.card === quick.card && move.to.zone === "resolution" && move.newCard) {
+              quick.resolving = move.newCard;
+              quick.info = { def: move.def, printing: move.printing || null };
+            } else if (quick.resolving !== null && move.card === quick.resolving && move.from?.zone === "resolution") {
+              quick.resolved = true;
+            }
+          }
+          break;
+        case "cardPlayed":
+          if (event.card === quick.resolving) quick.played = true;
+          break;
+        case "abilityPlayed":
+          if (quick.ability !== null && event.source === quick.card && event.ability === quick.ability) {
+            quick.played = true;
+            quick.info ??= this.cardInfo(event.source, event.sourceDef);
+          }
+          break;
+        case "cardsSelected":
+          if (event.source === null || (event.source !== quick.resolving && event.source !== quick.card)) break;
+          for (const id of event.cards) {
+            const card = this.cardInfo(id);
+            if (card && !quick.targets.some((target) => target.id === id)) quick.targets.push({ id, card });
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  /** A card's definition and printing, as the log's viewer knows it (or as an event named it). */
+  private cardInfo(id: CardId, def?: DefId): CardInfo | null {
+    const known = this.known.get(id);
+    if (known) return known;
+    const state = this.game?.state.cards[id];
+    if (def && !def.includes(":")) return { def, printing: state?.printing ?? null };
+    return null;
+  }
+
+  /**
+   * The followed quick play has resolved (CR 10.6.2.8): a played card has left the resolution zone; an ability's resolution
+   * asks nothing more about its card; or the quick window asks again (7.4.5 / 8.4.7). It becomes the announcement when
+   * people play and want to see it.
+   */
+  private settleQuick(): void {
+    const game = this.game!;
+    const quick = this.quick;
+    if (!quick) return;
+    if (game.isOver) {
+      this.quick = null;
+      return;
+    }
+    const decision = game.decision;
+    const again = decision !== null && decision.type === "quick" && decision.player === quick.player;
+    const resolved =
+      quick.resolved || again || decision === null || (quick.ability !== null && (!("source" in decision) || decision.source !== quick.card));
+    if (!quick.played || !resolved) return;
+    this.quick = null;
+    if (!this.settings.announceQuick || this.humans().length === 0 || !quick.info) return;
+    this.announcement = {
+      seq: ++this.announcementSeq,
+      player: quick.player,
+      card: quick.info,
+      ability: quick.ability,
+      played: quick.resolving,
+      targets: quick.targets,
+      choices: quick.choices,
+    };
   }
 
   private humans(): PlayerId[] {
@@ -454,6 +629,7 @@ export class GameHost {
       format: options.format ?? (options.deckRestrictions ? "standard" : "unlimited"),
       secondLeaders: options.secondLeaders ?? [null, null],
       manual: this.manualInfo(),
+      announcement: this.announcement,
       perspective,
       view: this.view(perspective),
       decision: this.decisionInfo(),

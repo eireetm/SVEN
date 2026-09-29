@@ -44,6 +44,11 @@ for (let game = 0; game < GAMES; game++) {
         await page.waitForTimeout(20);
         continue;
       }
+      // A quick play is shown until OK: nothing is answered (the next decision may be this player's own).
+      if (kind === "announcement") {
+        await answer(page, kind, pick);
+        continue;
+      }
       const inputs = await bar.getAttribute("data-inputs");
       const did = await answer(page, kind, pick);
       answers++;

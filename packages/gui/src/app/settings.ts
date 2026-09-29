@@ -1,7 +1,7 @@
 // Per-viewer settings, remembered in the browser (localStorage). Everything works without it (private windows, blocked
 // storage): the defaults are used.
 import { useSyncExternalStore } from "react";
-import type { FormatId, SeatController } from "../engine/protocol";
+import type { FormatId, SeatController, TurnOrder } from "../engine/protocol";
 
 export type UiLang = "en" | "zh" | "ja";
 export type CardLang = "en" | "cn" | "ja";
@@ -18,6 +18,8 @@ export interface Settings {
   /** The last game setup (deck files, who plays each seat). */
   setupDecks: [string, string];
   setupControllers: [SeatController, SeatController];
+  /** Who goes first in the games started from the setup (advanced). */
+  setupTurnOrder: TurnOrder;
   /** The format decks are built and games are played in (the deck builder and the game setup share it). */
   format: FormatId;
   /** The restriction list chosen for each format (a file of restrictions/, or none). */
@@ -32,6 +34,8 @@ export interface Settings {
   manualSlots: boolean;
   /** Manual debugging: clicks on cards, decks, leaders and point panels open what can be done by hand (docs/gui.md). */
   manualDebug: boolean;
+  /** After each Quick card or ability, the game waits until the person has seen it (who played what, its targets). */
+  announceQuick: boolean;
 }
 
 const KEY = "sve-gui-settings";
@@ -43,6 +47,7 @@ const DEFAULTS: Settings = {
   animations: true,
   setupDecks: ["samples/sd01.json", "samples/sd02.json"],
   setupControllers: ["human", "greedy"],
+  setupTurnOrder: "choose",
   format: "standard",
   restrictionLists: {},
   builderDeck: null,
@@ -50,6 +55,7 @@ const DEFAULTS: Settings = {
   uiTransparency: null,
   manualSlots: false,
   manualDebug: false,
+  announceQuick: true,
 };
 
 /** Settings saved by an older version, brought up to date: "deck restrictions" off became the unlimited format. */

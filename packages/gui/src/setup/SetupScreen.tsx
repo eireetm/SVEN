@@ -3,7 +3,7 @@ import { errorText } from "../app/errors";
 import { updateSettings, useSettings } from "../app/settings";
 import { engine, reportError, useApp } from "../app/store";
 import { cardCount, toDeckList, type DeckFile } from "../decks/format";
-import type { SeatController } from "../engine/protocol";
+import type { SeatController, TurnOrder } from "../engine/protocol";
 import { checkDeck, useFormat } from "../formats/check";
 import { formatProblemText, leadersFor, type FormatProblem } from "../formats/formats";
 import { FormatPicker } from "../formats/FormatPicker";
@@ -14,6 +14,8 @@ import { useT } from "../i18n";
 const CONTROLLERS: readonly SeatController[] = ["human", "greedy", "random"];
 /** The opponent: an AI, or a second person at the same screen (hot seat). */
 const OPPONENTS: readonly SeatController[] = ["greedy", "random", "human"];
+/** Who goes first: as the rules say (a random player decides, CR 6.2.1.6) first, then the testing choices. */
+const TURN_ORDERS: readonly TurnOrder[] = ["choose", "random", "player1", "player2"];
 
 interface DeckStatus {
   deck: DeckFile;
@@ -89,7 +91,10 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
     const [a, b] = [status[0].deck, status[1].deck];
     // Cross Craft: the engine plays with one leader, the other is shown beside it (GameOptions.secondLeaders).
     const [la, lb] = [leadersFor(a, format, catalog), leadersFor(b, format, catalog)];
-    engine.send({ kind: "settings", settings: { botDelayMs: settings.botDelayMs, paused: false, manualDebug: settings.manualDebug } });
+    engine.send({
+      kind: "settings",
+      settings: { botDelayMs: settings.botDelayMs, paused: false, manualDebug: settings.manualDebug, announceQuick: settings.announceQuick },
+    });
     engine.send({
       kind: "start",
       options: {
@@ -102,7 +107,9 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
         restrictionList: list?.id ?? null,
         secondLeaders: [la.second, lb.second],
         showEveryMainPhase: true,
+        askEveryQuickWindow: true,
         manualActions: true,
+        turnOrder: settings.setupTurnOrder,
       },
     });
     setSeed(newSeed());
@@ -113,7 +120,7 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
     if (!file) return;
     try {
       const replay = await readReplayFile(file);
-      engine.send({ kind: "settings", settings: { paused: false, manualDebug: settings.manualDebug } });
+      engine.send({ kind: "settings", settings: { paused: false, manualDebug: settings.manualDebug, announceQuick: settings.announceQuick } });
       engine.send({ kind: "loadReplay", replay });
       onStarted();
     } catch (err) {
@@ -220,6 +227,16 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
               <button type="button" onClick={() => setSeed(newSeed())}>
                 {t("setup.randomSeed")}
               </button>
+            </label>
+            <label className="sve-field">
+              <span>{t("setup.turnOrder")}</span>
+              <select value={settings.setupTurnOrder} onChange={(e) => updateSettings({ setupTurnOrder: e.target.value as TurnOrder })} data-testid="setup-turn-order">
+                {TURN_ORDERS.map((order) => (
+                  <option key={order} value={order}>
+                    {t(`turnOrder.${order}`)}
+                  </option>
+                ))}
+              </select>
             </label>
             <FormatPicker />
             <label className="sve-range">

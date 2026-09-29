@@ -28,6 +28,12 @@ export type SeatController = "human" | "greedy" | "random";
  */
 export type FormatId = "standard" | "crossCraft" | "unlimited";
 
+/**
+ * Who goes first: as the rules say (CR 6.2.1.6: a random player decides), a random player, or a given one (GameConfig.firstPlayer:
+ * for testing). "random" is drawn from the seed, so a replay goes the same way.
+ */
+export type TurnOrder = "choose" | "random" | "player1" | "player2";
+
 export interface GameOptions {
   seed: string;
   decks: [DeckList, DeckList];
@@ -59,6 +65,14 @@ export interface GameOptions {
    * once. Replays saved without it replay as the core decides by default.
    */
   showEveryMainPhase?: boolean;
+  /**
+   * The core asks every quick window, also when passing is all its player can do (its autoResolve without "quick"): the
+   * host passes those itself (inputs by no seat), and so can first stop after a Quick card or ability for people to see
+   * it (QuickAnnouncement). Pacing only. Replays saved without it replay as the core decides by default.
+   */
+  askEveryQuickWindow?: boolean;
+  /** Who goes first (absent: as the rules say). */
+  turnOrder?: TurnOrder;
 }
 
 /** One input of a game, with the seat that gave it (null: not given by a seat). */
@@ -84,6 +98,8 @@ export interface HostSettings {
   paused: boolean;
   /** Debug: manual debugging is on — updates carry what can be done by hand (GameUpdate.manual). */
   manualDebug: boolean;
+  /** After each Quick card or ability, the game waits until a person has seen it (GameUpdate.announcement). */
+  announceQuick: boolean;
 }
 
 export type ToWorker =
@@ -97,6 +113,8 @@ export type ToWorker =
   | { kind: "settings"; settings: Partial<HostSettings> }
   /** Debug: let a paused bot give one answer. */
   | { kind: "step" }
+  /** A person has seen the announcement `seq`: the game goes on. */
+  | { kind: "acknowledge"; seq: number }
   | { kind: "validateDeck"; requestId: number; deck: DeckList; deckRestrictions: boolean };
 
 /** A card's definition and printing, for cards the viewer may see. */
@@ -138,6 +156,32 @@ export interface DecisionInfo {
   abilities: Record<string, AbilitySummary & { source?: CardId; sourceDef?: DefId }>;
 }
 
+/** A choice made by a "choose" decision: its options and the chosen ones (options of a card, 5.18; X; a token ...). */
+export interface ChoiceMade {
+  reason: Extract<Decision, { type: "choose" }>["reason"];
+  options: { id: string; label: string }[];
+  ids: string[];
+}
+
+/**
+ * A Quick card or Quick activated ability played at quick timing (CR 7.4.5 / 8.4.7) has resolved: what the people at the
+ * screen are told before the game goes on (the host waits for "acknowledge"). Public information only: the card played,
+ * the cards selected in public zones (CR 10.6.2.3, the cardsSelected events) and the choices announced.
+ */
+export interface QuickAnnouncement {
+  /** Tells announcements apart (for "acknowledge"). */
+  seq: number;
+  player: PlayerId;
+  /** The card played, or the card whose ability was activated. */
+  card: CardInfo;
+  /** Null: the card was played; else the index of its activated ability. */
+  ability: number | null;
+  /** The played card's id in the resolution zone (CR 4.1.4), for the animations to know it. */
+  played: CardId | null;
+  targets: { id: CardId; card: CardInfo }[];
+  choices: ChoiceMade[];
+}
+
 /** An event for the game log, already hidden for the log's viewer (CR 4.1.2), with the cards it names. */
 export interface LogEntry {
   seq: number;
@@ -155,6 +199,8 @@ export interface GameUpdate {
   secondLeaders: [PrintingId | null, PrintingId | null];
   /** What can be done by hand now (null: manual debugging off, not a main phase decision, or not allowed in this game). */
   manual: ManualInfo | null;
+  /** A Quick card or ability just resolved: the game waits until a person has seen it (null: nothing to see). */
+  announcement: QuickAnnouncement | null;
   /** Whose view this is (the human's seat; in hot seat, the player who must decide). */
   perspective: PlayerId;
   view: PlayerView;

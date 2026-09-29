@@ -14,6 +14,7 @@ import { CardTile, type CardMark } from "../card/CardTile";
 import { DecisionDialog } from "../decisions/DecisionDialog";
 import { actionsFor, answerFor, attackTargets, dragKind, openManual, openMenu, sendAnswer, toggleChosen, useInteraction } from "../interaction";
 import { ManualDialog } from "../manual/ManualDialog";
+import { QuickAnnouncement } from "./QuickAnnouncement";
 import { playerLabel } from "../labels";
 import { AttackArrow } from "./AttackArrow";
 import { CardMenu } from "./CardMenu";
@@ -422,6 +423,7 @@ export function Table({ update, onNewGame, onMenu }: { update: GameUpdate; onNew
       <CardMenu update={update} />
       <ManualDialog update={update} />
       <DecisionDialog key={update.inputCount} update={update} />
+      <QuickAnnouncement update={update} />
       <ResultOverlay update={update} onNewGame={onNewGame} onMenu={onMenu} />
     </div>
   );

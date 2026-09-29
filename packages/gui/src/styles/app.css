@@ -1269,6 +1269,87 @@ option {
   }
 }
 
+/*
+ * A Quick card or ability that resolved (board/QuickAnnouncement.tsx): the table waits under a light shade (its cards stay
+ * readable, the selected ones light up), the card stands in its player's corner beside the mats — the opponent's at the top
+ * right, one's own at the bottom left — with what happened and OK. Above the sidebar, which stays usable.
+ */
+.sve-announce-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 44;
+  background: var(--sve-announce-shade, rgb(0 0 0 / 0.22));
+}
+
+.sve-announce {
+  position: absolute;
+  z-index: 56;
+  width: min(270px, calc(var(--side-width, 270px) - 20px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgb(14 24 38 / var(--sve-ui-alpha));
+  border: 1px solid rgba(110, 200, 255, 0.45);
+  box-shadow: 0 0 26px rgba(110, 200, 255, 0.35), 0 10px 30px #000a;
+}
+
+.sve-announce-opponent {
+  top: 48px;
+  left: calc(50% + var(--mat-width) / 2 + 10px);
+}
+
+.sve-announce-own {
+  bottom: 16px;
+  right: calc(50% + var(--mat-width) / 2 + 10px);
+}
+
+.sve-announce-card {
+  --sve-card-width: min(calc(var(--side-width, 270px) * 0.62), 170px);
+  filter: drop-shadow(0 0 18px rgba(110, 200, 255, 0.55));
+}
+
+.sve-announce-body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  width: 100%;
+}
+
+.sve-announce-title {
+  align-self: center;
+  padding: 1px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #cfeaff;
+  background: rgba(110, 200, 255, 0.2);
+  border: 1px solid rgba(110, 200, 255, 0.45);
+}
+
+.sve-announce-line {
+  margin: 0;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.sve-announce-body .sve-primary {
+  margin-top: 4px;
+}
+
+.sve-arrow-target path {
+  stroke: rgba(110, 200, 255, 0.9);
+  stroke-dasharray: 10 7;
+  filter: drop-shadow(0 0 6px rgba(110, 200, 255, 0.8));
+}
+
+.sve-arrow-target marker path {
+  fill: rgba(110, 200, 255, 0.95);
+}
+
 /* The result over the table. */
 .sve-result-overlay {
   position: absolute;

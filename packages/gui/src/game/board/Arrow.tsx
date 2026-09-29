@@ -15,7 +15,7 @@ export function cardCenter(card: string): Point | null {
   return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
 }
 
-export function Arrow({ from, to, variant }: { from: Point; to: Point; variant: "drag" | "attack" }) {
+export function Arrow({ from, to, variant }: { from: Point; to: Point; variant: "drag" | "attack" | "target" }) {
   // A gentle curve: the control point is lifted off the straight line.
   const mx = (from.x + to.x) / 2;
   const my = (from.y + to.y) / 2;
