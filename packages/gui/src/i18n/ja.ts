@@ -5,15 +5,15 @@
 import type { MessageKey } from "./en";
 
 export const ja: Record<MessageKey, string> = {
-  "app.loading": "エンジンを起動しています…",
-  "app.loadingNote": "すべてのカードとスクリプトを読み込んでいます（初回は数秒かかります）。",
+  "app.loading": "エース先輩がエンジンを起動しています…",
+  "app.loadingNote": "エース先輩がすべてのカードとスクリプトを読み込んでいます（初回は数秒かかります）。",
   "app.engineFailed": "エンジンを起動できませんでした",
   "app.errors": "エラー",
   "app.dismiss": "閉じる",
   "common.back": "戻る",
 
-  "menu.title": "Shadowverse: Evolve",
-  "menu.subtitle": "ファンメイドのルールエンジン · 個人利用",
+  "menu.title": "Shadowverse: Evolve NEXT",
+  "menu.subtitle": "エース先輩のSVE工房",
   "menu.playAi": "AI と対戦",
   "menu.settings": "設定",
   "menu.continue": "対戦を続ける",
@@ -111,6 +111,10 @@ export const ja: Record<MessageKey, string> = {
   "settings.appearance": "外観",
   "settings.uiTransparency": "画面の透明度",
   "settings.default": "初期値",
+  "settings.sound": "サウンド",
+  "settings.bgmVolume": "BGM",
+  "settings.sfxVolume": "効果音",
+  "settings.soundHelp": "packages/gui/public/audio にファイルがあるときだけ音が鳴ります（docs/resources.md）。",
   "settings.game": "対戦",
   "settings.announceQuick": "クイックのたびに一時停止して知らせる",
   "settings.announceQuickHelp": "クイックのカードや能力が解決すると、誰が何をプレイしたか、対象と選択をウィンドウで知らせ、「OK」で対戦が続きます。",

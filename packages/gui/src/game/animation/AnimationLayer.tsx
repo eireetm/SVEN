@@ -1,5 +1,6 @@
 // The table moves with the game, in an order that reads without the log (docs/gui.md 3, "动画"). Each update's events
-// (already hidden for the viewer) say what happened; the snapshot says where things were:
+// (already hidden for the viewer) say what happened; the snapshot says where things were; plan.ts puts them in order
+// (planTimeline, which the sounds follow too):
 //  1. cards fly from their old places to their new ones; a card that is hit waits where it was until it has been hit;
 //  2. an attack nothing stopped before its combat shows its red arrow first (one still going on has its own, AttackArrow);
 //     at the combat the attacker lunges at its target and the damage shows as it strikes;
@@ -18,20 +19,10 @@ import type { CardInfo, GameUpdate } from "../../engine/protocol";
 import { Arrow, type Point } from "../board/Arrow";
 import { CardTile } from "../card/CardTile";
 import { flip, floatText, flyIn, flyOut, lunge, popIn, shake } from "./effects";
-import { attacksIn, planFlights, playedCards, selectionsIn } from "./plan";
+import { planFlights, planTimeline, TIMING } from "./plan";
 import { captureTable, takeSnapshot, type Snapshot } from "./snapshot";
 
 onBeforeUpdate(captureTable);
-
-/** When things happen in an update's animation (ms after it is shown). */
-const LANDED = 320; // the flights (380 ms) have about landed: a played card shows in its corner
-const SHOWCASE = 900; // a played card's wipe in, its stay and its wipe out
-const FROM_CORNER = LANDED + 170; // the arrows of a played card, once it has wiped in
-const FROM_TABLE = 120; // the arrows of a card on the table
-const ARROW = 700; // how long an arrow is shown
-const LUNGE = 220; // an attack whose arrow is drawn now lunges after it
-const STRIKE = 170; // the damage of an attack shows as the lunge strikes; an effect's, this long after its arrow
-const LEAVE = 330; // a card that was hit and has gone waits this long before it flies away
 
 const cardElement = (id: CardId): HTMLElement | null => document.querySelector<HTMLElement>(`.sve-table [data-card="${CSS.escape(id)}"]`);
 
@@ -66,34 +57,19 @@ interface Effects {
 function animate(update: GameUpdate, snapshot: Snapshot, fx: Effects): void {
   // Where a card is now, or was just before the update (it has left).
   const position = (id: CardId): Point | null => center(cardElement(id)?.getBoundingClientRect() ?? snapshot.cards.get(id)?.rect);
-  const skip = update.announcement?.source ?? null;
-  const hitAt = new Map<CardId, number>();
-  const hit = (id: CardId, at: number) => hitAt.set(id, Math.min(hitAt.get(id) ?? Infinity, at));
+  const plan = planTimeline(update.log, update.announcement?.source ?? null);
 
-  // 3. Played cards, one after another in their corners.
-  const played = playedCards(update.log, skip);
-  const corner = new Map<CardId, { key: string; at: number }>();
-  played.forEach((p, i) => {
+  // 3. Played cards in their corners.
+  const corner = new Map<CardId, string>();
+  for (const p of plan.played) {
     const key = `${update.inputCount}:${p.id}`;
-    corner.set(p.id, { key, at: LANDED + i * SHOWCASE });
-    fx.show({ key, card: p.card, own: p.player === update.perspective, delay: LANDED + i * SHOWCASE });
-  });
+    corner.set(p.id, key);
+    fx.show({ key, card: p.card, own: p.player === update.perspective, delay: p.at });
+  }
 
-  // 2. Attacks nothing stopped before their combat: the arrow, then the lunge. Others lunge as their combat comes.
-  const lunges = new Map<CardId, { target: CardId; at: number }>();
-  for (const attack of attacksIn(update.log)) {
-    fx.flash(0, "attack", () => position(attack.attacker), () => position(attack.target));
-    lunges.set(attack.attacker, { target: attack.target, at: LUNGE });
-  }
-  for (const { event } of update.log) {
-    if (event.type !== "damageDealt") continue;
-    // CR 8.4.9: the attack damage, and the combat damage back to the attacker, as the attacker strikes.
-    if (event.kind === "attack" && event.source !== null) {
-      if (!lunges.has(event.source)) lunges.set(event.source, { target: event.target, at: 0 });
-      hit(event.target, lunges.get(event.source)!.at + STRIKE);
-    } else if (event.kind === "combat") hit(event.target, (lunges.get(event.target)?.at ?? 0) + STRIKE);
-  }
-  for (const [attacker, { target, at }] of lunges) {
+  // 2. Attacks nothing stopped before their combat: the arrow; then every attacker lunges as its combat comes.
+  for (const attack of plan.attacks) fx.flash(0, "attack", () => position(attack.attacker), () => position(attack.target));
+  for (const { attacker, target, at } of plan.lunges) {
     fx.later(at, () => {
       const a = cardElement(attacker);
       const b = cardElement(target);
@@ -101,25 +77,21 @@ function animate(update: GameUpdate, snapshot: Snapshot, fx: Effects): void {
     });
   }
 
-  // 4. Cards an effect selected: an arrow from its source, then they are hit.
-  for (const selection of selectionsIn(update.log, skip)) {
-    const shown = corner.get(selection.source);
-    const at = shown ? shown.at + (FROM_CORNER - LANDED) : FROM_TABLE;
-    const from = shown
-      ? () => center(document.querySelector(`[data-showcase="${CSS.escape(shown.key)}"] .sve-card`)?.getBoundingClientRect()) ?? position(selection.source)
-      : () => position(selection.source);
-    for (const target of selection.targets) {
-      if (target === selection.source) continue;
-      fx.flash(at, "target", from, () => position(target));
-      hit(target, at + STRIKE);
-    }
+  // 4. Cards an effect selected: an arrow from its source (a played card's corner), then they are hit.
+  for (const { source, target, at, corner: fromCorner } of plan.selections) {
+    const key = corner.get(source);
+    const from =
+      fromCorner && key
+        ? () => center(document.querySelector(`[data-showcase="${CSS.escape(key)}"] .sve-card`)?.getBoundingClientRect()) ?? position(source)
+        : () => position(source);
+    fx.flash(at, "target", from, () => position(target));
   }
 
   // 1. The flights; a card hit on its way out waits where it was until it has been hit.
   for (const flight of planFlights(update.log)) {
     const { origin } = flight;
-    const struck = origin.card !== null ? hitAt.get(origin.card) : undefined;
-    const delay = struck !== undefined ? struck + LEAVE : 0;
+    const struck = origin.card !== null ? plan.hits.get(origin.card) : undefined;
+    const delay = struck !== undefined ? struck + TIMING.leave : 0;
     const from = (origin.card ? snapshot.cards.get(origin.card)?.rect : undefined) ?? (origin.zone ? snapshot.zones.get(origin.zone) : undefined);
     const element = flight.card ? cardElement(flight.card) : null;
     if (element) {
@@ -140,7 +112,7 @@ function animate(update: GameUpdate, snapshot: Snapshot, fx: Effects): void {
       case "damageDealt": {
         if (event.amount <= 0) break;
         const at = position(event.target);
-        fx.later(hitAt.get(event.target) ?? 0, () => {
+        fx.later(plan.hits.get(event.target) ?? 0, () => {
           if (at) floatText(at.x, at.y, `-${event.amount}`, "damage");
           const element = cardElement(event.target);
           if (element) shake(element);
@@ -192,7 +164,7 @@ export function AnimationLayer({ update }: { update: GameUpdate }) {
       later,
       show: (showcase) => {
         setShowcases((all) => [...all, showcase]);
-        later(showcase.delay + SHOWCASE, () => setShowcases((all) => all.filter((s) => s.key !== showcase.key)));
+        later(showcase.delay + TIMING.showcase, () => setShowcases((all) => all.filter((s) => s.key !== showcase.key)));
       },
       flash: (ms, variant, from, to) =>
         later(ms, () => {
@@ -200,7 +172,7 @@ export function AnimationLayer({ update }: { update: GameUpdate }) {
           if (!a || !b) return;
           const key = `flash-${++seq.current}`;
           setFlashes((all) => [...all, { key, from: a, to: b, variant }]);
-          later(ARROW, () => setFlashes((all) => all.filter((f) => f.key !== key)));
+          later(TIMING.arrow, () => setFlashes((all) => all.filter((f) => f.key !== key)));
         }),
     });
   }, [update, animations]);
@@ -226,7 +198,7 @@ export function AnimationLayer({ update }: { update: GameUpdate }) {
           )
         : null}
       {flashes.map((f) => (
-        <Arrow key={f.key} from={f.from} to={f.to} variant={f.variant} flash={ARROW} />
+        <Arrow key={f.key} from={f.from} to={f.to} variant={f.variant} flash={TIMING.arrow} />
       ))}
     </>
   );

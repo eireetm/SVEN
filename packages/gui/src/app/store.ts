@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { EngineClient } from "../engine/client";
 import type { GameUpdate, LogEntry } from "../engine/protocol";
-import { playEventSounds } from "../resources/sound";
+import { playUpdateSounds } from "../resources/sound";
 import { Catalog } from "./catalog";
 
 export interface AppError {
@@ -50,7 +50,7 @@ engine.subscribe((message) => {
     case "update": {
       const update = message.update;
       for (const fn of beforeUpdate) fn(update);
-      if (!update.logReset) playEventSounds(update.log, update.perspective);
+      playUpdateSounds(update, state.update?.view ?? null, state.catalog, state.update?.announcement?.seq ?? null);
       setState({ update, log: update.logReset ? update.log : [...state.log, ...update.log] });
       break;
     }

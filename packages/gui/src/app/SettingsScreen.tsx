@@ -59,8 +59,36 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
           </div>
         </section>
         <section className="sve-settings-group">
+          <h3>{t("settings.sound")}</h3>
+          {(
+            [
+              ["bgmVolume", "settings.bgmVolume"],
+              ["volume", "settings.sfxVolume"],
+            ] as const
+          ).map(([key, label]) => (
+            <div key={key} className="sve-settings-row">
+              <label htmlFor={`sve-${key}`}>{t(label)}</label>
+              <span className="sve-settings-slider">
+                <input
+                  id={`sve-${key}`}
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={settings[key]}
+                  onChange={(e) => updateSettings({ [key]: Number(e.target.value) })}
+                  data-testid={`settings-${key}`}
+                />
+                <output className="sve-settings-value">{Math.round(settings[key] * 100)}%</output>
+              </span>
+            </div>
+          ))}
+          <p className="sve-hint">{t("settings.soundHelp")}</p>
+        </section>
+        <section className="sve-settings-group">
           <h3>{t("settings.game")}</h3>
-          <label className="sve-settings-row sve-check" title={t("settings.announceQuickHelp")}>
+          <label className="sve-settings-row" title={t("settings.announceQuickHelp")}>
+            <span>{t("settings.announceQuick")}</span>
             <input
               type="checkbox"
               checked={settings.announceQuick}
@@ -70,7 +98,6 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
               }}
               data-testid="settings-announce-quick"
             />
-            <span>{t("settings.announceQuick")}</span>
           </label>
           <p className="sve-hint">{t("settings.announceQuickHelp")}</p>
         </section>

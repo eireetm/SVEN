@@ -4,15 +4,15 @@
 import type { MessageKey } from "./en";
 
 export const zh: Record<MessageKey, string> = {
-  "app.loading": "正在启动引擎…",
-  "app.loadingNote": "正在载入全部卡牌和脚本（第一次需要几秒）。",
+  "app.loading": "欧丝先辈正在为您启动引擎…",
+  "app.loadingNote": "欧丝先辈正在为您载入全部卡牌和脚本（第一次需要几秒）。",
   "app.engineFailed": "引擎启动失败",
   "app.errors": "错误",
   "app.dismiss": "关闭",
   "common.back": "返回",
 
-  "menu.title": "Shadowverse: Evolve",
-  "menu.subtitle": "民间规则引擎 · 个人使用",
+  "menu.title": "Shadowverse: Evolve NEXT",
+  "menu.subtitle": "欧丝先辈的对战工坊",
   "menu.playAi": "对战 AI",
   "menu.settings": "设置",
   "menu.continue": "继续对局",
@@ -110,6 +110,10 @@ export const zh: Record<MessageKey, string> = {
   "settings.appearance": "外观",
   "settings.uiTransparency": "界面透明度",
   "settings.default": "默认",
+  "settings.sound": "声音",
+  "settings.bgmVolume": "背景音乐",
+  "settings.sfxVolume": "音效",
+  "settings.soundHelp": "只有 packages/gui/public/audio 里有对应的文件时才有声音（docs/resources.md）。",
   "settings.game": "对局",
   "settings.announceQuick": "每次快速结算后暂停并提示",
   "settings.announceQuickHelp": "快速卡或快速能力结算后，弹窗告知谁使用了什么、目标和选择，点“确定”后游戏继续。",

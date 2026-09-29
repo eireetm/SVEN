@@ -11,8 +11,10 @@ export interface Settings {
   cardLang: CardLang;
   /** The worker's pause before each bot answer. */
   botDelayMs: number;
-  /** 0–1; sounds play only when the player provided them (public/audio). */
+  /** The sound effects' volume, 0–1 (sounds play only when the player provided them: public/audio, docs/resources.md). */
   volume: number;
+  /** The background music's volume, 0–1. */
+  bgmVolume: number;
   /** The table's animations (cards flying, numbers, ...). */
   animations: boolean;
   /** The last game setup (deck files, who plays each seat). */
@@ -44,6 +46,7 @@ const DEFAULTS: Settings = {
   cardLang: "en",
   botDelayMs: 600,
   volume: 0.6,
+  bgmVolume: 0.4,
   animations: true,
   setupDecks: ["samples/sd01.json", "samples/sd02.json"],
   setupControllers: ["human", "greedy"],
@@ -88,6 +91,13 @@ export function updateSettings(change: Partial<Settings>): void {
     // Not remembered: fine.
   }
   for (const listener of listeners) listener();
+}
+
+/** Follow the settings outside React (the music's volume). */
+export function subscribeSettings(fn: (settings: Settings) => void): () => void {
+  const listener = () => fn(settings);
+  listeners.add(listener);
+  return () => listeners.delete(listener);
 }
 
 export function useSettings(): Settings {

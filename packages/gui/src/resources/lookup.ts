@@ -73,12 +73,28 @@ export function iconUrl(token: string): string | null {
   return find(`textures/icons/${token}`, IMAGE);
 }
 
-/** A sound for an event, the card's own first (public/audio/cards/<printing or definition>/<event>), then the common one. */
-export function soundUrl(event: string, card?: CardInfo): string | null {
-  for (const id of [card?.printing, card?.def]) {
-    if (!id) continue;
-    const found = find(`audio/cards/${id}/${event}`, AUDIO);
+/** A common sound effect (public/audio/sfx/<name>.*), else the first of its fallbacks there is (sound-plan.ts SFX). */
+export function sfxUrl(names: readonly string[]): string | null {
+  for (const name of names) {
+    const found = find(`audio/sfx/${name}`, AUDIO);
     if (found) return found;
   }
-  return find(`audio/sfx/${event}`, AUDIO);
+  return null;
+}
+
+/**
+ * A card's own sound, named by the player: public/audio/cards/<number>-<kind>.* with the kind p (played), a (attacks) or d
+ * (destroyed), for the first of the numbers (printing, definition; an evolved follower's evolve card first) that has one.
+ */
+export function cardSoundUrl(ids: readonly string[], kind: "p" | "a" | "d"): string | null {
+  for (const id of ids) {
+    const found = find(`audio/cards/${id}-${kind}`, AUDIO);
+    if (found) return found;
+  }
+  return null;
+}
+
+/** A screen's background music: public/audio/bgm/<name>.* (menu, deck, battle). */
+export function bgmUrl(name: string): string | null {
+  return find(`audio/bgm/${name}`, AUDIO);
 }

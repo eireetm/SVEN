@@ -3,7 +3,9 @@ import { DeckBuilder } from "../decks/DeckBuilder";
 import { DeckEditor } from "../decks/DeckEditor";
 import { GameScreen } from "../game/GameScreen";
 import { htmlLang, useT } from "../i18n";
-import { applyUiTransparency, loadResources } from "../resources/resources";
+import { applyUiTransparency, loadResources, useResourcesVersion } from "../resources/resources";
+import { installClickSound, playBgm } from "../resources/sound";
+import type { BgmName } from "../resources/sound-plan";
 import { SetupScreen } from "../setup/SetupScreen";
 import { MainMenu } from "./MainMenu";
 import { SettingsScreen } from "./SettingsScreen";
@@ -11,6 +13,9 @@ import { useSettings } from "./settings";
 import { dismissError, useApp } from "./store";
 
 type Screen = "menu" | "settings" | "setup" | "builder" | "text" | "game";
+
+/** Each screen's background music (public/audio/bgm, docs/resources.md): the menus', the deck builder's, a game's. */
+const MUSIC: Record<Screen, BgmName> = { menu: "menu", settings: "menu", setup: "menu", builder: "deck", text: "deck", game: "battle" };
 
 /**
  * The screens: the main menu first (play against the AI, build decks, settings); the game setup; the deck builder (from
@@ -36,6 +41,12 @@ export function App() {
     document.documentElement.lang = htmlLang(settings.uiLang);
   }, [settings.uiLang]);
   useEffect(() => applyUiTransparency(settings.uiTransparency), [settings.uiTransparency]);
+  // The music of the screen, once the list of the player's files is known; the click sound of the interface.
+  const resources = useResourcesVersion();
+  useEffect(() => {
+    if (resources > 0) playBgm(MUSIC[screen]);
+  }, [screen, resources]);
+  useEffect(() => installClickSound(), []);
 
   let body;
   switch (screen) {
