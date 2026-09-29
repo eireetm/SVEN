@@ -1,13 +1,13 @@
 // The look of the game comes in three layers, the first one found wins (public/README.md):
 //  1. the player's own files in public/ (images, textures, sounds, fonts, theme.css);
 //  2. the local assets folder of this machine: card images, and Misc/ — field (one player's playmat; the opponent's is the
-//     same turned 180 degrees), back (the card back), unknown (for any missing image) and, if there, the backgrounds
-//     background_m / background_d / background_f. Never shipped;
+//     same turned 180 degrees), back and back_e (the card backs of the main deck and the evolve deck), unknown (for any
+//     missing image) and, if there, the backgrounds background_m / background_d / background_f. Never shipped;
 //  3. the built-in style (plain colors and text).
 // The host lists what there is once at start; nothing is requested that isn't there. The lookups are in lookup.ts.
 import { useSyncExternalStore } from "react";
 import { hostApi } from "../host/api";
-import { battleImageUrl, builderImageUrl, cardBackUrl, fieldImageUrl, hasResource, menuImageUrl, setResourceLists, unknownImageUrl } from "./lookup";
+import { battleImageUrl, builderImageUrl, cardBackUrl, evolveBackUrl, fieldImageUrl, hasResource, menuImageUrl, setResourceLists, unknownImageUrl } from "./lookup";
 
 let version = 0;
 const listeners = new Set<() => void>();
@@ -50,6 +50,7 @@ export function currentUiTransparency(): number {
 function applyTheme(): void {
   const root = document.documentElement;
   root.style.setProperty("--sve-card-back-image", cssUrl(cardBackUrl()));
+  root.style.setProperty("--sve-evolve-back-image", cssUrl(evolveBackUrl()));
   root.style.setProperty("--sve-field-image", cssUrl(fieldImageUrl()));
   // With a playmat picture, the mat shows only the picture (its see-through parts too); without, a built-in mat.
   if (fieldImageUrl()) root.dataset.fieldImage = "true";

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DeckBuilder } from "../decks/DeckBuilder";
 import { DeckEditor } from "../decks/DeckEditor";
 import { GameScreen } from "../game/GameScreen";
-import { useT } from "../i18n";
+import { htmlLang, useT } from "../i18n";
 import { applyUiTransparency, loadResources } from "../resources/resources";
 import { SetupScreen } from "../setup/SetupScreen";
 import { MainMenu } from "./MainMenu";
@@ -33,7 +33,7 @@ export function App() {
     void loadResources();
   }, []);
   useEffect(() => {
-    document.documentElement.lang = settings.uiLang === "zh" ? "zh-CN" : "en";
+    document.documentElement.lang = htmlLang(settings.uiLang);
   }, [settings.uiLang]);
   useEffect(() => applyUiTransparency(settings.uiTransparency), [settings.uiTransparency]);
 

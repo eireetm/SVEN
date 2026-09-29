@@ -49,14 +49,29 @@
   --sve-left-width: clamp(220px, 19vw, 340px);
   /* Pictures from public/ or the assets' Misc folder (src/resources/resources.ts). */
   --sve-card-back-image: none;
+  --sve-evolve-back-image: none;
   --sve-field-image: none;
   --sve-unknown-image: none;
   --sve-menu-image: none;
   --sve-builder-image: none;
   --sve-battle-image: none;
+  /* Chinese and Japanese share many characters but draw them differently: each language gets its own fonts first. */
+  --sve-font-latin: "Segoe UI", system-ui;
+  --sve-font-zh: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", "Noto Sans CJK SC";
+  --sve-font-ja: "Yu Gothic UI", "Meiryo UI", "Meiryo", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP";
   color-scheme: dark;
-  font-family: system-ui, "Segoe UI", "Microsoft YaHei", "Yu Gothic UI", sans-serif;
+  font-family: var(--sve-font-latin), var(--sve-font-zh), var(--sve-font-ja), sans-serif;
   font-size: 14px;
+}
+
+/* The interface in Japanese, or Japanese card text (lang="ja", i18n htmlLang). */
+:root:lang(ja),
+[lang|="ja"] {
+  font-family: "Segoe UI", var(--sve-font-ja), var(--sve-font-zh), system-ui, sans-serif;
+}
+
+[lang|="zh"] {
+  font-family: "Segoe UI", var(--sve-font-zh), var(--sve-font-ja), system-ui, sans-serif;
 }
 
 * {
@@ -408,6 +423,11 @@ option {
   background-image: var(--sve-card-back-image), repeating-linear-gradient(45deg, #2b3448 0 6px, #232a3a 6px 12px);
   background-size: cover;
   border: 1px solid var(--sve-border);
+}
+
+/* The evolve deck's cards have a back of their own (the main deck's when there is no picture for it). */
+.sve-card-back.sve-card-back-evolve {
+  background-image: var(--sve-evolve-back-image), repeating-linear-gradient(45deg, #3b2c4f 0 6px, #2f243f 6px 12px);
 }
 
 .sve-card-art {

@@ -28,7 +28,7 @@ describe("deck text", () => {
     expect(parsed.name).toBe("Mine");
     expect(parsed.main).toEqual({ "A-1": 5, "B-2": 1 });
     expect(parsed.evolve).toEqual({ "C-3": 2 });
-    expect(errors).toEqual(['line 8: "this is wrong" is not "COUNT CARD"']);
+    expect(errors).toEqual([{ line: 8, text: "this is wrong" }]);
   });
 
   it("lists every copy for the engine", () => {

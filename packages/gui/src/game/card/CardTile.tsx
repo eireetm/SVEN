@@ -5,6 +5,7 @@ import { useSettings } from "../../app/settings";
 import { useApp } from "../../app/store";
 import type { CardInfo } from "../../engine/protocol";
 import { useT } from "../../i18n";
+import { counterName } from "../../i18n/counters";
 import { showCard, useFocusSelect, type FocusCard } from "../focus";
 import { CardArt } from "./CardArt";
 import { displayOf } from "./display";
@@ -31,13 +32,15 @@ interface Props {
   style?: CSSProperties;
   /** Linked cards (race / drive / equipment zones) or other notes under the card. */
   children?: ReactNode;
+  /** A face-down card of the evolve deck: the evolve deck's back. */
+  evolveBack?: boolean;
 }
 
 const MAX_KEYWORDS = 3;
 
-export function CardTile({ card, info, side, size = "normal", mark = null, onClick, onPointerDown, className, style, children }: Props) {
+export function CardTile({ card, info, side, size = "normal", mark = null, onClick, onPointerDown, className, style, children, evolveBack = false }: Props) {
   const catalog = useApp((s) => s.catalog);
-  const { cardLang } = useSettings();
+  const { cardLang, uiLang } = useSettings();
   const t = useT();
   const id = card && !card.hidden ? card.id : null;
   const highlighted = useFocusSelect((f) => (id !== null ? f.highlight.includes(id) : false));
@@ -49,7 +52,7 @@ export function CardTile({ card, info, side, size = "normal", mark = null, onCli
     return (
       <div className={classes.join(" ")} data-hidden="true" data-card={card.id} style={style}>
         <div className="sve-card-frame">
-          <div className="sve-card-face sve-card-back" />
+          <div className={`sve-card-face sve-card-back${evolveBack ? " sve-card-back-evolve" : ""}`} />
         </div>
       </div>
     );
@@ -111,8 +114,8 @@ export function CardTile({ card, info, side, size = "normal", mark = null, onCli
           {counters.length > 0 ? (
             <div className="sve-card-counters">
               {counters.map(([counter, n]) => (
-                <span key={counter} className="sve-counter" title={counter}>
-                  {counter} {n}
+                <span key={counter} className="sve-counter" title={counterName(counter, uiLang)}>
+                  {counterName(counter, uiLang)} {n}
                 </span>
               ))}
             </div>

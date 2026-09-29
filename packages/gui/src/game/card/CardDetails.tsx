@@ -4,7 +4,8 @@ import { type CardLang, useSettings } from "../../app/settings";
 import { useApp } from "../../app/store";
 import { traitName } from "../../app/traits";
 import { findCard, sideOf } from "../../engine/view-utils";
-import { useT } from "../../i18n";
+import { htmlLang, useT } from "../../i18n";
+import { counterName } from "../../i18n/counters";
 import { useFocusSelect } from "../focus";
 import { ArtViewer, type ArtFace } from "./ArtViewer";
 import { CardArt } from "./CardArt";
@@ -22,7 +23,7 @@ export function CardDetails() {
   const shown = useFocusSelect((f) => f.shown);
   const update = useApp((s) => s.update);
   const catalog = useApp((s) => s.catalog);
-  const { cardLang } = useSettings();
+  const { cardLang, uiLang } = useSettings();
   const t = useT();
   const [viewing, setViewing] = useState<readonly ArtFace[] | null>(null);
   if (!shown || !catalog) return <p className="sve-hint">{t("card.hint")}</p>;
@@ -31,7 +32,11 @@ export function CardDetails() {
   const def = catalog.def(focus.def);
   if (!def) return <p className="sve-hint">{focus.def}</p>;
   const view = focus.view;
-  const names = [def.names.cn, def.names.ja].filter((n): n is string => !!n && n !== def.name);
+  // The name in the card language, then in the other two (each drawn in its own language's characters).
+  const name = cardName(def, cardLang);
+  const others = LANGS.filter((l) => l !== cardLang)
+    .map((l) => ({ lang: l, name: cardName(def, l, "") }))
+    .filter((o) => o.name !== "" && o.name !== name);
   const stat = (label: string, now: number | null | undefined, printed: number | null) =>
     printed === null && (now === null || now === undefined) ? null : (
       <div className="sve-details-stat">
@@ -53,10 +58,21 @@ export function CardDetails() {
   return (
     <div className="sve-details">
       <button type="button" className="sve-details-art" onClick={() => setViewing(faces())} title={t("card.enlarge")} data-testid="details-art">
-        <CardArt printing={focus.printing} def={def.id} back={focus.back} name={def.name} subtitle={t(`type.${def.type}` as const)} />
+        <CardArt printing={focus.printing} def={def.id} back={focus.back} name={name} subtitle={t(`type.${def.type}` as const)} />
       </button>
-      <h3 className="sve-details-name">{cardName(def, cardLang)}</h3>
-      {names.length > 0 ? <div className="sve-details-names">{names.join(" / ")}</div> : null}
+      <h3 className="sve-details-name" lang={htmlLang(cardLang)}>
+        {name}
+      </h3>
+      {others.length > 0 ? (
+        <div className="sve-details-names">
+          {others.map((o, i) => (
+            <span key={o.lang} lang={htmlLang(o.lang)}>
+              {i > 0 ? " / " : ""}
+              {o.name}
+            </span>
+          ))}
+        </div>
+      ) : null}
       <div className="sve-details-type">
         {[
           t(`class.${def.class}` as const),
@@ -70,13 +86,16 @@ export function CardDetails() {
       </div>
       {def.traits.length > 0 ? (
         <div className="sve-details-traits">
-          {t("card.traits")}: {def.traits.map((trait) => traitName(trait, cardLang)).join("・")}
+          {t("card.traits")}: <span lang={htmlLang(cardLang)}>{def.traits.map((trait) => traitName(trait, cardLang)).join("・")}</span>
           <span className="sve-details-other">
-            {" "}
-            ({LANGS.filter((l) => l !== cardLang)
-              .map((l) => def.traits.map((trait) => traitName(trait, l)).join("・"))
-              .join(" / ")}
-            )
+            {" ("}
+            {LANGS.filter((l) => l !== cardLang).map((l, i) => (
+              <span key={l} lang={htmlLang(l)}>
+                {i > 0 ? " / " : ""}
+                {def.traits.map((trait) => traitName(trait, l)).join("・")}
+              </span>
+            ))}
+            {")"}
           </span>
         </div>
       ) : null}
@@ -96,7 +115,7 @@ export function CardDetails() {
             <div>
               {t("card.counters")}:{" "}
               {Object.entries(view.counters)
-                .map(([k, n]) => `${k} ${n}`)
+                .map(([k, n]) => `${counterName(k, uiLang)} ${n}`)
                 .join(", ")}
             </div>
           ) : null}

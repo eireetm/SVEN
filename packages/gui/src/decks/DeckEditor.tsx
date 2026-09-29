@@ -2,6 +2,7 @@
 // the engine (CR 6.1). A picture-based builder comes later; this is enough to make test decks quickly.
 import { useEffect, useMemo, useState } from "react";
 import { cardName } from "../app/catalog";
+import { errorText } from "../app/errors";
 import { useSettings } from "../app/settings";
 import { engine, reportError, useApp } from "../app/store";
 import { CardDetails } from "../game/card/CardDetails";
@@ -9,6 +10,7 @@ import { showCard } from "../game/focus";
 import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
 import { cardCount, deckFromText, deckToText, emptyDeck, toDeckList } from "./format";
+import { deckProblemText } from "./problems";
 
 /** `initialFile`: open this deck file first (the deck builder's "edit as text"). */
 export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initialFile?: string | null }) {
@@ -17,7 +19,7 @@ export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initia
   const { cardLang } = useSettings();
   const [files, setFiles] = useState<DeckFileEntry[]>([]);
   const [file, setFile] = useState("my-deck.json");
-  const [text, setText] = useState(() => deckToText(emptyDeck("My deck")));
+  const [text, setText] = useState(() => deckToText(emptyDeck(t("builder.newName"))));
   const [check, setCheck] = useState<string[] | null>(null);
   const [message, setMessage] = useState("");
   const [query, setQuery] = useState("");
@@ -46,11 +48,11 @@ export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initia
         setCheck(null);
         setMessage("");
       },
-      (err: unknown) => reportError(`${name}: ${err instanceof Error ? err.message : String(err)}`),
+      (err: unknown) => reportError(`${name}: ${errorText(err, t)}`),
     );
 
   const save = () => {
-    if (!file.endsWith(".json")) return reportError(`${file}: the file name must end with .json`);
+    if (!file.endsWith(".json")) return reportError(t("decks.badFileName", { file }));
     hostApi.saveDeck(file, deck).then(
       () => {
         setMessage(t("decks.saved", { file }));
@@ -79,7 +81,7 @@ export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initia
           type="button"
           onClick={() => {
             setFile("my-deck.json");
-            setText(deckToText(emptyDeck("My deck")));
+            setText(deckToText(emptyDeck(t("builder.newName"))));
             setCheck(null);
           }}
         >
@@ -103,7 +105,7 @@ export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initia
         <p className="sve-hint">{t("decks.textHelp")}</p>
         <textarea className="sve-deck-text" value={text} spellCheck={false} onChange={(e) => (setText(e.target.value), setCheck(null))} />
         <div className="sve-note">{t("decks.counts", { main: cardCount(deck.main), evolve: cardCount(deck.evolve) })}</div>
-        {[...parsed.errors, ...unknown.map((id) => t("decks.unknownCard", { card: id }))].map((e) => (
+        {[...parsed.errors.map((e) => t("decks.badLine", { line: e.line, text: e.text })), ...unknown.map((id) => t("decks.unknownCard", { card: id }))].map((e) => (
           <div key={e} className="sve-problem">
             {e}
           </div>
@@ -126,7 +128,7 @@ export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initia
           ) : (
             <ul className="sve-problems">
               {check.map((e) => (
-                <li key={e}>{e}</li>
+                <li key={e}>{deckProblemText(e, { catalog, lang: cardLang, t })}</li>
               ))}
             </ul>
           )

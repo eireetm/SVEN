@@ -22,6 +22,17 @@ export class Catalog {
     return this.byPrinting.get(id) ?? this.byDef.get(id);
   }
 
+  private byName: Map<string, CatalogCard> | null = null;
+
+  /** A card by its English name (the name the Core knows it by, CR 2.1): the first one listed. */
+  named(name: string): CatalogCard | undefined {
+    if (!this.byName) {
+      this.byName = new Map();
+      for (const card of this.cards) if (!this.byName.has(card.name)) this.byName.set(card.name, card);
+    }
+    return this.byName.get(name);
+  }
+
   /** Cards whose number starts with, or whose name contains, the query (any language). */
   search(query: string, limit = 80): CatalogCard[] {
     const q = query.trim().toLowerCase();

@@ -23,6 +23,7 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
             <select value={settings.uiLang} onChange={(e) => updateSettings({ uiLang: e.target.value as UiLang })} data-testid="settings-ui-lang">
               <option value="en">English</option>
               <option value="zh">中文</option>
+              <option value="ja">日本語</option>
             </select>
           </label>
           <label className="sve-settings-row">

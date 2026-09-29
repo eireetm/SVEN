@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { battleImageUrl, builderImageUrl, menuImageUrl, setResourceLists } from "../src/resources/lookup";
+import { battleImageUrl, builderImageUrl, cardBackUrl, evolveBackUrl, menuImageUrl, setResourceLists } from "../src/resources/lookup";
 
 // Where the three background pictures come from: the player's files in public/textures/menu/ first, then the Misc images
 // of the assets folder. Missing, the deck builder's falls back to the main menu's picture; the others to the built-in
@@ -32,5 +32,22 @@ describe("background pictures", () => {
     expect(menuImageUrl()).toBeNull();
     expect(builderImageUrl()).toBeNull();
     expect(battleImageUrl()).toBeNull();
+  });
+});
+
+describe("card backs", () => {
+  it("give the evolve deck its own back (public/images/backs/evolve, Misc/back_e), else the main deck's", () => {
+    setResourceLists(["images/backs/default.png", "images/backs/evolve.png"], ["back", "back_e"]);
+    expect(cardBackUrl()).toBe("/images/backs/default.png");
+    expect(evolveBackUrl()).toBe("/images/backs/evolve.png");
+
+    setResourceLists([], ["back", "back_e"]);
+    expect(cardBackUrl()).toBe("/api/misc/back");
+    expect(evolveBackUrl()).toBe("/api/misc/back_e");
+
+    setResourceLists([], ["back"]);
+    expect(evolveBackUrl()).toBe("/api/misc/back");
+    setResourceLists([], []);
+    expect(evolveBackUrl()).toBeNull();
   });
 });

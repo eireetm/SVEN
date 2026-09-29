@@ -7,6 +7,7 @@
 // starts with them on.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";
 import { cardName } from "../app/catalog";
+import { errorText } from "../app/errors";
 import { updateSettings, useSettings } from "../app/settings";
 import { traitName } from "../app/traits";
 import { reportError, useApp } from "../app/store";
@@ -87,7 +88,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
         setMessage("");
         updateSettings({ builderDeck: name });
       },
-      (err: unknown) => reportError(`${name}: ${err instanceof Error ? err.message : String(err)}`),
+      (err: unknown) => reportError(`${name}: ${errorText(err, t)}`),
     );
 
   useEffect(() => {

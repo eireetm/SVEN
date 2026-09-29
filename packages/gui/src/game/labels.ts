@@ -10,7 +10,7 @@ import { displayOf } from "./card/display";
 export function playerLabel(p: PlayerId, update: Pick<GameUpdate, "controllers">, t: Translate): string {
   const name = t("game.playerN", { n: p + 1 });
   const controller = update.controllers[p];
-  return controller === "human" ? name : `${name} (${t(`controller.${controller}` as const)})`;
+  return controller === "human" ? name : t("game.playerWithController", { player: name, controller: t(`controller.${controller}` as const) });
 }
 
 /** A card's name as its viewer knows it: from the board, or from what the decision told them; "a card" otherwise. */

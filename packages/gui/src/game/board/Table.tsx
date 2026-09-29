@@ -130,7 +130,7 @@ function Pile({ side, zone, count, top, back, lit = false }: { side: PlayerSideV
       onClick={browsable ? () => openZone({ player: side.id, zone }) : undefined}
     >
       {count > 0 && top ? <CardTile card={top} side={side} className="sve-slot-card" /> : null}
-      {count > 0 && !top && back ? <div className="sve-slot-back sve-card-back" /> : null}
+      {count > 0 && !top && back ? <div className={`sve-slot-back sve-card-back${zone === "evolveDeck" ? " sve-card-back-evolve" : ""}`} /> : null}
       {count > 0 ? <span className="sve-pile-count">{count}</span> : null}
     </div>
   );

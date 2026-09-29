@@ -35,9 +35,14 @@ export function fieldImageUrl(): string | null {
   return find("textures/board/field", IMAGE) ?? miscUrl("field");
 }
 
-/** The card back: public/images/backs/default.*, else Misc/back. */
+/** The card back of the main deck: public/images/backs/default.*, else Misc/back. */
 export function cardBackUrl(): string | null {
   return find("images/backs/default", IMAGE) ?? miscUrl("back");
+}
+
+/** The card back of the evolve deck (its cards have their own back): public/images/backs/evolve.*, else Misc/back_e, else the main deck's. */
+export function evolveBackUrl(): string | null {
+  return find("images/backs/evolve", IMAGE) ?? miscUrl("back_e") ?? cardBackUrl();
 }
 
 /** The picture for a card whose image is missing: public/images/cards/unknown.*, else Misc/unknown. */

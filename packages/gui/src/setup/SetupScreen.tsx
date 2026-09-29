@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { errorText } from "../app/errors";
 import { updateSettings, useSettings } from "../app/settings";
 import { engine, reportError, useApp } from "../app/store";
 import { cardCount, toDeckList, type DeckFile } from "../decks/format";
+import { deckProblemText } from "../decks/problems";
 import type { SeatController } from "../engine/protocol";
 import { readReplayFile } from "../game/replay-files";
 import { hostApi, type DeckFileEntry } from "../host/api";
@@ -36,6 +38,7 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
   const t = useT();
   const settings = useSettings();
   const hasGame = useApp((s) => s.update !== null && s.update.result === null);
+  const catalog = useApp((s) => s.catalog);
   const [decks, setDecks] = useState<DeckFileEntry[] | null>(null);
   const [seed, setSeed] = useState(newSeed);
   const [status, setStatus] = useState<[DeckStatus | null, DeckStatus | null]>([null, null]);
@@ -59,7 +62,7 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
           const errors = await engine.validateDeck(toDeckList(deck), true);
           if (live) setStatus((s) => (seat === 0 ? [{ deck, errors }, s[1]] : [s[0], { deck, errors }]));
         })
-        .catch((err: unknown) => reportError(`${file}: ${err instanceof Error ? err.message : String(err)}`));
+        .catch((err: unknown) => reportError(`${file}: ${errorText(err, t)}`));
     });
     return () => {
       live = false;
@@ -134,7 +137,7 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
                   {t("setup.deckProblems")}
                   <ul>
                     {s.errors.map((e) => (
-                      <li key={e}>{e}</li>
+                      <li key={e}>{catalog ? deckProblemText(e, { catalog, lang: settings.cardLang, t }) : e}</li>
                     ))}
                   </ul>
                 </div>

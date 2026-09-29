@@ -1,6 +1,7 @@
 // Deck files (decks/*.json) and the text form the deck editor uses. Pure functions: used by the app, the scripts and the
 // tests. Whether a deck is legal is the engine's question (Engine.validateDeck, CR 6.1), not this module's.
 import type { DeckList } from "@sve/core";
+import { en } from "../i18n/en";
 
 export const DECK_FORMAT = "sve-deck";
 
@@ -17,7 +18,17 @@ export interface DeckFile {
   notes?: string;
 }
 
-export class DeckFormatError extends Error {}
+/** What is wrong with a deck file: a message of the interface (English here; errorText says it in the person's language). */
+export type DeckFileKey = Extract<keyof typeof en, `deckFile.${string}`>;
+
+export class DeckFormatError extends Error {
+  constructor(
+    readonly key: DeckFileKey,
+    readonly params: Record<string, string> = {},
+  ) {
+    super(en[key].replace(/\{(\w+)\}/g, (all, name: string) => params[name] ?? all));
+  }
+}
 
 export function emptyDeck(name: string): DeckFile {
   return { format: DECK_FORMAT, version: 1, name, main: {}, evolve: {} };
@@ -25,10 +36,10 @@ export function emptyDeck(name: string): DeckFile {
 
 function counts(value: unknown, key: string): Record<string, number> {
   if (value === undefined) return {};
-  if (typeof value !== "object" || value === null || Array.isArray(value)) throw new DeckFormatError(`${key}: expected { "PRINTING": count }`);
+  if (typeof value !== "object" || value === null || Array.isArray(value)) throw new DeckFormatError("deckFile.counts", { section: key });
   const out: Record<string, number> = {};
   for (const [card, n] of Object.entries(value as Record<string, unknown>)) {
-    if (typeof n !== "number" || !Number.isInteger(n) || n < 0) throw new DeckFormatError(`${key}.${card}: the count must be a whole number`);
+    if (typeof n !== "number" || !Number.isInteger(n) || n < 0) throw new DeckFormatError("deckFile.count", { section: key, card });
     if (n > 0) out[card] = n;
   }
   return out;
@@ -36,12 +47,12 @@ function counts(value: unknown, key: string): Record<string, number> {
 
 /** Check a deck file's shape (a parsed JSON value). */
 export function parseDeckFile(value: unknown): DeckFile {
-  if (typeof value !== "object" || value === null) throw new DeckFormatError("a deck file is a JSON object");
+  if (typeof value !== "object" || value === null) throw new DeckFormatError("deckFile.notObject");
   const v = value as Record<string, unknown>;
-  if (v.format !== DECK_FORMAT) throw new DeckFormatError(`"format" must be "${DECK_FORMAT}"`);
-  if (v.version !== 1) throw new DeckFormatError(`unsupported version ${String(v.version)}`);
-  if (typeof v.name !== "string") throw new DeckFormatError(`"name" must be a string`);
-  if (v.leader !== undefined && typeof v.leader !== "string") throw new DeckFormatError(`"leader" must be a printing id`);
+  if (v.format !== DECK_FORMAT) throw new DeckFormatError("deckFile.format");
+  if (v.version !== 1) throw new DeckFormatError("deckFile.version", { version: String(v.version) });
+  if (typeof v.name !== "string") throw new DeckFormatError("deckFile.name");
+  if (v.leader !== undefined && typeof v.leader !== "string") throw new DeckFormatError("deckFile.leader");
   const deck: DeckFile = { format: DECK_FORMAT, version: 1, name: v.name, main: counts(v.main, "main"), evolve: counts(v.evolve, "evolve") };
   if (typeof v.leader === "string" && v.leader !== "") deck.leader = v.leader;
   if (typeof v.notes === "string" && v.notes !== "") deck.notes = v.notes;
@@ -85,13 +96,13 @@ export function deckToText(deck: DeckFile, nameOf?: (printing: string) => string
 
 export interface ParsedText {
   deck: DeckFile;
-  /** Line problems: "line 7: ...". */
-  errors: string[];
+  /** The lines that aren't "COUNT CARD" (numbered from 1). */
+  errors: { line: number; text: string }[];
 }
 
 export function deckFromText(text: string, fallbackName = "Untitled"): ParsedText {
   const deck = emptyDeck(fallbackName);
-  const errors: string[] = [];
+  const errors: ParsedText["errors"] = [];
   const notes: string[] = [];
   let section: "main" | "evolve" = "main";
   text.split(/\r?\n/).forEach((raw, i) => {
@@ -116,7 +127,7 @@ export function deckFromText(text: string, fallbackName = "Untitled"): ParsedTex
     }
     const entry = /^(?:(\d+)\s*x?\s+(\S+)|(\S+)\s+x\s*(\d+)|(\S+))$/i.exec(line);
     if (!entry) {
-      errors.push(`line ${i + 1}: "${raw.trim()}" is not "COUNT CARD"`);
+      errors.push({ line: i + 1, text: raw.trim() });
       return;
     }
     const card = entry[2] ?? entry[3] ?? entry[5]!;

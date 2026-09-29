@@ -4,7 +4,7 @@ import { answer, startGame, useSettings } from "./helpers";
 // The main menu and the settings; a game played on the table itself: cards dragged onto the mat to play them, a follower's
 // menu to attack, a follower dragged onto the enemy leader to attack.
 
-test("the main menu leads to the settings, where the interface language changes", async ({ page }) => {
+test("the main menu leads to the settings, where the interface language changes (English, Chinese, Japanese)", async ({ page }) => {
   await useSettings(page, { uiLang: "en" });
   await page.goto("/");
   await expect(page.getByTestId("menu-play")).toHaveText("Play vs AI");
@@ -19,6 +19,12 @@ test("the main menu leads to the settings, where the interface language changes"
   await page.getByRole("button", { name: "返回" }).click();
   await expect(page.getByTestId("menu-play")).toHaveText("对战 AI");
   await expect(page.getByTestId("menu-settings")).toHaveText("设置");
+  // Japanese: the page's language follows, so the characters are drawn in their Japanese forms.
+  await page.getByTestId("menu-settings").click();
+  await page.getByTestId("settings-ui-lang").selectOption("ja");
+  await page.getByRole("button", { name: "戻る" }).click();
+  await expect(page.getByTestId("menu-play")).toHaveText("AI と対戦");
+  await expect(page.locator("html")).toHaveAttribute("lang", "ja");
 });
 
 async function center(locator: Locator): Promise<{ x: number; y: number }> {

@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import type { SeatController } from "../engine/protocol";
 
-export type UiLang = "en" | "zh";
+export type UiLang = "en" | "zh" | "ja";
 export type CardLang = "en" | "cn" | "ja";
 
 export interface Settings {

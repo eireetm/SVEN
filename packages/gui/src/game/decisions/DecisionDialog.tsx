@@ -15,6 +15,7 @@ import { CardTile } from "../card/CardTile";
 import { setHighlight } from "../focus";
 import { sendAnswer, toggleChosen, useInteraction } from "../interaction";
 import { abilityLabel, cardLabel } from "../labels";
+import { optionText } from "../options";
 
 type Of<T extends Decision["type"]> = Extract<Decision, { type: T }>;
 
@@ -33,10 +34,12 @@ function useLabel(update: GameUpdate): (id: CardId) => string {
   return (id) => cardLabel(id, update, catalog, cardLang, t);
 }
 
-export function rangeLabel(min: number, max: number, t: Translate): string {
-  if (min === max) return t("decision.range.exact", { n: min });
-  if (min === 0) return t("decision.range.upTo", { max });
-  return t("decision.range.between", { min, max });
+/** "2", "up to 3", "1 to 2" (cards, or the options of a choice). */
+export function rangeLabel(min: number, max: number, t: Translate, of: "cards" | "options" = "cards"): string {
+  const key = of === "cards" ? "decision.range" : "decision.optionRange";
+  if (min === max) return t(`${key}.exact`, { n: min });
+  if (min === 0) return t(`${key}.upTo`, { max });
+  return t(`${key}.between`, { min, max });
 }
 
 /** A button that lights up its cards on the board while pointed at. */
@@ -178,10 +181,13 @@ const CHOOSE_KEYS: Record<Of<"choose">["reason"], MessageKey> = {
 function Choose({ d, update, answer, busy }: FormProps<"choose">) {
   const t = useT();
   const label = useLabel(update);
+  const catalog = useApp((s) => s.catalog)!;
+  const { cardLang } = useSettings();
   const [chosen, setChosen] = useState<string[]>([]);
   const single = d.max === 1;
   const subject = d.subject ? label(d.subject.id) : "";
-  const text = t(CHOOSE_KEYS[d.reason], { card: subject }) + (single ? "" : ` — ${t("decision.choose", { range: rangeLabel(d.min, d.max, t) })}`);
+  const text = t(CHOOSE_KEYS[d.reason], { card: subject }) + (single ? "" : ` — ${t("decision.choose", { range: rangeLabel(d.min, d.max, t, "options") })}`);
+  const option = (o: (typeof d.options)[number]) => optionText(o, d, { catalog, lang: cardLang, t });
   return (
     <>
       <Prompt text={text} source={d.source} update={update} />
@@ -189,7 +195,7 @@ function Choose({ d, update, answer, busy }: FormProps<"choose">) {
         {d.options.map((o) =>
           single ? (
             <ActionButton key={o.id} ids={d.subject ? [d.subject.id] : []} disabled={busy} onClick={() => answer({ type: "choose", ids: [o.id] })}>
-              {o.label}
+              {option(o)}
             </ActionButton>
           ) : (
             <label key={o.id} className="sve-check">
@@ -199,7 +205,7 @@ function Choose({ d, update, answer, busy }: FormProps<"choose">) {
                 disabled={busy || (!chosen.includes(o.id) && chosen.length >= d.max)}
                 onChange={() => setChosen((c) => (c.includes(o.id) ? c.filter((x) => x !== o.id) : [...c, o.id]))}
               />
-              {o.label}
+              {option(o)}
             </label>
           ),
         )}

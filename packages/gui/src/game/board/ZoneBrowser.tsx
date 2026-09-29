@@ -41,7 +41,7 @@ export function ZoneBrowser({ update }: { update: GameUpdate }) {
   const cards = side[open.zone] as readonly (CardView | HiddenCardView)[];
   const decision = update.decision?.decision;
   const tile = (card: CardView | HiddenCardView) => {
-    if (card.hidden || actionsFor(decision, card.id).length === 0) return <CardTile card={card} side={side} />;
+    if (card.hidden || actionsFor(decision, card.id).length === 0) return <CardTile card={card} side={side} evolveBack={open.zone === "evolveDeck"} />;
     return (
       <div
         className="sve-zone-action"
