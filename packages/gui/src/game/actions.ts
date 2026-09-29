@@ -28,3 +28,22 @@ export function dragKind(actions: readonly TableAction[]): "play" | "attack" | n
   if (plays === 1) return "play";
   return actions.some((a) => a.type === "attack") ? "attack" : null;
 }
+
+/**
+ * Whether a person answers the decision in the decision window instead of on the table: the order of pending abilities,
+ * choices, confirmations, orders of cards, and a selection whose cards are not all on the table (a search, a pile, cards
+ * looked at). Everything else is answered on the table: lit cards, their menus, and the buttons beside the mats.
+ */
+export function inDialog(decision: Decision | undefined, onTable: (card: CardId) => boolean): boolean {
+  switch (decision?.type) {
+    case "selectPending":
+    case "choose":
+    case "confirm":
+    case "orderCards":
+      return true;
+    case "selectCards":
+      return !decision.candidates.every(onTable);
+    default:
+      return false;
+  }
+}

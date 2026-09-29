@@ -1,22 +1,24 @@
-// The pending decision of a person, one small form per decision type (the core's protocol, model/decision.ts). Every
-// option comes from the decision itself: the GUI never works out what is legal (the decision protocol in
+// A person's decision that the table can't answer, in a window over the table: the order of pending abilities, choices
+// (CR 5.18 "choose" and others), confirmations (an optional cost ...), the order of cards, and a selection of cards that are
+// not all on the table (a search, a pile, cards looked at). Everything else is answered on the table (actions.ts
+// inDialog). Every option comes from the decision itself: the GUI never works out what is legal (the decision protocol in
 // docs/architecture.md).
 import { useState, type ReactNode } from "react";
-import type { Answer, CardId, Decision, MainAction, QuickAction } from "@sve/core";
-import { cardName } from "../../app/catalog";
+import type { Answer, CardId, Decision } from "@sve/core";
 import { useSettings } from "../../app/settings";
-import { engine, useApp } from "../../app/store";
-import { sendAnswer, toggleChosen, useInteraction } from "../interaction";
+import { useApp } from "../../app/store";
 import type { DecisionInfo, GameUpdate } from "../../engine/protocol";
-import { findCard } from "../../engine/view-utils";
+import { findCard, isOnTable } from "../../engine/view-utils";
 import { useT, type MessageKey, type Translate } from "../../i18n";
+import { inDialog } from "../actions";
 import { CardTile } from "../card/CardTile";
 import { setHighlight } from "../focus";
-import { abilityLabel, cardLabel, playerLabel } from "../labels";
+import { sendAnswer, toggleChosen, useInteraction } from "../interaction";
+import { abilityLabel, cardLabel } from "../labels";
 
 type Of<T extends Decision["type"]> = Extract<Decision, { type: T }>;
 
-interface PanelProps<T extends Decision["type"]> {
+interface FormProps<T extends Decision["type"]> {
   d: Of<T>;
   info: DecisionInfo;
   update: GameUpdate;
@@ -68,110 +70,7 @@ function Prompt({ text, source, update }: { text: string; source?: CardId | null
   );
 }
 
-function Group({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="sve-action-group">
-      <span className="sve-action-group-title">{title}</span>
-      <div className="sve-action-group-buttons">{children}</div>
-    </div>
-  );
-}
-
-function MainPhase({ d, info, update, answer, busy }: PanelProps<"mainPhase">) {
-  const t = useT();
-  const label = useLabel(update);
-  const catalog = useApp((s) => s.catalog)!;
-  const { cardLang } = useSettings();
-  const act = (action: MainAction) => answer({ type: "mainPhase", action });
-  const evolveName = (id: CardId, back: boolean) => {
-    const def = catalog.def(info.cards[id]?.def ?? "");
-    const shown = back && def?.backFace ? catalog.def(def.backFace) : def;
-    return cardName(shown, cardLang);
-  };
-  const plays = d.actions.filter((a) => a.type === "play");
-  const evolves = d.actions.filter((a) => a.type === "evolve");
-  const activates = d.actions.filter((a) => a.type === "activate");
-  const attacks = d.actions.filter((a) => a.type === "attack");
-  return (
-    <>
-      <Prompt text={t("decision.mainPhase")} update={update} />
-      <div className="sve-actions">
-        {plays.length > 0 ? (
-          <Group title={t("decision.play")}>
-            {plays.map((a, i) => (
-              <ActionButton key={i} ids={[a.card]} disabled={busy} onClick={() => act(a)}>
-                {label(a.card)}
-              </ActionButton>
-            ))}
-          </Group>
-        ) : null}
-        {evolves.length > 0 ? (
-          <Group title={t("decision.evolve")}>
-            {evolves.map((a, i) => (
-              <ActionButton key={i} ids={[a.card]} disabled={busy} onClick={() => act(a)}>
-                {label(a.card)} → {evolveName(a.evolveCard, a.backFace === true)}
-                {a.useEvolutionPoint ? ` · ${t("decision.withEp")}` : ""}
-                {a.superEvolve ? ` · ${t("decision.superEvolve")}` : ""}
-                {a.backFace ? ` · ${t("decision.backFace")}` : ""}
-              </ActionButton>
-            ))}
-          </Group>
-        ) : null}
-        {activates.length > 0 ? (
-          <Group title={t("decision.activate")}>
-            {activates.map((a, i) => (
-              <ActionButton key={i} ids={[a.card]} disabled={busy} onClick={() => act(a)}>
-                {label(a.card)}: {abilityLabel(info.abilities[`${a.card}:${a.ability}`], t)}
-                {a.useEvolutionPoint ? ` · ${t("decision.withEp")}` : ""}
-              </ActionButton>
-            ))}
-          </Group>
-        ) : null}
-        {attacks.length > 0 ? (
-          <Group title={t("decision.attack")}>
-            {attacks.map((a, i) => (
-              <ActionButton key={i} ids={[a.attacker, a.target]} disabled={busy} onClick={() => act(a)}>
-                {label(a.attacker)} → {label(a.target)}
-              </ActionButton>
-            ))}
-          </Group>
-        ) : null}
-      </div>
-      <div className="sve-actions-end">
-        <ActionButton ids={[]} primary disabled={busy} onClick={() => act({ type: "endMainPhase" })}>
-          {t("decision.endMain")}
-        </ActionButton>
-      </div>
-    </>
-  );
-}
-
-function Quick({ d, info, update, answer, busy }: PanelProps<"quick">) {
-  const t = useT();
-  const label = useLabel(update);
-  const act = (action: QuickAction) => answer({ type: "quick", action });
-  return (
-    <>
-      <Prompt text={t(d.timing === "attack" ? "decision.quick.attack" : "decision.quick.endPhase")} update={update} />
-      <div className="sve-actions">
-        {d.actions.map((a, i) =>
-          a.type === "pass" ? null : (
-            <ActionButton key={i} ids={[a.card]} disabled={busy} onClick={() => act(a)}>
-              {a.type === "play" ? `${t("decision.play")} ${label(a.card)}` : `${label(a.card)}: ${abilityLabel(info.abilities[`${a.card}:${a.ability}`], t)}`}
-            </ActionButton>
-          ),
-        )}
-      </div>
-      <div className="sve-actions-end">
-        <ActionButton ids={[]} primary disabled={busy} onClick={() => act({ type: "pass" })}>
-          {t("decision.pass")}
-        </ActionButton>
-      </div>
-    </>
-  );
-}
-
-function SelectPending({ d, info, update, answer, busy }: PanelProps<"selectPending">) {
+function SelectPending({ d, info, update, answer, busy }: FormProps<"selectPending">) {
   const t = useT();
   const label = useLabel(update);
   return (
@@ -208,10 +107,10 @@ export const SELECT_KEYS: Record<Of<"selectCards">["reason"], MessageKey> = {
   pick: "decision.select.pick",
 };
 
-function SelectCards({ d, info, update, answer, busy }: PanelProps<"selectCards">) {
+function SelectCards({ d, info, update, answer, busy }: FormProps<"selectCards">) {
   const t = useT();
   const label = useLabel(update);
-  // Shared with the table, where the same cards can be clicked.
+  // Shared with the table, where the cards that are on it can be clicked too.
   const chosen = useInteraction((s) => s.chosen);
   const single = d.min === 1 && d.max === 1;
   const toggle = (id: CardId) => {
@@ -276,7 +175,7 @@ const CHOOSE_KEYS: Record<Of<"choose">["reason"], MessageKey> = {
   effect: "decision.choose.effect",
 };
 
-function Choose({ d, update, answer, busy }: PanelProps<"choose">) {
+function Choose({ d, update, answer, busy }: FormProps<"choose">) {
   const t = useT();
   const label = useLabel(update);
   const [chosen, setChosen] = useState<string[]>([]);
@@ -286,7 +185,7 @@ function Choose({ d, update, answer, busy }: PanelProps<"choose">) {
   return (
     <>
       <Prompt text={text} source={d.source} update={update} />
-      <div className="sve-actions">
+      <div className="sve-actions sve-actions-column">
         {d.options.map((o) =>
           single ? (
             <ActionButton key={o.id} ids={d.subject ? [d.subject.id] : []} disabled={busy} onClick={() => answer({ type: "choose", ids: [o.id] })}>
@@ -328,7 +227,7 @@ const CONFIRM_KEYS: Record<Of<"confirm">["reason"], MessageKey> = {
   driveTrigger: "decision.confirm.driveTrigger",
 };
 
-function Confirm({ d, update, answer, busy }: PanelProps<"confirm">) {
+function Confirm({ d, update, answer, busy }: FormProps<"confirm">) {
   const t = useT();
   const label = useLabel(update);
   const ids = [d.source, d.subject?.id].filter((x): x is CardId => !!x);
@@ -352,7 +251,7 @@ function Confirm({ d, update, answer, busy }: PanelProps<"confirm">) {
   );
 }
 
-function OrderCards({ d, info, update, answer, busy }: PanelProps<"orderCards">) {
+function OrderCards({ d, info, update, answer, busy }: FormProps<"orderCards">) {
   const t = useT();
   const [order, setOrder] = useState<CardId[]>(d.cards.map((c) => c.id));
   const move = (i: number, by: number) =>
@@ -392,58 +291,10 @@ function OrderCards({ d, info, update, answer, busy }: PanelProps<"orderCards">)
   );
 }
 
-function Mulligan({ d, info, update, answer, busy }: PanelProps<"mulligan">) {
-  const t = useT();
-  return (
-    <>
-      <Prompt text={t("decision.mulligan")} update={update} />
-      <div className="sve-choice-cards">
-        {d.hand.map((id) => {
-          const view = findCard(update.view, id);
-          return <CardTile key={id} card={view ?? undefined} info={view ? undefined : info.cards[id]} side={update.view.players[d.player]} />;
-        })}
-      </div>
-      <div className="sve-actions-end">
-        <ActionButton ids={[]} primary disabled={busy} onClick={() => answer({ type: "mulligan", redraw: false })}>
-          {t("decision.keep")}
-        </ActionButton>
-        <ActionButton ids={[]} disabled={busy} onClick={() => answer({ type: "mulligan", redraw: true })}>
-          {t("decision.redraw")}
-        </ActionButton>
-      </div>
-    </>
-  );
-}
-
-function TurnOrder({ update, answer, busy }: PanelProps<"chooseTurnOrder">) {
-  const t = useT();
-  return (
-    <>
-      <Prompt text={t("decision.chooseTurnOrder")} update={update} />
-      <div className="sve-actions-end">
-        <ActionButton ids={[]} primary disabled={busy} onClick={() => answer({ type: "chooseTurnOrder", goFirst: true })}>
-          {t("decision.goFirst")}
-        </ActionButton>
-        <ActionButton ids={[]} disabled={busy} onClick={() => answer({ type: "chooseTurnOrder", goFirst: false })}>
-          {t("decision.goSecond")}
-        </ActionButton>
-      </div>
-    </>
-  );
-}
-
-function DecisionBody({ info, update, answer, busy }: { info: DecisionInfo; update: GameUpdate; answer: (a: Answer) => void; busy: boolean }) {
+function DecisionForm({ info, update, answer, busy }: { info: DecisionInfo; update: GameUpdate; answer: (a: Answer) => void; busy: boolean }) {
   const d = info.decision;
   const common = { info, update, answer, busy };
   switch (d.type) {
-    case "chooseTurnOrder":
-      return <TurnOrder d={d} {...common} />;
-    case "mulligan":
-      return <Mulligan d={d} {...common} />;
-    case "mainPhase":
-      return <MainPhase d={d} {...common} />;
-    case "quick":
-      return <Quick d={d} {...common} />;
     case "selectPending":
       return <SelectPending d={d} {...common} />;
     case "selectCards":
@@ -454,55 +305,45 @@ function DecisionBody({ info, update, answer, busy }: { info: DecisionInfo; upda
       return <Confirm d={d} {...common} />;
     case "orderCards":
       return <OrderCards d={d} {...common} />;
+    default:
+      return null;
   }
 }
 
-/** The decision panel (right column): the person's decision, else who the game waits for, else the result. */
-export function DecisionPanel({ update, onNewGame }: { update: GameUpdate; onNewGame: () => void }) {
+/**
+ * The decision window, over the table (the card panel on the left stays in view). "Look at the table" folds it into a
+ * button at the bottom, to see the board before answering. Its root always carries the pending decision's type and the
+ * number of answers so far (for the tests); the table remounts it for each decision.
+ */
+export function DecisionDialog({ update }: { update: GameUpdate }) {
   const t = useT();
-  // Sent answers and refusals are tracked with the table's interaction state (one decision at a time).
   const sent = useInteraction((s) => s.sent);
+  const [folded, setFolded] = useState(false);
   const info = update.decision;
+  const open = !!info && inDialog(info.decision, (id) => isOnTable(update.view, id));
   const answer = (a: Answer) => sendAnswer(update, a);
-  const seat = update.controllers[update.perspective] === "human" ? update.perspective : null;
-  const concede = () => {
-    if (seat !== null && window.confirm(t("game.concedeConfirm"))) engine.send({ kind: "concede", seat });
-  };
-  let body: ReactNode;
-  if (update.result) {
-    body = (
-      <div className="sve-actions-end">
-        <span className="sve-result-text">
-          {update.result.winner === null ? t("game.draw") : t("game.win", { player: playerLabel(update.result.winner, update, t) })}
-        </span>
-        <button type="button" className="sve-primary" onClick={onNewGame}>
-          {t("game.newGame")}
-        </button>
-      </div>
-    );
-  } else if (info) {
-    body = <DecisionBody info={info} update={update} answer={answer} busy={sent} />;
-  } else if (update.waitingFor !== null) {
-    const controller = update.controllers[update.waitingFor];
-    body = (
-      <div className="sve-prompt">
-        {update.settings.paused && controller !== "human"
-          ? t("game.paused")
-          : t("game.waiting", { player: playerLabel(update.waitingFor, update, t), controller: t(`controller.${controller}` as const) })}
-      </div>
-    );
-  }
   return (
     <div
-      className={`sve-decision${sent ? " sve-busy" : ""}`}
+      className={`sve-decision${sent ? " sve-busy" : ""}${open && !folded ? " sve-decision-open" : ""}`}
       data-decision={info?.decision.type ?? (update.result ? "over" : "waiting")}
       data-inputs={update.inputCount}
     >
-      <div className="sve-decision-body">{body}</div>
-      {seat !== null && !update.result ? (
-        <button type="button" className="sve-concede" onClick={concede}>
-          {t("game.concede")}
+      {open && folded ? (
+        <button type="button" className="sve-primary sve-decision-unfold" onClick={() => setFolded(false)} data-testid="decision-unfold">
+          {t("decision.backToChoice")}
         </button>
+      ) : null}
+      {open && !folded && info ? (
+        <div className="sve-decision-dialog" role="dialog" data-testid="decision-dialog">
+          <div className="sve-decision-body">
+            <DecisionForm info={info} update={update} answer={answer} busy={sent} />
+          </div>
+          <div className="sve-decision-tools">
+            <button type="button" onClick={() => setFolded(true)} data-testid="decision-fold">
+              {t("decision.lookAtTable")}
+            </button>
+          </div>
+        </div>
       ) : null}
     </div>
   );

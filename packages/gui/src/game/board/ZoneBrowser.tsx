@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import type { CardView, HiddenCardView } from "@sve/core";
 import type { GameUpdate } from "../../engine/protocol";
+import { actionsFor, openMenu } from "../interaction";
 import type { SideZone } from "../../engine/view-utils";
 import { useT, type MessageKey } from "../../i18n";
 import { CardTile } from "../card/CardTile";
@@ -21,7 +22,10 @@ const ZONE_KEYS: Record<SideZone, MessageKey> = {
   equipmentZone: "log.zone.equipmentZone",
 };
 
-/** A pile opened from the board (cemetery, banished, evolve deck): every card its viewer may see. */
+/**
+ * A pile opened from the board (cemetery, banished, evolve deck): every card its viewer may see. A card the pending
+ * decision lets act (an ability used from the cemetery ...) is lit: a click closes the window and opens its menu.
+ */
 export function ZoneBrowser({ update }: { update: GameUpdate }) {
   const open = useOpenZone();
   const t = useT();
@@ -35,6 +39,22 @@ export function ZoneBrowser({ update }: { update: GameUpdate }) {
   if (!open) return null;
   const side = update.view.players[open.player];
   const cards = side[open.zone] as readonly (CardView | HiddenCardView)[];
+  const decision = update.decision?.decision;
+  const tile = (card: CardView | HiddenCardView) => {
+    if (card.hidden || actionsFor(decision, card.id).length === 0) return <CardTile card={card} side={side} />;
+    return (
+      <div
+        className="sve-zone-action"
+        onClick={(e) => {
+          const box = e.currentTarget.getBoundingClientRect();
+          openZone(null);
+          openMenu({ card: card.id, anchor: { left: box.left, top: box.top, right: box.right, bottom: box.bottom } });
+        }}
+      >
+        <CardTile card={card} side={side} mark="action" />
+      </div>
+    );
+  };
   return (
     <div className="sve-modal-backdrop" onClick={() => openZone(null)}>
       <div className="sve-modal" onClick={(e) => e.stopPropagation()}>
@@ -50,11 +70,11 @@ export function ZoneBrowser({ update }: { update: GameUpdate }) {
             // In the evolve deck, the face-up cards (CR 4.6.3) are marked; face-down ones aren't.
             open.zone === "evolveDeck" && !card.hidden && card.faceUp ? (
               <div key={card.id} className="sve-face-up-card">
-                <CardTile card={card} side={side} />
+                {tile(card)}
                 <span className="sve-face-up-tag">{t("game.faceUp")}</span>
               </div>
             ) : (
-              <CardTile key={card.id} card={card} side={side} />
+              <div key={card.id}>{tile(card)}</div>
             ),
           )}
         </div>

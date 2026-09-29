@@ -43,3 +43,15 @@ export function sideOf(view: PlayerView, id: string): PlayerSideView | undefined
   const here = (card: CardView | HiddenCardView | null): boolean => !!card && !card.hidden && card.id === id;
   return view.players.find((side) => here(side.leader) || SIDE_ZONES.some((zone) => (side[zone] as readonly (CardView | HiddenCardView)[]).some(here)));
 }
+
+/**
+ * Whether a card is on the table as a card of its own, which a person can click there: a leader, a card in a hand, on the
+ * field, in the EX area or linked to a follower (race, drive, equipment zones), or in the trigger zone. Cards in piles
+ * (cemetery, banished, evolve deck) and in the deck are not.
+ */
+export function isOnTable(view: PlayerView, id: string): boolean {
+  const here = (card: CardView | HiddenCardView | null): boolean => !!card && !card.hidden && card.id === id;
+  return view.players.some(
+    (side) => here(side.leader) || [side.hand, side.field, side.ex, side.raceZone, side.driveZone, side.equipmentZone, side.triggerZone].some((zone) => (zone as readonly (CardView | HiddenCardView)[]).some(here)),
+  );
+}

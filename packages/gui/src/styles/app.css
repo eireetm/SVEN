@@ -613,10 +613,14 @@ option {
   --w: calc(var(--sve-card-width) * 0.4);
 }
 
-/* Game screen: the card panel, the table, the decision and the log, over the battlefield's background (background_f). */
+/*
+ * Game screen: the card panel and the table, over the battlefield's background (background_f). The log and debug sidebar
+ * is hidden unless shown; then it lies over the right of the table.
+ */
 .sve-game {
+  position: relative;
   display: grid;
-  grid-template-columns: var(--sve-left-width) minmax(0, 1fr) clamp(280px, 22vw, 380px);
+  grid-template-columns: var(--sve-left-width) minmax(0, 1fr);
   height: 100%;
   background:
     var(--sve-background-shade),
@@ -637,10 +641,31 @@ option {
 }
 
 .sve-game-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  width: clamp(280px, 24vw, 400px);
   border-left: 1px solid var(--sve-border);
+  box-shadow: -12px 0 30px #0008;
+}
+
+.sve-sidebar-show {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 50;
+}
+
+.sve-sidebar-hide {
+  margin-left: auto;
 }
 
 .sve-game-left-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
   padding: 8px;
   border-bottom: 1px solid var(--sve-border);
 }
@@ -683,7 +708,7 @@ option {
 
 :root:not([data-field-image]) .sve-mat-picture {
   background:
-    linear-gradient(transparent 57.9%, rgba(110, 200, 255, 0.5) 57.9%, rgba(110, 200, 255, 0.5) 58.2%, transparent 58.2%),
+    linear-gradient(transparent 60.4%, rgba(110, 200, 255, 0.5) 60.4%, rgba(110, 200, 255, 0.5) 60.7%, transparent 60.7%),
     radial-gradient(ellipse at 50% 45%, #0f4b7a 0%, #062443 45%, #021a30 80%);
   box-shadow: 0 0 0 1px rgba(110, 200, 255, 0.15);
 }
@@ -1231,28 +1256,84 @@ option {
   gap: 10px;
 }
 
-/* The decision panel (right column): every option of the pending decision as a button. */
+/*
+ * The decision window over the table (choices, confirmations, orders, cards not on the table). The table behind it is
+ * dimmed a little; "look at the table" folds it into a button at the bottom.
+ */
 .sve-decision {
-  --sve-card-width: 66px;
+  position: absolute;
+  inset: 0;
+  z-index: 45;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px 12px;
-  max-height: 52%;
-  overflow: auto;
-  border-bottom: 1px solid var(--sve-border);
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
-.sve-decision.sve-busy {
+.sve-decision-open {
+  background: rgb(4 8 16 / 0.35);
+  pointer-events: auto;
+}
+
+.sve-decision-dialog {
+  --sve-card-width: 92px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(760px, calc(100% - 48px));
+  max-height: calc(100% - 64px);
+  overflow: auto;
+  padding: 16px 18px 12px;
+  border-radius: 14px;
+  background: var(--sve-panel);
+  border: 1px solid rgba(120, 170, 230, 0.35);
+  box-shadow: 0 20px 60px #000c;
+  pointer-events: auto;
+}
+
+.sve-decision.sve-busy .sve-decision-dialog {
   opacity: 0.6;
 }
 
 .sve-decision-body {
-  flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.sve-decision-tools {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 6px;
+  border-top: 1px solid var(--sve-border);
+}
+
+/* Where the buttons that finish a decision stand, beside the mats (they are none while the window is open). */
+.sve-decision-unfold {
+  position: absolute;
+  top: 50%;
+  left: calc(50% + var(--mat-width) / 2 + 12px);
+  width: min(190px, var(--side-width, 190px));
+  transform: translateY(-50%);
+  justify-content: center;
+  padding: 12px 10px;
+  font-size: 15px;
+  pointer-events: auto;
+  box-shadow: 0 0 18px rgba(76, 195, 138, 0.45);
+}
+
+/* The options of a choice, one per line. */
+.sve-actions-column {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.sve-actions-column > button {
+  justify-content: flex-start;
+  text-align: left;
+  padding: 8px 12px;
 }
 
 .sve-prompt {
@@ -1327,7 +1408,6 @@ option {
 }
 
 .sve-concede {
-  align-self: flex-end;
   border-color: #6b3030;
 }
 
@@ -1365,10 +1445,10 @@ option {
 }
 
 .sve-details-art {
-  --w: 180px;
+  --w: min(200px, 100%);
   display: block;
-  width: 180px;
-  height: calc(180px * 88 / 63);
+  width: min(200px, 100%);
+  aspect-ratio: 63 / 88;
   padding: 0;
   align-self: center;
   border: none;
@@ -1381,7 +1461,7 @@ option {
 .sve-details-other,
 .sve-details-printings {
   color: var(--sve-muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .sve-details-printings .sve-current {
@@ -1405,21 +1485,22 @@ option {
 }
 
 .sve-details-name {
-  margin: 4px 0 0;
-  font-size: 16px;
+  margin: 6px 0 0;
+  font-size: 18px;
 }
 
 .sve-details-names,
 .sve-details-type,
 .sve-details-traits,
 .sve-details-meta {
-  font-size: 12px;
+  font-size: 13.5px;
   color: var(--sve-muted);
 }
 
 .sve-details-stats {
   display: flex;
   gap: 14px;
+  font-size: 15px;
 }
 
 .sve-details-stat {
@@ -1437,12 +1518,12 @@ option {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 12px;
+  font-size: 13.5px;
 }
 
 .sve-card-text {
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 14.5px;
+  line-height: 1.55;
 }
 
 .sve-card-text p {
@@ -1455,7 +1536,7 @@ option {
   margin: 0 1px;
   border-radius: 3px;
   background: #3b4457;
-  font-size: 11px;
+  font-size: 12.5px;
   font-weight: 700;
 }
 
@@ -2043,4 +2124,55 @@ option {
   right: 0;
   font-size: 9px;
   text-align: center;
+}
+
+/*
+ * An engaged card lies turned 90 degrees clockwise (CR 4.2.2): its numbers move with their corners and stay upright. The
+ * cost (top left) goes to the top right, the attack (bottom left) to the top left, the defense (bottom right) to the
+ * bottom left; keywords and counters lie along the top and bottom edges.
+ */
+.sve-card-engaged .sve-stat-cost {
+  top: 2px;
+  left: auto;
+  right: 2px;
+}
+
+.sve-card-engaged .sve-stat-atk {
+  top: 2px;
+  bottom: auto;
+  left: 2px;
+}
+
+.sve-card-engaged .sve-stat-def {
+  bottom: 2px;
+  left: 2px;
+  right: auto;
+}
+
+.sve-card-engaged .sve-card-keywords {
+  top: 3px;
+  left: 30%;
+  right: 30%;
+  justify-content: center;
+}
+
+.sve-card-engaged .sve-card-counters {
+  bottom: 3px;
+  left: 30%;
+  right: 12%;
+  justify-content: center;
+}
+
+/* A pile holding a card that can act (an ability used from the cemetery ...), and that card in the pile's window. */
+.sve-pile-action {
+  cursor: pointer;
+}
+
+.sve-pile-action .sve-card-face,
+.sve-pile-action .sve-slot-back {
+  box-shadow: 0 0 0 2px var(--sve-action), 0 0 12px rgba(88, 166, 255, 0.6);
+}
+
+.sve-zone-action {
+  cursor: pointer;
 }

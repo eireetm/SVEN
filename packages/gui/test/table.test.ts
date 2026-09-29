@@ -1,9 +1,9 @@
 import type { CardMove, Decision, GameEvent } from "@sve/core";
 import { describe, expect, it } from "vitest";
 import type { LogEntry } from "../src/engine/protocol";
-import { actionsFor, answerFor, attackTargets, dragKind } from "../src/game/actions";
+import { actionsFor, answerFor, attackTargets, dragKind, inDialog } from "../src/game/actions";
 import { planFlights } from "../src/game/animation/plan";
-import { computeLayout, ENGAGED_WIDTH, MAT_HEIGHT, PIECES, SLOT_COUNT, SLOT_PITCH, WIDE_WIDTH, pileRect, slotRect, type PileZone, type Rect } from "../src/game/board/layout";
+import { computeLayout, ENGAGED_WIDTH, MAT_BOX_HEIGHT, PIECES, SLOT_COUNT, SLOT_PITCH, WIDE_WIDTH, pileRect, slotRect, type PileZone, type Rect } from "../src/game/board/layout";
 import { NO_SLOTS, placeWaiting, reconcileSlots } from "../src/game/board/slots";
 
 // The table's pure parts: the layout of the mats, the options of a card, and the flights of the animations.
@@ -17,7 +17,7 @@ describe("table layout", () => {
       [600, 1000],
     ] as const) {
       const l = computeLayout(width, height);
-      expect(l.matWidth / l.matHeight).toBeCloseTo(WIDE_WIDTH / MAT_HEIGHT, 5);
+      expect(l.matWidth / l.matHeight).toBeCloseTo(WIDE_WIDTH / MAT_BOX_HEIGHT, 5);
       expect(l.opponentHandHeight + 2 * l.matHeight + l.handHeight).toBeLessThanOrEqual(height);
       expect(l.matWidth + 2 * Math.min(l.sideWidth, 120)).toBeLessThanOrEqual(width);
       // Your hand's cards fit in their strip.
@@ -87,6 +87,22 @@ describe("the mat's slots", () => {
     slots = placeWaiting(slots, 1);
     expect(slots.waiting).toEqual([]);
     expect(slots.rows["1:field"]).toEqual(["x", null, null, null, null]);
+  });
+});
+
+describe("where a decision is answered", () => {
+  const select = (candidates: string[]): Decision => ({ type: "selectCards", player: 0, reason: "target", candidates, candidateDefs: candidates.map(() => "X"), min: 1, max: 1 }) as unknown as Decision;
+  const onTable = (card: string) => card.startsWith("t");
+
+  it("answers choices, confirmations, orders and ability order in the window, the rest on the table", () => {
+    for (const type of ["selectPending", "choose", "confirm", "orderCards"]) expect(inDialog({ type } as unknown as Decision, onTable), type).toBe(true);
+    for (const type of ["mainPhase", "quick", "mulligan", "chooseTurnOrder"]) expect(inDialog({ type } as unknown as Decision, onTable), type).toBe(false);
+    expect(inDialog(undefined, onTable)).toBe(false);
+  });
+
+  it("selects cards on the table when they are all on it, else in the window (a search, a pile)", () => {
+    expect(inDialog(select(["t1", "t2"]), onTable)).toBe(false);
+    expect(inDialog(select(["t1", "deck7"]), onTable)).toBe(true);
   });
 });
 

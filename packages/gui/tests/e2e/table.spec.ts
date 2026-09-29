@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { startGame, useSettings } from "./helpers";
+import { answer, startGame, useSettings } from "./helpers";
 
 // The main menu and the settings; a game played on the table itself: cards dragged onto the mat to play them, a follower's
 // menu to attack, a follower dragged onto the enemy leader to attack.
@@ -95,16 +95,7 @@ test("a person plays on the table: drags cards to play them and attacks from a m
         for (let i = 0; i < (await lit.count()) && action === null; i++) if (await dragToTarget(page, lit.nth(i))) action = "dragAttack";
       }
       if (action === null) await page.getByTestId("table-end").click();
-    } else {
-      // Anything else (targets, choices) through the decision panel's first option.
-      const body = bar.locator(".sve-decision-body");
-      const cards = body.locator(".sve-choice-cards .sve-card");
-      if (kind === "selectCards" && (await cards.count()) > 0) {
-        await cards.first().click();
-        const confirm = body.getByRole("button", { name: /^Confirm$/ });
-        if ((await confirm.count()) > 0 && (await confirm.isEnabled())) await confirm.click();
-      } else await body.locator("button:not([disabled])").first().click();
-    }
+    } else await answer(page, kind); // anything else (targets, choices): the first card or option
     await expect.poll(inputs, { message: `${action ?? kind} was answered` }).toBeGreaterThan(before);
     if (action) done[action]++;
     expect(problems).toEqual([]);
@@ -136,7 +127,7 @@ test("with card spots chosen by hand, a follower waits for its slot and goes whe
       const handCard = page.locator(".sve-hand-own .sve-card-action").first();
       if ((await handCard.count()) > 0) await drag(page, handCard, page.locator(".sve-mat-own .sve-field-slot").nth(2));
       else await page.getByTestId("table-end").click();
-    } else await bar.locator(".sve-decision-body button:not([disabled])").first().click();
+    } else await answer(page, kind);
     await page.waitForTimeout(150);
   }
   // The new card waits in the first free slot; the free slots light up; a click puts it in slot 3.

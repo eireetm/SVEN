@@ -1,11 +1,13 @@
 // Beside the line where the two mats meet: on the left the turn, the phase and what the game waits for; on the right the
 // buttons that finish the pending decision (end the main phase, pass, confirm a selection, keep the hand ...). Everything
-// else about a decision is on the table (lit cards) or in the decision panel.
+// else about a decision is on the table (lit cards and their menus) or in the decision window (DecisionDialog).
 import type { Answer } from "@sve/core";
 import type { ReactNode } from "react";
 import type { GameUpdate } from "../../engine/protocol";
 import { useT, type MessageKey } from "../../i18n";
-import { rangeLabel, SELECT_KEYS } from "../decisions/DecisionPanel";
+import { isOnTable } from "../../engine/view-utils";
+import { inDialog } from "../actions";
+import { rangeLabel, SELECT_KEYS } from "../decisions/DecisionDialog";
 import { sendAnswer, useInteraction } from "../interaction";
 import { playerLabel } from "../labels";
 
@@ -33,7 +35,9 @@ export function CenterLine({ update, placing = null }: { update: GameUpdate; pla
       </button>,
     );
   let prompt: string | null = null;
-  if (decision) {
+  if (decision && inDialog(decision, (id) => isOnTable(view, id))) {
+    prompt = t("table.answerInDialog");
+  } else if (decision) {
     switch (decision.type) {
       case "mainPhase":
         prompt = t("table.mainPhase");
@@ -61,7 +65,7 @@ export function CenterLine({ update, placing = null }: { update: GameUpdate; pla
         button("second", t("decision.goSecond"), () => answer({ type: "chooseTurnOrder", goFirst: false }));
         break;
       default:
-        prompt = t("table.answerInPanel");
+        prompt = t("table.answerInDialog");
     }
   } else if (update.waitingFor !== null && !update.result) {
     prompt = update.thinking ? t("game.thinking", { player: playerLabel(update.waitingFor, update, t) }) : null;

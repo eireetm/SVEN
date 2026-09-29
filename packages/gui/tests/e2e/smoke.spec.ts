@@ -1,58 +1,19 @@
 import { expect, test, type Page } from "@playwright/test";
-import { openSetup, startGame, useSettings } from "./helpers";
+import { answer, openSetup, showSidebar, startGame, useSettings } from "./helpers";
 
-// End-to-end: the page starts the engine worker, a game is set up and played through the decision panel by clicking, and
-// no error appears. Screenshots go to test-results/ for a look.
+// End-to-end: the page starts the engine worker, a game is set up and played by clicking (the table and the decision
+// window), and no error appears. Screenshots go to test-results/ for a look.
 
-/** Answer whatever the decision bar asks with the simplest button. Returns false once the game is over. */
+/** Answer whatever is pending the simplest way (helpers.answer). Returns false once the game is over. */
 async function answerOnce(page: Page): Promise<boolean> {
   const bar = page.locator(".sve-decision");
-  const kind = await bar.getAttribute("data-decision");
-  const buttons = bar.locator(".sve-decision-body button:not([disabled])");
-  const click = async (name: RegExp) => {
-    const button = bar.getByRole("button", { name });
-    if ((await button.count()) > 0 && (await button.first().isEnabled())) await button.first().click();
-  };
-  switch (kind) {
-    case "over":
-      return false;
-    case "waiting":
-      await page.waitForTimeout(50);
-      return true;
-    case "chooseTurnOrder":
-      await click(/^Go first$/);
-      break;
-    case "mulligan":
-      await click(/^Keep$/);
-      break;
-    case "mainPhase":
-      await click(/^End main phase$/);
-      break;
-    case "quick":
-      await click(/^Pass$/);
-      break;
-    case "selectCards": {
-      const candidates = bar.locator(".sve-choice-cards .sve-card");
-      if ((await candidates.count()) > 0) await candidates.first().click();
-      await click(/^Confirm$/);
-      await click(/^Select none$/);
-      break;
-    }
-    case "confirm":
-      await click(/^Yes$/);
-      break;
-    case "orderCards":
-      await click(/^Confirm$/);
-      break;
-    default: {
-      // selectPending, choose: the first option.
-      const checkbox = bar.locator("input[type=checkbox]:not([disabled])");
-      if ((await checkbox.count()) > 0) {
-        await checkbox.first().check();
-        await click(/^Confirm$/);
-      } else if ((await buttons.count()) > 0) await buttons.first().click();
-    }
+  const kind = (await bar.getAttribute("data-decision"))!;
+  if (kind === "over") return false;
+  if (kind === "waiting" || (await bar.getAttribute("class"))!.includes("sve-busy")) {
+    await page.waitForTimeout(50);
+    return true;
   }
+  await answer(page, kind);
   await page.waitForTimeout(30);
   return true;
 }
@@ -74,6 +35,9 @@ test("a person plays a whole game against the random bot by clicking", async ({ 
   await expect(page.locator(".sve-decision")).toHaveAttribute("data-decision", "over");
   await page.screenshot({ path: "test-results/03-over.png" });
   await expect(page.locator(".sve-toast")).toHaveCount(0);
+  // The log is in the sidebar, hidden until shown.
+  await expect(page.getByTestId("game-sidebar")).toHaveCount(0);
+  await showSidebar(page);
   await expect(page.locator(".sve-log-line").first()).toBeVisible();
   // Undo goes back to before the person's last answer: the game is on again and it is their decision.
   await page.getByRole("button", { name: /^Debug$/ }).click();
@@ -105,6 +69,7 @@ test("two bots play a game to the end, and the debug panel saves a replay", asyn
   await useSettings(page, { botDelayMs: 0, setupControllers: ["greedy", "random"], setupDecks: ["samples/csd02a.json", "samples/csd03b.json"] });
   await startGame(page);
   await expect(page.locator(".sve-decision")).toHaveAttribute("data-decision", "over", { timeout: 150_000 });
+  await showSidebar(page);
   await page.getByRole("button", { name: /^Debug$/ }).click();
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: /^Save replay$/ }).click();

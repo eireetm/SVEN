@@ -11,6 +11,7 @@ import { useMemo, useRef, type CSSProperties, type ReactNode } from "react";
 import type { GameUpdate } from "../../engine/protocol";
 import { useT } from "../../i18n";
 import { CardTile, type CardMark } from "../card/CardTile";
+import { DecisionDialog } from "../decisions/DecisionDialog";
 import { actionsFor, answerFor, attackTargets, dragKind, openMenu, sendAnswer, toggleChosen, useInteraction } from "../interaction";
 import { playerLabel } from "../labels";
 import { AttackArrow } from "./AttackArrow";
@@ -113,13 +114,16 @@ function TableCard({ update, card, side, marks, size, className, style, children
   );
 }
 
-/** A pile's spot on the mat: its top card (face up) or a card back, and how many cards there are. */
-function Pile({ side, zone, count, top, back }: { side: PlayerSideView; zone: "deck" | "cemetery" | "banished" | "evolveDeck"; count: number; top?: CardView | null; back?: boolean }) {
+/**
+ * A pile's spot on the mat: its top card (face up) or a card back, and how many cards there are. `lit`: a card in it can
+ * act (an ability used from the cemetery ...): the pile lights up, and its window lets the card be used.
+ */
+function Pile({ side, zone, count, top, back, lit = false }: { side: PlayerSideView; zone: "deck" | "cemetery" | "banished" | "evolveDeck"; count: number; top?: CardView | null; back?: boolean; lit?: boolean }) {
   const t = useT();
   const browsable = zone !== "deck" && count > 0;
   return (
     <div
-      className={`sve-pile${browsable ? " sve-pile-browsable" : ""}`}
+      className={`sve-pile${browsable ? " sve-pile-browsable" : ""}${lit ? " sve-pile-action" : ""}`}
       data-zone={`${side.id}:${zone}`}
       role={browsable ? "button" : undefined}
       title={t(PILE_LABELS[zone])}
@@ -141,6 +145,8 @@ const PILE_LABELS = { deck: "game.deck", cemetery: "game.cemetery", banished: "g
 function Mat({ update, side, opponent, marks, slots }: { update: GameUpdate; side: PlayerSideView; opponent: boolean; marks: Map<CardId, CardMark>; slots: Slots }) {
   const t = useT();
   const linked = [...side.raceZone, ...side.driveZone, ...side.equipmentZone];
+  const decision = update.decision?.decision;
+  const lit = (cards: readonly (CardView | HiddenCardView)[]) => cards.some((c) => !c.hidden && actionsFor(decision, c.id).length > 0);
   const at = (zone: PileZone, content: ReactNode) => (
     <div className={`sve-mat-zone sve-mat-${zone}`} style={rectStyle(pileRect(zone, opponent))}>
       {content}
@@ -153,7 +159,7 @@ function Mat({ update, side, opponent, marks, slots }: { update: GameUpdate; sid
         {attached.length > 0 ? (
           <div className="sve-attached">
             {attached.map((a) => (
-              <CardTile key={a.id} card={a} side={side} size="small" />
+              <TableCard key={a.id} update={update} card={a} side={side} marks={marks} size="small" />
             ))}
           </div>
         ) : null}
@@ -220,11 +226,11 @@ function Mat({ update, side, opponent, marks, slots }: { update: GameUpdate; sid
         ) : null,
       )}
       {at("deck", <Pile side={side} zone="deck" count={side.deckCount} back />)}
-      {at("cemetery", <Pile side={side} zone="cemetery" count={side.cemetery.length} top={lastVisible(side.cemetery)} />)}
-      {at("banished", <Pile side={side} zone="banished" count={side.banished.length} top={lastVisible(side.banished)} back />)}
+      {at("cemetery", <Pile side={side} zone="cemetery" count={side.cemetery.length} top={lastVisible(side.cemetery)} lit={lit(side.cemetery)} />)}
+      {at("banished", <Pile side={side} zone="banished" count={side.banished.length} top={lastVisible(side.banished)} back lit={lit(side.banished)} />)}
       {at(
         "evolveDeck",
-        <Pile side={side} zone="evolveDeck" count={side.evolveDeck.length} top={lastFaceUp} back />,
+        <Pile side={side} zone="evolveDeck" count={side.evolveDeck.length} top={lastFaceUp} back lit={lit(side.evolveDeck)} />,
       )}
       {row("field", fieldCard)}
       {row("ex", exCard)}
@@ -264,8 +270,8 @@ function HandStrip({ update, side, opponent, marks, layout }: { update: GameUpda
   );
 }
 
-/** Beside a mat: who plays it, leader defense, play points, evolution points, hand and deck sizes. */
-function PlayerPanel({ update, side, opponent }: { update: GameUpdate; side: PlayerSideView; opponent: boolean }) {
+/** Beside a mat: who plays it, leader defense, play points, evolution points, hand and deck sizes, the trigger zone. */
+function PlayerPanel({ update, side, opponent, marks }: { update: GameUpdate; side: PlayerSideView; opponent: boolean; marks: Map<CardId, CardMark> }) {
   const t = useT();
   const active = update.view.activePlayer === side.id && update.view.phase !== "over";
   const deciding = update.waitingFor === side.id;
@@ -300,7 +306,7 @@ function PlayerPanel({ update, side, opponent }: { update: GameUpdate; side: Pla
         <div className="sve-trigger" data-zone={`${side.id}:triggerZone`}>
           <span className="sve-zone-label">{t("game.trigger")}</span>
           {side.triggerZone.map((c) => (
-            <CardTile key={c.id} card={c} side={side} size="small" />
+            <TableCard key={c.id} update={update} card={c} side={side} marks={marks} size="small" />
           ))}
         </div>
       ) : null}
@@ -338,8 +344,8 @@ export function Table({ update, onNewGame, onMenu }: { update: GameUpdate; onNew
       <div className="sve-mats">
         <Mat update={update} side={view.players[opponent]} opponent marks={marks} slots={slots} />
         <Mat update={update} side={view.players[me]} opponent={false} marks={marks} slots={slots} />
-        <PlayerPanel update={update} side={view.players[opponent]} opponent />
-        <PlayerPanel update={update} side={view.players[me]} opponent={false} />
+        <PlayerPanel update={update} side={view.players[opponent]} opponent marks={marks} />
+        <PlayerPanel update={update} side={view.players[me]} opponent={false} marks={marks} />
         <CenterLine update={update} placing={placing} />
         {view.resolution.length > 0 ? (
           <div className="sve-resolution-zone" data-zone="resolution" title={t("game.resolution")}>
@@ -353,6 +359,7 @@ export function Table({ update, onNewGame, onMenu }: { update: GameUpdate; onNew
       <AttackArrow update={update} />
       <DragLayer update={update} />
       <CardMenu update={update} />
+      <DecisionDialog key={update.inputCount} update={update} />
       <ResultOverlay update={update} onNewGame={onNewGame} onMenu={onMenu} />
     </div>
   );

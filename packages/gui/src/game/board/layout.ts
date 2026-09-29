@@ -5,6 +5,7 @@
 // The table shows the picture wider than it is drawn, without stretching anything drawn: the picture is cut into its pieces
 // (each pile and slot, the divider's ornament and its two ends), and the room between the piles and the slots grows by
 // SPREAD, so that engaged cards (lying sideways, as wide as a card is tall, CR 4.2.2) never overlap each other or a pile.
+// Only the drawn part of the picture's height is shown (TOP to BOTTOM), so the mats and their cards can be larger.
 // Positions are in percent of that wide mat, so any window size (and any player-made picture of the same layout) lines up.
 
 /** The playmat picture's size; a custom field picture should keep this size and layout. */
@@ -49,6 +50,12 @@ const DIVIDER = { x: 238, y: 564, w: 1111, h: 24 };
 /** The divider's ornament, in the middle: kept at its size; the plain line on each side of it is stretched. */
 const ORNAMENT = { x: 645, w: 295 };
 
+/** The part of the picture's height the mat shows: its drawn parts (the leader's top to the EX slots' bottom), a little more. */
+const TOP = 54;
+const BOTTOM = 916;
+/** The mat's height, in picture pixels. */
+export const MAT_BOX_HEIGHT = BOTTOM - TOP;
+
 /** The middle of the picture (between the left piles' right edge and the right piles' left edge) is shown SPREAD wider. */
 const LEFT = 214;
 const RIGHT = 1375;
@@ -71,9 +78,9 @@ function wideX(x: number): number {
 
 const toRect = (x: number, y: number, w: number, h: number): Rect => ({
   left: (x / WIDE_WIDTH) * 100,
-  top: (y / MAT_HEIGHT) * 100,
+  top: ((y - TOP) / MAT_BOX_HEIGHT) * 100,
   width: (w / WIDE_WIDTH) * 100,
-  height: (h / MAT_HEIGHT) * 100,
+  height: (h / MAT_BOX_HEIGHT) * 100,
 });
 
 /** A piece kept at its size, its middle moved to where the middle goes. */
@@ -178,12 +185,12 @@ export function computeLayout(width: number, height: number): TableLayout {
   const opponentHandHeight = clamp(height * 0.06, 36, 72);
   const side = clamp(width * 0.13, 110, 220);
   // height = opponent hand + 2 mats + your hand (card height + margin), cards sized from the mat's height.
-  const cardPerMat = CARD_WIDTH / MAT_HEIGHT;
+  const cardPerMat = CARD_WIDTH / MAT_BOX_HEIGHT;
   const handPerMat = cardPerMat * HAND_SCALE * CARD_RATIO;
   const byHeight = (height - opponentHandHeight - HAND_MARGIN - 8) / (2 + handPerMat);
-  const byWidth = ((width - 2 * side) * MAT_HEIGHT) / WIDE_WIDTH;
+  const byWidth = ((width - 2 * side) * MAT_BOX_HEIGHT) / WIDE_WIDTH;
   const matHeight = Math.max(120, Math.min(byHeight, byWidth));
-  const matWidth = (matHeight * WIDE_WIDTH) / MAT_HEIGHT;
+  const matWidth = (matHeight * WIDE_WIDTH) / MAT_BOX_HEIGHT;
   const cardWidth = matHeight * cardPerMat;
   const handCardWidth = cardWidth * HAND_SCALE;
   return {
