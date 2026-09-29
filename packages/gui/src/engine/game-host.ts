@@ -446,6 +446,8 @@ export class GameHost {
       seed: options.seed,
       controllers: options.controllers,
       deckNames: options.deckNames,
+      format: options.format ?? (options.deckRestrictions ? "standard" : "unlimited"),
+      secondLeaders: options.secondLeaders ?? [null, null],
       perspective,
       view: this.view(perspective),
       decision: this.decisionInfo(),

@@ -12,6 +12,8 @@ export interface DeckFile {
   name: string;
   /** A leader printing. Optional: without deck restrictions a placeholder leader is used (CR 6.1.1.1). */
   leader?: string;
+  /** Cross Craft: the second leader printing, of another class (CR Appendix B-2 6.1.1.1). Other formats ignore it. */
+  leader2?: string;
   /** Printing id -> number of copies, in the order written. */
   main: Record<string, number>;
   evolve: Record<string, number>;
@@ -53,16 +55,18 @@ export function parseDeckFile(value: unknown): DeckFile {
   if (v.version !== 1) throw new DeckFormatError("deckFile.version", { version: String(v.version) });
   if (typeof v.name !== "string") throw new DeckFormatError("deckFile.name");
   if (v.leader !== undefined && typeof v.leader !== "string") throw new DeckFormatError("deckFile.leader");
+  if (v.leader2 !== undefined && typeof v.leader2 !== "string") throw new DeckFormatError("deckFile.leader");
   const deck: DeckFile = { format: DECK_FORMAT, version: 1, name: v.name, main: counts(v.main, "main"), evolve: counts(v.evolve, "evolve") };
   if (typeof v.leader === "string" && v.leader !== "") deck.leader = v.leader;
+  if (typeof v.leader2 === "string" && v.leader2 !== "") deck.leader2 = v.leader2;
   if (typeof v.notes === "string" && v.notes !== "") deck.notes = v.notes;
   return deck;
 }
 
-/** The engine's deck list: every copy listed. */
-export function toDeckList(deck: DeckFile): DeckList {
+/** The engine's deck list: every copy listed, with the deck's leader or `leader` (Cross Craft: the one the engine plays with). */
+export function toDeckList(deck: DeckFile, leader: string | undefined = deck.leader): DeckList {
   const expand = (c: Record<string, number>) => Object.entries(c).flatMap(([card, n]) => Array<string>(n).fill(card));
-  return { ...(deck.leader ? { leader: deck.leader } : {}), main: expand(deck.main), evolve: expand(deck.evolve) };
+  return { ...(leader ? { leader } : {}), main: expand(deck.main), evolve: expand(deck.evolve) };
 }
 
 export const cardCount = (c: Record<string, number>): number => Object.values(c).reduce((a, b) => a + b, 0);
@@ -72,6 +76,7 @@ export const cardCount = (c: Record<string, number>): number => Object.values(c)
  *
  *   name: My deck
  *   leader: SD01-LD01
+ *   leader2: SD02-LD01    (Cross Craft)
  *   [main]
  *   3 SD01-011  ; Goblin
  *   [evolve]
@@ -88,6 +93,7 @@ export function deckToText(deck: DeckFile, nameOf?: (printing: string) => string
   };
   const lines = [`name: ${deck.name}`];
   if (deck.leader) lines.push(named(`leader: ${deck.leader}`, deck.leader));
+  if (deck.leader2) lines.push(named(`leader2: ${deck.leader2}`, deck.leader2));
   lines.push("", "[main]", ...Object.entries(deck.main).map(([c, n]) => named(`${n} ${c}`, c)));
   lines.push("", "[evolve]", ...Object.entries(deck.evolve).map(([c, n]) => named(`${n} ${c}`, c)));
   if (deck.notes) lines.push("", ...deck.notes.split("\n").map((l) => `; ${l}`));
@@ -117,12 +123,13 @@ export function deckFromText(text: string, fallbackName = "Untitled"): ParsedTex
       section = header[1]!.toLowerCase() as "main" | "evolve";
       return;
     }
-    const field = /^(name|leader)\s*:\s*(.*)$/i.exec(line);
+    const field = /^(name|leader2?)\s*:\s*(.*)$/i.exec(line);
     if (field) {
+      const key = field[1]!.toLowerCase() as "name" | "leader" | "leader2";
       const value = field[2]!.trim();
-      if (field[1]!.toLowerCase() === "name") deck.name = value;
-      else if (value !== "") deck.leader = value;
-      else delete deck.leader;
+      if (key === "name") deck.name = value;
+      else if (value !== "") deck[key] = value;
+      else delete deck[key];
       return;
     }
     const entry = /^(?:(\d+)\s*x?\s+(\S+)|(\S+)\s+x\s*(\d+)|(\S+))$/i.exec(line);

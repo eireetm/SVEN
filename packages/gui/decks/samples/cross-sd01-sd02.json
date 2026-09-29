@@ -1,0 +1,35 @@
+{
+  "format": "sve-deck",
+  "version": 1,
+  "name": "Cross Craft — Arisa & Erika (sample)",
+  "leader": "SD01-LD01",
+  "leader2": "SD02-LD01",
+  "main": {
+    "SD01-001": 2,
+    "SD01-002": 3,
+    "SD01-003": 2,
+    "SD01-005": 2,
+    "SD01-006": 2,
+    "SD01-007": 3,
+    "SD01-008": 2,
+    "SD01-009": 2,
+    "SD01-011": 2,
+    "SD02-001": 2,
+    "SD02-002": 3,
+    "SD02-003": 2,
+    "SD02-005": 3,
+    "SD02-006": 2,
+    "SD02-007": 3,
+    "SD02-008": 3,
+    "SD02-009": 2
+  },
+  "evolve": {
+    "SD01-004": 2,
+    "SD01-010": 2,
+    "SD01-012": 1,
+    "SD02-004": 2,
+    "SD02-011": 2,
+    "SD02-013": 1
+  },
+  "notes": "Made by scripts/gen-sample-decks.ts: a Cross Craft sample (CR Appendix B-2), half of SD01's sample and half of SD02's."
+}

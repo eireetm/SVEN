@@ -1005,9 +1005,41 @@ option {
   color: var(--sve-muted);
 }
 
-.sve-universe {
-  font-size: 11px;
+/* What a player's deck is built on: its universe, or its leaders' classes (not in the unlimited format). */
+.sve-player-basis {
+  font-size: 12px;
   color: var(--sve-accent);
+}
+
+/* A Cross Craft player's two leaders: the second lies behind the first, like a small pile (click for both). */
+.sve-leader-stack {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sve-leader-second {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(12%, -7%) rotate(5deg);
+  filter: brightness(0.8);
+  cursor: zoom-in;
+}
+
+.sve-leader-stack .sve-leader-card {
+  z-index: 1;
+}
+
+.sve-leader-two .sve-leader-card {
+  cursor: zoom-in;
+}
+
+.sve-leader-stack .sve-pile-count {
+  z-index: 2;
 }
 
 .sve-zone-label {
@@ -2195,4 +2227,31 @@ option {
 
 .sve-zone-action {
   cursor: pointer;
+}
+
+/* The format and its restriction list (deck builder, game setup). */
+.sve-format-picker {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+}
+
+/* A deck's problems in the format, told when the deck is saved or the builder is left. */
+.sve-problems-dialog {
+  width: min(640px, 90vw);
+}
+
+.sve-problems-dialog .sve-problems {
+  margin: 8px 0 12px;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.sve-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
 }

@@ -2,8 +2,10 @@ import { expect, test, type Page } from "@playwright/test";
 import { useSettings } from "./helpers";
 
 // The deck builder (stage 5): filters, adding by click and drag, removing by right-click and by dragging back to the pool,
-// the leader window, save as / delete.
+// the leader window, save as / delete; the format (Cross Craft: two leaders) and what a deck doesn't meet, told on saving
+// and leaving.
 const FILE = "e2e-builder-test.json";
+const CROSS_FILE = "e2e-cross-test.json";
 
 async function openBuilder(page: Page): Promise<void> {
   await page.goto("/");
@@ -71,6 +73,9 @@ test("builds a deck: filters, click and drag to add, right-click and drag back t
   await page.getByTestId("builder-save").click();
   await page.getByTestId("builder-saveas-name").fill(FILE);
   await page.getByTestId("builder-saveas-ok").click();
+  // Two cards are no standard deck: saved all the same, and told why it can't be played.
+  await expect(page.getByTestId("format-problems")).toContainText("The main deck has 2 cards");
+  await page.getByTestId("format-problems-ok").click();
   await expect(page.getByTestId("builder-file")).toHaveValue(FILE);
   await expect(page.locator(".sve-unsaved")).toHaveCount(0);
   await page.getByTestId("builder-delete").click();
@@ -105,5 +110,53 @@ test("lists alternate printings, keeps the card panel on the last card, shows a 
   await expect(page.getByTestId("art-viewer")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByTestId("art-viewer")).toHaveCount(0);
+  expect(problems).toEqual([]);
+});
+
+test("Cross Craft: two leaders; saving and leaving tell what the deck doesn't meet, and don't stop", async ({ page }) => {
+  const problems: string[] = [];
+  page.on("pageerror", (e) => problems.push(e.message));
+  page.on("dialog", (d) => void d.accept());
+  await useSettings(page, { uiLang: "en", builderDeck: null, format: "crossCraft", restrictionLists: { crossCraft: "09_26_EN_CROSS" } });
+  await openBuilder(page);
+  await page.getByRole("button", { name: /^New$/ }).click();
+  await expect(page.getByTestId("format-select")).toHaveValue("crossCraft");
+  await expect(page.getByTestId("format-list")).toHaveValue("09_26_EN_CROSS");
+
+  // A Forestcraft and a Swordcraft leader.
+  await page.getByTestId("builder-leader").click();
+  await page.locator('.sve-leader-option[data-leader="SD01-LD01"]').click();
+  await page.getByTestId("builder-leader2").click();
+  await page.locator('.sve-leader-option[data-leader="SD02-LD01"]').click();
+  await expect(page.getByTestId("builder-leader")).toContainText("Leader 1:");
+  await expect(page.getByTestId("builder-leader2")).toContainText("Leader 2:");
+
+  // A Runecraft card goes in: nothing stops it.
+  await page.getByTestId("builder-search").fill("SD03-001");
+  await page.locator(".sve-pool-tile").first().click();
+  expect(await count(page, "main")).toBe(1);
+
+  // Saving saves, then tells: the Runecraft card, and 9 cards of each class (the English site's Cross Craft rule).
+  await page.getByTestId("builder-name").fill("E2E cross test");
+  await page.getByTestId("builder-save").click();
+  await page.getByTestId("builder-saveas-name").fill(CROSS_FILE);
+  await page.getByTestId("builder-saveas-ok").click();
+  const told = page.getByTestId("format-problems");
+  await expect(told).toContainText("(Runecraft) is not of the leaders' classes (Forestcraft / Swordcraft)");
+  await expect(told).toContainText("at least 9 Forestcraft");
+  await page.getByTestId("format-problems-ok").click();
+  await expect(page.getByTestId("builder-file")).toHaveValue(CROSS_FILE);
+
+  // Leaving tells too: keep editing, or leave anyway.
+  await page.getByTestId("builder-back").click();
+  await expect(told).toBeVisible();
+  await page.getByTestId("format-problems-stay").click();
+  await expect(told).toHaveCount(0);
+  await page.getByTestId("builder-delete").click();
+  await expect(page.getByTestId("builder-file").locator(`option[value="${CROSS_FILE}"]`)).toHaveCount(0);
+  await page.getByTestId("builder-back").click();
+  await expect(told).toContainText("Cross Craft needs two leader cards");
+  await page.getByTestId("format-problems-leave").click();
+  await expect(page.getByTestId("menu-decks")).toBeVisible();
   expect(problems).toEqual([]);
 });

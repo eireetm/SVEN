@@ -9,7 +9,7 @@ import { useApp } from "../../app/store";
 import { findCard } from "../../engine/view-utils";
 import { useMemo, useRef, type CSSProperties, type ReactNode } from "react";
 import type { GameUpdate } from "../../engine/protocol";
-import { useT } from "../../i18n";
+import { useT, type MessageKey } from "../../i18n";
 import { CardTile, type CardMark } from "../card/CardTile";
 import { DecisionDialog } from "../decisions/DecisionDialog";
 import { actionsFor, answerFor, attackTargets, dragKind, openMenu, sendAnswer, toggleChosen, useInteraction } from "../interaction";
@@ -65,10 +65,12 @@ interface TableCardProps {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
+  /** A click when the decision gives the card nothing to do (a Cross Craft leader opens its window). */
+  onClick?: () => void;
 }
 
 /** A card on the table that answers the decision: click for its menu (or to choose it), drag to play or attack. */
-function TableCard({ update, card, side, marks, size, className, style, children }: TableCardProps) {
+function TableCard({ update, card, side, marks, size, className, style, children, onClick }: TableCardProps) {
   const dragging = useInteraction((s) => s.drag?.card === card.id);
   if (card.hidden) return <CardTile card={card} side={side} size={size} className={className} style={style} />;
   const decision = update.decision?.decision;
@@ -108,6 +110,7 @@ function TableCard({ update, card, side, marks, size, className, style, children
       className={`${className ?? ""}${dragging ? " sve-card-dragged" : ""}`}
       style={style}
       onPointerDown={press}
+      onClick={press ? undefined : onClick}
     >
       {children}
     </CardTile>
@@ -144,6 +147,11 @@ const PILE_LABELS = { deck: "game.deck", cemetery: "game.cemetery", banished: "g
  */
 function Mat({ update, side, opponent, marks, slots }: { update: GameUpdate; side: PlayerSideView; opponent: boolean; marks: Map<CardId, CardMark>; slots: Slots }) {
   const t = useT();
+  const catalog = useApp((s) => s.catalog);
+  // Cross Craft: the second leader, shown behind the one the engine plays with (GameOptions.secondLeaders).
+  const secondPrinting = update.secondLeaders[side.id];
+  const second = secondPrinting ? catalog?.printing(secondPrinting) : undefined;
+  const browseLeaders = () => openZone({ player: side.id, zone: "leader" });
   const linked = [...side.raceZone, ...side.driveZone, ...side.equipmentZone];
   const decision = update.decision?.decision;
   const lit = (cards: readonly (CardView | HiddenCardView)[]) => cards.some((c) => !c.hidden && actionsFor(decision, c.id).length > 0);
@@ -218,11 +226,19 @@ function Mat({ update, side, opponent, marks, slots }: { update: GameUpdate; sid
       {at(
         "leader",
         side.leader ? (
-          <TableCard update={update} card={side.leader} side={side} marks={marks} className="sve-slot-card sve-leader-card">
-            <span className="sve-leader-defense" title={t("game.defense")}>
-              {side.leaderDefense}
-            </span>
-          </TableCard>
+          <div className={`sve-leader-stack${second ? " sve-leader-two" : ""}`} data-testid={`leader-${side.id}`}>
+            {second ? (
+              <div className="sve-leader-second" role="button" title={t("game.leader")} onClick={browseLeaders}>
+                <CardTile info={{ def: second.id, printing: secondPrinting }} className="sve-slot-card" />
+              </div>
+            ) : null}
+            <TableCard update={update} card={side.leader} side={side} marks={marks} className="sve-slot-card sve-leader-card" onClick={second ? browseLeaders : undefined}>
+              <span className="sve-leader-defense" title={t("game.defense")}>
+                {side.leaderDefense}
+              </span>
+            </TableCard>
+            {second ? <span className="sve-pile-count">2</span> : null}
+          </div>
         ) : null,
       )}
       {at("deck", <Pile side={side} zone="deck" count={side.deckCount} back />)}
@@ -273,7 +289,18 @@ function HandStrip({ update, side, opponent, marks, layout }: { update: GameUpda
 /** Beside a mat: who plays it, leader defense, play points, evolution points, hand and deck sizes, the trigger zone. */
 function PlayerPanel({ update, side, opponent, marks }: { update: GameUpdate; side: PlayerSideView; opponent: boolean; marks: Map<CardId, CardMark> }) {
   const t = useT();
+  const catalog = useApp((s) => s.catalog);
   const active = update.view.activePlayer === side.id && update.view.phase !== "over";
+  // What the deck is built on: its universe (CR 6.1.1.5.2), else, in a format, its leaders' classes (Cross Craft: two).
+  const secondPrinting = update.secondLeaders[side.id];
+  const classes = [side.leader?.def, secondPrinting ? catalog?.printing(secondPrinting)?.id : undefined]
+    .map((def) => (def ? catalog?.def(def)?.class : undefined))
+    .filter((c) => c !== undefined);
+  const basis = side.universe
+    ? t(`universe.${side.universe}` as const)
+    : update.format !== "unlimited" && classes.length > 0
+      ? classes.map((c) => t(`class.${c}` as MessageKey)).join(" / ")
+      : null;
   const deciding = update.waitingFor === side.id;
   const you = side.id === update.perspective && update.controllers[side.id] === "human";
   return (
@@ -282,6 +309,11 @@ function PlayerPanel({ update, side, opponent, marks }: { update: GameUpdate; si
         {playerLabel(side.id, update, t)}
         {you ? ` · ${t("game.you")}` : ""}
       </div>
+      {basis ? (
+        <div className="sve-player-basis" data-testid={`player-basis-${side.id}`}>
+          {basis}
+        </div>
+      ) : null}
       <div className="sve-player-defense" title={t("game.defense")}>
         {side.leaderDefense}
       </div>
@@ -301,7 +333,6 @@ function PlayerPanel({ update, side, opponent, marks }: { update: GameUpdate; si
       <div className="sve-player-counts">
         {t("game.hand")} {side.hand.length} · {t("game.deck")} {side.deckCount}
       </div>
-      {side.universe ? <div className="sve-universe">{t(`universe.${side.universe}` as const)}</div> : null}
       {side.triggerZone.length > 0 ? (
         <div className="sve-trigger" data-zone={`${side.id}:triggerZone`}>
           <span className="sve-zone-label">{t("game.trigger")}</span>

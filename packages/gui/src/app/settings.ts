@@ -1,7 +1,7 @@
 // Per-viewer settings, remembered in the browser (localStorage). Everything works without it (private windows, blocked
 // storage): the defaults are used.
 import { useSyncExternalStore } from "react";
-import type { SeatController } from "../engine/protocol";
+import type { FormatId, SeatController } from "../engine/protocol";
 
 export type UiLang = "en" | "zh" | "ja";
 export type CardLang = "en" | "cn" | "ja";
@@ -15,10 +15,13 @@ export interface Settings {
   volume: number;
   /** The table's animations (cards flying, numbers, ...). */
   animations: boolean;
-  /** The last game setup (deck files, who plays each seat, deck restrictions). */
+  /** The last game setup (deck files, who plays each seat). */
   setupDecks: [string, string];
   setupControllers: [SeatController, SeatController];
-  setupRestrictions: boolean;
+  /** The format decks are built and games are played in (the deck builder and the game setup share it). */
+  format: FormatId;
+  /** The restriction list chosen for each format (a file of restrictions/, or none). */
+  restrictionLists: Partial<Record<FormatId, string | null>>;
   /** The deck file the deck builder edited last. */
   builderDeck: string | null;
   /** The deck builder's pool lists every printing (alternate arts) instead of one per card. */
@@ -38,17 +41,24 @@ const DEFAULTS: Settings = {
   animations: true,
   setupDecks: ["samples/sd01.json", "samples/sd02.json"],
   setupControllers: ["human", "greedy"],
-  setupRestrictions: true,
+  format: "standard",
+  restrictionLists: {},
   builderDeck: null,
   builderAllPrintings: false,
   uiTransparency: null,
   manualSlots: false,
 };
 
+/** Settings saved by an older version, brought up to date: "deck restrictions" off became the unlimited format. */
+export function migrateSettings(saved: Partial<Settings> & { setupRestrictions?: boolean }): Settings {
+  const { setupRestrictions, ...rest } = saved;
+  return { ...DEFAULTS, ...(setupRestrictions === false && rest.format === undefined ? { format: "unlimited" as const } : {}), ...rest };
+}
+
 function load(): Settings {
   try {
     const raw = localStorage.getItem(KEY);
-    return raw ? { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Settings>) } : DEFAULTS;
+    return raw ? migrateSettings(JSON.parse(raw) as Partial<Settings>) : DEFAULTS;
   } catch {
     return DEFAULTS;
   }

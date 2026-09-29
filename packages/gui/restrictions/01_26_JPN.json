@@ -1,0 +1,19 @@
+{
+  "format": "standard",
+  "region": "asia",
+  "updated": "2026-01-30",
+  "source": "https://shadowverse-evolve.com/card_limit/",
+  "banned": [
+    { "card": "BP13-107", "name": "ワールドブレイク", "since": "2026-01-30" },
+    { "card": "BP12-044", "name": "運命への反逆", "since": "2025-11-21" },
+    { "card": "BP04-037", "name": "星の鎧", "since": "2025-10-01" },
+    { "card": "CSD03a-016", "name": "スターダスト・トランペッター", "since": "2024-12-13" },
+    { "card": "CSD03b-016", "name": "リザードランナー アンドゥー", "since": "2024-12-13" }
+  ],
+  "limited": [
+    { "card": "BP02-062", "name": "竜巫女の儀式", "since": "2026-01-30" },
+    { "card": "BP07-072", "name": "紫紺の抵抗者・エンネア", "since": "2026-01-30" },
+    { "card": "ECP01-044", "name": "マンハッタンカフェ", "since": "2025-04-11" },
+    { "card": "BP03-048", "name": "お菓子の家", "since": "2024-06-28" }
+  ]
+}

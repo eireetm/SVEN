@@ -3,8 +3,9 @@
 // Click a card of the pool or drag it into the deck to add it (it goes into the right section); right-click a card of the
 // deck or drag it back onto the right column to remove it (dropped anywhere else, it stays, as in YGOPro). "All versions"
 // lists every printing (alternate arts) of a card: the same card for the rules (CR 2.1.1; the engine counts copies by
-// name, 6.1.1.4), only the picture differs. No deck-building limits here for now: the engine checks decks when a game
-// starts with them on.
+// name, 6.1.1.4), only the picture differs. Between the files and the leader: the format and its restriction list
+// (formats/); cards go in freely, and a deck that doesn't meet them is only told so when it is saved or the builder is left.
+// Cross Craft decks have two leaders (CR Appendix B-2 6.1.1.1).
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";
 import { cardName } from "../app/catalog";
 import { errorText } from "../app/errors";
@@ -17,6 +18,9 @@ import { CardDetails } from "../game/card/CardDetails";
 import { CardTile } from "../game/card/CardTile";
 import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
+import { checkDeck, useFormat } from "../formats/check";
+import type { FormatProblem } from "../formats/formats";
+import { FormatPicker, ProblemsDialog } from "../formats/FormatPicker";
 import { DeckStats } from "./DeckStats";
 import { ABILITIES, NO_FILTERS, poolEntries, setsOf, traitsOf, type AbilityTag, type PoolFilters, type TypeFilter } from "./filters";
 import { cardCount, emptyDeck, type DeckFile } from "./format";
@@ -48,13 +52,16 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
   const { cardLang, builderAllPrintings: allPrintings } = settings;
   const [files, setFiles] = useState<DeckFileEntry[]>([]);
   const [file, setFile] = useState<string | null>(null);
-  const [deck, setDeck] = useState<DeckFile>(() => emptyDeck("New deck"));
-  const [saved, setSaved] = useState<string>(() => JSON.stringify(emptyDeck("New deck")));
+  const [deck, setDeck] = useState<DeckFile>(() => emptyDeck(t("builder.newName")));
+  const [saved, setSaved] = useState<string>(() => JSON.stringify(emptyDeck(t("builder.newName"))));
   const [saveAs, setSaveAs] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [filters, setFilters] = useState<PoolFilters>(NO_FILTERS);
   const [limit, setLimit] = useState(POOL_PAGE);
-  const [choosingLeader, setChoosingLeader] = useState(false);
+  const [choosingLeader, setChoosingLeader] = useState<"leader" | "leader2" | null>(null);
+  const { format, list } = useFormat();
+  // The deck's problems in the format, told after saving or before leaving (`then`: leave anyway).
+  const [told, setTold] = useState<{ problems: FormatProblem[]; then: (() => void) | null } | null>(null);
   const [dropping, setDropping] = useState(false);
   const dirty = JSON.stringify(deck) !== saved;
 
@@ -139,6 +146,14 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
     setSaved(JSON.stringify(fresh));
     setMessage("");
   };
+  /** The deck's problems in the chosen format (none in unlimited: anything goes). */
+  const problems = async (): Promise<FormatProblem[]> => (format === "unlimited" ? [] : checkDeck(deck, format, list, catalog));
+  /** Leave the builder (back, or its text editor), telling first what the deck doesn't meet. */
+  const leave = async (go: () => void) => {
+    const found = await problems();
+    if (found.length > 0) setTold({ problems: found, then: go });
+    else go();
+  };
   const write = async (name: string) => {
     try {
       await hostApi.saveDeck(name, deck);
@@ -150,7 +165,10 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
       await refresh();
     } catch (err) {
       reportError(err instanceof Error ? err.message : String(err));
+      return;
     }
+    const found = await problems();
+    if (found.length > 0) setTold({ problems: found, then: null });
   };
   const save = () => (file ? void write(file) : setSaveAs(fileNameFor(deck.name)));
   const confirmSaveAs = () => {
@@ -203,7 +221,10 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
     remove(section, printing);
   };
 
-  const leader = deck.leader ? defOf(deck.leader) : undefined;
+  const leaderName = (printing: string | undefined) => {
+    const card = printing ? defOf(printing) : undefined;
+    return card ? cardName(card, cardLang) : t("builder.noLeader");
+  };
   const section = (key: DeckSection, title: string) => {
     const copies = copiesOf(deck, key);
     return (
@@ -241,7 +262,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
     <div className="sve-builder">
       <aside className="sve-game-left">
         <div className="sve-game-left-top">
-          <button type="button" onClick={() => discardChanges() && onBack()}>
+          <button type="button" onClick={() => void leave(() => discardChanges() && onBack())} data-testid="builder-back">
             {t("common.back")}
           </button>
         </div>
@@ -298,10 +319,24 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
               </button>
             </div>
           ) : null}
+          <div className="sve-builder-row sve-builder-format">
+            <FormatPicker />
+          </div>
           <div className="sve-builder-row">
-            <button type="button" className="sve-leader-button" onClick={() => setChoosingLeader(true)} data-testid="builder-leader">
-              {t("builder.leader", { name: leader ? cardName(leader, cardLang) : t("builder.noLeader") })}
-            </button>
+            {format === "crossCraft" ? (
+              <>
+                <button type="button" className="sve-leader-button" onClick={() => setChoosingLeader("leader")} data-testid="builder-leader">
+                  {t("builder.leaderN", { n: 1, name: leaderName(deck.leader) })}
+                </button>
+                <button type="button" className="sve-leader-button" onClick={() => setChoosingLeader("leader2")} data-testid="builder-leader2">
+                  {t("builder.leaderN", { n: 2, name: leaderName(deck.leader2) })}
+                </button>
+              </>
+            ) : (
+              <button type="button" className="sve-leader-button" onClick={() => setChoosingLeader("leader")} data-testid="builder-leader">
+                {t("builder.leader", { name: leaderName(deck.leader) })}
+              </button>
+            )}
             <button type="button" onClick={() => setDeck((d) => sortDeck(d, defOf, "type"))} data-testid="builder-sort-type">
               {t("builder.sortByType")}
             </button>
@@ -311,7 +346,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
             <button type="button" onClick={() => (cardCount(deck.main) + cardCount(deck.evolve) === 0 || window.confirm(t("builder.confirmClear"))) && setDeck(clearDeck)}>
               {t("builder.clear")}
             </button>
-            <button type="button" onClick={() => discardChanges() && onTextEditor(file)}>
+            <button type="button" onClick={() => void leave(() => discardChanges() && onTextEditor(file))}>
               {t("builder.textEditor")}
             </button>
             <span className="sve-hint">{t("builder.removeHint")}</span>
@@ -439,18 +474,48 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
 
       {choosingLeader ? (
         <LeaderPicker
-          current={deck.leader ?? null}
+          current={deck[choosingLeader] ?? null}
           onPick={(printing) => {
             setDeck((d) => {
               const next = { ...d };
-              if (printing) next.leader = printing;
-              else delete next.leader;
+              if (printing) next[choosingLeader] = printing;
+              else delete next[choosingLeader];
               return next;
             });
-            setChoosingLeader(false);
+            setChoosingLeader(null);
           }}
-          onClose={() => setChoosingLeader(false)}
+          onClose={() => setChoosingLeader(null)}
         />
+      ) : null}
+      {told ? (
+        <ProblemsDialog title={t("builder.problemsTitle", { format: t(`format.${format}`) })} problems={told.problems} ctx={{ catalog, lang: cardLang, t }}>
+          {told.then ? (
+            <>
+              <button type="button" onClick={() => setTold(null)} data-testid="format-problems-stay">
+                {t("builder.keepEditing")}
+              </button>
+              <button
+                type="button"
+                className="sve-primary"
+                onClick={() => {
+                  const go = told.then!;
+                  setTold(null);
+                  go();
+                }}
+                data-testid="format-problems-leave"
+              >
+                {t("builder.leave")}
+              </button>
+            </>
+          ) : (
+            <>
+              <span className="sve-note">{t("builder.problemsSaved")}</span>
+              <button type="button" className="sve-primary" onClick={() => setTold(null)} data-testid="format-problems-ok">
+                {t("builder.ok")}
+              </button>
+            </>
+          )}
+        </ProblemsDialog>
       ) : null}
     </div>
   );

@@ -56,7 +56,7 @@ test("the deck editor opens a sample deck with card names, and the engine checks
   await expect(text).toHaveValue(/leader: SD01-LD01 {2}; \S/);
   await expect(text).toHaveValue(/\[evolve\]/);
   await page.getByRole("button", { name: /^Check$/ }).click();
-  await expect(page.getByText("Legal with deck restrictions.")).toBeVisible();
+  await expect(page.getByText("Legal in Standard.")).toBeVisible();
   // A card from the search goes into the text; more than three copies make the deck illegal (CR 6.1.1.4).
   await page.locator(".sve-search").fill("SD01-011");
   for (let i = 0; i < 4; i++) await page.locator(".sve-search-result").first().getByRole("button").click();

@@ -1,0 +1,17 @@
+{
+  "format": "standard",
+  "region": "en",
+  "updated": "2026-08-21",
+  "source": "https://en.shadowverse-evolve.com/restrictions/",
+  "banned": [
+    { "card": "BP13-107", "name": "Planetary Fracture", "since": "2026-08-21" },
+    { "card": "BP12-044", "name": "Rebel Against Fate", "since": "2026-07-24" },
+    { "card": "BP04-037", "name": "Armor of the Stars", "since": "2026-05-22" }
+  ],
+  "limited": [
+    { "card": "BP02-062", "name": "Dracomancer's Rites", "since": "2026-08-21" },
+    { "card": "BP07-072", "name": "Aenea, Amethyst Rebel", "since": "2026-08-21" },
+    { "card": "BP03-048", "name": "Gingerbread House", "since": "2025-08-22", "note": "The page links BP03-046 (Magical Knight); its name and the Japanese list say Gingerbread House, BP03-048." },
+    { "card": "CP03-069", "name": "Vortex Dragon", "since": "2025-08-15" }
+  ]
+}

@@ -1,11 +1,11 @@
-// Which pile the zone browser shows (cemetery, banished, evolve deck, ...), if any.
+// Which pile the zone browser shows (cemetery, banished, evolve deck, ... or a Cross Craft player's two leaders), if any.
 import { useSyncExternalStore } from "react";
 import type { PlayerId } from "@sve/core";
 import type { SideZone } from "../../engine/view-utils";
 
 export interface OpenZone {
   player: PlayerId;
-  zone: SideZone;
+  zone: SideZone | "leader";
 }
 
 let open: OpenZone | null = null;

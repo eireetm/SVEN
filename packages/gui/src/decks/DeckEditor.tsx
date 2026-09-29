@@ -1,16 +1,17 @@
-// The basic deck editor: deck files in decks/, edited as text ("3 BP01-001"), cards added from a search, and checked by
-// the engine (CR 6.1). A picture-based builder comes later; this is enough to make test decks quickly.
+// The basic deck editor: deck files in decks/, edited as text ("3 BP01-001"), cards added from a search, and checked in the
+// chosen format (the engine's CR 6.1 and the format's rules, formats/). The deck builder is the picture-based editor.
 import { useEffect, useMemo, useState } from "react";
 import { cardName } from "../app/catalog";
 import { errorText } from "../app/errors";
 import { useSettings } from "../app/settings";
-import { engine, reportError, useApp } from "../app/store";
+import { reportError, useApp } from "../app/store";
 import { CardDetails } from "../game/card/CardDetails";
 import { showCard } from "../game/focus";
 import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
-import { cardCount, deckFromText, deckToText, emptyDeck, toDeckList } from "./format";
-import { deckProblemText } from "./problems";
+import { checkDeck, useFormat } from "../formats/check";
+import { formatProblemText, type FormatProblem } from "../formats/formats";
+import { cardCount, deckFromText, deckToText, emptyDeck } from "./format";
 
 /** `initialFile`: open this deck file first (the deck builder's "edit as text"). */
 export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initialFile?: string | null }) {
@@ -20,7 +21,8 @@ export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initia
   const [files, setFiles] = useState<DeckFileEntry[]>([]);
   const [file, setFile] = useState("my-deck.json");
   const [text, setText] = useState(() => deckToText(emptyDeck(t("builder.newName"))));
-  const [check, setCheck] = useState<string[] | null>(null);
+  const [check, setCheck] = useState<FormatProblem[] | null>(null);
+  const { format, list } = useFormat();
   const [message, setMessage] = useState("");
   const [query, setQuery] = useState("");
   const parsed = useMemo(() => deckFromText(text), [text]);
@@ -111,7 +113,7 @@ export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initia
           </div>
         ))}
         <div className="sve-setup-actions">
-          <button type="button" onClick={() => void engine.validateDeck(toDeckList(deck), true).then(setCheck)}>
+          <button type="button" onClick={() => void checkDeck(deck, format, list, catalog).then(setCheck)}>
             {t("decks.check")}
           </button>
           <button type="button" onClick={() => setText(deckToText(deck, nameOf))} title={t("decks.tidyHelp")}>
@@ -124,11 +126,11 @@ export function DeckEditor({ onBack, initialFile }: { onBack: () => void; initia
         </div>
         {check !== null ? (
           check.length === 0 ? (
-            <div className="sve-ok">{t("decks.legal")}</div>
+            <div className="sve-ok">{t("decks.legal", { format: t(`format.${format}`) })}</div>
           ) : (
             <ul className="sve-problems">
-              {check.map((e) => (
-                <li key={e}>{deckProblemText(e, { catalog, lang: cardLang, t })}</li>
+              {check.map((problem, i) => (
+                <li key={i}>{formatProblemText(problem, { catalog, lang: cardLang, t })}</li>
               ))}
             </ul>
           )

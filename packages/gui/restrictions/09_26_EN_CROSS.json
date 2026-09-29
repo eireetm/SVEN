@@ -1,0 +1,16 @@
+{
+  "format": "crossCraft",
+  "region": "en",
+  "updated": "2026-09-25",
+  "source": "https://en.shadowverse-evolve.com/restrictions/",
+  "rules": "https://en.shadowverse-evolve.com/rules/cross-craft/",
+  "minimumPerLeaderClass": 9,
+  "banned": [
+    { "card": "BP19-104", "name": "Sacred Tiger", "since": "2026-09-25" },
+    { "card": "BP12-044", "name": "Rebel Against Fate", "since": "2026-07-24" },
+    { "card": "BP04-037", "name": "Armor of the Stars", "since": "2026-05-22" }
+  ],
+  "limited": [
+    { "card": "BP03-101", "name": "Tin Soldier", "since": "2025-03-22" }
+  ]
+}

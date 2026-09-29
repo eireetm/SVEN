@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import type { CardView, HiddenCardView } from "@sve/core";
+import { useApp } from "../../app/store";
 import type { GameUpdate } from "../../engine/protocol";
 import { actionsFor, openMenu } from "../interaction";
 import type { SideZone } from "../../engine/view-utils";
@@ -8,7 +9,8 @@ import { CardTile } from "../card/CardTile";
 import { playerLabel } from "../labels";
 import { openZone, useOpenZone } from "./zone-browser";
 
-const ZONE_KEYS: Record<SideZone, MessageKey> = {
+const ZONE_KEYS: Record<SideZone | "leader", MessageKey> = {
+  leader: "game.leader",
   hand: "game.hand",
   field: "game.field",
   ex: "game.ex",
@@ -23,11 +25,13 @@ const ZONE_KEYS: Record<SideZone, MessageKey> = {
 };
 
 /**
- * A pile opened from the board (cemetery, banished, evolve deck): every card its viewer may see. A card the pending
- * decision lets act (an ability used from the cemetery ...) is lit: a click closes the window and opens its menu.
+ * A pile opened from the board (cemetery, banished, evolve deck; a Cross Craft player's leaders): every card its viewer may
+ * see. A card the pending decision lets act (an ability used from the cemetery ...) is lit: a click closes the window and
+ * opens its menu.
  */
 export function ZoneBrowser({ update }: { update: GameUpdate }) {
   const open = useOpenZone();
+  const catalog = useApp((s) => s.catalog);
   const t = useT();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -38,7 +42,10 @@ export function ZoneBrowser({ update }: { update: GameUpdate }) {
   }, []);
   if (!open) return null;
   const side = update.view.players[open.player];
-  const cards = side[open.zone] as readonly (CardView | HiddenCardView)[];
+  // The leaders: the one the engine plays with, and the second one (Cross Craft), known only by its printing.
+  const second = open.zone === "leader" ? update.secondLeaders[open.player] : null;
+  const secondDef = second ? catalog?.printing(second) : undefined;
+  const cards = (open.zone === "leader" ? (side.leader ? [side.leader] : []) : side[open.zone]) as readonly (CardView | HiddenCardView)[];
   const decision = update.decision?.decision;
   const tile = (card: CardView | HiddenCardView) => {
     if (card.hidden || actionsFor(decision, card.id).length === 0) return <CardTile card={card} side={side} evolveBack={open.zone === "evolveDeck"} />;
@@ -77,6 +84,11 @@ export function ZoneBrowser({ update }: { update: GameUpdate }) {
               <div key={card.id}>{tile(card)}</div>
             ),
           )}
+          {secondDef && second ? (
+            <div key="second-leader">
+              <CardTile info={{ def: secondDef.id, printing: second }} />
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

@@ -3,8 +3,10 @@ import { errorText } from "../app/errors";
 import { updateSettings, useSettings } from "../app/settings";
 import { engine, reportError, useApp } from "../app/store";
 import { cardCount, toDeckList, type DeckFile } from "../decks/format";
-import { deckProblemText } from "../decks/problems";
 import type { SeatController } from "../engine/protocol";
+import { checkDeck, useFormat } from "../formats/check";
+import { formatProblemText, leadersFor, type FormatProblem } from "../formats/formats";
+import { FormatPicker } from "../formats/FormatPicker";
 import { readReplayFile } from "../game/replay-files";
 import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
@@ -15,7 +17,8 @@ const OPPONENTS: readonly SeatController[] = ["greedy", "random", "human"];
 
 interface DeckStatus {
   deck: DeckFile;
-  errors: string[] | null;
+  /** What keeps it out of the chosen format (none: it can be played). */
+  problems: FormatProblem[];
 }
 
 function newSeed(): string {
@@ -32,7 +35,8 @@ interface Props {
 
 /**
  * Play against the AI: your deck, the opponent's deck and AI. Under "Advanced" (testing): who plays your seat (bots can
- * play each other), the seed, deck restrictions, the bots' pace, and loading a replay.
+ * play each other), the seed, the format and its restriction list (a deck that doesn't meet them can't start a game), the
+ * bots' pace, and loading a replay.
  */
 export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
   const t = useT();
@@ -44,30 +48,31 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
   const [status, setStatus] = useState<[DeckStatus | null, DeckStatus | null]>([null, null]);
   const files = settings.setupDecks;
   const controllers = settings.setupControllers;
-  const restrictions = settings.setupRestrictions;
+  const { format, list } = useFormat();
 
   useEffect(() => {
     hostApi.listDecks().then(setDecks, (err: unknown) => reportError(String(err)));
   }, []);
 
-  // Check the chosen decks with the engine (CR 6.1).
+  // Check the chosen decks in the format (the engine's CR 6.1 and the format's own rules, formats.ts).
   useEffect(() => {
     let live = true;
     setStatus([null, null]);
+    if (!catalog) return;
     files.forEach((file, seat) => {
       if (!file) return;
       hostApi
         .loadDeck(file)
         .then(async (deck) => {
-          const errors = await engine.validateDeck(toDeckList(deck), true);
-          if (live) setStatus((s) => (seat === 0 ? [{ deck, errors }, s[1]] : [s[0], { deck, errors }]));
+          const problems = await checkDeck(deck, format, list, catalog);
+          if (live) setStatus((s) => (seat === 0 ? [{ deck, problems }, s[1]] : [s[0], { deck, problems }]));
         })
         .catch((err: unknown) => reportError(`${file}: ${errorText(err, t)}`));
     });
     return () => {
       live = false;
     };
-  }, [files]);
+  }, [files, format, list, catalog]);
 
   const setSeat = (seat: 0 | 1, change: { deck?: string; controller?: SeatController }) => {
     const nextDecks: [string, string] = [...files];
@@ -77,20 +82,25 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
     updateSettings({ setupDecks: nextDecks, setupControllers: nextControllers });
   };
 
-  const ready = status[0] !== null && status[1] !== null && (!restrictions || (status[0].errors?.length === 0 && status[1].errors?.length === 0));
+  const ready = status[0] !== null && status[1] !== null && status[0].problems.length === 0 && status[1].problems.length === 0;
 
   const start = () => {
-    if (!status[0] || !status[1]) return;
+    if (!status[0] || !status[1] || !catalog) return;
     const [a, b] = [status[0].deck, status[1].deck];
+    // Cross Craft: the engine plays with one leader, the other is shown beside it (GameOptions.secondLeaders).
+    const [la, lb] = [leadersFor(a, format, catalog), leadersFor(b, format, catalog)];
     engine.send({ kind: "settings", settings: { botDelayMs: settings.botDelayMs, paused: false } });
     engine.send({
       kind: "start",
       options: {
         seed,
-        decks: [toDeckList(a), toDeckList(b)],
+        decks: [toDeckList(a, la.leader), toDeckList(b, lb.leader)],
         deckNames: [a.name, b.name],
         controllers,
-        deckRestrictions: restrictions,
+        deckRestrictions: format === "standard",
+        format,
+        restrictionList: list?.id ?? null,
+        secondLeaders: [la.second, lb.second],
         showEveryMainPhase: true,
       },
     });
@@ -131,13 +141,13 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
           ) : (
             <>
               <span>{t("setup.deckSummary", { main: cardCount(s.deck.main), evolve: cardCount(s.deck.evolve) })}</span>
-              {s.errors && s.errors.length === 0 ? <span className="sve-ok">{t("setup.deckOk")}</span> : null}
-              {s.errors && s.errors.length > 0 ? (
-                <div className="sve-problems">
-                  {t("setup.deckProblems")}
+              {s.problems.length === 0 ? <span className="sve-ok">{t("setup.deckOk")}</span> : null}
+              {s.problems.length > 0 && catalog ? (
+                <div className="sve-problems" data-testid={`setup-problems-${seat}`}>
+                  {t("setup.deckProblems", { format: t(`format.${format}`) })}
                   <ul>
-                    {s.errors.map((e) => (
-                      <li key={e}>{catalog ? deckProblemText(e, { catalog, lang: settings.cardLang, t }) : e}</li>
+                    {s.problems.map((problem, i) => (
+                      <li key={i}>{formatProblemText(problem, { catalog, lang: settings.cardLang, t })}</li>
                     ))}
                   </ul>
                 </div>
@@ -190,6 +200,9 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
           <button type="button" className="sve-primary sve-big-button" disabled={!ready} onClick={start} data-testid="start-game">
             {t("setup.start")}
           </button>
+          <span className="sve-note" data-testid="setup-format">
+            {t("setup.formatSummary", { format: t(`format.${format}`), list: list ? ` · ${list.id}` : "" })}
+          </span>
           {hasGame ? (
             <button type="button" onClick={onStarted}>
               {t("setup.continue")}
@@ -207,10 +220,7 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
                 {t("setup.randomSeed")}
               </button>
             </label>
-            <label className="sve-check">
-              <input type="checkbox" checked={restrictions} onChange={(e) => updateSettings({ setupRestrictions: e.target.checked })} />
-              {t("setup.restrictions")}
-            </label>
+            <FormatPicker />
             <label className="sve-range">
               {t("setup.botDelay")}: {settings.botDelayMs} ms
               <input type="range" min={0} max={3000} step={100} value={settings.botDelayMs} onChange={(e) => updateSettings({ botDelayMs: Number(e.target.value) })} />

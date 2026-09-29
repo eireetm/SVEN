@@ -21,14 +21,32 @@ import type {
 /** Who plays a seat: a person at this screen, or a bot run by the worker. */
 export type SeatController = "human" | "greedy" | "random";
 
+/**
+ * How decks are built (the GUI checks them, formats/formats.ts): standard (CR 6.1, and a restriction list), Cross Craft (two
+ * classes and two leaders, CR Appendix B-2, and its own lists) or unlimited (anything the engine can play).
+ */
+export type FormatId = "standard" | "crossCraft" | "unlimited";
+
 export interface GameOptions {
   seed: string;
   decks: [DeckList, DeckList];
   /** Shown in the GUI and saved in replays. */
   deckNames: [string, string];
   controllers: [SeatController, SeatController];
-  /** GameConfig.deckRestrictions (CLAUDE.md: the "deck restrictions" switch). */
+  /**
+   * GameConfig.deckRestrictions: the engine checks CR 6.1 when the game starts. On in standard; off in Cross Craft (the GUI
+   * checked its class rules, which the engine doesn't know) and unlimited.
+   */
   deckRestrictions: boolean;
+  /** The format the decks were checked in. Replays saved without it: standard with deck restrictions, else unlimited. */
+  format?: FormatId;
+  /** The restriction list the decks were checked against (its file name, restrictions/), or none. */
+  restrictionList?: string | null;
+  /**
+   * Cross Craft: each seat's second leader card (CR Appendix B-2 6.1.1.1). The engine plays with the deck's one leader: no
+   * card refers to a leader card itself, only to the player's leader, so the second is shown beside it (the look only).
+   */
+  secondLeaders?: [PrintingId | null, PrintingId | null];
   /**
    * Ask for every main phase, also when ending it is all that is left, so a person has time to look before the turn
    * moves on (the core's autoResolve without "mainPhase": pacing only, the rules are the same). Bots answer those at
@@ -116,6 +134,9 @@ export interface GameUpdate {
   seed: string;
   controllers: [SeatController, SeatController];
   deckNames: [string, string];
+  format: FormatId;
+  /** Cross Craft: each seat's second leader (GameOptions.secondLeaders). */
+  secondLeaders: [PrintingId | null, PrintingId | null];
   /** Whose view this is (the human's seat; in hot seat, the player who must decide). */
   perspective: PlayerId;
   view: PlayerView;

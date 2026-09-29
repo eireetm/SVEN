@@ -42,6 +42,17 @@ function harness(controllers: [SeatController, SeatController], seed = "host-tes
 }
 
 describe("GameHost (engine worker logic)", () => {
+  it("publishes the format and a Cross Craft player's second leader (old replays: the format from deck restrictions)", () => {
+    const h = harness(["random", "random"]);
+    h.host.handle({ kind: "start", options: { ...h.options, deckRestrictions: false, format: "crossCraft", secondLeaders: ["SD02-LD01", null] } });
+    expect(h.last().format).toBe("crossCraft");
+    expect(h.last().secondLeaders).toEqual(["SD02-LD01", null]);
+    h.host.handle({ kind: "start", options: h.options });
+    expect(h.last().format).toBe("standard");
+    expect(h.last().secondLeaders).toEqual([null, null]);
+    expect(h.errors()).toEqual([]);
+  });
+
   it("plays a game between two bots to the end, publishing views and the log", () => {
     const h = harness(["random", "random"]);
     h.host.handle({ kind: "start", options: h.options });
