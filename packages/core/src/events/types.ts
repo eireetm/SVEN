@@ -1,6 +1,7 @@
 import type { CardType, DefId, PrintingId, TriggerIcon } from "../model/card";
 import type { CardId, PlayerId } from "../model/ids";
 import type { Keyword } from "../model/keyword";
+import type { ManualOp } from "../model/manual";
 import type { GameResult, GrantedAbilityId, ZoneName } from "../model/state";
 
 /**
@@ -143,6 +144,8 @@ export type GameEvent =
   | { type: "givenDrive"; card: CardId; player: PlayerId }
   /** CR 5.20 a player rolled a six-sided die. */
   | { type: "dieRolled"; player: PlayerId; result: number }
+  /** Not a rule: a manual operation (model/manual.ts) is carried out; its own events follow. */
+  | { type: "manualOp"; op: ManualOp }
   /**
    * CR 14.5.1.3 — a Union Burst ability was executed (played; the engine resolves every ability it plays): the ability
    * `ability` of `sourceDef`, whose card is `source`, controlled by `player`.

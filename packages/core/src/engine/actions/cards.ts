@@ -42,11 +42,12 @@ export function shuffleDeck(g: G, p: PlayerId): void {
 
 /**
  * CR 5.10 — draw `count` cards one at a time (5.10.2). Drawing from an empty deck marks the
- * player; rules handling makes them lose (5.10.1.1, 11.2.2).
+ * player; rules handling makes them lose (5.10.1.1, 11.2.2). `force`: a manual operation
+ * (model/manual.ts), which no card forbids.
  */
-export function drawCards(g: G, p: PlayerId, count: number): CardId[] {
+export function drawCards(g: G, p: PlayerId, count: number, force = false): CardId[] {
   const drawn: CardId[] = [];
-  if (drawForbidden(g, p)) return drawn; // CR 1.3.3 — no draw at all, so no empty-deck loss either
+  if (!force && drawForbidden(g, p)) return drawn; // CR 1.3.3 — no draw at all, so no empty-deck loss either
   const ps = g.state.players[p];
   for (let i = 0; i < count; i++) {
     const top = ps.zones.deck[0];

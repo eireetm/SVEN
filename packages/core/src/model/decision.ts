@@ -1,5 +1,6 @@
 import type { DefId } from "./card";
 import type { CardId, PlayerId } from "./ids";
+import type { ManualOp } from "./manual";
 
 /**
  * Every player input is an answer to a Decision raised by the engine. Bots, the GUI and the
@@ -36,7 +37,12 @@ export type MainAction =
   /** CR 8.4 attack. `target` is an enemy follower or the enemy leader card. */
   | { type: "attack"; attacker: CardId; target: CardId }
   /** CR 7.3.3 end the main phase. */
-  | { type: "endMainPhase" };
+  | { type: "endMainPhase" }
+  /**
+   * Not a rule: an operation by hand for testing (model/manual.ts). Only in games with
+   * `GameConfig.manualActions`, and never listed among a decision's actions.
+   */
+  | { type: "manual"; op: ManualOp };
 
 /** CR 7.4.5 / 8.4.7 — non-active player's options in a quick window. */
 export type QuickAction =

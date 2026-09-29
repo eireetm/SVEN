@@ -13,6 +13,8 @@ import { runGame } from "./flow/game";
 import type { G } from "./runtime/context";
 import type { Proc } from "./runtime/proc";
 import { validateAnswer } from "./runtime/validate";
+import { manualOpError, manualOptions, type ManualOptions } from "./manual";
+import type { ManualOp } from "../model/manual";
 import { makeReader, type GameReader } from "./query";
 import { playerView, type PlayerView } from "../view/player-view";
 
@@ -143,16 +145,28 @@ export class GameSession {
     }
     const decision = this.pendingDecision;
     if (!decision) throw new IllegalInputError("no decision is pending");
-    if (from !== undefined && from !== decision.player) {
-      throw new IllegalInputError(`waiting for player ${decision.player}, not player ${from}`);
-    }
-    const error = validateAnswer(decision, input);
+    const error = isManualInput(input) ? this.manualInputError(decision, input) : this.answerError(decision, input, from);
     if (error) throw new IllegalInputError(error);
     const answer = cloneJson(input) as Answer;
     this.inputs.push(answer);
     this.pendingDecision = null;
     this.advance(cloneJson(answer));
     return this.takeBuffer();
+  }
+
+  private answerError(decision: Decision, answer: Answer, from: PlayerId | undefined): string | null {
+    if (from !== undefined && from !== decision.player) return `waiting for player ${decision.player}, not player ${from}`;
+    return validateAnswer(decision, answer);
+  }
+
+  /**
+   * A manual operation (model/manual.ts): only in a game that allows them, at a main phase decision (its checkpoint: no
+   * procedure is half done), from either player (testing by hand is nobody's turn).
+   */
+  private manualInputError(decision: Decision, input: Extract<Answer, { type: "mainPhase" }>): string | null {
+    if (!this.live.config.manualActions) return "this game doesn't allow manual operations";
+    if (decision.type !== "mainPhase") return "manual operations are only possible at a main phase decision";
+    return input.action.type === "manual" ? manualOpError(this.g, input.action.op) : "not a manual operation";
   }
 
   /** CR 1.2.3 — a player concedes: they lose immediately, no Confirmation Timing. */
@@ -168,6 +182,22 @@ export class GameSession {
     this.pendingDecision = null;
     this.buffer.push({ type: "gameEnded", result });
     return this.takeBuffer();
+  }
+
+  /**
+   * What can be done by hand now (model/manual.ts), for a GUI's menus: null unless the game allows manual operations and a
+   * main phase decision is pending (the only time they are accepted).
+   */
+  manualOptions(): ManualOptions | null {
+    if (!this.live.config.manualActions || this.pendingDecision?.type !== "mainPhase") return null;
+    return manualOptions(this.g);
+  }
+
+  /** Why a manual operation can't be carried out now (null: it can). */
+  manualOpError(op: ManualOp): string | null {
+    const decision = this.pendingDecision;
+    if (!decision) return "no decision is pending";
+    return this.manualInputError(decision, { type: "mainPhase", action: { type: "manual", op } });
   }
 
   /** JSON-serializable snapshot (requires checkpoints). */
@@ -246,4 +276,9 @@ export class GameSession {
       throw e;
     }
   }
+}
+
+/** A manual operation (model/manual.ts) given as the answer to a main phase decision. */
+export function isManualInput(input: Input): input is Extract<Answer, { type: "mainPhase" }> {
+  return input.type === "mainPhase" && (input as Extract<Answer, { type: "mainPhase" }>).action?.type === "manual";
 }

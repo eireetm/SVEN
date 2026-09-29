@@ -7,6 +7,7 @@ import {
   ALL_AUTO_RESOLVABLE,
   defaultAnswer,
   forcedAnswer,
+  isManualInput,
   opponentOf,
   randomAnswer,
   redactEvent,
@@ -33,6 +34,7 @@ import type {
   GameUpdate,
   HostSettings,
   LogEntry,
+  ManualInfo,
   RecordedInput,
   Replay,
   SeatController,
@@ -96,7 +98,7 @@ export class GameHost {
   private options: GameOptions | null = null;
   private inputs: RecordedInput[] = [];
   private bots: [Bot | null, Bot | null] = [null, null];
-  private settings: HostSettings = { botDelayMs: 600, revealAll: false, paused: false };
+  private settings: HostSettings = { botDelayMs: 600, revealAll: false, paused: false, manualDebug: false };
   private cancelTimer: (() => void) | null = null;
   /** Log entries not sent yet. */
   private log: LogEntry[] = [];
@@ -157,7 +159,8 @@ export class GameHost {
     let game: GameSession;
     try {
       const autoResolve = options.showEveryMainPhase ? ALL_AUTO_RESOLVABLE.filter((type) => type !== "mainPhase") : ALL_AUTO_RESOLVABLE;
-      game = this.engine.newGame({ seed: options.seed, players: options.decks, config: { deckRestrictions: options.deckRestrictions, autoResolve } });
+      const config = { deckRestrictions: options.deckRestrictions, autoResolve, manualActions: options.manualActions === true };
+      game = this.engine.newGame({ seed: options.seed, players: options.decks, config });
     } catch (err) {
       return this.error(err);
     }
@@ -187,8 +190,10 @@ export class GameHost {
     const game = this.game;
     const decision = game?.decision;
     if (!game || !decision) return this.error("there is no decision to answer");
-    if (decision.player !== seat || this.bots[seat]) return this.error(`it is not player ${seat + 1}'s decision`);
-    const problem = validateAnswer(decision, answer);
+    // A manual operation (testing by hand) may come from a person at any main phase decision, a bot's too (bots paused).
+    const manual = isManualInput(answer);
+    if (manual ? this.bots[seat] !== null : decision.player !== seat || this.bots[seat]) return this.error(`it is not player ${seat + 1}'s decision`);
+    const problem = manual && answer.action.type === "manual" ? game.manualOpError(answer.action.op) : validateAnswer(decision, answer);
     if (problem) return this.error(`illegal answer: ${problem}`);
     try {
       this.apply(answer, seat);
@@ -448,6 +453,7 @@ export class GameHost {
       deckNames: options.deckNames,
       format: options.format ?? (options.deckRestrictions ? "standard" : "unlimited"),
       secondLeaders: options.secondLeaders ?? [null, null],
+      manual: this.manualInfo(),
       perspective,
       view: this.view(perspective),
       decision: this.decisionInfo(),
@@ -463,6 +469,28 @@ export class GameHost {
     this.log = [];
     this.logReset = false;
     this.send({ kind: "update", update });
+  }
+
+  /** What can be done by hand now, when manual debugging is on (the core's options, the abilities' summaries, the decks). */
+  private manualInfo(): ManualInfo | null {
+    const game = this.game;
+    const options = this.settings.manualDebug ? game?.manualOptions() : null;
+    if (!game || !options) return null;
+    const abilities: ManualInfo["abilities"] = {};
+    for (const key of options.activatable) {
+      const [card, index] = key.split(":") as [CardId, string];
+      const ref = game.reader().info(card).abilities[Number(index)];
+      if (ref) abilities[key] = summarizeAbility(ref.ability, ref.def);
+    }
+    const deck = (p: PlayerId): Record<DefId, number> => {
+      const counts: Record<DefId, number> = {};
+      for (const id of game.state.players[p].zones.deck) {
+        const def = game.state.cards[id]!.def;
+        counts[def] = (counts[def] ?? 0) + 1;
+      }
+      return counts;
+    };
+    return { ...options, abilities, decks: [deck(0), deck(1)] };
   }
 
   private error(err: unknown, context?: string): void {

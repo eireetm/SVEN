@@ -1,8 +1,9 @@
 // A line of text for each log event. The worker already hid what the log's viewer may not see (CR 4.1.2): a card it
 // can't name is "a card".
-import type { CardId, CardMove, GameEvent } from "@sve/core";
+import type { CardId, CardMove, GameEvent, ManualOp } from "@sve/core";
 import { cardName, type Catalog } from "../../app/catalog";
-import type { CardLang } from "../../app/settings";
+import { counterName } from "../../i18n/counters";
+import type { CardLang, UiLang } from "../../app/settings";
 import type { GameUpdate, LogEntry } from "../../engine/protocol";
 import type { MessageKey, Translate } from "../../i18n";
 import { playerLabel } from "../labels";
@@ -11,6 +12,8 @@ export interface LogContext {
   t: Translate;
   catalog: Catalog;
   lang: CardLang;
+  /** The interface language (counter names). */
+  uiLang: UiLang;
   update: GameUpdate;
 }
 
@@ -84,9 +87,63 @@ export function describeEntry(entry: LogEntry, ctx: LogContext, showAll: boolean
       const result = event.result.winner === null ? t("game.draw") : t("game.win", { player: player(event.result.winner) });
       return line(t("log.gameEnded", { result }));
     }
+    case "manualOp":
+      return line(t("log.manual", { text: manualText(event.op, ctx, name, player) }));
     default:
       if (!showAll && MINOR.has(event.type)) return null;
       return showAll ? line(JSON.stringify(event), "minor") : null;
+  }
+}
+
+/** A manual operation (testing by hand, outside the rules) in words; its own events follow it in the log. */
+function manualText(op: ManualOp, ctx: LogContext, name: (id: CardId) => string, player: (p: 0 | 1) => string): string {
+  const { t, catalog, lang } = ctx;
+  const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
+  switch (op.kind) {
+    case "draw":
+      return t("manualLog.draw", { player: player(op.player), n: op.count });
+    case "mill":
+      return t("manualLog.mill", { player: player(op.player), n: op.count });
+    case "shuffle":
+      return t("manualLog.shuffle", { player: player(op.player) });
+    case "search":
+      return t("manualLog.search", { player: player(op.player), card: cardName(catalog.def(op.def), lang, op.def) });
+    case "points": {
+      const parts = [
+        op.playPoints !== undefined || op.maxPlayPoints !== undefined ? `${t("game.pp")} ${op.playPoints ?? "-"}/${op.maxPlayPoints ?? "-"}` : null,
+        op.evolutionPoints !== undefined ? `${t("game.ep")} ${op.evolutionPoints}` : null,
+        op.superEvolutionPoints !== undefined ? `${t("game.sep")} ${op.superEvolutionPoints}` : null,
+      ];
+      return t("manualLog.points", { player: player(op.player), points: parts.filter((p) => p !== null).join(" · ") });
+    }
+    case "leaderDefense":
+      return t("manualLog.leaderDefense", { player: player(op.player), n: op.value });
+    case "token":
+      return t("manualLog.token", { player: player(op.player), card: cardName(catalog.def(op.token), lang, op.token), zone: t(`log.zone.${op.to}`) });
+    case "move":
+      return t("manualLog.move", { card: name(op.card), zone: t(`manual.to.${op.to}`) });
+    case "destroy":
+      return t("manualLog.destroy", { card: name(op.card) });
+    case "engage":
+      return t(op.engaged ? "manualLog.engage" : "manualLog.stand", { card: name(op.card) });
+    case "damage":
+      return t("manualLog.damage", { card: name(op.card), n: op.amount });
+    case "heal":
+      return t("manualLog.heal", { card: name(op.card), n: op.amount });
+    case "stats":
+      return t("manualLog.stats", { card: name(op.card), stats: `${signed(op.attack)}/${signed(op.defense)}` });
+    case "keyword":
+      return t("manualLog.keyword", { card: name(op.card), keyword: t(`keyword.${op.keyword}`) });
+    case "counters":
+      return t("manualLog.counters", { card: name(op.card), counter: counterName(op.counter, ctx.uiLang), n: signed(op.amount) });
+    case "evolve":
+      return t(op.superEvolve ? "manualLog.superEvolve" : "manualLog.evolve", { card: name(op.card), into: name(op.evolveCard) });
+    case "attack":
+      return t("manualLog.attack", { attacker: name(op.attacker), target: name(op.target) });
+    case "play":
+      return t("manualLog.play", { card: name(op.card) });
+    case "activate":
+      return t("manualLog.activate", { card: name(op.card) });
   }
 }
 

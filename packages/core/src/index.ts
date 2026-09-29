@@ -31,6 +31,7 @@ export type {
   SelectReason,
   ConfirmReason,
 } from "./model/decision";
+export type { ManualOp, ManualDestination } from "./model/manual";
 
 export type { GameEvent, CardMove, MoveReason, ZoneRef } from "./events/types";
 export { redactEvent } from "./events/redact";
@@ -41,7 +42,8 @@ export type { RawCardJson } from "./data/raw";
 export { readCardSetFile, type CardSetFile } from "./data/set-file";
 
 export { Engine, createEngine, resolveConfig, type EngineOptions, type GameSetup, type GameConfigInput } from "./engine/engine";
-export { GameSession, type GameSnapshot, type SessionOptions } from "./engine/session";
+export { GameSession, isManualInput, type GameSnapshot, type SessionOptions } from "./engine/session";
+export type { ManualOptions } from "./engine/manual";
 export type { DeckList, ImplementationStatus } from "./engine/deck";
 export { EngineError, IllegalInputError, DeckError } from "./engine/errors";
 export type { GameReader } from "./engine/query";

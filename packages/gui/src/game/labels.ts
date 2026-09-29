@@ -57,6 +57,8 @@ export function actionLabel(
       return t("decision.endMain");
     case "pass":
       return t("decision.pass");
+    case "manual": // never listed in a decision (model/manual.ts)
+      return "";
   }
 }
 

@@ -12,7 +12,8 @@ import type { GameUpdate } from "../../engine/protocol";
 import { useT, type MessageKey } from "../../i18n";
 import { CardTile, type CardMark } from "../card/CardTile";
 import { DecisionDialog } from "../decisions/DecisionDialog";
-import { actionsFor, answerFor, attackTargets, dragKind, openMenu, sendAnswer, toggleChosen, useInteraction } from "../interaction";
+import { actionsFor, answerFor, attackTargets, dragKind, openManual, openMenu, sendAnswer, toggleChosen, useInteraction } from "../interaction";
+import { ManualDialog } from "../manual/ManualDialog";
 import { playerLabel } from "../labels";
 import { AttackArrow } from "./AttackArrow";
 import { CardMenu } from "./CardMenu";
@@ -43,7 +44,7 @@ function useMarks(update: GameUpdate): Map<CardId, CardMark> {
     if (decision.type === "mainPhase" || decision.type === "quick") {
       for (const action of decision.actions) {
         if (action.type === "attack") marks.set(action.attacker, "action");
-        else if (action.type !== "endMainPhase" && action.type !== "pass") marks.set(action.card, "action");
+        else if ("card" in action) marks.set(action.card, "action");
       }
     } else if (decision.type === "selectCards") {
       for (const id of decision.candidates) marks.set(id, chosen.includes(id) ? "selected" : "candidate");
@@ -79,8 +80,10 @@ function TableCard({ update, card, side, marks, size, className, style, children
   const plays = actions.filter((a) => a.type === "play");
   const attacks = actions.filter((a) => a.type === "attack");
   const candidate = decision?.type === "selectCards" && decision.candidates.includes(id);
+  // Manual debugging: a click opens what can be done with the card by hand (its legal actions too); dragging stays legal.
+  const manual = update.manual !== null;
   const press =
-    actions.length > 0 || candidate
+    actions.length > 0 || candidate || manual
       ? (e: React.PointerEvent<HTMLDivElement>) =>
           pressCard(e, {
             card: id,
@@ -90,6 +93,8 @@ function TableCard({ update, card, side, marks, size, className, style, children
               if (decision?.type === "selectCards") {
                 if (decision.min === 1 && decision.max === 1) sendAnswer(update, { type: "selectCards", cards: [id] });
                 else toggleChosen(id, decision.max);
+              } else if (manual) {
+                openManual(card.type === "leader" ? { kind: "leader", player: card.controller } : { kind: "card", card: id });
               } else {
                 openMenu({ card: id, anchor: { left: box.left, top: box.top, right: box.right, bottom: box.bottom } });
               }
@@ -121,16 +126,35 @@ function TableCard({ update, card, side, marks, size, className, style, children
  * A pile's spot on the mat: its top card (face up) or a card back, and how many cards there are. `lit`: a card in it can
  * act (an ability used from the cemetery ...): the pile lights up, and its window lets the card be used.
  */
-function Pile({ side, zone, count, top, back, lit = false }: { side: PlayerSideView; zone: "deck" | "cemetery" | "banished" | "evolveDeck"; count: number; top?: CardView | null; back?: boolean; lit?: boolean }) {
+function Pile({
+  side,
+  zone,
+  count,
+  top,
+  back,
+  lit = false,
+  manual = false,
+}: {
+  side: PlayerSideView;
+  zone: "deck" | "cemetery" | "banished" | "evolveDeck";
+  count: number;
+  top?: CardView | null;
+  back?: boolean;
+  lit?: boolean;
+  /** Manual debugging: the deck opens what can be done with it by hand. */
+  manual?: boolean;
+}) {
   const t = useT();
   const browsable = zone !== "deck" && count > 0;
+  const open = browsable ? () => openZone({ player: side.id, zone }) : manual && zone === "deck" ? () => openManual({ kind: "deck", player: side.id }) : undefined;
   return (
     <div
-      className={`sve-pile${browsable ? " sve-pile-browsable" : ""}${lit ? " sve-pile-action" : ""}`}
+      className={`sve-pile${open ? " sve-pile-browsable" : ""}${lit ? " sve-pile-action" : ""}`}
       data-zone={`${side.id}:${zone}`}
-      role={browsable ? "button" : undefined}
+      role={open ? "button" : undefined}
       title={t(PILE_LABELS[zone])}
-      onClick={browsable ? () => openZone({ player: side.id, zone }) : undefined}
+      onClick={open}
+      data-testid={zone === "deck" ? `deck-${side.id}` : undefined}
     >
       {count > 0 && top ? <CardTile card={top} side={side} className="sve-slot-card" /> : null}
       {count > 0 && !top && back ? <div className={`sve-slot-back sve-card-back${zone === "evolveDeck" ? " sve-card-back-evolve" : ""}`} /> : null}
@@ -241,7 +265,7 @@ function Mat({ update, side, opponent, marks, slots }: { update: GameUpdate; sid
           </div>
         ) : null,
       )}
-      {at("deck", <Pile side={side} zone="deck" count={side.deckCount} back />)}
+      {at("deck", <Pile side={side} zone="deck" count={side.deckCount} back manual={update.manual !== null} />)}
       {at("cemetery", <Pile side={side} zone="cemetery" count={side.cemetery.length} top={lastVisible(side.cemetery)} lit={lit(side.cemetery)} />)}
       {at("banished", <Pile side={side} zone="banished" count={side.banished.length} top={lastVisible(side.banished)} back lit={lit(side.banished)} />)}
       {at(
@@ -303,8 +327,14 @@ function PlayerPanel({ update, side, opponent, marks }: { update: GameUpdate; si
       : null;
   const deciding = update.waitingFor === side.id;
   const you = side.id === update.perspective && update.controllers[side.id] === "human";
+  // Manual debugging: the panel opens the player's points and tokens.
+  const manual = update.manual !== null;
   return (
-    <div className={`sve-player-panel ${opponent ? "sve-player-opponent" : "sve-player-own"}${active ? " sve-active" : ""}${deciding ? " sve-deciding" : ""}`}>
+    <div
+      className={`sve-player-panel ${opponent ? "sve-player-opponent" : "sve-player-own"}${active ? " sve-active" : ""}${deciding ? " sve-deciding" : ""}${manual ? " sve-manual-target" : ""}`}
+      onClick={manual ? () => openManual({ kind: "player", player: side.id }) : undefined}
+      data-testid={`player-panel-${side.id}`}
+    >
       <div className="sve-player-name">
         {playerLabel(side.id, update, t)}
         {you ? ` · ${t("game.you")}` : ""}
@@ -390,6 +420,7 @@ export function Table({ update, onNewGame, onMenu }: { update: GameUpdate; onNew
       <AttackArrow update={update} />
       <DragLayer update={update} />
       <CardMenu update={update} />
+      <ManualDialog update={update} />
       <DecisionDialog key={update.inputCount} update={update} />
       <ResultOverlay update={update} onNewGame={onNewGame} onMenu={onMenu} />
     </div>

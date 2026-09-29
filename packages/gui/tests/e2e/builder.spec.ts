@@ -17,6 +17,9 @@ async function openBuilder(page: Page): Promise<void> {
 
 const count = (page: Page, section: "main" | "evolve") => page.locator(`[data-section=${section}] .sve-deck-tile`).count();
 
+/** The pool applies new filters in the background: wait for it before clicking its cards. */
+const settled = (page: Page) => expect(page.getByTestId("builder-pool")).not.toHaveAttribute("data-stale");
+
 test("builds a deck: filters, click and drag to add, right-click and drag back to remove, leader, save and delete", async ({ page }) => {
   const problems: string[] = [];
   page.on("pageerror", (e) => problems.push(e.message));
@@ -28,6 +31,7 @@ test("builds a deck: filters, click and drag to add, right-click and drag back t
   // Forestcraft followers: three clicks add three cards to the main deck.
   await page.getByLabel("Class").selectOption("Forestcraft");
   await page.getByTestId("builder-type").selectOption("follower");
+  await settled(page);
   const tiles = page.locator(".sve-pool-tile");
   for (let i = 0; i < 3; i++) await tiles.nth(i).click();
   expect(await count(page, "main")).toBe(3);
@@ -35,11 +39,13 @@ test("builds a deck: filters, click and drag to add, right-click and drag back t
 
   // Evolve deck cards go to the evolve deck.
   await page.getByTestId("builder-type").selectOption("evolve");
+  await settled(page);
   await tiles.first().click();
   expect(await count(page, "evolve")).toBe(1);
 
   // Drag a card in; right-click one out; drag one back onto the pool.
   await page.getByTestId("builder-type").selectOption("follower");
+  await settled(page);
   await tiles.nth(5).dragTo(page.getByTestId("builder-deck"));
   expect(await count(page, "main")).toBe(4);
   await page.locator("[data-section=main] .sve-deck-tile").first().click({ button: "right" });
@@ -133,6 +139,7 @@ test("Cross Craft: two leaders; saving and leaving tell what the deck doesn't me
 
   // A Runecraft card goes in: nothing stops it.
   await page.getByTestId("builder-search").fill("SD03-001");
+  await settled(page);
   await page.locator(".sve-pool-tile").first().click();
   expect(await count(page, "main")).toBe(1);
 

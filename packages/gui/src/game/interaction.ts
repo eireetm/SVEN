@@ -2,7 +2,7 @@
 // answer on its way. All of it belongs to one decision (the update's input count) and is dropped when the next one comes.
 // The options themselves always come from the decision (the GUI works out no rules).
 import { useSyncExternalStore } from "react";
-import type { Answer, CardId } from "@sve/core";
+import type { Answer, CardId, ManualOp, PlayerId } from "@sve/core";
 import { engine } from "../app/store";
 import type { GameUpdate } from "../engine/protocol";
 import { setHighlight } from "./focus";
@@ -14,6 +14,9 @@ export interface CardMenu {
   /** Where to show it: the card's box on the screen. */
   anchor: { left: number; top: number; right: number; bottom: number };
 }
+
+/** What manual debugging's window is open for: a card, a player's deck, leader, or points and tokens. */
+export type ManualTarget = { kind: "card"; card: CardId } | { kind: "deck" | "leader" | "player"; player: PlayerId };
 
 export interface Drag {
   card: CardId;
@@ -33,9 +36,11 @@ interface InteractionState {
   chosen: CardId[];
   /** An answer was sent for this decision and the reply hasn't come. */
   sent: boolean;
+  /** Manual debugging's window. */
+  manual: ManualTarget | null;
 }
 
-let state: InteractionState = { key: -1, menu: null, drag: null, chosen: [], sent: false };
+let state: InteractionState = { key: -1, menu: null, drag: null, chosen: [], sent: false, manual: null };
 const listeners = new Set<() => void>();
 
 function set(change: Partial<InteractionState>): void {
@@ -45,7 +50,7 @@ function set(change: Partial<InteractionState>): void {
 
 /** Start afresh for a new decision (called when an update arrives). */
 export function resetInteraction(key: number): void {
-  if (state.key !== key) set({ key, menu: null, drag: null, chosen: [], sent: false });
+  if (state.key !== key) set({ key, menu: null, drag: null, chosen: [], sent: false, manual: state.manual });
 }
 
 /** A refused answer brings an error, not an update: the controls work again. */
@@ -54,6 +59,7 @@ export function answerRefused(): void {
 }
 
 export const openMenu = (menu: CardMenu | null): void => set({ menu, drag: null });
+export const openManual = (manual: ManualTarget | null): void => set({ manual, menu: null, drag: null });
 export const setDrag = (drag: Drag | null): void => set({ drag });
 
 export function toggleChosen(card: CardId, max: number): void {
@@ -78,6 +84,17 @@ export function sendAnswer(update: GameUpdate, answer: Answer): void {
   set({ sent: true, menu: null, drag: null });
   setHighlight([]);
   engine.send({ kind: "answer", seat: info.decision.player, answer });
+}
+
+/**
+ * Send a manual operation (testing by hand, outside the rules): from the person's seat, at the pending main phase decision,
+ * whoever's it is. The window stays open for the next one.
+ */
+export function sendManual(update: GameUpdate, op: ManualOp): void {
+  if (!update.decision || state.sent || state.key !== update.inputCount) return;
+  set({ sent: true, menu: null, drag: null });
+  setHighlight([]);
+  engine.send({ kind: "answer", seat: update.perspective, answer: { type: "mainPhase", action: { type: "manual", op } } });
 }
 
 // Each update may bring a new decision; an error after an answer is the answer being refused.

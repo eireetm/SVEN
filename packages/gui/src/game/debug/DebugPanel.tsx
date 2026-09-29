@@ -6,7 +6,7 @@ import { hostApi, type HostInfo } from "../../host/api";
 import { useT } from "../../i18n";
 import { downloadJson, readReplayFile } from "../replay-files";
 
-/** Tools for testing by hand: undo, rewind, replays (a bug report), hidden cards, bot pace. */
+/** Tools for testing by hand: manual debugging, undo, rewind, replays (a bug report), hidden cards, bot pace. */
 export function DebugPanel({ update }: { update: GameUpdate }) {
   const t = useT();
   const [host, setHost] = useState<HostInfo | null>(null);
@@ -20,7 +20,11 @@ export function DebugPanel({ update }: { update: GameUpdate }) {
   }, [update.inputCount]);
   const lastHuman = update.humanInputs[update.humanInputs.length - 1];
   const settings = update.settings;
-  const { animations, manualSlots } = useSettings();
+  const { animations, manualSlots, manualDebug } = useSettings();
+  const setManual = (on: boolean) => {
+    updateSettings({ manualDebug: on });
+    engine.send({ kind: "settings", settings: { manualDebug: on } });
+  };
   const saveReplay = async () => {
     const replay = await engine.exportReplay();
     if (replay) downloadJson(`sve-replay-${replay.options.seed}-${replay.inputs.length}.json`, replay);
@@ -41,6 +45,11 @@ export function DebugPanel({ update }: { update: GameUpdate }) {
         <dt>{t("debug.inputs")}</dt>
         <dd>{update.inputCount}</dd>
       </dl>
+      <label className="sve-check sve-debug-manual" title={t("debug.manualHelp")}>
+        <input type="checkbox" checked={manualDebug} onChange={(e) => setManual(e.target.checked)} data-testid="debug-manual" />
+        {t("debug.manual")}
+      </label>
+      {manualDebug ? <p className="sve-hint">{t("debug.manualHelp")}</p> : null}
       <div className="sve-debug-row">
         <button type="button" disabled={lastHuman === undefined} onClick={() => engine.send({ kind: "rewind", inputs: lastHuman! })}>
           {t("debug.undo")}

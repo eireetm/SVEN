@@ -89,7 +89,7 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
     const [a, b] = [status[0].deck, status[1].deck];
     // Cross Craft: the engine plays with one leader, the other is shown beside it (GameOptions.secondLeaders).
     const [la, lb] = [leadersFor(a, format, catalog), leadersFor(b, format, catalog)];
-    engine.send({ kind: "settings", settings: { botDelayMs: settings.botDelayMs, paused: false } });
+    engine.send({ kind: "settings", settings: { botDelayMs: settings.botDelayMs, paused: false, manualDebug: settings.manualDebug } });
     engine.send({
       kind: "start",
       options: {
@@ -102,6 +102,7 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
         restrictionList: list?.id ?? null,
         secondLeaders: [la.second, lb.second],
         showEveryMainPhase: true,
+        manualActions: true,
       },
     });
     setSeed(newSeed());
@@ -112,7 +113,7 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
     if (!file) return;
     try {
       const replay = await readReplayFile(file);
-      engine.send({ kind: "settings", settings: { paused: false } });
+      engine.send({ kind: "settings", settings: { paused: false, manualDebug: settings.manualDebug } });
       engine.send({ kind: "loadReplay", replay });
       onStarted();
     } catch (err) {

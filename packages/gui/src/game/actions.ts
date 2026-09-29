@@ -8,7 +8,7 @@ export type TableAction = MainAction | QuickAction;
 export function actionsFor(decision: Decision | undefined, card: CardId): TableAction[] {
   if (!decision || (decision.type !== "mainPhase" && decision.type !== "quick")) return [];
   const actions: readonly TableAction[] = decision.actions;
-  return actions.filter((a) => (a.type === "attack" ? a.attacker === card : a.type !== "endMainPhase" && a.type !== "pass" && a.card === card));
+  return actions.filter((a) => (a.type === "attack" ? a.attacker === card : "card" in a && a.card === card));
 }
 
 /** The answer for one action of a main phase or quick decision. */

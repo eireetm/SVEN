@@ -454,7 +454,14 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
             <span className="sve-hint">{t("builder.addHint")}</span>
           </header>
         </div>
-        <div ref={poolRef} className="sve-builder-pool-grid" style={{ "--sve-card-width": `${poolCard}px`, gridTemplateColumns: `repeat(${poolColumns}, ${poolCard}px)` } as CSSProperties} data-testid="builder-pool">
+        {/* data-stale: the pool still shows the previous filters (they are applied in the background, useDeferredValue). */}
+        <div
+          ref={poolRef}
+          className="sve-builder-pool-grid"
+          style={{ "--sve-card-width": `${poolCard}px`, gridTemplateColumns: `repeat(${poolColumns}, ${poolCard}px)` } as CSSProperties}
+          data-stale={filters !== deferredFilters ? "" : undefined}
+          data-testid="builder-pool"
+        >
           {results.slice(0, limit).map(({ card, printing }) => {
             // Copies of the card (any printing; the limit counts them together) and, listing printings, of this one.
             const total = copiesOfDefinition(deck, card.printings);

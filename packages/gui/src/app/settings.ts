@@ -30,6 +30,8 @@ export interface Settings {
   uiTransparency: number | null;
   /** A person picks the mat slot of each card they put on the field or into the EX area (the look only). */
   manualSlots: boolean;
+  /** Manual debugging: clicks on cards, decks, leaders and point panels open what can be done by hand (docs/gui.md). */
+  manualDebug: boolean;
 }
 
 const KEY = "sve-gui-settings";
@@ -47,6 +49,7 @@ const DEFAULTS: Settings = {
   builderAllPrintings: false,
   uiTransparency: null,
   manualSlots: false,
+  manualDebug: false,
 };
 
 /** Settings saved by an older version, brought up to date: "deck restrictions" off became the unlimited format. */

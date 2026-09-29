@@ -11,6 +11,7 @@ import { ATTACKS_KEY, usesThisTurn } from "../state/access";
 import { makeReader } from "../query";
 import { attackTargets, canAttackWith, performAttack } from "./attack";
 import { canPlayCard, cardsToPlayFrom, playCard } from "./play-card";
+import { performManualOp } from "../manual";
 
 /** CR 7.3.3 — every legal main phase action for the active player (8.1.2: only complete ones). */
 export function mainPhaseActions(g: G, player: PlayerId): MainAction[] {
@@ -68,6 +69,8 @@ function* performMainAction(g: G, player: PlayerId, action: Exclude<MainAction, 
       return yield* playActivatedAbility(g, player, action.card, action.ability, action.useEvolutionPoint === true);
     case "attack":
       return yield* performAttack(g, action.attacker, action.target);
+    case "manual": // not a rule: testing by hand (model/manual.ts), accepted only in games that allow it
+      return yield* performManualOp(g, action.op);
   }
 }
 

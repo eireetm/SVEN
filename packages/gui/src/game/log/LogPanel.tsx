@@ -11,16 +11,16 @@ export function LogPanel({ update }: { update: GameUpdate }) {
   const t = useT();
   const log = useApp((s) => s.log);
   const catalog = useApp((s) => s.catalog)!;
-  const { cardLang } = useSettings();
+  const { cardLang, uiLang } = useSettings();
   const [showAll, setShowAll] = useState(false);
   const bottom = useRef<HTMLDivElement>(null);
   const lines = useMemo(
     () =>
       log.flatMap((entry) => {
-        const line = describeEntry(entry, { t, catalog, lang: cardLang, update }, showAll);
+        const line = describeEntry(entry, { t, catalog, lang: cardLang, uiLang, update }, showAll);
         return line ? [{ entry, line }] : [];
       }),
-    [log, t, catalog, cardLang, update, showAll],
+    [log, t, catalog, cardLang, uiLang, update, showAll],
   );
   // (Braces: scrollIntoView returns a promise in newer browsers, and an effect may only return a clean-up function.)
   useEffect(() => {

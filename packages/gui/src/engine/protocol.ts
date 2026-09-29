@@ -13,6 +13,7 @@ import type {
   GameResult,
   ImplementationStatus,
   Input,
+  ManualOptions,
   PlayerId,
   PlayerView,
   PrintingId,
@@ -48,6 +49,11 @@ export interface GameOptions {
    */
   secondLeaders?: [PrintingId | null, PrintingId | null];
   /**
+   * The game accepts manual operations (GameConfig.manualActions: testing by hand, outside the rules; docs/gui.md). Local
+   * games allow them; the debug sidebar's "manual debugging" shows the menus.
+   */
+  manualActions?: boolean;
+  /**
    * Ask for every main phase, also when ending it is all that is left, so a person has time to look before the turn
    * moves on (the core's autoResolve without "mainPhase": pacing only, the rules are the same). Bots answer those at
    * once. Replays saved without it replay as the core decides by default.
@@ -76,6 +82,8 @@ export interface HostSettings {
   revealAll: boolean;
   /** Debug: bots wait for "step" instead of playing on. */
   paused: boolean;
+  /** Debug: manual debugging is on — updates carry what can be done by hand (GameUpdate.manual). */
+  manualDebug: boolean;
 }
 
 export type ToWorker =
@@ -113,6 +121,14 @@ export interface AbilitySummary {
   granted?: boolean;
 }
 
+/** What a person may do by hand now (manual debugging, at a main phase decision of a game that allows it). */
+export interface ManualInfo extends ManualOptions {
+  /** How the activated abilities in `activatable` read ("card:index"). */
+  abilities: Record<string, AbilitySummary>;
+  /** Each player's deck: the definitions in it and how many (the order stays hidden). */
+  decks: [Record<DefId, number>, Record<DefId, number>];
+}
+
 /** The decision a person must answer, with what the GUI needs to show it. */
 export interface DecisionInfo {
   decision: Decision;
@@ -137,6 +153,8 @@ export interface GameUpdate {
   format: FormatId;
   /** Cross Craft: each seat's second leader (GameOptions.secondLeaders). */
   secondLeaders: [PrintingId | null, PrintingId | null];
+  /** What can be done by hand now (null: manual debugging off, not a main phase decision, or not allowed in this game). */
+  manual: ManualInfo | null;
   /** Whose view this is (the human's seat; in hot seat, the player who must decide). */
   perspective: PlayerId;
   view: PlayerView;

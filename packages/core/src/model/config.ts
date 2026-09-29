@@ -59,6 +59,11 @@ export interface GameConfig {
   /** Allow cards whose card text has no script yet (they would behave as vanilla). */
   allowUnimplementedCards: boolean;
   /**
+   * Accept manual operations (model/manual.ts) as answers to main phase decisions: testing by hand,
+   * outside the rules. Off by default; a GUI turns it on for local games.
+   */
+  manualActions: boolean;
+  /**
    * Fixed first player. null = CR 6.2.1.6: pick a player at random, who then decides.
    * Mainly for tests and reproducible bot matches.
    */
@@ -89,6 +94,7 @@ export const ALL_AUTO_RESOLVABLE: readonly AutoResolvable[] = [
 export const DEFAULT_CONFIG: GameConfig = {
   deckRestrictions: true,
   allowUnimplementedCards: false,
+  manualActions: false,
   firstPlayer: null,
   autoResolve: ALL_AUTO_RESOLVABLE,
   rules: DEFAULT_RULES,

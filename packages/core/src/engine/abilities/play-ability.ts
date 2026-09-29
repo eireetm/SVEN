@@ -188,6 +188,25 @@ export function canPlayActivated(
   return targetsAvailable(g, ability.targets, player, card);
 }
 
+/**
+ * A manual operation (model/manual.ts): could activated ability `index` of `card` be played without its points, leader
+ * defense, engaging and Earth Rite, and whatever limits it (timing, "once per turn", effects forbidding it)? Only where it is
+ * valid (CR 10.3.5), with its targets (10.6.2.3.3), and when what the effect relies on holds: a cost made of cards or counters
+ * that can be paid (it is still paid: BP03-001's X is the number of counters removed) and the ability's own condition (BP21-030
+ * pays X and needs a card to summon for it).
+ */
+export function canPlayActivatedFree(g: G, card: CardId, index: number): boolean {
+  const c = g.state.cards[card];
+  const found = c ? activatedAbility(g, card, index) : null;
+  if (!c || !found || found.ability.evolve) return false;
+  const { ability, def } = found;
+  if (!abilityZones(g, def, ability).includes(c.zone)) return false;
+  if (ability.condition && !ability.condition(makeReader(g), c.controller, card)) return false;
+  if (ability.cost.custom && !ability.cost.custom.canPay(makeReader(g), c.controller, card)) return false;
+  if (ability.modes) return performableModes(g, ability.modes, c.controller, card).length > 0;
+  return targetsAvailable(g, ability.targets, c.controller, card);
+}
+
 /** How many times per turn an activated ability can be played ("once per turn", BP08-084 "twice"), or null. */
 function activationsPerTurn(ability: ActivatedAbility): number | null {
   return ability.timesPerTurn ?? (ability.oncePerTurn ? 1 : null);
@@ -212,21 +231,24 @@ export function cardsWithActivatedAbilities(g: G, player: PlayerId): CardId[] {
 /**
  * CR 10.6.2 — play and resolve an activated ability (not an evolve ability). `useEvolutionPoint`:
  * an advanced activated ability's 1 evolution point in lieu of 1 play point (CR 12.16.3).
+ * `free`: a manual operation (model/manual.ts) — no points, leader defense or engaging are paid
+ * (a required Earth Rite counts as paid, an optional one isn't offered; a custom cost of cards or
+ * counters is still paid) and it doesn't count toward "once per turn".
  */
-export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, index: number, useEvolutionPoint = false): Proc<void> {
+export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, index: number, useEvolutionPoint = false, free = false): Proc<void> {
   const found = activatedAbility(g, card, index);
   if (!found || found.ability.evolve) throw new EngineError(`${card}#${index} is not a playable activated ability`);
   const { ability, def } = found;
   // 10.6.2.2 optional additional cost: Earth Rite (13.3.3.2)
   let earthRite = ability.earthRite?.mode === "required";
-  if (ability.earthRite?.mode === "optional" && earthRitePayable(g, player, ability.earthRite)) {
+  if (!free && ability.earthRite?.mode === "optional" && earthRitePayable(g, player, ability.earthRite)) {
     earthRite = yield* confirm(g, player, "earthRite", card);
   }
   // 10.6.2.2 options (5.18)
   const modes = ability.modes ? yield* chooseModes(g, player, ability, card) : [];
   if (modes === null) throw new EngineError("activated ability played without a performable option");
   // An option's Earth Rite may be paid or not (BP10-050 ruling, 13.3.3.2).
-  if (!earthRite && modes.some((m) => m.earthRite) && earthRitePayable(g, player, { mode: "optional" })) {
+  if (!free && !earthRite && modes.some((m) => m.earthRite) && earthRitePayable(g, player, { mode: "optional" })) {
     earthRite = yield* confirm(g, player, "earthRite", card);
   }
   // 10.6.2.3 targets (of each chosen option, 5.18.4)
@@ -243,21 +265,26 @@ export function* playActivatedAbility(g: G, player: PlayerId, card: CardId, inde
     fieldAbility: abilityZones(g, def, ability).includes("field"),
   };
   // 10.6.2.5 pay the cost in the listed order (10.4.2.1)
-  const cost = ability.cost;
-  const points = activationPoints(g, player, ability, useEvolutionPoint);
-  if (!points) throw new EngineError("evolution point cannot be used for this ability");
-  payPlayPoints(g, player, points.playPoints);
-  spendPoints(g, player, points.evolutionPoints, 0);
-  if (cost.engageSelf) setEngaged(g, [card], true);
-  if (cost.custom) yield* cost.custom.pay(makeEffectContext(g, init));
-  if (cost.leaderDefense) changeLeaderDefense(g, player, -cost.leaderDefense);
-  const c = g.state.cards[card];
-  if (activationsPerTurn(ability) !== null && c) recordUse(g.state, c, abilityKey(def, index));
   let self = card;
-  if (cost.burySelf && g.state.cards[card]) self = buryCards(g, [card])[0] ?? card; // "this card" after it moved (4.1.4.1)
-  if (earthRite) yield* payEarthRite(g, player, ability.earthRite?.count ?? 1, card);
-  // 10.6.2.7 — an advanced activated ability counts as this turn's evolve ability (12.16.3, 8.3.2.1)
-  if (ability.advanced) g.state.players[player].evolveAbilityTurn = g.state.turn;
+  const cost = ability.cost;
+  if (!free) {
+    const points = activationPoints(g, player, ability, useEvolutionPoint);
+    if (!points) throw new EngineError("evolution point cannot be used for this ability");
+    payPlayPoints(g, player, points.playPoints);
+    spendPoints(g, player, points.evolutionPoints, 0);
+    if (cost.engageSelf) setEngaged(g, [card], true);
+  }
+  // Paid when free too: the effect may depend on it (BP03-001's X counters removed, BP07-093's discarded card).
+  if (cost.custom) yield* cost.custom.pay(makeEffectContext(g, init));
+  if (!free) {
+    if (cost.leaderDefense) changeLeaderDefense(g, player, -cost.leaderDefense);
+    const c = g.state.cards[card];
+    if (activationsPerTurn(ability) !== null && c) recordUse(g.state, c, abilityKey(def, index));
+    if (cost.burySelf && g.state.cards[card]) self = buryCards(g, [card])[0] ?? card; // "this card" after it moved (4.1.4.1)
+    if (earthRite) yield* payEarthRite(g, player, ability.earthRite?.count ?? 1, card);
+    // 10.6.2.7 — an advanced activated ability counts as this turn's evolve ability (12.16.3, 8.3.2.1)
+    if (ability.advanced) g.state.players[player].evolveAbilityTurn = g.state.turn;
+  }
   g.emit({ type: "abilityPlayed", player, source: card, sourceDef: def, ability: index });
   if (ability.unionBurst) recordUnionBurst(g, player, card, def, index); // CR 14.5.1.3
   // 10.6.2.8.2 — chosen options in listed order (5.18.1)

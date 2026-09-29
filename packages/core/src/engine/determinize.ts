@@ -69,6 +69,7 @@ export function cardsInDecision(d: Decision | null): CardId[] {
           case "attack":
             return [a.attacker, a.target];
           case "endMainPhase":
+          case "manual": // never listed (model/manual.ts)
             return [];
         }
       });

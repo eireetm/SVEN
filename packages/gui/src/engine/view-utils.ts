@@ -38,6 +38,17 @@ export function findCard(view: PlayerView, id: string): CardView | null {
   return found;
 }
 
+/** Where a visible card is: its side's player and zone (a leader: "leader"); null for the resolution zone's cards. */
+export function zoneOf(view: PlayerView, id: string): { player: PlayerSideView["id"]; zone: SideZone | "leader" } | null {
+  const here = (card: CardView | HiddenCardView | null): boolean => !!card && !card.hidden && card.id === id;
+  for (const side of view.players) {
+    if (here(side.leader)) return { player: side.id, zone: "leader" };
+    const zone = SIDE_ZONES.find((z) => (side[z] as readonly (CardView | HiddenCardView)[]).some(here));
+    if (zone) return { player: side.id, zone };
+  }
+  return null;
+}
+
 /** The side a visible card is on (undefined for the resolution zone's cards). */
 export function sideOf(view: PlayerView, id: string): PlayerSideView | undefined {
   const here = (card: CardView | HiddenCardView | null): boolean => !!card && !card.hidden && card.id === id;

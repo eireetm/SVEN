@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import type { CardView, HiddenCardView } from "@sve/core";
 import { useApp } from "../../app/store";
 import type { GameUpdate } from "../../engine/protocol";
-import { actionsFor, openMenu } from "../interaction";
+import { actionsFor, openManual, openMenu } from "../interaction";
 import type { SideZone } from "../../engine/view-utils";
 import { useT, type MessageKey } from "../../i18n";
 import { CardTile } from "../card/CardTile";
@@ -48,6 +48,14 @@ export function ZoneBrowser({ update }: { update: GameUpdate }) {
   const cards = (open.zone === "leader" ? (side.leader ? [side.leader] : []) : side[open.zone]) as readonly (CardView | HiddenCardView)[];
   const decision = update.decision?.decision;
   const tile = (card: CardView | HiddenCardView) => {
+    // Manual debugging: any card of the pile opens what can be done with it by hand.
+    if (!card.hidden && update.manual !== null) {
+      return (
+        <div className="sve-zone-action" onClick={() => (openZone(null), openManual({ kind: "card", card: card.id }))}>
+          <CardTile card={card} side={side} />
+        </div>
+      );
+    }
     if (card.hidden || actionsFor(decision, card.id).length === 0) return <CardTile card={card} side={side} evolveBack={open.zone === "evolveDeck"} />;
     return (
       <div
