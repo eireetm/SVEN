@@ -2,6 +2,7 @@
 // player's view, its decisions and determinized copies of the game (docs/bot.md).
 
 export { GreedyBot, type GreedyBotOptions, type BotStats } from "./greedy";
+export { PlannerBot, type PlannerBotOptions } from "./planner";
 export { evaluate, DEFAULT_WEIGHTS, type EvalWeights } from "./evaluate";
 export { fastAnswer, lookupFromView, lookupFromReader, staticValue, type CardFacts, type CardLookup } from "./policy";
 export { candidateAnswers } from "./candidates";
