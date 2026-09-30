@@ -66,6 +66,14 @@ describe("GameHost (engine worker logic)", () => {
     expect(logged.some((e) => e.event.type === "gameEnded")).toBe(true);
   });
 
+  it("plays the planning bots (docs/bot.md): Bot-Medium against Bot-Hard to the end, paced as the setup page starts games", () => {
+    const h = harness(["medium", "hard"]);
+    h.host.handle({ kind: "start", options: { ...h.options, showEveryMainPhase: true, askEveryQuickWindow: true } });
+    h.scheduler.run(20_000);
+    expect(h.errors()).toEqual([]);
+    expect(h.last().result).not.toBeNull();
+  }, 300_000);
+
   it("gives a person their decisions with the cards they name, and hides the opponent's hand", () => {
     const h = harness(["human", "random"]);
     h.host.handle({ kind: "start", options: h.options });

@@ -96,5 +96,5 @@ test("who goes first: player 2, without anyone choosing (the setup's advanced op
   await expect(bar).toHaveAttribute("data-decision", "mainPhase", { timeout: 20_000 });
   await expect(page.locator(".sve-center-status")).toContainText("Turn 2");
   await showSidebar(page);
-  await expect(page.locator(".sve-log")).toContainText("Player 2 (Greedy bot) goes first.");
+  await expect(page.locator(".sve-log")).toContainText("Player 2 (Bot-Easy) goes first.");
 });

@@ -2,7 +2,7 @@
 // and replays), and what the GUI is shown: views, the pending decision and the log. No worker or DOM API here, so tests
 // run it in Node. Nothing in it decides rules: legal answers come from the core's decisions (the decision protocol in
 // docs/architecture.md).
-import { GreedyBot } from "@sve/bot";
+import { createBot } from "@sve/bot";
 import {
   ALL_AUTO_RESOLVABLE,
   defaultAnswer,
@@ -63,9 +63,13 @@ interface Bot {
   decide(game: GameSession): Answer;
 }
 
-/** A bot for a seat, seeded from the game (the same game and inputs give the same bot answers). */
-function makeBot(engine: Engine, controller: SeatController, seed: string, seat: PlayerId): Bot | null {
-  if (controller === "greedy") return new GreedyBot(engine, { seed: `${seed}:greedy:${seat}` });
+/**
+ * A bot for a seat, seeded from the game (the same game and inputs give the same bot answers). `effort` scales how much the
+ * planning bots search (GameHostOptions.botEffort).
+ */
+function makeBot(engine: Engine, controller: SeatController, seed: string, seat: PlayerId, effort: number): Bot | null {
+  if (controller === "greedy") return createBot(engine, "easy", `${seed}:greedy:${seat}`);
+  if (controller === "medium" || controller === "hard") return createBot(engine, controller, `${seed}:${controller}:${seat}`, effort);
   if (controller === "random") {
     const rng = seedRng(`${seed}:random:${seat}`);
     return { decide: (game) => randomAnswer(rng, game.decision!) };
@@ -170,6 +174,11 @@ interface QuickPlay {
 /** Event fields that hold card ids (for the names a log entry needs). */
 const CARD_KEYS = new Set(["card", "newCard", "target", "attacker", "defender", "source", "follower", "evolveCard", "token", "cards", "id"]);
 
+export interface GameHostOptions {
+  /** How much the planning bots search (1: fully). A phone thinks less, so they answer in about the same time (docs/bot.md). */
+  botEffort?: number;
+}
+
 export class GameHost {
   private game: GameSession | null = null;
   private options: GameOptions | null = null;
@@ -202,6 +211,7 @@ export class GameHost {
     private readonly engine: Engine,
     private readonly send: (message: FromWorker) => void,
     private readonly scheduler: Scheduler = timerScheduler,
+    private readonly hostOptions: GameHostOptions = {},
   ) {}
 
   handle(message: ToWorker): void {
@@ -289,7 +299,7 @@ export class GameHost {
     // Watching, nobody plays: the replay's inputs are its answers.
     this.bots = this.watching
       ? [null, null]
-      : [makeBot(this.engine, options.controllers[0], options.seed, 0), makeBot(this.engine, options.controllers[1], options.seed, 1)];
+      : ([0, 1] as const).map((seat) => makeBot(this.engine, options.controllers[seat], options.seed, seat, this.hostOptions.botEffort ?? 1)) as [Bot | null, Bot | null];
     this.known.clear();
     this.log = [];
     this.logSeq = 0;

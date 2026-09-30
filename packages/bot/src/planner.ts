@@ -39,6 +39,8 @@ export interface PlannerBotOptions {
   opponentQuick?: boolean;
   /** Main phase actions per turn; after that the bot ends its main phase (CR 15.2.1.1: the player decides how often they repeat). */
   maxActionsPerTurn?: number;
+  /** Decisions per turn in its main phase; after that it gives default answers, which stop any cycle it can stop. */
+  maxDecisionsPerTurn?: number;
 }
 
 /** A point of a plan: a copy of the game at one of our decisions in our main phase, or where the plan ends. */
@@ -75,6 +77,7 @@ export class PlannerBot {
   private readonly replyPlans: number;
   private readonly maxSimulations: number;
   private readonly maxActionsPerTurn: number;
+  private readonly maxDecisionsPerTurn: number;
   private readonly rng: RngState;
   private readonly replyModel: "greedy" | "planner";
   private readonly opponentQuick: boolean;
@@ -84,6 +87,7 @@ export class PlannerBot {
   private models = 0;
   private turn = -1;
   private actionsThisTurn = 0;
+  private decisionsThisTurn = 0;
   /** The plan being carried out: its positions from the first answer on, and how many answers of it were given. */
   private current: { path: Node[]; given: number; turn: number } | null = null;
 
@@ -100,6 +104,7 @@ export class PlannerBot {
     this.replyPlans = options.replyPlans ?? 4;
     this.maxSimulations = options.maxSimulations ?? 600;
     this.maxActionsPerTurn = options.maxActionsPerTurn ?? 40;
+    this.maxDecisionsPerTurn = options.maxDecisionsPerTurn ?? 300;
     this.rng = seedRng(`planner:${this.seed}`);
     this.replyModel = options.replyModel ?? "greedy";
     this.opponentQuick = options.opponentQuick ?? false;
@@ -133,7 +138,9 @@ export class PlannerBot {
     if (state.turn !== this.turn) {
       this.turn = state.turn;
       this.actionsThisTurn = 0;
+      this.decisionsThisTurn = 0;
     }
+    if (++this.decisionsThisTurn > this.maxDecisionsPerTurn) return defaultAnswer(d);
     if (d.type === "mainPhase" && ++this.actionsThisTurn > this.maxActionsPerTurn) return defaultAnswer(d);
     return this.followPlan(session, me) ?? this.plan(session, me);
   }

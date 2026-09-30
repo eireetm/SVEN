@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { createEngine, script, validateAnswer, type Answer, type GameSession } from "../src/core";
-import { GreedyBot, PlannerBot, type PlannerBotOptions } from "../src";
+import { GreedyBot, HARD_OPTIONS as HARD, MEDIUM_OPTIONS as MEDIUM, PlannerBot, type PlannerBotOptions } from "../src";
 import { ALL_CARDS, ALL_SCRIPTS } from "../../core/src/sets";
-import { checkInvariants, deckPool, drive, randomAgent, randomDeck, testFollower, type ScenarioSide } from "../../core/src/testing";
+import { PERPETUAL_CYCLE_LIMIT } from "../../core/src/engine/abilities/confirmation";
+import { checkInvariants, deckPool, drive, randomAgent, randomDeck, testAmulet, testFollower, type ScenarioSide } from "../../core/src/testing";
 
-const { defineCard } = script;
+const { defineCard, activated, whenYourLeaderGainsDefense } = script;
 
 // Positions made of test cards: what the planning bots do with their turn where the greedy bot fails (docs/bot.md).
 const cards = createEngine({
@@ -27,8 +28,6 @@ const cards = createEngine({
   },
 });
 const fillers = Array<string>(10).fill("FILLER");
-const MEDIUM: PlannerBotOptions = {};
-const HARD: PlannerBotOptions = { cheat: true, replyModel: "planner", opponentQuick: true, replyPlans: 6, beamWidth: 8, maxSimulations: 900 };
 
 /** Let a bot play player 0's turn from the position; what it did, and the game after. */
 function myTurn(bot: { decide(g: GameSession): Answer }, me: ScenarioSide, opp: ScenarioSide) {
@@ -151,4 +150,55 @@ describe("PlannerBot in whole games", () => {
     }
     expect(compared).toBeGreaterThan(5);
   }, 600_000);
+});
+
+describe("PlannerBot never loops forever", () => {
+  // As for the greedy bot: FOUNTAIN is a free ability that always helps; ECHO ("whenever your leader gains defense, you may
+  // give your leader +1 defense") is a cycle only its controller can stop.
+  const loopEngine = createEngine({
+    cards: [testFollower("V1", 1, 2, 2), testAmulet("FOUNTAIN", 1), testAmulet("ECHO", 1)],
+    scripts: {
+      FOUNTAIN: defineCard({
+        abilities: [
+          activated(
+            {},
+            {
+              *resolve(fx) {
+                yield* fx.giveLeaderDefense(fx.controller, 1);
+              },
+            },
+          ),
+        ],
+      }),
+      ECHO: defineCard({
+        abilities: [
+          whenYourLeaderGainsDefense({
+            *resolve(fx) {
+              if (yield* fx.confirm()) yield* fx.giveLeaderDefense(fx.controller, 1);
+            },
+          }),
+        ],
+      }),
+    },
+  });
+  const botTurn = (field: string[], options: PlannerBotOptions) => {
+    const t = drive(loopEngine, { me: { field }, opp: { deck: ["V1"] } });
+    const bot = new PlannerBot(loopEngine, { seed: "loop", ...options });
+    const turn = t.game.state.turn;
+    for (let i = 0; i < 1000 && t.game.decision?.player === 0 && t.game.state.turn === turn; i++) t.game.act(bot.decide(t.game));
+    return { t, bot, turn };
+  };
+  const clean = (bot: PlannerBot) => [bot.stats.fallbacks, bot.stats.simulationFailures, bot.stats.lastError];
+
+  it("repeats an ability that always helps only as often as it allows itself (CR 15.2.1.1)", () => {
+    const { t, bot, turn } = botTurn(["FOUNTAIN"], { maxActionsPerTurn: 5 });
+    expect([t.game.state.turn > turn, t.leader(), clean(bot)]).toEqual([true, 25, [0, 0, null]]);
+  }, 60_000);
+
+  it("stops a cycle of optional effects it keeps choosing, before the engine has to call a draw", () => {
+    const { t, bot, turn } = botTurn(["FOUNTAIN", "ECHO"], { maxActionsPerTurn: 1, maxDecisionsPerTurn: 30 });
+    expect([t.game.result, t.game.state.turn > turn, clean(bot)]).toEqual([null, true, [0, 0, null]]);
+    expect(t.leader()).toBeGreaterThan(21);
+    expect(t.leader()).toBeLessThan(20 + PERPETUAL_CYCLE_LIMIT);
+  }, 60_000);
 });

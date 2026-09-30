@@ -16,7 +16,10 @@
   - 纯 TypeScript，结果确定，可以在没有界面的环境里运行，不依赖界面或文件。
   - 按综合规则（v1.26.1）逐条实现，规则判断都注明条款编号。
   - 支持 56 个卡包的 3,568 个卡牌定义，共 7,296 个印刷版本，异画共用同一个定义。
-- **Bot（`@sve/bot`）**：贪心 Bot。每个决策都模拟所有候选回答并评估局面，只用 Core 的公开 API。
+- **Bot（`@sve/bot`）**：三个难度，只用 Core 的公开 API：
+  - Bot-简单：贪心，每个决策都模拟所有候选回答，评估局面后选最好的；
+  - Bot-中等：规划整个回合，再模拟对手的下一回合，只用玩家看得到的信息；
+  - Bot-困难：同样规划，但直接读完整的局面（对手的手牌、双方牌组的顺序），会作弊。
 - **GUI（`@sve/gui`）**：Web 界面（Vite + React），引擎和 Bot 在 Web Worker 里运行。
   - 牌桌按场地图摆放，点击或拖拽操作，有动画、箭头和音效；
   - 组卡界面：筛选、异画、赛制和禁卡表、卡组码；
@@ -64,6 +67,7 @@ npm run dev:gui
 | `npm run android:apk` | 打安卓 APK（见"安卓版"） |
 | `npm run card -- <卡号>` | 查一张卡：各语言文本、日文类型、相关卡、官方 QA、脚本状态 |
 | `npm run bench` | 性能基准：随机对局、复制和抽样一局、Bot 每个决策的耗时 |
+| `npm run bot:arena -- [局数] [A] [B]` | Bot 互打（easy / medium / hard）：示例卡组，两局一组交换座位，打印胜率和思考时间 |
 | `npm run build:cards` | 从抓取的卡牌数据（仓库旁边的 `assets/`）重新生成 `packages/core/data/*.json` |
 | `npm run scripts:index` | 新增卡牌脚本后，重新生成脚本注册表（`packages/core/src/script/<卡包>/index.ts`） |
 | `npm run cards:status` | 生成每张卡的实现和测试状态表（写到 `docs/card-status*.md`） |
@@ -310,7 +314,10 @@ An unofficial rules engine, AI and client for the *Shadowverse: Evolve* trading 
   - Plain TypeScript and deterministic. It runs headless, with no dependency on a UI or on files.
   - It implements the Comprehensive Rules (v1.26.1) clause by clause, and every rules decision cites its clause number.
   - It supports 3,568 card definitions from 56 sets, 7,296 printings in all; alternate arts share one definition.
-- **Bot (`@sve/bot`)**: a greedy bot. For each decision it simulates every candidate answer and scores the result, using only the Core's public API.
+- **Bot (`@sve/bot`)**: three levels, on the Core's public API only:
+  - Bot-Easy: greedy. For each decision it simulates every candidate answer and picks the best-scoring result.
+  - Bot-Medium: plans its whole turn, then plays out the opponent's next turn. It uses only what its player can see.
+  - Bot-Hard: plans the same way, but reads the whole game (the opponent's hand, both decks in order): it cheats.
 - **GUI (`@sve/gui`)**: a web interface (Vite + React). The engine and the bots run in a Web Worker.
   - A table laid out on the playmat picture, played by clicking and dragging, with animations, arrows and sounds.
   - A deck builder with filters, alternate arts, formats and restriction lists, and deck codes.
@@ -358,6 +365,7 @@ Run these at the repository root:
 | `npm run android:apk` | Build the Android APK (see "Android app") |
 | `npm run card -- <card number>` | Show a card: its text in each language, Japanese traits, related cards, official Q&A, script status |
 | `npm run bench` | Benchmarks: random games, copying and sampling a game, the bot's time per decision |
+| `npm run bot:arena -- [games] [A] [B]` | Bots against each other (easy / medium / hard): the sample decks, games in pairs with the seats swapped; prints the win rate and thinking time |
 | `npm run build:cards` | Rebuild `packages/core/data/*.json` from the scraped card data (the `assets/` folder next to the repository) |
 | `npm run scripts:index` | Regenerate the card script registries (`packages/core/src/script/<set>/index.ts`) after adding scripts |
 | `npm run cards:status` | Write each card's implementation and test status (to `docs/card-status*.md`) |

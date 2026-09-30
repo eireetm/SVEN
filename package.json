@@ -20,7 +20,8 @@
     "cards:status": "tsx tools/card-status.ts",
     "card": "tsx tools/show-card.ts",
     "scripts:index": "tsx tools/gen-script-index.ts",
-    "bench": "tsx tools/bench.ts"
+    "bench": "tsx tools/bench.ts",
+    "bot:arena": "tsx tools/bot-arena.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",

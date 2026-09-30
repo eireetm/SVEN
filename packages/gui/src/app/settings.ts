@@ -52,7 +52,7 @@ const DEFAULTS: Settings = {
   bgmVolume: 0.4,
   animations: true,
   setupDecks: ["samples/sd01.json", "samples/sd02.json"],
-  setupControllers: ["human", "greedy"],
+  setupControllers: ["human", "medium"],
   setupTurnOrder: "choose",
   format: "standard",
   restrictionLists: {},

@@ -21,9 +21,11 @@ import type {
 
 /**
  * Who plays a seat: a person at this screen, a bot run by the worker, or a person at another program (online play,
- * docs/online.md: their answers come as "remoteInput").
+ * docs/online.md: their answers come as "remoteInput"). The bots (docs/bot.md): "greedy" is Bot-Easy (the name it had
+ * before the levels, kept for saved settings and replays), "medium" plans its turn fairly, "hard" plans reading every
+ * hidden card (it cheats), "random" answers at random (testing).
  */
-export type SeatController = "human" | "greedy" | "random" | "remote";
+export type SeatController = "human" | "greedy" | "medium" | "hard" | "random" | "remote";
 
 /**
  * How decks are built (the GUI checks them, formats/formats.ts): standard (CR 6.1, and a restriction list), Cross Craft (two

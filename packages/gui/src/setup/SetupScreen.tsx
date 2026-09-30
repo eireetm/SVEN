@@ -11,9 +11,9 @@ import { readReplayFile } from "../game/replay-files";
 import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
 
-const CONTROLLERS: readonly SeatController[] = ["human", "greedy", "random"];
-/** The opponent: an AI, or a second person at the same screen (hot seat). */
-const OPPONENTS: readonly SeatController[] = ["greedy", "random", "human"];
+const CONTROLLERS: readonly SeatController[] = ["human", "greedy", "medium", "hard", "random"];
+/** The opponent: an AI (by level, docs/bot.md), or a second person at the same screen (hot seat). */
+const OPPONENTS: readonly SeatController[] = ["greedy", "medium", "hard", "random", "human"];
 /** Who goes first: as the rules say (a random player decides, CR 6.2.1.6) first, then the testing choices. */
 const TURN_ORDERS: readonly TurnOrder[] = ["choose", "random", "player1", "player2"];
 
@@ -220,6 +220,9 @@ export function SetupScreen({ onStarted, onBack, onEditDecks }: Props) {
             <h3>{t("setup.opponent")}</h3>
             {deckField(1)}
             {controllerField(1, t("setup.aiType"), OPPONENTS)}
+            <p className="sve-note" data-testid="setup-controller-hint">
+              {t(`controllerHint.${controllers[1] === "remote" ? "human" : controllers[1]}` as const)}
+            </p>
           </section>
         </div>
         <div className="sve-setup-actions">

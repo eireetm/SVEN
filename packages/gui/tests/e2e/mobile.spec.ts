@@ -42,6 +42,10 @@ test("a phone: the menus fit, a game is played by tapping, the card panel is a d
   expect(menu.y + menu.height).toBeLessThanOrEqual(412);
   await play.tap();
   await expect(page.getByTestId("start-game")).toBeEnabled({ timeout: 60_000 });
+  // What the opponent's AI does (docs/bot.md) wraps within the phone's width; the page doesn't scroll sideways.
+  const hint = (await page.getByTestId("setup-controller-hint").boundingBox())!;
+  expect(hint.x + hint.width).toBeLessThanOrEqual(915);
+  expect(await page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")).toBe(true);
   await page.getByTestId("start-game").tap();
   await expect(page.locator(".sve-table[data-compact]")).toBeVisible();
   // No left column: the table has the whole width; the drawer opens from its button and hides again.

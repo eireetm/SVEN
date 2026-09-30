@@ -225,8 +225,16 @@ export const en = {
   "deckProblem.triggerClass": "{card} has a Trigger and is not of the leader's class, {class} (CR 14.4.2.1.2)",
   "deckProblem.wrongClass": "{card} ({cardClass}) doesn't match the leader's class, {class} (CR 6.1.1.5.1)",
   "controller.human": "Human",
-  "controller.greedy": "Greedy bot",
+  "controller.greedy": "Bot-Easy",
+  "controller.medium": "Bot-Medium",
+  "controller.hard": "Bot-Hard",
   "controller.random": "Random bot",
+  // What each choice of the setup screen's "Played by" does (docs/bot.md).
+  "controllerHint.human": "A second person plays at this screen (hot seat).",
+  "controllerHint.greedy": "Weighs one action at a time: often misses attacks and combinations.",
+  "controllerHint.medium": "Plans its whole turn and thinks about your reply. Plays fair: it sees only what a player may see.",
+  "controllerHint.hard": "Plans like Bot-Medium, but cheats: it sees your hand, both decks in order and what random effects will do.",
+  "controllerHint.random": "Answers at random (for testing).",
   "controller.remote": "online opponent",
 
   "game.turn": "Turn {n}",
