@@ -12,6 +12,7 @@
     "dev:gui": "npm run dev -w @sve/gui -- --open",
     "build:gui": "npm run build -w @sve/gui",
     "test:gui": "npm run test:e2e -w @sve/gui",
+    "android:apk": "node packages/gui/scripts/android-apk.mjs",
     "typecheck": "tsc -p packages/core/tsconfig.json && tsc -p packages/core/tsconfig.test.json && tsc -p packages/bot/tsconfig.json && tsc -p packages/bot/tsconfig.test.json && tsc -p tools/tsconfig.json && tsc -p packages/gui/tsconfig.json && tsc -p packages/gui/tsconfig.node.json",
     "build:cards": "tsx tools/build-card-data.ts",
     "rules:clauses": "tsx tools/extract-cr-clauses.ts",

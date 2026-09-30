@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SVE NEXT</string>
+    <string name="title_activity_main">SVE NEXT</string>
+    <string name="package_name">local.sve.next</string>
+    <string name="custom_url_scheme">local.sve.next</string>
+</resources>

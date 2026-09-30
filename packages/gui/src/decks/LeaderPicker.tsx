@@ -7,6 +7,7 @@ import { useSettings } from "../app/settings";
 import { useApp } from "../app/store";
 import { CardTile } from "../game/card/CardTile";
 import { useT } from "../i18n";
+import { useBack } from "../app/back";
 
 interface Props {
   /** The deck's leader printing, or null. */
@@ -37,6 +38,7 @@ export function LeaderPicker({ current, onPick, onClose }: Props) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+  useBack(true, onClose);
   return (
     <div className="sve-modal-backdrop" onClick={onClose}>
       <div className="sve-modal sve-leader-picker" onClick={(e) => e.stopPropagation()} data-testid="leader-picker">

@@ -1,7 +1,72 @@
+import { useState } from "react";
+import { hostApi, type ImportResult } from "../host/api";
 import { useT } from "../i18n";
 import { engine } from "./store";
-import { applyUiTransparency, currentUiTransparency } from "../resources/resources";
+import { applyUiTransparency, currentUiTransparency, loadResources } from "../resources/resources";
 import { updateSettings, useSettings, type CardLang, type UiLang } from "./settings";
+
+type ResourceStatus =
+  | { kind: "idle" }
+  | { kind: "importing"; written: number }
+  | { kind: "imported"; result: ImportResult }
+  | { kind: "reloaded"; files: number }
+  | { kind: "failed"; error: string };
+
+/**
+ * The Android app: where the player's own files go (the app's public/ folder, copied over a USB cable), importing them
+ * from a zip file, and reading the folder again after copying (docs/android.md).
+ */
+function ResourcesSection() {
+  const t = useT();
+  const [status, setStatus] = useState<ResourceStatus>({ kind: "idle" });
+  const importZip = async (file: File | undefined) => {
+    if (!file) return;
+    setStatus({ kind: "importing", written: 0 });
+    try {
+      const result = await hostApi.importResources!(file, (written) => setStatus({ kind: "importing", written }));
+      await loadResources();
+      setStatus({ kind: "imported", result });
+    } catch (err) {
+      setStatus({ kind: "failed", error: err instanceof Error ? err.message : String(err) });
+    }
+  };
+  const reload = async () => {
+    await loadResources();
+    setStatus({ kind: "reloaded", files: (await hostApi.resources()).length });
+  };
+  const busy = status.kind === "importing";
+  return (
+    <section className="sve-settings-group" data-testid="settings-resources">
+      <h3>{t("settings.resources")}</h3>
+      <p className="sve-settings-folder">{t("settings.resourcesFolder", { folder: hostApi.resourceFolder ?? "" })}</p>
+      <p className="sve-hint">{t("settings.resourcesHelp")}</p>
+      <div className="sve-settings-buttons">
+        <label className={`sve-file-button${busy ? " sve-disabled" : ""}`}>
+          {t("settings.resourcesImport")}
+          <input
+            type="file"
+            accept=".zip,application/zip"
+            hidden
+            disabled={busy}
+            onChange={(e) => {
+              void importZip(e.target.files?.[0]);
+              e.target.value = "";
+            }}
+          />
+        </label>
+        <button type="button" disabled={busy} onClick={() => void reload()}>
+          {t("settings.resourcesReload")}
+        </button>
+      </div>
+      {status.kind === "importing" ? <p className="sve-hint">{t("settings.resourcesImporting", { n: status.written })}</p> : null}
+      {status.kind === "imported" ? (
+        <p className="sve-ok">{t("settings.resourcesImported", { written: status.result.written, skipped: status.result.skipped })}</p>
+      ) : null}
+      {status.kind === "reloaded" ? <p className="sve-ok">{t("settings.resourcesReloaded", { n: status.files })}</p> : null}
+      {status.kind === "failed" ? <p className="sve-problem">{t("settings.resourcesFailed", { error: status.error })}</p> : null}
+    </section>
+  );
+}
 
 /** The settings (remembered in this browser): the languages (the interface's and the card text's), the appearance. */
 export function SettingsScreen({ onBack }: { onBack: () => void }) {
@@ -58,6 +123,7 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
             </span>
           </div>
         </section>
+        {hostApi.platform === "android" ? <ResourcesSection /> : null}
         <section className="sve-settings-group">
           <h3>{t("settings.sound")}</h3>
           {(
@@ -83,7 +149,7 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
               </span>
             </div>
           ))}
-          <p className="sve-hint">{t("settings.soundHelp")}</p>
+          <p className="sve-hint">{t(hostApi.platform === "android" ? "settings.soundHelpAndroid" : "settings.soundHelp")}</p>
         </section>
         <section className="sve-settings-group">
           <h3>{t("settings.game")}</h3>

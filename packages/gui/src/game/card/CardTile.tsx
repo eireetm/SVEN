@@ -84,7 +84,7 @@ export function CardTile({ card, info, side, size = "normal", mark = null, onCli
       data-def={shown.def}
       title={name}
       style={style}
-      onMouseEnter={() => showCard(focus)}
+      onPointerEnter={() => showCard(focus)}
       onPointerDown={onPointerDown}
       onClick={onPointerDown ? undefined : onClick}
     >

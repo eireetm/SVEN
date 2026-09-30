@@ -19,11 +19,24 @@ export function setResourceLists(publicFiles: Iterable<string>, miscNames: Itera
 /** Whether public/ has this file ("theme.css"). */
 export const hasResource = (path: string): boolean => files.has(path);
 
-/** "/images/backs/default.png" for the base path "images/backs/default", or null. */
+/** The URL of "images/backs/default.png" for the base path "images/backs/default" (host/api.ts resourceUrl), or null. */
 function find(base: string, extensions: readonly string[]): string | null {
   for (const ext of extensions) {
     const path = `${base}.${ext}`;
-    if (files.has(path)) return `/${path.split("/").map(encodeURIComponent).join("/")}`;
+    if (files.has(path)) return hostApi.resourceUrl(path);
+  }
+  return null;
+}
+
+/**
+ * The player's own image of a card in public/images/cards/: by printing, then by definition; a back face's with "_back"
+ * (host/resources.ts findCardArt, which also looks in the assets folder on a computer). The Android app's card images.
+ */
+export function ownCardArtUrl(printing: string, def: string, back = false): string | null {
+  for (const id of [printing, def]) {
+    const name = back && !id.endsWith("_back") ? `${id}_back` : id;
+    const found = find(`images/cards/${name}`, IMAGE);
+    if (found) return found;
   }
   return null;
 }

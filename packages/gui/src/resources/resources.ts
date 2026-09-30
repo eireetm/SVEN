@@ -64,7 +64,7 @@ function applyTheme(): void {
     const link = document.createElement("link");
     link.id = "sve-theme";
     link.rel = "stylesheet";
-    link.href = "/theme.css";
+    link.href = hostApi.resourceUrl("theme.css");
     document.head.appendChild(link);
   }
 }

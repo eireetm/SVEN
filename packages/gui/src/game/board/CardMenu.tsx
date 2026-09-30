@@ -9,6 +9,7 @@ import { useT } from "../../i18n";
 import { setHighlight } from "../focus";
 import { actionsFor, answerFor, openMenu, sendAnswer, useInteraction } from "../interaction";
 import { actionLabel, cardLabel } from "../labels";
+import { useBack } from "../../app/back";
 
 export function CardMenu({ update }: { update: GameUpdate }) {
   const menu = useInteraction((s) => s.menu);
@@ -22,6 +23,7 @@ export function CardMenu({ update }: { update: GameUpdate }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+  useBack(menu !== null, () => openMenu(null));
   const info = update.decision;
   if (!menu || !info || !catalog) return null;
   const decision = info.decision;

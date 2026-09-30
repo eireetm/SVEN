@@ -169,6 +169,11 @@ export interface TableLayout {
   opponentHandCardWidth: number;
   /** The room beside each mat (panels, status, buttons). */
   sideWidth: number;
+  /**
+   * A small screen (a phone held sideways, docs/android.md): the mats take the whole height, your hand is beside your mat
+   * (bottom right), the panels and the status are on the left, the buttons on the right.
+   */
+  compact: boolean;
 }
 
 const clamp = (x: number, min: number, max: number): number => Math.max(min, Math.min(max, x));
@@ -177,11 +182,15 @@ const clamp = (x: number, min: number, max: number): number => Math.max(min, Mat
 const HAND_SCALE = 1.3;
 const HAND_MARGIN = 16;
 
+/** Tables less tall than this are laid out for a small screen (app/compact.ts has the same limit for the screen). */
+export const COMPACT_HEIGHT = 560;
+
 /**
  * Sizes for a table area of `width` x `height` pixels: the two mats as large as fit between the opponent's hand strip
  * and yours (just tall enough for your cards), leaving room beside the mats for the panels and buttons.
  */
 export function computeLayout(width: number, height: number): TableLayout {
+  if (height < COMPACT_HEIGHT) return computeCompactLayout(width, height);
   const opponentHandHeight = clamp(height * 0.06, 36, 72);
   const side = clamp(width * 0.13, 110, 220);
   // height = opponent hand + 2 mats + your hand (card height + margin), cards sized from the mat's height.
@@ -203,5 +212,36 @@ export function computeLayout(width: number, height: number): TableLayout {
     handCardWidth,
     opponentHandCardWidth: (opponentHandHeight - 6) / CARD_RATIO,
     sideWidth: Math.max(90, (width - matWidth) / 2 - 20),
+    compact: false,
+  };
+}
+
+/**
+ * A small screen: the height is what limits the mats, so they take all of it but a thin strip for the opponent's hand; your
+ * hand goes beside your mat, fanned in the room on the right (its cards larger than the mat's, as they are read).
+ */
+function computeCompactLayout(width: number, height: number): TableLayout {
+  const opponentHandHeight = clamp(height * 0.06, 20, 30);
+  const side = clamp(width * 0.2, 150, 280);
+  const cardPerMat = CARD_WIDTH / MAT_BOX_HEIGHT;
+  const byHeight = (height - opponentHandHeight - 6) / 2;
+  const byWidth = ((width - 2 * side) * MAT_BOX_HEIGHT) / WIDE_WIDTH;
+  const matHeight = Math.max(100, Math.min(byHeight, byWidth));
+  const matWidth = (matHeight * WIDE_WIDTH) / MAT_BOX_HEIGHT;
+  const cardWidth = matHeight * cardPerMat;
+  const sideWidth = Math.max(120, (width - matWidth) / 2 - 12);
+  const handWidth = sideWidth - 8;
+  const handCardWidth = clamp(Math.min((height * 0.42) / CARD_RATIO, handWidth * 0.34), cardWidth, cardWidth * 2);
+  return {
+    matWidth,
+    matHeight,
+    cardWidth,
+    handHeight: handCardWidth * CARD_RATIO + 10,
+    opponentHandHeight,
+    handWidth,
+    handCardWidth,
+    opponentHandCardWidth: (opponentHandHeight - 4) / CARD_RATIO,
+    sideWidth,
+    compact: true,
   };
 }

@@ -401,7 +401,7 @@ export function Table({ update, onNewGame, onMenu, onReplays }: { update: GameUp
     "--side-width": `${layout.sideWidth}px`,
   } as CSSProperties;
   return (
-    <div className="sve-table" ref={ref} style={vars}>
+    <div className="sve-table" ref={ref} style={vars} data-compact={layout.compact ? "" : undefined}>
       <HandStrip update={update} side={view.players[opponent]} opponent marks={marks} layout={layout} />
       <div className="sve-mats">
         <Mat update={update} side={view.players[opponent]} opponent marks={marks} slots={slots} />

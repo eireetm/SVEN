@@ -13,6 +13,7 @@ import { MainMenu } from "./MainMenu";
 import { SettingsScreen } from "./SettingsScreen";
 import { useSettings } from "./settings";
 import { dismissError, useApp } from "./store";
+import { useBack } from "./back";
 
 type Screen = "menu" | "settings" | "setup" | "builder" | "text" | "replays" | "online" | "game";
 
@@ -54,6 +55,9 @@ export function App() {
   useEffect(() => installClickSound(), []);
   // A game over the connection starts when both players are ready, wherever this one is (docs/online.md).
   useEffect(() => onGameStart(() => setScreen("game")), []);
+  // "Back" (the Android back button, back.ts): one screen back. The deck builder and the online screen have their own
+  // (unsaved changes, leaving a room).
+  useBack(screen !== "menu" && screen !== "builder" && screen !== "online", () => setScreen(screen === "text" ? "builder" : "menu"));
 
   let body;
   switch (screen) {

@@ -8,6 +8,7 @@ import { useT, type MessageKey } from "../../i18n";
 import { CardTile } from "../card/CardTile";
 import { playerLabel } from "../labels";
 import { openZone, useOpenZone } from "./zone-browser";
+import { useBack } from "../../app/back";
 
 const ZONE_KEYS: Record<SideZone | "leader", MessageKey> = {
   leader: "game.leader",
@@ -40,6 +41,7 @@ export function ZoneBrowser({ update }: { update: GameUpdate }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+  useBack(open !== null, () => openZone(null));
   if (!open) return null;
   const side = update.view.players[open.player];
   // The leaders: the one the engine plays with, and the second one (Cross Craft), known only by its printing.

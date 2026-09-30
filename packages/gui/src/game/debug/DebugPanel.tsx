@@ -4,7 +4,7 @@ import { engine, reportError } from "../../app/store";
 import type { GameUpdate } from "../../engine/protocol";
 import { hostApi, type HostInfo } from "../../host/api";
 import { useT } from "../../i18n";
-import { downloadJson, readReplayFile } from "../replay-files";
+import { readReplayFile } from "../replay-files";
 
 /**
  * Tools for testing by hand: manual debugging, undo, rewind, replays (a bug report), hidden cards, bot pace. Online, both
@@ -31,7 +31,7 @@ export function DebugPanel({ update }: { update: GameUpdate }) {
   };
   const saveReplay = async () => {
     const replay = await engine.exportReplay();
-    if (replay) downloadJson(`sve-replay-${replay.options.seed}-${replay.inputs.length}.json`, replay);
+    if (replay) await hostApi.saveExport(`sve-replay-${replay.options.seed}-${replay.inputs.length}.json`, replay);
   };
   const loadReplay = async (file: File | undefined) => {
     if (!file) return;
@@ -134,7 +134,7 @@ export function DebugPanel({ update }: { update: GameUpdate }) {
         <button
           type="button"
           onClick={() => {
-            void navigator.clipboard?.writeText(JSON.stringify(update.view, null, 2)).then(() => setCopied(true));
+            void hostApi.copyText(JSON.stringify(update.view, null, 2)).then(() => setCopied(true));
           }}
         >
           {t("debug.copyView")}

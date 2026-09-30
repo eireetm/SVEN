@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useBack } from "../app/back";
+import { useCompact } from "../app/compact";
 import { engine, useApp } from "../app/store";
 import type { GameUpdate } from "../engine/protocol";
+import { hostApi } from "../host/api";
 import { useT } from "../i18n";
 import { useOnline } from "../net/state";
 import { Chat } from "../online/Chat";
@@ -8,9 +11,10 @@ import { AnimationLayer } from "./animation/AnimationLayer";
 import { Table } from "./board/Table";
 import { ZoneBrowser } from "./board/ZoneBrowser";
 import { CardDetails } from "./card/CardDetails";
+import { setDetailsOpen, useDetailsOpen } from "./details";
+import { installLongPress } from "./long-press";
 import { DebugPanel } from "./debug/DebugPanel";
 import { LogPanel } from "./log/LogPanel";
-import { downloadJson } from "./replay-files";
 import { WatchBar } from "./watch/WatchBar";
 
 type Tab = "log" | "debug" | "chat";
@@ -28,13 +32,26 @@ interface Props {
  * (lit cards, their menus, the buttons beside the mats) or in the decision window over it. The log and debug tabs are a
  * sidebar, hidden unless shown: it then covers the right of the table, which keeps its size. A replay being watched has its
  * playback bar under the card on the left (nobody answers anything). Online, the connection's state is under the menu
- * button, and the chat is a tab of the sidebar.
+ * button, and the chat is a tab of the sidebar. On a small screen (a phone, docs/android.md) the left column is a drawer
+ * like the sidebar: its button, or a long press on a card, opens it; the table takes the whole width.
  */
 export function GameScreen({ onMenu, onNewGame, onReplays, onOnline }: Props) {
   const update = useApp((s) => s.update);
   const t = useT();
   const [tab, setTab] = useState<Tab>("log");
   const [sidebar, setSidebar] = useState(false);
+  const compact = useCompact();
+  const detailsOpen = useDetailsOpen();
+  const drawer = compact && detailsOpen;
+  const gameRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const root = gameRef.current;
+    return compact && root ? installLongPress(root) : undefined;
+  }, [compact, update === null]);
+  // Leaving the game closes the drawer (it is closed when a game is shown again).
+  useEffect(() => () => setDetailsOpen(false), []);
+  useBack(sidebar, () => setSidebar(false));
+  useBack(drawer, () => setDetailsOpen(false));
   const online = update?.online ?? null;
   const openChat = () => {
     setSidebar(true);
@@ -57,24 +74,36 @@ export function GameScreen({ onMenu, onNewGame, onReplays, onOnline }: Props) {
   const tabs: Tab[] = online ? ["log", "chat", "debug"] : ["log", "debug"];
   const shown = tabs.includes(tab) ? tab : "log";
   return (
-    <div className="sve-game">
-      <aside className="sve-game-left">
-        <div className="sve-game-left-top">
-          <button type="button" onClick={onMenu} data-testid="game-menu">
-            {t("game.menu")}
-          </button>
-          {seat !== null && !update.result ? (
-            <button type="button" className="sve-concede" onClick={concede} data-testid="game-concede">
-              {t("game.concede")}
+    <div className={`sve-game${compact ? " sve-game-compact" : ""}`} ref={gameRef}>
+      {compact && !drawer ? (
+        <button type="button" className="sve-details-show" onClick={() => setDetailsOpen(true)} data-testid="details-show">
+          ☰ {t("game.showDetails")}
+        </button>
+      ) : null}
+      {!compact || drawer ? (
+        <aside className={`sve-game-left${drawer ? " sve-drawer" : ""}`} data-testid="game-left">
+          <div className="sve-game-left-top">
+            <button type="button" onClick={onMenu} data-testid="game-menu">
+              {t("game.menu")}
             </button>
-          ) : null}
-        </div>
-        {online ? <OnlineStatus update={update} chatOpen={sidebar && shown === "chat"} onChat={openChat} onOnline={onOnline} /> : null}
-        <section className="sve-sidebar-card">
-          <CardDetails />
-        </section>
-        {update.watch ? <WatchBar update={update} onExit={onReplays} /> : null}
-      </aside>
+            {seat !== null && !update.result ? (
+              <button type="button" className="sve-concede" onClick={concede} data-testid="game-concede">
+                {t("game.concede")}
+              </button>
+            ) : null}
+            {drawer ? (
+              <button type="button" className="sve-drawer-hide" onClick={() => setDetailsOpen(false)} data-testid="details-hide">
+                {t("game.hideSidebar")}
+              </button>
+            ) : null}
+          </div>
+          {online ? <OnlineStatus update={update} chatOpen={sidebar && shown === "chat"} onChat={openChat} onOnline={onOnline} /> : null}
+          <section className="sve-sidebar-card">
+            <CardDetails />
+          </section>
+          {update.watch ? <WatchBar update={update} onExit={onReplays} /> : null}
+        </aside>
+      ) : null}
       <Table update={update} onNewGame={online ? onOnline : onNewGame} onMenu={onMenu} onReplays={onReplays} />
       {sidebar ? (
         <aside className="sve-game-right" data-testid="game-sidebar">
@@ -139,7 +168,7 @@ function Desync({ at }: { at: string }) {
   const t = useT();
   const save = async () => {
     const replay = await engine.exportReplay();
-    if (replay) downloadJson(`sve-replay-${replay.options.seed}-${replay.inputs.length}.json`, replay);
+    if (replay) await hostApi.saveExport(`sve-replay-${replay.options.seed}-${replay.inputs.length}.json`, replay);
   };
   return (
     <div className="sve-desync" role="alert" data-testid="game-desync">

@@ -1,0 +1,3 @@
+# Windows runs gradlew.bat with cmd, which needs CRLF line ends; gradlew is a shell script.
+*.bat text eol=crlf
+gradlew text eol=lf

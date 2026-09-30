@@ -5,8 +5,13 @@
 // lists every printing (alternate arts) of a card: the same card for the rules (CR 2.1.1; the engine counts copies by
 // name, 6.1.1.4), only the picture differs. Between the files and the leader: the format and its restriction list
 // (formats/); cards go in freely, and a deck that doesn't meet them is only told so when it is saved or the builder is left.
-// Cross Craft decks have two leaders (CR Appendix B-2 6.1.1.1).
+// Cross Craft decks have two leaders (CR Appendix B-2 6.1.1.1). On a small screen (a phone, docs/android.md) the card panel
+// is a drawer and the deck and the pool are two tabs; a tap adds a card of the pool or removes one of the deck, a long
+// press shows the card, and nothing is dragged.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";
+import { useCompact } from "../app/compact";
+import { setDetailsOpen, useDetailsOpen } from "../game/details";
+import { installLongPress } from "../game/long-press";
 import { cardName } from "../app/catalog";
 import { errorText } from "../app/errors";
 import { updateSettings, useSettings } from "../app/settings";
@@ -26,6 +31,7 @@ import { ABILITIES, NO_FILTERS, poolEntries, setsOf, traitsOf, type AbilityTag, 
 import { cardCount, emptyDeck, type DeckFile } from "./format";
 import { LeaderPicker } from "./LeaderPicker";
 import { addCard, clearDeck, copiesOf, copiesOfDefinition, fileNameFor, removeCard, sectionOf, sortDeck, type DeckSection } from "./model";
+import { useBack } from "../app/back";
 
 const POOL_DATA = "application/x-sve-pool";
 const DECK_DATA = "application/x-sve-deck";
@@ -64,6 +70,16 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
   const [told, setTold] = useState<{ problems: FormatProblem[]; then: (() => void) | null } | null>(null);
   const [dropping, setDropping] = useState(false);
   const dirty = JSON.stringify(deck) !== saved;
+  const compact = useCompact();
+  const [tab, setTab] = useState<"deck" | "pool">("deck");
+  const detailsOpen = useDetailsOpen();
+  const drawer = compact && detailsOpen;
+  const rootRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const root = rootRef.current;
+    return compact && root ? installLongPress(root) : undefined;
+  }, [compact]);
+  useEffect(() => () => setDetailsOpen(false), []);
 
   const deckRef = useRef<HTMLDivElement>(null);
   const poolRef = useRef<HTMLDivElement>(null);
@@ -149,6 +165,8 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
   /** The deck's problems in the chosen format (none in unlimited: anything goes). */
   const problems = async (): Promise<FormatProblem[]> => (format === "unlimited" ? [] : checkDeck(deck, format, list, catalog));
   /** Leave the builder (back, or its text editor), telling first what the deck doesn't meet. */
+  useBack(true, () => void leave(() => discardChanges() && onBack()));
+  useBack(drawer, () => setDetailsOpen(false));
   const leave = async (go: () => void) => {
     const found = await problems();
     if (found.length > 0) setTold({ problems: found, then: go });
@@ -241,11 +259,12 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
                 key={`${printing}:${i}`}
                 className="sve-deck-tile"
                 data-printing={printing}
-                draggable
+                draggable={!compact}
                 onDragStart={(e) => startDrag(e, DECK_DATA, JSON.stringify({ section: key, printing }))}
+                onClick={compact ? () => remove(key, printing) : undefined}
                 onContextMenu={(e) => {
                   e.preventDefault();
-                  remove(key, printing);
+                  if (!compact) remove(key, printing);
                 }}
               >
                 <CardTile info={{ def: card?.id ?? printing, printing }} />
@@ -258,18 +277,44 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
     );
   };
 
+  const back = () => void leave(() => discardChanges() && onBack());
   return (
-    <div className="sve-builder">
-      <aside className="sve-game-left">
-        <div className="sve-game-left-top">
-          <button type="button" onClick={() => void leave(() => discardChanges() && onBack())} data-testid="builder-back">
+    <div className={`sve-builder${compact ? " sve-builder-compact" : ""}`} data-tab={compact ? tab : undefined} ref={rootRef}>
+      {compact ? (
+        <nav className="sve-builder-tabs">
+          <button type="button" onClick={back} data-testid="builder-back">
             {t("common.back")}
           </button>
-        </div>
-        <section className="sve-sidebar-card">
-          <CardDetails />
-        </section>
-      </aside>
+          <button type="button" onClick={() => setDetailsOpen(true)} data-testid="details-show">
+            ☰ {t("game.showDetails")}
+          </button>
+          <button type="button" className={tab === "deck" ? "sve-tab-active" : undefined} onClick={() => setTab("deck")} data-testid="builder-tab-deck">
+            {t("builder.tabDeck", { main: cardCount(deck.main), evolve: cardCount(deck.evolve) })}
+          </button>
+          <button type="button" className={tab === "pool" ? "sve-tab-active" : undefined} onClick={() => setTab("pool")} data-testid="builder-tab-pool">
+            {t("builder.tabPool")}
+          </button>
+          {dirty ? <span className="sve-unsaved">{t("builder.unsaved")}</span> : null}
+        </nav>
+      ) : null}
+      {!compact || drawer ? (
+        <aside className={`sve-game-left${drawer ? " sve-drawer" : ""}`}>
+          <div className="sve-game-left-top">
+            {drawer ? (
+              <button type="button" className="sve-drawer-hide" onClick={() => setDetailsOpen(false)} data-testid="details-hide">
+                {t("game.hideSidebar")}
+              </button>
+            ) : (
+              <button type="button" onClick={back} data-testid="builder-back">
+                {t("common.back")}
+              </button>
+            )}
+          </div>
+          <section className="sve-sidebar-card">
+            <CardDetails />
+          </section>
+        </aside>
+      ) : null}
 
       <section className="sve-builder-center">
         <div className="sve-builder-top">
@@ -349,7 +394,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
             <button type="button" onClick={() => void leave(() => discardChanges() && onTextEditor(file))}>
               {t("builder.textEditor")}
             </button>
-            <span className="sve-hint">{t("builder.removeHint")}</span>
+            <span className="sve-hint">{t(compact ? "builder.removeHintTouch" : "builder.removeHint")}</span>
           </div>
         </div>
         <div
@@ -451,7 +496,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
           </div>
           <header className="sve-builder-pool-header">
             <strong>{t(allPrintings ? "builder.resultsPrintings" : "builder.results", { n: results.length })}</strong>
-            <span className="sve-hint">{t("builder.addHint")}</span>
+            <span className="sve-hint">{t(compact ? "builder.addHintTouch" : "builder.addHint")}</span>
           </header>
         </div>
         {/* data-stale: the pool still shows the previous filters (they are applied in the background, useDeferredValue). */}
@@ -468,7 +513,14 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
             const own = copiesOfDefinition(deck, [printing]);
             const alt = printing !== card.printings[0];
             return (
-              <div key={printing} className="sve-pool-tile" draggable onDragStart={(e) => startDrag(e, POOL_DATA, printing)} onClick={() => add(card, printing)} data-printing={printing}>
+              <div
+                key={printing}
+                className="sve-pool-tile"
+                draggable={!compact}
+                onDragStart={(e) => startDrag(e, POOL_DATA, printing)}
+                onClick={() => add(card, printing)}
+                data-printing={printing}
+              >
                 <CardTile info={{ def: card.id, printing }} />
                 {total > 0 ? <PoolCount own={allPrintings ? own : total} total={total} /> : null}
                 {allPrintings && card.printings.length > 1 ? <span className={`sve-printing-label${alt ? " sve-alt" : ""}`}>{printing}</span> : null}

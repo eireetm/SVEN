@@ -30,15 +30,21 @@ function engineFingerprint(): string {
 
 // `npm run dev:gui` (repository root) starts this dev server and opens the browser (its --open flag; a plain `vite`, as the
 // end-to-end tests run it, opens nothing). SVE_GUI_PORT changes the port (default 5173, or the next free one).
-export default defineConfig({
-  plugins: [react(), hostPlugin()],
-  server: {
-    port: Number(process.env.SVE_GUI_PORT ?? 5173),
-  },
-  worker: { format: "es" },
-  build: { target: "es2022", chunkSizeWarningLimit: 10_000 },
-  define: { __ENGINE_FINGERPRINT__: JSON.stringify(engineFingerprint()) },
-  // Online play loads when first opened (src/online): its libraries are prepared when the server starts, else the dev
-  // server finds them only then and reloads every open page.
-  optimizeDeps: { include: ["trystero", "@trystero-p2p/mqtt", "@trystero-p2p/torrent"] },
+// `vite build --mode android` builds the Android app's web part (docs/android.md): without public/ (the player's own files
+// are on the phone, in the app's folder), into dist-android/ for Capacitor.
+export default defineConfig(({ mode }) => {
+  const android = mode === "android";
+  return {
+    plugins: [react(), hostPlugin()],
+    server: {
+      port: Number(process.env.SVE_GUI_PORT ?? 5173),
+    },
+    worker: { format: "es" },
+    publicDir: android ? false : "public",
+    build: { target: "es2022", chunkSizeWarningLimit: 10_000, outDir: android ? "dist-android" : "dist" },
+    define: { __ENGINE_FINGERPRINT__: JSON.stringify(engineFingerprint()) },
+    // Online play loads when first opened (src/online): its libraries are prepared when the server starts, else the dev
+    // server finds them only then and reloads every open page.
+    optimizeDeps: { include: ["trystero", "@trystero-p2p/mqtt", "@trystero-p2p/torrent"] },
+  };
 });

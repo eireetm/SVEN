@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The game's colors (packages/gui/src/styles/app.css): the dark blue backdrop and the gold of the icon. -->
+    <color name="sve_background">#0E1624</color>
+    <color name="sve_gold">#C9A227</color>
+</resources>

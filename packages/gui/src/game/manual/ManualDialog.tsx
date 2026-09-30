@@ -15,6 +15,7 @@ import { useT } from "../../i18n";
 import { COUNTER_NAMES, counterName } from "../../i18n/counters";
 import { actionsFor, answerFor, attackTargets, openManual, sendAnswer, sendManual, useInteraction } from "../interaction";
 import { abilityLabel, actionLabel, cardLabel, playerLabel } from "../labels";
+import { useBack } from "../../app/back";
 
 const DESTINATIONS: readonly ManualDestination[] = ["hand", "field", "ex", "cemetery", "banished", "deckTop", "deckBottom"];
 
@@ -56,6 +57,7 @@ export function ManualDialog({ update }: { update: GameUpdate }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+  useBack(target !== null, () => openManual(null));
   // A card that moved is a new card (CR 4.1.4): the window closes.
   const gone = target?.kind === "card" && !findCard(update.view, target.card);
   useEffect(() => {

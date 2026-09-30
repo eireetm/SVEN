@@ -16,6 +16,7 @@ import { setHighlight } from "../focus";
 import { cardLabel, playerLabel } from "../labels";
 import { optionText } from "../options";
 import { Arrow, cardCenter, type Point } from "./Arrow";
+import { useBack } from "../../app/back";
 
 export function QuickAnnouncement({ update }: { update: GameUpdate }) {
   const announcement = update.announcement;
@@ -66,6 +67,7 @@ function AnnouncementWindow({ update, announcement: a }: { update: GameUpdate; a
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
+  useBack(!update.watch, ok);
 
   if (!catalog) return null;
   const item = (name: string) => t("announce.item", { name });

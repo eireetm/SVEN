@@ -37,6 +37,7 @@ import {
   type OnlinePhase,
 } from "../net/online";
 import { Chat } from "./Chat";
+import { useBack } from "../app/back";
 
 /** Who goes first, as the game setup offers it (the rules' way first). */
 const TURN_ORDERS: readonly TurnOrder[] = ["choose", "random", "player1", "player2"];
@@ -68,7 +69,7 @@ function CodeBox({ code, large = false, testId }: { code: string; large?: boolea
   const t = useT();
   const [copied, setCopied] = useState(false);
   const copy = () =>
-    void navigator.clipboard.writeText(code).then(
+    void hostApi.copyText(code).then(
       () => setCopied(true),
       () => setCopied(false),
     );
@@ -110,6 +111,7 @@ export function OnlineScreen({ onBack, onGame, onEditDecks }: Props) {
     else if (kind === "closed" && !going) leave();
     onBack();
   };
+  useBack(true, back);
   return (
     <div className="sve-menu">
       <div className="sve-menu-panel sve-online" data-testid="online" data-phase={online.phase.kind}>
@@ -291,7 +293,7 @@ function NetworkCheckPanel() {
   const noStun = result.stun.every((s) => !s.ok);
   const verdict = noRelay ? t("online.checkNoRelays") : noStun ? t("online.checkNoStun") : t("online.checkOk");
   const copy = () =>
-    void navigator.clipboard.writeText([...lines, verdict].join("\n")).then(
+    void hostApi.copyText([...lines, verdict].join("\n")).then(
       () => setCopied(true),
       () => setCopied(false),
     );

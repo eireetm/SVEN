@@ -6,6 +6,14 @@ import { setDrag } from "../interaction";
 
 const DRAG_START = 6;
 
+/** A long press opened the card's details (game/long-press.ts): the press going on neither clicks nor drags. */
+let longPressed = false;
+
+export function markLongPress(): void {
+  longPressed = true;
+  setDrag(null);
+}
+
 export interface PointerOptions {
   card: CardId;
   /** What dragging this card does, or null if it can't be dragged. */
@@ -39,7 +47,9 @@ export function pressCard(e: PointerEvent<HTMLElement>, options: PointerOptions)
   const startY = e.clientY;
   let dragging = false;
   let over: CardId | "field" | null = null;
+  longPressed = false;
   const move = (ev: globalThis.PointerEvent) => {
+    if (longPressed) return;
     if (!dragging) {
       if (!options.drag || Math.hypot(ev.clientX - startX, ev.clientY - startY) < DRAG_START) return;
       dragging = true;
@@ -52,7 +62,8 @@ export function pressCard(e: PointerEvent<HTMLElement>, options: PointerOptions)
     window.removeEventListener("pointerup", stop);
     window.removeEventListener("pointercancel", stop);
     window.removeEventListener("keydown", escape);
-    const cancelled = ev.type === "pointercancel" || ev.type === "keydown";
+    const cancelled = ev.type === "pointercancel" || ev.type === "keydown" || longPressed;
+    longPressed = false;
     if (dragging) {
       setDrag(null);
       if (!cancelled && over) options.onDrop(over);

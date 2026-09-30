@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The launch screen (styles.xml AppTheme.NoActionBarLaunch): the icon on the game's dark blue. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/sve_background" />
+    <item
+        android:width="160dp"
+        android:height="160dp"
+        android:drawable="@drawable/ic_launcher_sve"
+        android:gravity="center" />
+</layer-list>

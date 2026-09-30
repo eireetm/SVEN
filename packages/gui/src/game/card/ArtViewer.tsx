@@ -2,6 +2,7 @@ import { useEffect, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { useT } from "../../i18n";
 import { CardArt } from "./CardArt";
+import { useBack } from "../../app/back";
 
 export interface ArtFace {
   def: string;
@@ -23,6 +24,7 @@ export function ArtViewer({ faces, onClose }: { faces: readonly ArtFace[]; onClo
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+  useBack(true, onClose);
   return createPortal(
     <div className="sve-modal-backdrop sve-art-viewer" style={{ "--faces": faces.length } as CSSProperties} onClick={onClose} role="dialog" aria-label={faces[0]?.name} title={t("game.close")} data-testid="art-viewer">
       {faces.map((face) => (

@@ -2896,3 +2896,254 @@ option {
   margin: 0;
   text-align: center;
 }
+
+/* ---------------------------------------------------------------------------------------------------------------------
+   Small screens: a phone held sideways (app/compact.ts, docs/android.md). The same query as COMPACT_QUERY; the table
+   switches by its own height (board/layout.ts COMPACT_HEIGHT, data-compact).
+   --------------------------------------------------------------------------------------------------------------------- */
+@media (max-height: 560px), (max-width: 760px) {
+  /* No fixed left column: the game's card panel is a drawer, and windows dim the whole screen. */
+  :root {
+    --sve-left-width: 0px;
+  }
+
+  /* The menus: smaller, and they scroll when still too tall (centered while they fit). */
+  .sve-menu {
+    overflow-y: auto;
+    align-items: flex-start;
+    padding: 8px 0;
+  }
+
+  .sve-menu > * {
+    margin: auto;
+  }
+
+  .sve-menu-panel {
+    padding: 14px 24px;
+    gap: 8px;
+  }
+
+  .sve-menu-title {
+    font-size: 24px;
+  }
+
+  .sve-menu-subtitle {
+    margin: 0;
+  }
+
+  .sve-menu-buttons {
+    gap: 6px;
+  }
+
+  .sve-menu-button {
+    padding: 7px 16px;
+    font-size: 15px;
+  }
+
+  .sve-setup {
+    max-height: none;
+    padding: 12px 16px;
+    gap: 10px;
+  }
+}
+
+/* The game on a small screen: the table takes the whole width; the card panel is a drawer over its left side. */
+.sve-game.sve-game-compact {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.sve-game-compact .sve-game-left.sve-drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 60;
+  width: min(340px, 44vw);
+  /* Nearly opaque: the table's panels would show through the card text. */
+  background: rgb(16 22 32 / 0.96);
+  border-right: 1px solid var(--sve-border);
+  box-shadow: 12px 0 30px #0008;
+}
+
+.sve-drawer-hide {
+  margin-left: auto;
+}
+
+.sve-details-show {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  z-index: 50;
+}
+
+.sve-game-compact .sve-sidebar-show {
+  top: 6px;
+  right: 8px;
+}
+
+/* A finger on the table: no scrolling, zooming or long-press menu of the browser (dragging a card is the table's). */
+.sve-game-compact .sve-table {
+  touch-action: none;
+  -webkit-touch-callout: none;
+}
+
+/* The compact table (board/layout.ts): the mats take the height; on the left the opponent's panel (top), the status
+   (middle) and yours (bottom); on the right the buttons (top) and your hand (bottom). */
+.sve-table[data-compact] .sve-player-panel {
+  width: min(170px, var(--side-width));
+  padding: 4px 8px;
+  gap: 1px;
+  font-size: 10px;
+}
+
+.sve-table[data-compact] .sve-player-defense {
+  font-size: 20px;
+}
+
+.sve-table[data-compact] .sve-player-opponent {
+  right: calc(100% + 8px);
+  top: 30px;
+  bottom: auto;
+}
+
+.sve-table[data-compact] .sve-player-own {
+  left: auto;
+  right: calc(100% + 8px);
+  top: auto;
+  bottom: 0;
+}
+
+.sve-table[data-compact] .sve-center-status {
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(170px, var(--side-width));
+  padding: 4px 8px;
+  font-size: 10px;
+}
+
+.sve-table[data-compact] .sve-center-turn strong {
+  font-size: 12px;
+}
+
+.sve-table[data-compact] .sve-center-prompt {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sve-table[data-compact] .sve-center-actions {
+  left: calc(100% + 8px);
+  top: 30px;
+  transform: none;
+  width: min(200px, var(--side-width));
+}
+
+.sve-table[data-compact] .sve-center-actions button {
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.sve-table[data-compact] .sve-hand-own {
+  position: absolute;
+  right: 6px;
+  bottom: 2px;
+  z-index: 5;
+  width: var(--side-width);
+  height: var(--hand-height);
+}
+
+.sve-table[data-compact] .sve-announce {
+  width: min(240px, calc(var(--side-width) - 12px));
+  padding: 8px;
+  gap: 6px;
+}
+
+.sve-table[data-compact] .sve-result-panel {
+  padding: 14px 20px;
+}
+
+/* Windows on a small screen: a little smaller and never taller than the screen. */
+.sve-game-compact .sve-decision-dialog {
+  --sve-card-width: 64px;
+  width: min(760px, calc(100% - 24px));
+  max-height: calc(100% - 20px);
+  padding: 10px 12px 8px;
+  gap: 6px;
+}
+
+.sve-game-compact .sve-modal {
+  max-width: 96vw;
+  max-height: 92vh;
+}
+
+/* The deck builder on a small screen: a tab bar (back, the card drawer, the deck, the pool) over the tab shown. */
+.sve-builder.sve-builder-compact {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.sve-builder-compact > .sve-builder-center,
+.sve-builder-compact > .sve-builder-pool {
+  grid-row: 2;
+  grid-column: 1;
+}
+
+.sve-builder-compact[data-tab="deck"] > .sve-builder-pool,
+.sve-builder-compact[data-tab="pool"] > .sve-builder-center {
+  display: none;
+}
+
+.sve-builder-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: var(--sve-panel);
+  border-bottom: 1px solid var(--sve-border);
+}
+
+/* The deck tab scrolls as a whole: its buttons, then the deck. */
+.sve-builder-compact .sve-builder-center {
+  overflow-y: auto;
+}
+
+.sve-builder-compact .sve-builder-deck {
+  flex: none;
+  overflow: visible;
+}
+
+.sve-builder-compact .sve-builder-top {
+  padding: 6px 8px;
+  gap: 6px;
+}
+
+.sve-builder-compact .sve-builder-pool {
+  border-left: none;
+}
+
+.sve-builder-compact .sve-builder-filters {
+  padding: 6px 8px;
+}
+
+/* The drawer of the card panel, in a game or the deck builder: over the left side. */
+.sve-builder-compact .sve-game-left.sve-drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 60;
+  width: min(340px, 44vw);
+  background: rgb(16 22 32 / 0.96);
+  border-right: 1px solid var(--sve-border);
+  box-shadow: 12px 0 30px #0008;
+}
+
+.sve-builder-compact .sve-deck-tile,
+.sve-builder-compact .sve-pool-tile {
+  cursor: pointer;
+  -webkit-touch-callout: none;
+}
