@@ -87,7 +87,9 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
   const deckWidth = useElementWidth(deckRef);
   const poolWidth = useElementWidth(poolRef, 400);
   const deckCard = Math.max(40, Math.floor((deckWidth - (DECK_COLUMNS - 1) * GAP) / DECK_COLUMNS));
-  const poolColumns = Math.max(2, Math.floor((poolWidth + GAP) / (104 + GAP)));
+  // A phone shows a few more, smaller cards a row (its pool tab scrolls as a whole, the filters too).
+  const poolMin = compact ? 92 : 104;
+  const poolColumns = Math.max(2, Math.floor((poolWidth + GAP) / (poolMin + GAP)));
   const poolCard = Math.floor((poolWidth - (poolColumns - 1) * GAP) / poolColumns);
 
   const refresh = async (): Promise<DeckFileEntry[]> => {
@@ -271,7 +273,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
               </div>
             );
           })}
-          {copies.length === 0 ? <div className="sve-deck-empty">{t("builder.emptySection")}</div> : null}
+          {copies.length === 0 ? <div className="sve-deck-empty">{t(compact ? "builder.emptySectionTouch" : "builder.emptySection")}</div> : null}
         </div>
       </section>
     );

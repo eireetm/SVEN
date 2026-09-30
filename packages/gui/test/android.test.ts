@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { goBack, pushBack } from "../src/app/back";
 import { computeLayout, MAT_BOX_HEIGHT, WIDE_WIDTH } from "../src/game/board/layout";
+import { mergeResources } from "../src/host/bundled";
 import { resourcePathInZip } from "../src/host/zip-paths";
 
-// The Android app (docs/android.md): where the files of an imported zip go, the back button, the table on a phone.
+// The Android app (docs/android.md): where the files of an imported zip go, the resources built into a release, the back
+// button, the table on a phone.
 
 describe("importing resources from a zip", () => {
   it("puts the resource folders into public/, however the zip holds them, and nothing else", () => {
@@ -19,6 +21,23 @@ describe("importing resources from a zip", () => {
     for (const name of ["images/", "readme.txt", "MyPack/readme.txt", "images/.DS_Store", "__MACOSX/images/cards/a.png", "../images/cards/a.png", "images/../../x.png", "A/B/images/cards/a.png", "images"]) {
       expect(resourcePathInZip(name)).toBeNull();
     }
+  });
+});
+
+describe("resources built into the app", () => {
+  it("are used where the player has no file of the same name in the same folder, whatever its type", () => {
+    const own = ["images/cards/BP01-001.png", "textures/menu/background_m.jpg", "theme.css"];
+    const bundled = ["audio/bgm/menu.wav", "images/cards/BP01-001.webp", "images/cards/BP01-002.webp", "textures/menu/background_m.png"];
+    expect(mergeResources(own, bundled)).toEqual([
+      "audio/bgm/menu.wav",
+      "images/cards/BP01-001.png",
+      "images/cards/BP01-002.webp",
+      "textures/menu/background_m.jpg",
+      "theme.css",
+    ]);
+    // None built in (a plain build), or no files of the player's.
+    expect(mergeResources(own, [])).toEqual([...own].sort());
+    expect(mergeResources([], bundled)).toEqual([...bundled].sort());
   });
 });
 

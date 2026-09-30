@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+// A release is signed with the key a properties file names (storeFile, relative to that file; storePassword; keyAlias;
+// keyPassword). The file and the key stay outside the repository; scripts/android-apk.mjs --release passes its path in
+// SVE_ANDROID_SIGNING (docs/android.md). Without it, a release build is left unsigned.
+def signingFile = System.getenv('SVE_ANDROID_SIGNING') ? file(System.getenv('SVE_ANDROID_SIGNING')) : null
+
 android {
     namespace = "local.sve.next"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -8,7 +13,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,10 +21,23 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (signingFile) {
+            release {
+                def key = new Properties()
+                signingFile.withInputStream { key.load(it) }
+                storeFile new File(signingFile.parentFile, key.getProperty('storeFile'))
+                storePassword key.getProperty('storePassword')
+                keyAlias key.getProperty('keyAlias')
+                keyPassword key.getProperty('keyPassword')
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (signingFile) signingConfig signingConfigs.release
         }
     }
 }

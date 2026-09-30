@@ -3121,8 +3121,15 @@ option {
   gap: 6px;
 }
 
+/* The pool tab scrolls as a whole too: the filters scroll away above the cards, which then have the whole height. */
 .sve-builder-compact .sve-builder-pool {
   border-left: none;
+  overflow-y: auto;
+}
+
+.sve-builder-compact .sve-builder-pool-grid {
+  flex: none;
+  overflow: visible;
 }
 
 .sve-builder-compact .sve-builder-filters {

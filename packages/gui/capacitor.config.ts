@@ -6,6 +6,12 @@ const config: CapacitorConfig = {
   appId: "local.sve.next",
   appName: "SVE NEXT",
   webDir: "dist-android",
+  android: {
+    // The oldest WebView (the Chrome inside it) the app runs on: CSS aspect-ratio (88), Object.hasOwn in online play (93),
+    // the "deflate-raw" compression of connection codes (103). With an older one, the error page below says so.
+    minWebViewVersion: 103,
+  },
+  server: { errorPath: "webview-old.html" },
 };
 
 export default config;

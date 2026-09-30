@@ -14,7 +14,8 @@ type ResourceStatus =
 
 /**
  * The Android app: where the player's own files go (the app's public/ folder, copied over a USB cable), importing them
- * from a zip file, and reading the folder again after copying (docs/android.md).
+ * from a zip file, and reading the folder again after copying; how many resources the app has of its own, if any
+ * (docs/android.md).
  */
 function ResourcesSection() {
   const t = useT();
@@ -40,6 +41,7 @@ function ResourcesSection() {
       <h3>{t("settings.resources")}</h3>
       <p className="sve-settings-folder">{t("settings.resourcesFolder", { folder: hostApi.resourceFolder ?? "" })}</p>
       <p className="sve-hint">{t("settings.resourcesHelp")}</p>
+      {hostApi.bundledResources ? <p className="sve-hint">{t("settings.resourcesBundled", { n: hostApi.bundledResources })}</p> : null}
       <div className="sve-settings-buttons">
         <label className={`sve-file-button${busy ? " sve-disabled" : ""}`}>
           {t("settings.resourcesImport")}

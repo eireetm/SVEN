@@ -8,6 +8,14 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // In the Android app, when the app's code can't even be read (a syntax error before main.tsx starts: a WebView too
+      // old for it), show the page that says so rather than a blank screen (docs/android.md). Old JavaScript, on purpose.
+      window.addEventListener("error", function (e) {
+        if (window.sveStarted || !window.Capacitor || !/SyntaxError/.test(String(e && e.message))) return;
+        location.replace("/webview-old.html");
+      });
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

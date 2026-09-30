@@ -106,6 +106,10 @@ test("a phone: the deck builder's deck and pool tabs, tap to add or remove, hold
   await page.getByTestId("builder-tab-pool").tap();
   await expect(page.getByTestId("builder-pool")).toBeVisible();
   await expect(page.getByTestId("builder-deck")).toBeHidden();
+  // The pool tab scrolls as a whole: the filters go up out of sight, the cards get the screen.
+  await page.evaluate(`document.querySelector(".sve-builder-pool").scrollBy(0, 400)`);
+  await expect.poll(async () => (await page.getByTestId("builder-search").boundingBox())?.y ?? 0).toBeLessThan(0);
+  await page.evaluate(`document.querySelector(".sve-builder-pool").scrollTo(0, 0)`);
   await page.locator(".sve-pool-tile").first().tap();
   await expect(deckTab).toHaveText("Deck 40 + 8");
   // A long press reads the card: nothing is added.

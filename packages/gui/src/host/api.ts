@@ -68,6 +68,8 @@ export interface Host {
   copyText(text: string): Promise<void>;
   /** The Android app: the folder the player copies their own files into (null elsewhere: public/ of the project). */
   readonly resourceFolder: string | null;
+  /** The Android app: how many resources are built into it (a release with resources; host/bundled.ts). */
+  readonly bundledResources?: number;
   /** The Android app: import resources from a zip file into that folder. */
   importResources?(file: File, progress: (written: number) => void): Promise<ImportResult>;
 }
@@ -154,6 +156,9 @@ export const hostApi: Host = {
   },
   get resourceFolder() {
     return current.resourceFolder;
+  },
+  get bundledResources() {
+    return current.bundledResources;
   },
   info: () => current.info(),
   resources: () => current.resources(),

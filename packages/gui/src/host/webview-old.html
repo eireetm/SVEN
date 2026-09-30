@@ -1,0 +1,66 @@
+<!doctype html>
+<!--
+  The Android app's page for a phone whose WebView is too old to run it (docs/android.md): Capacitor opens it instead of
+  the app when the WebView is older than capacitor.config.ts minWebViewVersion, and index.html sends the app here when its
+  code can't be read at all. vite.config.ts copies it into the Android build. Plain HTML and old JavaScript, on purpose.
+-->
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SVE NEXT</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #0e1624;
+        color: #e6ebf2;
+        font-family: sans-serif;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      main {
+        max-width: 720px;
+        padding: 16px 24px;
+      }
+      section {
+        margin: 0 0 16px;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 17px;
+        color: #c9a227;
+      }
+      p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section lang="zh">
+        <h1>无法打开：这台手机的 WebView 版本太旧</h1>
+        <p>本 App 需要 Android System WebView（或 Chrome）103 以上的版本，这台手机是 <span class="v">?</span>。请在应用商店（Google Play 或手机自带的应用商店）更新“Android System WebView”，然后重新打开本 App。</p>
+      </section>
+      <section lang="en">
+        <h1>Can't start: this phone's WebView is too old</h1>
+        <p>This app needs Android System WebView (or Chrome) 103 or later; this phone has <span class="v">?</span>. Update "Android System WebView" in the app store (Google Play or your phone's own store), then open the app again.</p>
+      </section>
+      <section lang="ja">
+        <h1>起動できません：このスマホの WebView が古すぎます</h1>
+        <p>このアプリには Android System WebView（または Chrome）103 以降が必要です（このスマホは <span class="v">?</span>）。ストア（Google Play または端末のストア）で「Android System WebView」を更新してから、もう一度開いてください。</p>
+      </section>
+    </main>
+    <script>
+      var match = navigator.userAgent.match(/Chrome\/(\d+)/);
+      var spans = document.getElementsByClassName("v");
+      for (var i = 0; i < spans.length; i++) spans[i].textContent = match ? match[1] : "?";
+    </script>
+  </body>
+</html>

@@ -5,7 +5,8 @@
 //   decks/    deck files; the sample decks are put into decks/samples/ at the start when missing;
 //   replays/  saved replays;
 //   exports/  files handed to the person (a bug report file), shared from there.
-// No assets folder: card images are only the player's own. Loaded by main.tsx in the Android build only.
+// No assets folder: card images are only the player's own, or those built into the app (a release with resources,
+// host/bundled.ts). Loaded by main.tsx in the Android build only.
 import { App } from "@capacitor/app";
 import { Clipboard } from "@capacitor/clipboard";
 import { Capacitor } from "@capacitor/core";
@@ -18,6 +19,7 @@ import type { SeatController } from "../engine/protocol";
 import { parseReplay } from "../replays/replay-format";
 import { ownCardArtUrl } from "../resources/lookup";
 import type { DeckFileEntry, Host, HostInfo, ImportResult, ReplayFileEntry } from "./api";
+import { mergeResources } from "./bundled";
 import { resourcePathInZip } from "./zip-paths";
 
 const DIR = Directory.External;
@@ -166,6 +168,16 @@ async function importZip(file: File, progress: (written: number) => void): Promi
   return { written, skipped };
 }
 
+/** The list of the resources built into the app (vite.config.ts writes it; empty without them). */
+async function bundledResources(): Promise<string[]> {
+  try {
+    const res = await fetch("/bundled-resources.json");
+    return res.ok ? ((await res.json()) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
 /** The app's folder as the person finds it with a file manager or over USB ("Android/data/local.sve.next/files"). */
 function shownFolder(uri: string): string {
   const path = decodeURIComponent(uri.replace(/^file:\/\//, ""));
@@ -182,11 +194,17 @@ export async function createAndroidHost(): Promise<Host> {
   }
   const root = (await Filesystem.getUri({ path: "", directory: DIR })).uri.replace(/\/$/, "");
   const folder = shownFolder(root);
-  const url = (path: string) => Capacitor.convertFileSrc(`${root}/${path.split("/").map(encodeURIComponent).join("/")}`);
+  const encode = (path: string) => path.split("/").map(encodeURIComponent).join("/");
+  const url = (path: string) => Capacitor.convertFileSrc(`${root}/${encode(path)}`);
+  // The built-in resources are served from the app itself; the player's files (as last listed) go before them.
+  const bundled = await bundledResources();
+  const builtIn = new Set(bundled);
+  let own = new Set<string>();
 
   return {
     platform: "android",
     resourceFolder: `${folder}/public`,
+    bundledResources: bundled.length,
 
     info: async (): Promise<HostInfo> => ({
       assetsDir: `${folder}/public/images/cards`,
@@ -197,7 +215,11 @@ export async function createAndroidHost(): Promise<Host> {
       misc: [],
     }),
 
-    resources: async () => (await walk("public")).map((f) => f.path).sort(),
+    resources: async () => {
+      const files = (await walk("public")).map((f) => f.path);
+      own = new Set(files);
+      return mergeResources(files, bundled);
+    },
 
     listDecks: async () => {
       const out: DeckFileEntry[] = [];
@@ -240,7 +262,7 @@ export async function createAndroidHost(): Promise<Host> {
 
     deleteReplay: async (file) => Filesystem.deleteFile({ path: replayPath(file), directory: DIR }),
 
-    resourceUrl: (path) => url(`public/${path}`),
+    resourceUrl: (path) => (builtIn.has(path) && !own.has(path) ? `/${encode(path)}` : url(`public/${path}`)),
 
     // No assets folder: the host lists no Misc images, so none is asked for.
     miscUrl: () => "",
