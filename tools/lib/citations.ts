@@ -60,7 +60,7 @@ export interface ClauseList {
 }
 
 export function loadClauses(root: string): ClauseList {
-  return JSON.parse(readFileSync(join(root, "docs", "cr-clauses.json"), "utf8")) as ClauseList;
+  return JSON.parse(readFileSync(join(root, "tools", "data", "cr-clauses.json"), "utf8")) as ClauseList;
 }
 
 export function compareClauses(a: string, b: string): number {

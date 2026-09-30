@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 export interface HostConfig {
   /** The GUI package (packages/gui). */
   root: string;
-  /** Customizable resources, served as-is at "/" (images, textures, audio, fonts, theme.css — public/README.md). */
+  /** Customizable resources, served as-is at "/" (images, textures, audio, fonts, theme.css — README "Custom resources"). */
   publicDir: string;
   /** Deck files (decks/*.json, any sub-folder). */
   decksDir: string;

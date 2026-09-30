@@ -12,7 +12,7 @@ interface Props {
 }
 
 /**
- * A card's picture (the player's own first, then the scraped one, public/README.md). Without one: the "unknown" picture
+ * A card's picture (the player's own first, then the scraped one, README "Custom resources"). Without one: the "unknown" picture
  * (Misc/unknown) with the card's name on it, or just the name.
  */
 export function CardArt({ printing, def, back = false, name, subtitle }: Props) {

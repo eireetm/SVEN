@@ -1,4 +1,4 @@
-// The look of the game comes in three layers, the first one found wins (public/README.md):
+// The look of the game comes in three layers, the first one found wins (README "Custom resources"):
 //  1. the player's own files in public/ (images, textures, sounds, fonts, theme.css);
 //  2. the local assets folder of this machine: card images, and Misc/ — field (one player's playmat; the opponent's is the
 //     same turned 180 degrees), back and back_e (the card backs of the main deck and the evolve deck), unknown (for any

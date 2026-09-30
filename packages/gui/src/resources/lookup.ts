@@ -1,4 +1,4 @@
-// Where each picture and sound comes from (public/README.md): the player's own file in public/ first, then the Misc
+// Where each picture and sound comes from (README "Custom resources"): the player's own file in public/ first, then the Misc
 // image of the local assets folder, else nothing, and the built-in style shows. Pure lookups in the lists the host gave
 // (resources.ts loads them and applies the theme), so they also run in tests, without a browser.
 import type { CardInfo } from "../engine/protocol";

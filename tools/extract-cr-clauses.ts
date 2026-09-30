@@ -1,6 +1,6 @@
 /**
  * Extract the clause numbers (and section titles) of the Comprehensive Rules PDF into
- * docs/cr-clauses.json. Only numbers and short titles are stored, not the rules text.
+ * tools/data/cr-clauses.json. Only numbers and short titles are stored, not the rules text.
  *
  *   npm run rules:clauses                       # newest ../rules/*.pdf
  *   npm run rules:clauses -- --pdf <file> --pdftotext <exe>
@@ -71,5 +71,5 @@ const out = {
   sections: Object.fromEntries(Object.entries(sections).sort(([a], [b]) => byNumber(a, b))),
   clauses: [...clauses].sort(byNumber),
 };
-writeFileSync(join(repoRoot, "docs", "cr-clauses.json"), JSON.stringify(out, null, 1) + "\n", "utf8");
-console.log(`CR ${version}: ${out.clauses.length} clause numbers, ${Object.keys(out.sections).length} sections -> docs/cr-clauses.json`);
+writeFileSync(join(repoRoot, "tools", "data", "cr-clauses.json"), JSON.stringify(out, null, 1) + "\n", "utf8");
+console.log(`CR ${version}: ${out.clauses.length} clause numbers, ${Object.keys(out.sections).length} sections -> tools/data/cr-clauses.json`);

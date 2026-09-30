@@ -6,3 +6,5 @@ dist/
 test-results/
 playwright-report/
 dist-android/
+# The project's notes (docs/) stay on the developer's machine: the README says what a user needs.
+docs/

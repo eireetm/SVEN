@@ -5,7 +5,7 @@
  *
  *   npm run rules:index
  */
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { CITATION_DIRS, compareClauses, loadClauses, scanCitations, type Citation } from "./lib/citations";
@@ -70,6 +70,8 @@ for (const clause of clauses) {
   if (src.length) lines.push(`  - 实现: ${dedupe(src).join(", ")}`);
   if (test.length) lines.push(`  - 测试: ${dedupe(test).join(", ")}`);
 }
+// docs/ holds the local notes (not in the repository): made when missing.
+mkdirSync(join(repoRoot, "docs"), { recursive: true });
 writeFileSync(join(repoRoot, "docs", "rules-index.md"), lines.join("\n") + "\n", "utf8");
 console.log(`${clauses.length} clauses cited, ${unknown.length} unknown -> docs/rules-index.md`);
 

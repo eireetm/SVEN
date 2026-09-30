@@ -166,6 +166,8 @@ const report = [
   ...(warnings.length ? warnings.map((w) => `- ${w}`) : ["（无）"]),
   "",
 ];
+// docs/ holds the local notes (not in the repository): made when missing.
+mkdirSync(join(repoRoot, "docs"), { recursive: true });
 writeFileSync(join(repoRoot, "docs", "card-data-report.md"), report.join("\n"), "utf8");
 console.log(
   `${textVariants.length} English variants, ${noEnglishText.length} without English, ${officialMismatches.length} official mismatches, ${japaneseVariants.length} Japanese variants, ` +

@@ -1,7 +1,7 @@
 import type { CardLang } from "../../app/settings";
 
 // Labels of the {[...]} icons of card text, in the card text's language. A picture in public/textures/icons/<name>.png
-// replaces a label (public/README.md).
+// replaces a label (README "Custom resources").
 const LABELS: Record<CardLang, Record<string, string>> = {
   en: {
     fanfare: "Fanfare",

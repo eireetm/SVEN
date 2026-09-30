@@ -1,6 +1,6 @@
 // The Android app's host (docs/android.md). Its files live in the app's own folder on the phone,
 // Android/data/local.sve.next/files/:
-//   public/   the player's own pictures, sounds, fonts and theme.css (public/README.md): copied there over a USB cable, or
+//   public/   the player's own pictures, sounds, fonts and theme.css (README "Custom resources"): copied there over a USB cable, or
 //             imported from a zip file in the settings;
 //   decks/    deck files; the sample decks are put into decks/samples/ at the start when missing;
 //   replays/  saved replays;
@@ -24,7 +24,7 @@ import { resourcePathInZip } from "./zip-paths";
 
 const DIR = Directory.External;
 
-/** public/'s folders (public/README.md), made at the start so the player sees where to copy their files. */
+/** public/'s folders (README "Custom resources"), made at the start so the player sees where to copy their files. */
 const PUBLIC_FOLDERS = ["audio/bgm", "audio/sfx", "audio/cards", "images/cards", "images/backs", "textures/board", "textures/menu", "textures/icons", "fonts"];
 
 /** The sample decks (decks/samples), in the app. */

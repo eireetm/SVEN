@@ -1,7 +1,7 @@
 // Importing the player's resources from a zip file (the Android app, docs/android.md): where each file of the zip goes in
 // public/. Pure: tested without a phone (test/android-host.test.ts).
 
-/** The folders of public/ a zip may fill (public/README.md), and its style sheet. */
+/** The folders of public/ a zip may fill (README "Custom resources"), and its style sheet. */
 const FOLDERS = ["audio", "images", "textures", "fonts"];
 
 const isResource = (parts: readonly string[]): boolean =>

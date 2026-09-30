@@ -1,6 +1,6 @@
 /*
  * The built-in look. Every size and color is a variable or a class (sve-...) so that public/theme.css (loaded after this
- * file) can change anything; public/theme.example.css shows the main variables.
+ * file) can change anything; README "Custom resources" shows the main variables.
  *
  * As in YGOPro, the interface is a little see-through, so it never hides the background picture completely: panels,
  * windows, buttons and fields at 224/255 (--sve-ui-alpha), the deck builder's card areas at 64/255 (--sve-area-alpha).

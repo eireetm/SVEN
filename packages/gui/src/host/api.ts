@@ -35,7 +35,7 @@ export interface ReplayFileEntry {
 /** What importing the player's resources from a zip file did (the Android app, settings "资源"). */
 export interface ImportResult {
   written: number;
-  /** Files of the zip outside the resource folders (public/README.md), not imported. */
+  /** Files of the zip outside the resource folders (README "Custom resources"), not imported. */
   skipped: number;
 }
 
