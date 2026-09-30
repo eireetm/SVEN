@@ -8,7 +8,7 @@
 
 ## 中文
 
-《Shadowverse: Evolve》（影之诗：进化对决）实体卡牌游戏的非官方对战引擎、AI 和客户端。规则由引擎自动处理，可以对战 AI、和朋友联机、组卡、看录像，电脑和安卓手机都能玩。定位类似 Yu-Gi-Oh! 的 YGOPro，用于个人学习和测试。
+《Shadowverse: Evolve》（影之诗：进化对决）实体卡牌游戏的非官方对战引擎、AI 和客户端。规则由引擎自动处理，可以对战 AI、联机、组卡组、看录像，支持PC和安卓平台。仅用于个人学习和测试。
 
 ### 内容
 
@@ -46,7 +46,7 @@ npm install
 npm run dev:gui
 ```
 
-- `npm run dev:gui` 启动开发服务器，并自动打开 http://localhost:5173 。
+- `npm run dev:gui` 启动开发服务器。
 - 页面打开就是主界面。引擎在后台加载几秒，加载完"对战 AI"才能点。
 - 开发服务器只监听本机，改了界面代码，页面会自动刷新。端口被占用时换下一个，也可以用 `SVE_GUI_PORT` 指定。
 
@@ -314,7 +314,7 @@ while (game.decision) game.act(chooseAnswer(game.decision));
 
 ## English
 
-An unofficial rules engine, AI and client for the *Shadowverse: Evolve* trading card game. The engine applies the rules, so you can play against the AI, play online with friends, build decks and watch replays, on a computer or an Android phone. It is meant for personal study and testing, in the spirit of YGOPro for Yu-Gi-Oh!.
+An unofficial rules engine, AI and client for the *Shadowverse: Evolve* trading card game. The engine applies the rules, so you can play against the AI, play online, build decks and watch replays, on a computer or an Android phone. It is meant for personal study and testing only.
 
 ### What's inside
 
