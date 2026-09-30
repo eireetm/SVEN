@@ -222,18 +222,6 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
 }
 ```
 
-**本机素材文件夹的 `Misc/`**（都可以不放）：
-
-| 文件 | 用途 |
-|---|---|
-| `field.png` | 场地 |
-| `back.png` | 主卡组的卡背 |
-| `back_e.png` | 进化牌组的卡背 |
-| `unknown.png` | 缺图时的替代图 |
-| `background_m`、`background_d`、`background_f` | 三张背景图 |
-
-`public/` 里有同用途的文件时，用 `public/` 的。
-
 ### 卡组
 
 - **卡组文件**：`packages/gui/decks/<名字>.json`，也可以放在子文件夹里，`samples/` 里是示例卡组。
@@ -250,7 +238,7 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
   - "文本编辑"用文字编辑卡组（每行一张，如 `3 SD01-011`）。
 - **卡组码**：组卡界面的"卡组码…"。
   - 把卡组变成一行文字（`SVE1-…`）分享，粘贴就能导入；
-  - 也能导入 sve-server（另一个模拟器）的卡组码，按卡名找卡。
+  - 也能导入 SVE Simulator（另一个模拟器）的卡组码，按卡名找卡。
 - **赛制和禁卡表**：
   - 赛制有标准、双职业（综合规则附录 B-2）、无限制；
   - 禁卡表在 `packages/gui/restrictions/`，每张一个文件；
@@ -528,18 +516,6 @@ Sound effects (26):
 }
 ```
 
-**`Misc/` in the local assets folder** (all optional):
-
-| File | What it is |
-|---|---|
-| `field.png` | The playmat |
-| `back.png` | The main deck's card back |
-| `back_e.png` | The evolve deck's card back |
-| `unknown.png` | Shown when a picture is missing |
-| `background_m`, `background_d`, `background_f` | The three backgrounds |
-
-A file in `public/` with the same purpose wins.
-
 ### Decks
 
 - **Deck files**: `packages/gui/decks/<name>.json`, also in sub-folders. `samples/` holds the sample decks.
@@ -556,7 +532,7 @@ A file in `public/` with the same purpose wins.
   - "Edit as text" edits the deck as text, one card per line (e.g. `3 SD01-011`).
 - **Deck codes**: "Deck code…" in the deck builder.
   - It turns a deck into one line of text (`SVE1-…`) to share; paste a code to import the deck.
-  - It also imports deck codes of sve-server (another simulator), finding the cards by name.
+  - It also imports deck codes of SVE Simulator (another simulator), finding the cards by name.
 - **Formats and restriction lists**:
   - The formats are Standard, Cross Craft (Comprehensive Rules Appendix B-2) and Unlimited.
   - The restriction lists are in `packages/gui/restrictions/`, one file each.
