@@ -167,3 +167,36 @@ test("Cross Craft: two leaders; saving and leaving tell what the deck doesn't me
   await expect(page.getByTestId("menu-decks")).toBeVisible();
   expect(problems).toEqual([]);
 });
+
+test("deck codes: a deck's code, imported back as a new deck; a code copied wrong is refused", async ({ page }) => {
+  const problems: string[] = [];
+  page.on("pageerror", (e) => problems.push(e.message));
+  page.on("dialog", (d) => void d.accept());
+  await useSettings(page, { uiLang: "en", builderDeck: "samples/sd02.json" });
+  await openBuilder(page);
+  await expect(page.getByTestId("builder-name")).toHaveValue(/SD02/);
+  const main = await count(page, "main");
+  const evolve = await count(page, "evolve");
+
+  await page.getByTestId("builder-deck-code").click();
+  const code = await page.getByTestId("deck-code-text").inputValue();
+  expect(code).toMatch(/^SVE1-[A-Za-z0-9_-]+$/);
+  await page.getByTestId("deck-code-close").click();
+
+  // A new, empty deck; the code brings the cards, the leader and the name back.
+  await page.getByRole("button", { name: /^New$/ }).click();
+  expect(await count(page, "main")).toBe(0);
+  await page.getByTestId("builder-deck-code").click();
+  await page.getByTestId("deck-code-input").fill(code.slice(0, code.length - 6));
+  await expect(page.getByTestId("deck-code")).toContainText("cut short or was copied wrong");
+  await expect(page.getByTestId("deck-code-import")).toBeDisabled();
+  await page.getByTestId("deck-code-input").fill(`${code.slice(0, 30)}\n${code.slice(30)}`);
+  await expect(page.getByTestId("deck-code-preview")).toContainText("SD02");
+  await page.getByTestId("deck-code-import").click();
+  await expect(page.getByTestId("deck-code")).toHaveCount(0);
+  await expect(page.getByTestId("builder-name")).toHaveValue(/SD02/);
+  expect(await count(page, "main")).toBe(main);
+  expect(await count(page, "evolve")).toBe(evolve);
+  await expect(page.getByTestId("builder-leader")).not.toHaveText(/none/);
+  expect(problems).toEqual([]);
+});

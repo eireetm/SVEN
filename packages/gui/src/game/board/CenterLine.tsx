@@ -8,7 +8,7 @@ import { useT, type MessageKey } from "../../i18n";
 import { isOnTable } from "../../engine/view-utils";
 import { inDialog } from "../actions";
 import { rangeLabel, SELECT_KEYS } from "../decisions/DecisionDialog";
-import { sendAnswer, useInteraction } from "../interaction";
+import { sendAnswer, setRedrawing, useInteraction } from "../interaction";
 import { playerLabel } from "../labels";
 
 const PHASE_KEYS: Record<string, MessageKey> = {
@@ -57,7 +57,8 @@ export function CenterLine({ update, placing = null }: { update: GameUpdate; pla
       case "mulligan":
         prompt = t("decision.mulligan");
         button("keep", t("decision.keep"), () => answer({ type: "mulligan", redraw: false }), true);
-        button("redraw", t("decision.redraw"), () => answer({ type: "mulligan", redraw: true }));
+        // CR 6.2.1.8: the hand goes to the bottom of the deck in the order the person chooses (the decision window asks it).
+        button("redraw", t("decision.redraw"), () => setRedrawing(true));
         break;
       case "chooseTurnOrder":
         prompt = t("decision.chooseTurnOrder");

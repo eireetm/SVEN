@@ -89,8 +89,15 @@ export async function answer(page: Page, kind: string, pick?: Pick): Promise<str
   switch (kind) {
     case "chooseTurnOrder":
       return click(choose(2) === 0 ? "first" : "second");
-    case "mulligan":
-      return click(choose(3) === 0 ? "redraw" : "keep");
+    case "mulligan": {
+      if (choose(3) !== 0) return click("keep");
+      // CR 6.2.1.8: redrawing asks the order the hand goes to the bottom of the deck in (moved about at random when picking).
+      await click("redraw");
+      const moves = page.locator("[data-testid=card-order] .sve-order-buttons button:not([disabled])");
+      if (pick) for (let i = pick(3); i > 0; i--) await moves.nth(pick(await moves.count())).click();
+      await page.getByTestId("mulligan-redraw").click();
+      return "redraw";
+    }
     case "mainPhase":
     case "quick":
       return pick ? useTable(page, kind, pick) : click(kind === "mainPhase" ? "end" : "pass");
@@ -174,6 +181,8 @@ async function answerInDialog(body: Locator, kind: string, choose: (n: number) =
     if (random && n > 0) await moves.nth(choose(n)).click();
     return (await confirm.click(), "order");
   }
+  // The hand's order for a redraw (left open by an earlier step): redraw as it is.
+  if (kind === "mulligan") return (await body.getByTestId("mulligan-redraw").click(), "redraw");
   const buttons = body.locator("button:not([disabled])");
   const n = await buttons.count();
   expect(n, `no button to answer ${kind}`).toBeGreaterThan(0);

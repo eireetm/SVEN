@@ -1599,22 +1599,41 @@ option {
   align-items: flex-end;
 }
 
+/* Cards put on the deck in order: a pile, its top card first; each row moves up or down. */
 .sve-order {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+  --sve-card-width: 64px;
 }
 
 .sve-order-item {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
   align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--sve-area);
+}
+
+.sve-order-position {
+  min-width: 1.4em;
+  font-weight: 700;
+  color: var(--sve-accent);
+  text-align: right;
+}
+
+.sve-order-name {
+  flex: 1;
+  min-width: 0;
 }
 
 .sve-order-buttons {
   display: flex;
-  gap: 2px;
+  gap: 4px;
 }
 
 .sve-concede {
@@ -1839,6 +1858,43 @@ option {
   font-size: 11px;
   background: var(--sve-input);
   padding: 6px;
+}
+
+/* The deck builder's deck code window: the code to copy, a code to import and what it brings. */
+.sve-deck-code {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(640px, 92vw);
+}
+
+/* Nothing shrinks to fit a small screen: the window scrolls instead. */
+.sve-deck-code > * {
+  flex: none;
+}
+
+.sve-deck-code p {
+  margin: 0;
+}
+
+.sve-deck-code-notes {
+  margin: 4px 0 0;
+  padding-left: 20px;
+}
+
+.sve-deck-code hr {
+  width: 100%;
+  margin: 6px 0;
+  border: none;
+  border-top: 1px solid var(--sve-border);
+}
+
+.sve-deck-code-text {
+  width: 100%;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  word-break: break-all;
+  resize: vertical;
 }
 
 /* Zone browser */
@@ -3062,6 +3118,17 @@ option {
 
 .sve-table[data-compact] .sve-result-panel {
   padding: 14px 20px;
+}
+
+/* Cards put in order on a small screen: lower rows, so the whole pile and the buttons fit. */
+.sve-game-compact .sve-order {
+  --sve-card-width: 44px;
+  gap: 2px;
+  margin: 4px 0;
+}
+
+.sve-game-compact .sve-order-item {
+  padding: 1px 6px;
 }
 
 /* Windows on a small screen: a little smaller and never taller than the screen. */

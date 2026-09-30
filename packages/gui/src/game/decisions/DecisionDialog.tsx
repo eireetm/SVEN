@@ -4,16 +4,17 @@
 // inDialog). Every option comes from the decision itself: the GUI never works out what is legal (the decision protocol in
 // docs/architecture.md).
 import { useState, type ReactNode } from "react";
+import { useBack } from "../../app/back";
 import type { Answer, CardId, Decision } from "@sve/core";
 import { useSettings } from "../../app/settings";
 import { useApp } from "../../app/store";
-import type { DecisionInfo, GameUpdate } from "../../engine/protocol";
+import type { CardInfo, DecisionInfo, GameUpdate } from "../../engine/protocol";
 import { findCard, isOnTable } from "../../engine/view-utils";
 import { useT, type MessageKey, type Translate } from "../../i18n";
 import { inDialog } from "../actions";
 import { CardTile } from "../card/CardTile";
 import { setHighlight } from "../focus";
-import { sendAnswer, toggleChosen, useInteraction } from "../interaction";
+import { sendAnswer, setRedrawing, toggleChosen, useInteraction } from "../interaction";
 import { abilityLabel, cardLabel } from "../labels";
 import { optionText } from "../options";
 
@@ -257,41 +258,77 @@ function Confirm({ d, update, answer, busy }: FormProps<"confirm">) {
   );
 }
 
+/**
+ * Cards put on the deck in an order the person sets, shown as a pile: the top of the list is the card that ends up
+ * highest. "Up" and "down" move a card there in the list at once.
+ */
+function CardOrder({ order, setOrder, card, label, busy }: { order: CardId[]; setOrder: (order: CardId[]) => void; card: (id: CardId) => CardInfo; label: (id: CardId) => string; busy: boolean }) {
+  const t = useT();
+  const move = (i: number, by: number) => {
+    const next = [...order];
+    const [moved] = next.splice(i, 1);
+    next.splice(i + by, 0, moved!);
+    setOrder(next);
+  };
+  return (
+    <ol className="sve-order" data-testid="card-order">
+      {order.map((id, i) => (
+        <li key={id} className="sve-order-item" data-card-order={id}>
+          <span className="sve-order-position">{i + 1}</span>
+          <CardTile info={card(id)} size="small" />
+          <span className="sve-order-name">{label(id)}</span>
+          <span className="sve-order-buttons">
+            <button type="button" disabled={busy || i === 0} onClick={() => move(i, -1)} data-testid="order-up">
+              {t("decision.up")}
+            </button>
+            <button type="button" disabled={busy || i === order.length - 1} onClick={() => move(i, 1)} data-testid="order-down">
+              {t("decision.down")}
+            </button>
+          </span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 function OrderCards({ d, info, update, answer, busy }: FormProps<"orderCards">) {
   const t = useT();
+  const label = useLabel(update);
   const [order, setOrder] = useState<CardId[]>(d.cards.map((c) => c.id));
-  const move = (i: number, by: number) =>
-    setOrder((o) => {
-      const next = [...o];
-      const [card] = next.splice(i, 1);
-      next.splice(i + by, 0, card!);
-      return next;
-    });
+  const card = (id: CardId): CardInfo => info.cards[id] ?? { def: d.cards.find((c) => c.id === id)!.def, printing: null };
   return (
     <>
       <Prompt text={t(d.reason === "deckTop" ? "decision.orderCards.deckTop" : "decision.orderCards.deckBottom")} source={d.source} update={update} />
-      <div className="sve-order">
-        {order.map((id, i) => {
-          const ref = d.cards.find((c) => c.id === id)!;
-          return (
-            <div key={id} className="sve-order-item">
-              <CardTile info={info.cards[id] ?? { def: ref.def, printing: null }} size="small" />
-              <div className="sve-order-buttons">
-                <button type="button" disabled={busy || i === 0} onClick={() => move(i, -1)}>
-                  {t("decision.up")}
-                </button>
-                <button type="button" disabled={busy || i === order.length - 1} onClick={() => move(i, 1)}>
-                  {t("decision.down")}
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <CardOrder order={order} setOrder={setOrder} card={card} label={label} busy={busy} />
       <div className="sve-actions-end">
         <ActionButton ids={[]} primary disabled={busy} onClick={() => answer({ type: "orderCards", order })}>
           {t("decision.confirm")}
         </ActionButton>
+      </div>
+    </>
+  );
+}
+
+/**
+ * CR 6.2.1.8: redrawing puts the hand on the bottom of the deck in any order (the answer's bottomOrder, top first), then
+ * the player draws again. Opened by the table's "Redraw"; "Cancel" goes back to keeping or redrawing.
+ */
+function MulliganOrder({ d, info, update, answer, busy }: FormProps<"mulligan">) {
+  const t = useT();
+  const label = useLabel(update);
+  const [order, setOrder] = useState<CardId[]>(d.hand);
+  useBack(true, () => setRedrawing(false));
+  return (
+    <>
+      <p className="sve-prompt">{t("decision.mulliganOrder")}</p>
+      <CardOrder order={order} setOrder={setOrder} card={(id) => info.cards[id]!} label={label} busy={busy} />
+      <div className="sve-actions-end">
+        <button type="button" disabled={busy} onClick={() => setRedrawing(false)} data-testid="mulligan-cancel">
+          {t("builder.cancel")}
+        </button>
+        <button type="button" className="sve-primary" disabled={busy} onClick={() => answer({ type: "mulligan", redraw: true, bottomOrder: order })} data-testid="mulligan-redraw">
+          {t("decision.redraw")}
+        </button>
       </div>
     </>
   );
@@ -311,6 +348,8 @@ function DecisionForm({ info, update, answer, busy }: { info: DecisionInfo; upda
       return <Confirm d={d} {...common} />;
     case "orderCards":
       return <OrderCards d={d} {...common} />;
+    case "mulligan":
+      return <MulliganOrder d={d} {...common} />;
     default:
       return null;
   }
@@ -328,7 +367,8 @@ export function DecisionDialog({ update }: { update: GameUpdate }) {
   const info = update.decision;
   // A quick play being announced comes first (QuickAnnouncement): the decision waits until it has been seen.
   const announcing = update.announcement !== null;
-  const open = !announcing && !update.watch && !!info && inDialog(info.decision, (id) => isOnTable(update.view, id));
+  const redrawing = useInteraction((s) => s.redrawing);
+  const open = !announcing && !update.watch && !!info && (inDialog(info.decision, (id) => isOnTable(update.view, id)) || (info.decision.type === "mulligan" && redrawing));
   const answer = (a: Answer) => sendAnswer(update, a);
   return (
     <div

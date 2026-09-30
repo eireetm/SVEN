@@ -26,6 +26,7 @@ import { useT } from "../i18n";
 import { checkDeck, useFormat } from "../formats/check";
 import type { FormatProblem } from "../formats/formats";
 import { FormatPicker, ProblemsDialog } from "../formats/FormatPicker";
+import { DeckCodeDialog } from "./DeckCodeDialog";
 import { DeckStats } from "./DeckStats";
 import { ABILITIES, NO_FILTERS, poolEntries, setsOf, traitsOf, type AbilityTag, type PoolFilters, type TypeFilter } from "./filters";
 import { cardCount, emptyDeck, type DeckFile } from "./format";
@@ -65,6 +66,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
   const [filters, setFilters] = useState<PoolFilters>(NO_FILTERS);
   const [limit, setLimit] = useState(POOL_PAGE);
   const [choosingLeader, setChoosingLeader] = useState<"leader" | "leader2" | null>(null);
+  const [codeOpen, setCodeOpen] = useState(false);
   const { format, list } = useFormat();
   // The deck's problems in the format, told after saving or before leaving (`then`: leave anyway).
   const [told, setTold] = useState<{ problems: FormatProblem[]; then: (() => void) | null } | null>(null);
@@ -163,6 +165,16 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
     setDeck(fresh);
     setSaved(JSON.stringify(fresh));
     setMessage("");
+  };
+  /** A deck from a deck code (DeckCodeDialog), as a new deck not saved yet; false: the person kept their unsaved changes. */
+  const importDeck = (imported: DeckFile): boolean => {
+    if (!discardChanges()) return false;
+    setFile(null);
+    setDeck(imported);
+    setSaved(JSON.stringify(emptyDeck(t("builder.newName"))));
+    setSaveAs(null);
+    setMessage(t("deckCode.imported", { name: imported.name }));
+    return true;
   };
   /** The deck's problems in the chosen format (none in unlimited: anything goes). */
   const problems = async (): Promise<FormatProblem[]> => (format === "unlimited" ? [] : checkDeck(deck, format, list, catalog));
@@ -396,6 +408,9 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
             <button type="button" onClick={() => void leave(() => discardChanges() && onTextEditor(file))}>
               {t("builder.textEditor")}
             </button>
+            <button type="button" onClick={() => setCodeOpen(true)} data-testid="builder-deck-code">
+              {t("builder.deckCode")}
+            </button>
             <span className="sve-hint">{t(compact ? "builder.removeHintTouch" : "builder.removeHint")}</span>
           </div>
         </div>
@@ -548,6 +563,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
           onClose={() => setChoosingLeader(null)}
         />
       ) : null}
+      {codeOpen ? <DeckCodeDialog deck={deck} catalog={catalog} onImport={importDeck} onClose={() => setCodeOpen(false)} /> : null}
       {told ? (
         <ProblemsDialog title={t("builder.problemsTitle", { format: t(`format.${format}`) })} problems={told.problems} ctx={{ catalog, lang: cardLang, t }}>
           {told.then ? (

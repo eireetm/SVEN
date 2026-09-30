@@ -38,9 +38,11 @@ interface InteractionState {
   sent: boolean;
   /** Manual debugging's window. */
   manual: ManualTarget | null;
+  /** The person chose to redraw: the decision window asks the order the hand goes to the bottom of the deck in. */
+  redrawing: boolean;
 }
 
-let state: InteractionState = { key: -1, menu: null, drag: null, chosen: [], sent: false, manual: null };
+let state: InteractionState = { key: -1, menu: null, drag: null, chosen: [], sent: false, manual: null, redrawing: false };
 const listeners = new Set<() => void>();
 
 function set(change: Partial<InteractionState>): void {
@@ -50,7 +52,7 @@ function set(change: Partial<InteractionState>): void {
 
 /** Start afresh for a new decision (called when an update arrives). */
 export function resetInteraction(key: number): void {
-  if (state.key !== key) set({ key, menu: null, drag: null, chosen: [], sent: false, manual: state.manual });
+  if (state.key !== key) set({ key, menu: null, drag: null, chosen: [], sent: false, manual: state.manual, redrawing: false });
 }
 
 /** A refused answer brings an error, not an update: the controls work again. */
@@ -61,6 +63,7 @@ export function answerRefused(): void {
 export const openMenu = (menu: CardMenu | null): void => set({ menu, drag: null });
 export const openManual = (manual: ManualTarget | null): void => set({ manual, menu: null, drag: null });
 export const setDrag = (drag: Drag | null): void => set({ drag });
+export const setRedrawing = (redrawing: boolean): void => set({ redrawing, menu: null });
 
 export function toggleChosen(card: CardId, max: number): void {
   const chosen = state.chosen.includes(card) ? state.chosen.filter((c) => c !== card) : max === 1 ? [card] : state.chosen.length < max ? [...state.chosen, card] : state.chosen;
