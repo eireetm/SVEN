@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles/app.css";
 import { App } from "./app/App";
+import { showCrash } from "./app/crash";
 import { setHost } from "./host/api";
 import { webHost } from "./host/web";
 
@@ -18,11 +19,20 @@ async function start(): Promise<void> {
   } else {
     setHost(webHost);
   }
-  createRoot(document.getElementById("root")!).render(
+  createRoot(document.getElementById("root")!, {
+    // React removes everything on an error nothing catches: say so rather than leave an empty page (crash.ts).
+    onUncaughtError: (error, info) => {
+      console.error(error);
+      showCrash(error, info.componentStack);
+    },
+  }).render(
     <StrictMode>
       <App />
     </StrictMode>,
   );
 }
 
-void start();
+start().catch((error: unknown) => {
+  console.error(error);
+  showCrash(error);
+});
