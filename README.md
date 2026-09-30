@@ -65,6 +65,7 @@ npm run dev:gui
 | `npm run typecheck` | 类型检查（源码、测试、工具） |
 | `npm run test:gui` | GUI 的端到端测试（Playwright） |
 | `npm run android:apk` | 打安卓 APK（见"安卓版"） |
+| `npm run release:pc -- --zip` | 打 PC 发行版（见"发行版"） |
 | `npm run card -- <卡号>` | 查一张卡：各语言文本、日文类型、相关卡、官方 QA、脚本状态 |
 | `npm run bench` | 性能基准：随机对局、复制和抽样一局、Bot 每个决策的耗时 |
 | `npm run bot:arena -- [局数] [A] [B]` | Bot 互打（easy / medium / hard）：示例卡组，两局一组交换座位，打印胜率和思考时间 |
@@ -262,6 +263,34 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
 - **录像**：对局结束后点"保存录像"，存在 `packages/gui/replays/`（不进仓库）；主菜单"观看录像"播放。
 - **复现包**：调试页"保存复现包"，里面是种子、双方卡组和全部回答，能逐字节重现一局，报告问题时附上它。开局页"高级"里可以载入。
 
+### 发行版
+
+给朋友用的版本（例如 0.1.2）有 PC 版和安卓版两种。
+
+- **版本号**：`packages/gui/package.json` 的 `version`，PC 版和安卓版都用它，发新版前先改。
+  - 安卓的 versionCode 按版本号算（0.1.2 → 102，0.2.0 → 200）。每次都比上一次大，朋友才能直接覆盖安装，并保留数据。
+- **PC 版**：`npm run release:pc -- --zip`
+  - 在仓库旁边生成 `SVEN-<版本>-pc/` 文件夹和同名的 zip。
+  - 文件夹已经存在时不会覆盖：换一个 `--out <文件夹>`，或者先删掉旧的。
+  - 里面有：
+    - 程序（`app/`）；
+    - 本机服务器（`server.mjs`，双击 `start.bat` 或运行 `node server.mjs`）；
+    - 示例卡组、空的 `replays/` 和 `public/` 文件夹结构；
+    - 三语的 `README.txt`，以及写着版本、提交和引擎指纹的 `VERSION.txt`。
+  - `--public <文件夹>`：把这个文件夹里的资源一起放进 `public/`（默认不放）。
+  - 朋友的电脑要装 Node.js 20 以上。
+- **安卓版**：`npm run android:apk -- --release --public <资源文件夹> --out <APK 路径>`（选项见"安卓版"）。
+  - 每次都要用同一个密钥签名（默认是仓库旁边的 `SVE-signing/`），换了密钥就不能覆盖安装。
+  - 密钥要备份，不要给别人。
+- **联机**：双方的引擎指纹一样才能对局（`VERSION.txt` 和联机界面里都能看到）。
+  - 改了 `packages/core/` 或 `packages/gui/src/engine/` 的代码，指纹就会变，大家都要换新版。
+- **建议的步骤**：
+  1. 提交代码；
+  2. 改版本号并提交；
+  3. `npm test`；
+  4. 打两个版本；
+  5. 自己各打一局试试。
+
 ### 安卓版
 
 - **构建**：装好 Android Studio 后运行 `npm run android:apk`，得到调试版 APK `packages/gui/android/app/build/outputs/apk/debug/app-debug.apk`。
@@ -273,6 +302,7 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
     - 用 `--signing <文件>` 指定，默认是仓库旁边的 `SVE-signing/keystore.properties`。
   - `--public <文件夹>`：把这个文件夹里的资源打包进 App（手机上同名的文件优先）。
   - `--out <文件>`：打好后把 APK 拷到那里。
+  - 版本号和 versionCode 见"发行版"。
 - **手机上的文件**：都在 `Android/data/local.sve.next/files/` 下。
   - `public/`：资源，用数据线拷进去，或者在设置页导入 zip；
   - `decks/`、`replays/`：卡组和录像；
@@ -363,6 +393,7 @@ Run these at the repository root:
 | `npm run typecheck` | Type-check sources, tests and tools |
 | `npm run test:gui` | The GUI's end-to-end tests (Playwright) |
 | `npm run android:apk` | Build the Android APK (see "Android app") |
+| `npm run release:pc -- --zip` | Build the PC release (see "Releases") |
 | `npm run card -- <card number>` | Show a card: its text in each language, Japanese traits, related cards, official Q&A, script status |
 | `npm run bench` | Benchmarks: random games, copying and sampling a game, the bot's time per decision |
 | `npm run bot:arena -- [games] [A] [B]` | Bots against each other (easy / medium / hard): the sample decks, games in pairs with the seats swapped; prints the win rate and thinking time |
@@ -560,6 +591,34 @@ Sound effects (26):
 - **Replays**: "Save replay" after a game stores it in `packages/gui/replays/` (not in the repository); "Watch replays" on the main menu plays it.
 - **Bug report files**: "Save a bug report file" on the debug tab stores the seed, both decks and every answer, enough to replay the game exactly. Attach it when reporting a problem; "Advanced (testing)" on the game setup page loads it.
 
+### Releases
+
+The versions for friends (e.g. 0.1.2) come in two kinds: for PCs and for Android.
+
+- **Version**: the `version` in `packages/gui/package.json`, used by both. Change it before building a new release.
+  - Android's versionCode comes from it (0.1.2 → 102, 0.2.0 → 200). It must grow every time, so friends can install the new APK over the old one and keep their data.
+- **PC**: `npm run release:pc -- --zip`
+  - It writes a folder `SVEN-<version>-pc/` next to the repository, and a zip of it.
+  - It never writes into an existing folder: pass another `--out <folder>`, or delete the old one first.
+  - Inside:
+    - the program (`app/`);
+    - the local server (`server.mjs`: double-click `start.bat`, or run `node server.mjs`);
+    - the sample decks, an empty `replays/`, and the `public/` folder structure;
+    - `README.txt` in three languages, and `VERSION.txt` with the version, the commit and the engine fingerprint.
+  - `--public <folder>`: copies that folder's resources into `public/` (none by default).
+  - Friends need Node.js 20 or newer.
+- **Android**: `npm run android:apk -- --release --public <resource folder> --out <APK path>` (options under "Android app").
+  - Always sign with the same key (by default `SVE-signing/` next to the repository). With another key, the APK can't be installed over the old one.
+  - Back the key up, and keep it to yourself.
+- **Online play**: both sides need the same engine fingerprint (shown in `VERSION.txt` and in the online screen).
+  - Changing code in `packages/core/` or `packages/gui/src/engine/` changes it, and everyone needs the new release.
+- **Suggested steps**:
+  1. Commit.
+  2. Change the version, and commit.
+  3. `npm test`.
+  4. Build both.
+  5. Play a game with each yourself.
+
 ### Android app
 
 - **Build**: with Android Studio installed, `npm run android:apk` makes a debug APK at `packages/gui/android/app/build/outputs/apk/debug/app-debug.apk`.
@@ -571,6 +630,7 @@ Sound effects (26):
     - Pass it with `--signing <file>`; by default it is `SVE-signing/keystore.properties` next to the repository.
   - `--public <folder>`: builds that folder's resources into the app (files on the phone with the same name win).
   - `--out <file>`: copies the APK there.
+  - The version and versionCode: see "Releases".
 - **Files on the phone**: all under `Android/data/local.sve.next/files/`.
   - `public/`: resources, copied over USB or imported from a zip in the settings.
   - `decks/`, `replays/`: decks and replays.

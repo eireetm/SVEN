@@ -1,17 +1,19 @@
 // Build the Android app (docs/android.md): the web part for Android (vite --mode android), Capacitor's copy of it into the
 // Android project, and Gradle's APK. Uses Android Studio's JDK and the Android SDK where JAVA_HOME / ANDROID_HOME don't say
-// otherwise. `npm run android:apk` at the repository root builds a debug APK; options (after `--`):
+// otherwise. The version is packages/gui/package.json's (android/app/build.gradle reads it too). `npm run android:apk` at the
+// repository root builds a debug APK; options (after `--`):
 //   --release           a release APK, signed with the key --signing names (default: SVE-signing/keystore.properties
 //                       beside the repository; the key never goes into it)
 //   --signing <file>    that key's properties file (android/app/build.gradle says what it holds)
 //   --public <folder>   build the resources of this folder into the app (like the phone's public/ folder; theirs go first)
 //   --out <file>        copy the APK there
 import { spawnSync } from "node:child_process";
-import { copyFileSync, existsSync, statSync } from "node:fs";
+import { copyFileSync, existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const gui = join(dirname(fileURLToPath(import.meta.url)), "..");
+const version = JSON.parse(readFileSync(join(gui, "package.json"), "utf8")).version;
 const args = process.argv.slice(2);
 const option = (name) => {
   const at = args.indexOf(name);
@@ -70,4 +72,4 @@ run("npx", ["cap", "sync", "android"], gui);
 run(join(gui, "android", process.platform === "win32" ? "gradlew.bat" : "gradlew"), [release ? "assembleRelease" : "assembleDebug"], join(gui, "android"));
 const apk = join(gui, "android", "app", "build", "outputs", "apk", release ? "release" : "debug", release ? "app-release.apk" : "app-debug.apk");
 if (out) copyFileSync(apk, out);
-console.log(`\nAPK: ${out ?? apk} (${Math.round(statSync(apk).size / 2 ** 20)} MB)`);
+console.log(`\nAPK ${version}${release ? "" : " (debug)"}: ${out ?? apk} (${Math.round(statSync(apk).size / 2 ** 20)} MB)`);

@@ -1,32 +1,12 @@
 import react from "@vitejs/plugin-react";
-import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, type Plugin } from "vite";
+import { engineFingerprint } from "./fingerprint.ts";
 import { hostPlugin } from "./host/plugin.ts";
 
 const here = fileURLToPath(new URL(".", import.meta.url));
-
-/**
- * A fingerprint of the rules code: the core (its source and card data) and the worker host that paces a game. Online, two
- * programs play one game only when theirs are the same (docs/online.md); line endings don't count.
- */
-function engineFingerprint(): string {
-  const hash = createHash("sha256");
-  const walk = (root: string, dir: string) => {
-    for (const name of readdirSync(dir).sort()) {
-      const full = join(dir, name);
-      if (statSync(full).isDirectory()) walk(root, full);
-      else if (/\.(ts|json)$/.test(name)) {
-        hash.update(relative(root, full).split("\\").join("/"));
-        hash.update(readFileSync(full, "utf8").replace(/\r\n/g, "\n"));
-      }
-    }
-  };
-  for (const dir of ["../core/src", "../core/data", "src/engine"]) walk(join(here, dir), join(here, dir));
-  return hash.digest("hex").slice(0, 16);
-}
 
 /** Every file under `dir` ("images/cards/BP01-001.webp"), hidden files left out. */
 function filesUnder(dir: string, prefix = ""): string[] {
@@ -73,7 +53,7 @@ export default defineConfig(({ mode }) => {
     worker: { format: "es" },
     publicDir: android ? (bundle ?? false) : "public",
     build: { target: "es2022", chunkSizeWarningLimit: 10_000, outDir: android ? "dist-android" : "dist" },
-    define: { __ENGINE_FINGERPRINT__: JSON.stringify(engineFingerprint()) },
+    define: { __ENGINE_FINGERPRINT__: JSON.stringify(engineFingerprint(here)) },
     // Online play loads when first opened (src/online): its libraries are prepared when the server starts, else the dev
     // server finds them only then and reloads every open page. The libraries are found from the app's page only, not from
     // the pages of the builds' output (dist-android/, android/).

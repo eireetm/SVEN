@@ -5,6 +5,12 @@ apply plugin: 'com.android.application'
 // SVE_ANDROID_SIGNING (docs/android.md). Without it, a release build is left unsigned.
 def signingFile = System.getenv('SVE_ANDROID_SIGNING') ? file(System.getenv('SVE_ANDROID_SIGNING')) : null
 
+// The version is packages/gui/package.json's, like the PC release's (README "发行版"). versionCode must grow with every
+// release friends install over the last one: 0.1.2 -> 102, 0.2.0 -> 200, 1.0.0 -> 10000 (0.1 was 1).
+def sveVersion = new groovy.json.JsonSlurper().parse(file('../../package.json')).version as String
+def sveVersionParts = sveVersion.tokenize('.').collect { it as int } + [0, 0, 0]
+def sveVersionCode = sveVersionParts[0] * 10000 + sveVersionParts[1] * 100 + sveVersionParts[2]
+
 android {
     namespace = "local.sve.next"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -12,8 +18,8 @@ android {
         applicationId "local.sve.next"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "0.1"
+        versionCode sveVersionCode
+        versionName sveVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
