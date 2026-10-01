@@ -108,6 +108,8 @@ async function playAtRandom(host: Page, guest: Page, answers: number, problems: 
   for (let round = 0; round < 4000 && done < answers && idle < 80; round++) {
     let acted = false;
     for (const page of [host, guest]) {
+      // Exactly that many: when both programs have a decision in the last round, the guest's isn't answered.
+      if (done >= answers) break;
       const bar = page.locator(".sve-decision");
       const kind = (await bar.getAttribute("data-decision"))!;
       if (kind === "over" || kind === "waiting" || (await bar.getAttribute("class"))!.includes("sve-busy")) continue;
