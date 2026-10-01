@@ -190,8 +190,10 @@ export function* playCard(g: G, player: PlayerId, card: CardId, opts: PlayCardOp
   if (earthRite) yield* payEarthRite(g, player, spell?.earthRite?.count ?? 1, played);
   const nextPlay = nextPlayModifiersFor(g, played, player);
   payPlayPoints(g, player, playCost(g, played, player, option, opts.setCost));
-  // "The next card you play this turn costs N less" is used up by this play (BP03-038 ruling).
-  if (nextPlay.length > 0) g.state.nextPlay = g.state.nextPlay.filter((m) => !nextPlay.includes(m));
+  // "The next card you play this turn costs N less" is used up by this play (BP03-038 ruling); "for the rest of this
+  // turn" is not (BP22-049 rulings).
+  const usedUp = nextPlay.filter((m) => !m.allThisTurn);
+  if (usedUp.length > 0) g.state.nextPlay = g.state.nextPlay.filter((m) => !usedUp.includes(m));
   // "The next card you play that was put into your EX area this way costs 0" (BP14-046): the other
   // cards of the group lose it.
   const groups = g.state.effects.flatMap((e) => (e.target === played && e.change.kind === "playCostSet" && e.change.group ? [e.change.group] : []));

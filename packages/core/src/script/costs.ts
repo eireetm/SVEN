@@ -235,6 +235,19 @@ export function allCosts(...costs: readonly CustomCost[]): CustomCost {
   };
 }
 
+/**
+ * CR 13.3.3 — "Earth Rite (N)" as the process of a play option, e.g. BP22-039 "When playing this card, Earth Rite (9): This
+ * card costs 1" (CR 10.4.7.3): remove N Stack counters from one amulet with Stack on your field (13.3.3.2).
+ */
+export function earthRiteCost(count = 1): CustomCost {
+  return {
+    canPay: (g, c) => g.stackCards(c).some((id) => (g.card(id)?.counters.stack ?? 0) >= count),
+    *pay(fx) {
+      yield* fx.payEarthRite(count);
+    },
+  };
+}
+
 /** A play-point cost of an automatic ability, e.g. "{[fanfare]} {[cost03]} ..." (CR 10.4.4, 10.4.7.4). */
 export function playPointsCost(n: number): CustomCost {
   return {

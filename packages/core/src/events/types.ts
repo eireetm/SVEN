@@ -96,6 +96,12 @@ export interface CardMove {
     type?: CardType;
     traits?: string[];
     /**
+     * A follower leaving the field: its attack and defense there (CR 10.7.4.1.2, 10.11.1), e.g. BP22-025 "deal damage to its
+     * leader equal to its attack" (modified attack counts — ruling).
+     */
+    attack?: number;
+    defense?: number;
+    /**
      * It had "This follower doesn't deal damage" in force on the field: abilities triggered by
      * its leaving (e.g. Last Words) use that information (CR 10.7.4.1.2) and deal no damage
      * (BP12-109 ruling: BP10-T01's Last Words deal none).

@@ -252,6 +252,8 @@ export function moveCards(g: G, allSpecs: readonly MoveSpec[], reason: MoveReaso
     if (onField) {
       before.type = onField.type; // BP11-002 "a Mount card", BP12-088 "an amulet"
       before.traits = [...onField.traits];
+      if (onField.attack !== null) before.attack = onField.attack; // BP22-025
+      if (onField.defense !== null) before.defense = onField.defense;
     }
     const grants = onField ? grantedAbilitiesOf(g, c.id) : [];
     if (grants.length > 0) before.grants = grants; // BP07-038 a given Last Words

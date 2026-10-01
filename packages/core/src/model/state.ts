@@ -490,6 +490,11 @@ export interface NextPlayModifier {
   /** Change to the play cost (negative = cheaper), applied after set-to-value changes (BP03-038 ruling). */
   costDelta: number;
   createdTurn: number;
+  /**
+   * "For the rest of this turn, when you play a [matching] card, it costs N less" (BP22-049): every matching card played
+   * this turn, not only the next one; playing one doesn't use it up (rulings).
+   */
+  allThisTurn?: true;
 }
 
 /**

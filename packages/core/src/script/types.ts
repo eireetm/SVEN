@@ -75,9 +75,10 @@ export interface CardScript {
   cannotAttackLeader?(game: GameReader, self: CardId): boolean;
   /**
    * "This card can't be destroyed by abilities" (BP02-089/090/091): prohibits destroying it by
-   * an ability's effect (CR 1.3.3). Rules handling still destroys it (defense 0, 11.3).
+   * an ability's effect (CR 1.3.3). Rules handling still destroys it (defense 0, 11.3). A function:
+   * while a condition holds (BP22-061 "while this is engaged").
    */
-  cannotBeDestroyedByAbilities?: boolean;
+  cannotBeDestroyedByAbilities?: boolean | ((game: GameReader, self: CardId) => boolean);
   /** "This card can't be banished by abilities" while it is on the field (BP06-022, CR 1.3.3). */
   cannotBeBanishedByAbilities?: boolean;
   /**

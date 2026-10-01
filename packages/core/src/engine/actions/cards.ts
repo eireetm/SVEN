@@ -96,9 +96,12 @@ export function setEngaged(g: G, cards: readonly CardId[], engaged: boolean): Ca
 export function destroyCards(g: G, cards: readonly CardId[]): CardId[] {
   // CR 1.3.3 — "This card can't be destroyed by abilities" prohibits destroying it here (this
   // is only called for effects; rules handling destroys through moveCards directly).
-  const onField = cards.filter(
-    (id) => g.state.cards[id]?.zone === "field" && !activeScript(g, id)?.cannotBeDestroyedByAbilities,
-  );
+  const reader = makeReader(g);
+  const protectedFrom = (id: CardId) => {
+    const p = activeScript(g, id)?.cannotBeDestroyedByAbilities;
+    return typeof p === "function" ? p(reader, id) : p === true;
+  };
+  const onField = cards.filter((id) => g.state.cards[id]?.zone === "field" && !protectedFrom(id));
   if (onField.length === 0) return [];
   return moveCards(g, onField.map((card) => ({ card, to: "cemetery" as const })), "destroy");
 }

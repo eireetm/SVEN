@@ -37,6 +37,7 @@ import { effectEvolve } from "../abilities/evolve";
 import { EngineError } from "../errors";
 import { cannotLose, endGame } from "../flow/end-game";
 import { playCard } from "../flow/play-card";
+import { payEarthRite } from "../costs";
 import type { G } from "../runtime/context";
 import { cardRefs, chooseOptions, confirm, orderCards, selectCards } from "../runtime/decide";
 import type { Proc } from "../runtime/proc";
@@ -322,6 +323,16 @@ export interface EffectContext {
    * match is `CardScript.nextPlay[key]` of this ability's definition.
    */
   nextPlayCostsLess(key: string, amount: number): Proc<void>;
+  /**
+   * "For the rest of this turn, when you play a [matching] card, it costs N less" (BP22-049): like `nextPlayCostsLess`,
+   * for every matching card played this turn; each use adds N (rulings).
+   */
+  cardsCostLessThisTurn(key: string, amount: number): Proc<void>;
+  /**
+   * CR 13.3.3.2 — pay Earth Rite as a cost the script pays itself (BP22-039 "When playing this, Earth Rite (9): this costs
+   * 1"): remove `count` Stack counters from one amulet with Stack on your field (you pick which).
+   */
+  payEarthRite(count: number): Proc<void>;
   /**
    * Deal `total` ability damage divided as the controller chooses among the targets, at least 1
    * to each (rulings BP08-028 / EBD02-015; select at most `total` targets, see TargetSpec.max).
@@ -854,6 +865,23 @@ export function makeEffectContext(g: G, init: EffectInit): EffectContext {
         costDelta: -amount,
         createdTurn: g.state.turn,
       });
+    },
+    *cardsCostLessThisTurn(key, amount) {
+      if (!g.scripts[init.sourceDef]?.nextPlay?.[key]) throw new EngineError(`${init.sourceDef} has no nextPlay "${key}"`);
+      const seq = nextSeq(g.state);
+      g.state.nextPlay.push({
+        id: `n${seq}`,
+        seq,
+        player: ctrl,
+        sourceDef: init.sourceDef,
+        key,
+        costDelta: -amount,
+        createdTurn: g.state.turn,
+        allThisTurn: true,
+      });
+    },
+    *payEarthRite(count) {
+      yield* payEarthRite(g, ctrl, count, selfIfPresent());
     },
     *dealDividedDamage(targets, total) {
       const present = targets.filter((id) => {

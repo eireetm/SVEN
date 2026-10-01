@@ -304,7 +304,8 @@ export const whenThisBecomesEngaged = (spec: TimingSpec) =>
 /**
  * "[During your turn,] whenever an enemy follower is put from the field into the cemetery" (BP09-026)
  * — once per follower, however it got there (destroyed, buried, as a cost), tokens too (its
- * rulings). Also when this card leaves at the same time (look-back, CR 10.7.4.2). Data: the card.
+ * rulings). Also when this card leaves at the same time (look-back, CR 10.7.4.2). Data: the card,
+ * and its attack on the field as `count` (CR 10.7.4.1.2; BP22-025 "equal to its attack").
  */
 export function whenEnemyFollowerToCemetery(spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}): AutomaticAbility {
   return automatic(
@@ -320,7 +321,7 @@ export function whenEnemyFollowerToCemetery(spec: TimingSpec, opts: { onlyYourTu
             m.before.controller !== me.controller &&
             game.db.get(m.before.abilityDef).type === "follower",
         )
-        .map((m) => ({ card: m.newCard ?? m.card! }));
+        .map((m) => ({ card: m.newCard ?? m.card!, ...(m.before?.attack !== undefined ? { count: m.before.attack } : {}) }));
     },
     spec,
   );
@@ -403,6 +404,41 @@ export function whenCardPutIntoYourEx(spec: TimingSpec, filter?: (game: GameRead
                 (filter === undefined || (game.card(m.newCard) !== undefined && filter(game, m.newCard))),
             )
             .map((m) => ({ card: m.newCard! })),
+    spec,
+  );
+}
+
+/**
+ * "When 1 or more of your cards leave the EX area" (BP22-017): once for the cards that leave your EX area together, however
+ * they leave — played (CR 10.6.2.1), put onto the field, banished, transformed (BP22-017 rulings). `fx.data.count`: how many
+ * left.
+ */
+export function whenYourCardsLeaveEx(spec: TimingSpec): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me) => {
+      if (me.lookBack) return false;
+      const n = moves(e).filter((m) => m.from?.zone === "ex" && m.from.player === me.controller && m.to.zone !== "ex").length;
+      return n > 0 ? [{ count: n }] : false;
+    },
+    spec,
+  );
+}
+
+/**
+ * "[During your turn,] when a card is put into your banished zone" (BP22-037): once per card (two at once trigger twice), from
+ * any zone, a token too (it is removed right after, CR 9.1.4), a card banished as a cost — and this card itself banished from
+ * the field (look-back, CR 10.7.4.2; BP22-037 rulings). Data: the card.
+ */
+export function whenCardPutIntoYourBanishedZone(spec: TimingSpec, opts: { onlyYourTurn?: boolean } = {}): AutomaticAbility {
+  return automatic(
+    "other",
+    (e, me, game): readonly TriggerData[] => {
+      if (opts.onlyYourTurn && game.activePlayer !== me.controller) return [];
+      return moves(e)
+        .filter((m) => m.to.zone === "banished" && m.to.player === me.controller && m.from?.zone !== "banished")
+        .map((m) => ({ card: m.newCard ?? m.card! }));
+    },
     spec,
   );
 }
