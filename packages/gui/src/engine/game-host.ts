@@ -98,6 +98,17 @@ export function summarizeAbility(ability: AbilityDef | undefined, def: DefId): A
   return { kind: "spell", ...granted };
 }
 
+/**
+ * Which of its card's automatic abilities with the same timing an ability is, and how many there are (a choice between
+ * pending abilities shows each one's line of the card text, game/card/ability-text.ts); nothing for another kind.
+ */
+export function rankOf(abilities: readonly AbilityDef[], index: number): Pick<AbilitySummary, "rank" | "count"> {
+  const ability = abilities[index];
+  if (ability?.kind !== "automatic") return {};
+  const same = (a: AbilityDef | undefined) => a?.kind === "automatic" && a.timing === ability.timing;
+  return { rank: abilities.slice(0, index).filter(same).length, count: abilities.filter(same).length };
+}
+
 /** GameConfig.firstPlayer for a game's turn order: a given player, one drawn from the seed ("random"), or null (CR 6.2.1.6). */
 export function firstPlayerOf(options: Pick<GameOptions, "seed" | "turnOrder">): PlayerId | null {
   switch (options.turnOrder) {
@@ -878,8 +889,14 @@ export class GameHost {
           const pending = game.state.pending.find((p) => p.id === id);
           if (!pending) continue;
           add(pending.source, pending.sourceDef.includes(":") ? undefined : pending.sourceDef);
-          const ability = this.engine.scripts[pending.sourceDef]?.abilities?.[pending.ability];
-          abilities[id] = { ...summarizeAbility(ability, pending.sourceDef), source: pending.source, sourceDef: pending.sourceDef };
+          const all = this.engine.scripts[pending.sourceDef]?.abilities ?? [];
+          const ability = all[pending.ability];
+          abilities[id] = {
+            ...summarizeAbility(ability, pending.sourceDef),
+            ...rankOf(all, pending.ability),
+            source: pending.source,
+            sourceDef: pending.sourceDef,
+          };
         }
         break;
       case "selectCards":

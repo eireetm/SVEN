@@ -197,6 +197,12 @@ export interface AbilitySummary {
   advanced?: boolean;
   /** A given ability (not printed on the card). */
   granted?: boolean;
+  /**
+   * An automatic ability of its card: which of the card's abilities with this timing it is (0: the first, in its script's
+   * order) and how many the card has, to find its line of the card text (game/card/ability-text.ts).
+   */
+  rank?: number;
+  count?: number;
 }
 
 /** What a person may do by hand now (manual debugging, at a main phase decision of a game that allows it). */

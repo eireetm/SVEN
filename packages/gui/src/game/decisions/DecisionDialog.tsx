@@ -10,7 +10,10 @@ import { useApp } from "../../app/store";
 import type { CardInfo, DecisionInfo, GameUpdate } from "../../engine/protocol";
 import { findCard, isOnTable } from "../../engine/view-utils";
 import { useT, type MessageKey, type Translate } from "../../i18n";
+import { cardText } from "../../app/catalog";
 import { inDialog } from "../actions";
+import { abilityLine } from "../card/ability-text";
+import { CardTextLine, plainLine } from "../card/CardText";
 import { CardTile } from "../card/CardTile";
 import { setHighlight } from "../focus";
 import { sendAnswer, setRedrawing, toggleChosen, useInteraction } from "../interaction";
@@ -43,11 +46,28 @@ export function rangeLabel(min: number, max: number, t: Translate, of: "cards" |
 }
 
 /** A button that lights up its cards on the board while pointed at. */
-function ActionButton({ ids, onClick, disabled, primary, children }: { ids: CardId[]; onClick: () => void; disabled: boolean; primary?: boolean; children: ReactNode }) {
+function ActionButton({
+  ids,
+  onClick,
+  disabled,
+  primary,
+  className,
+  title,
+  children,
+}: {
+  ids: CardId[];
+  onClick: () => void;
+  disabled: boolean;
+  primary?: boolean;
+  className?: string;
+  title?: string;
+  children: ReactNode;
+}) {
   return (
     <button
       type="button"
-      className={primary ? "sve-primary" : undefined}
+      className={[primary ? "sve-primary" : null, className].filter(Boolean).join(" ") || undefined}
+      title={title}
       disabled={disabled}
       onMouseEnter={() => setHighlight(ids)}
       onMouseLeave={() => setHighlight([])}
@@ -73,20 +93,47 @@ function Prompt({ text, source, update }: { text: string; source?: CardId | null
   );
 }
 
+/**
+ * Which pending automatic ability to play next (CR 10.5.2.2): each one by its card and timing, and its own line of the card
+ * text when the text tells which line it is (card/ability-text.ts) — two Fanfares of one card read the same otherwise.
+ * Options that still read the same (copies of one card) are numbered; pointing at one shows its card on the table.
+ */
 function SelectPending({ d, info, update, answer, busy }: FormProps<"selectPending">) {
   const t = useT();
   const label = useLabel(update);
+  const catalog = useApp((s) => s.catalog)!;
+  const { cardLang } = useSettings();
+  const options = d.options.map((id) => {
+    const summary = info.abilities[id];
+    const source = summary?.source;
+    const head = `${source ? `${label(source)} — ` : ""}${abilityLabel(summary, t)}`;
+    const def = summary?.sourceDef && !summary.granted ? catalog.def(summary.sourceDef) : undefined;
+    const line =
+      def && summary?.timing !== undefined && summary.rank !== undefined && summary.count !== undefined
+        ? abilityLine(def.id, cardText(def, cardLang), cardLang, summary.timing, summary.rank, summary.count)
+        : null;
+    return { id, source, head, line };
+  });
   return (
     <>
       <Prompt text={t("decision.selectPending")} update={update} />
-      <div className="sve-actions">
-        {d.options.map((id) => {
-          const summary = info.abilities[id];
-          const source = summary?.source;
+      <div className="sve-actions sve-actions-column">
+        {options.map((o) => {
+          const twins = options.filter((x) => x.head === o.head && x.line === o.line);
           return (
-            <ActionButton key={id} ids={source ? [source] : []} disabled={busy} onClick={() => answer({ type: "selectPending", id })}>
-              {source ? `${label(source)} — ` : ""}
-              {abilityLabel(summary, t)}
+            <ActionButton
+              key={o.id}
+              ids={o.source ? [o.source] : []}
+              disabled={busy}
+              className="sve-pending-option"
+              title={o.line ? plainLine(o.line, cardLang) : undefined}
+              onClick={() => answer({ type: "selectPending", id: o.id })}
+            >
+              <span>
+                {o.head}
+                {twins.length > 1 ? ` (${twins.indexOf(o) + 1})` : ""}
+              </span>
+              {o.line ? <CardTextLine className="sve-pending-text" line={o.line} lang={cardLang} /> : null}
             </ActionButton>
           );
         })}
