@@ -105,7 +105,11 @@ describe("the card pool", () => {
     const byAbility = (ability: (typeof ABILITIES)[number]) => filterPool(pool, { ...NO_FILTERS, ability });
     const fanfare = byAbility("fanfare");
     expect(fanfare.length).toBeGreaterThan(500);
-    expect(fanfare.every((c) => c.text.en.includes("{[fanfare]}"))).toBe(true);
+    expect(fanfare.filter((c) => !c.preview).every((c) => c.text.en.includes("{[fanfare]}"))).toBe(true);
+    // A pre-release card (BP22: a placeholder English text) is found by its Japanese text.
+    expect(fanfare.map((c) => c.id)).toContain("BP22-009");
+    expect([byAbility("act"), byAbility("quick"), byAbility("onSuperEvolve")].map((cs) => cs.some((c) => ["BP22-001", "BP22-018", "BP22-022"].includes(c.id)))).toEqual([true, true, true]);
+    expect(byAbility("storm").map((c) => c.id)).not.toContain("BP22-009");
     expect(byAbility("ward").map((c) => c.id)).toContain("BP10-105");
     expect(byAbility("sanguine").map((c) => c.id)).toContain("BP01-112");
     for (const ability of ABILITIES) expect(byAbility(ability).length, ability).toBeGreaterThan(0);

@@ -280,6 +280,7 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
       token,
       ...(advanced ? { advanced: true as const } : {}),
       ...(universe ? { universe } : {}),
+      ...(raw.preview ? { preview: true as const } : {}),
       ...(trigger ? { trigger } : {}),
       cost: raw.cost,
       attack: raw.atk,

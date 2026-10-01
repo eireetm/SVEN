@@ -3,7 +3,10 @@ import type { CardDefinition } from "@sve/core";
 import { traitNames } from "../app/traits";
 import { isDeckCard } from "./model";
 
-export type PoolCard = Pick<CardDefinition, "id" | "printings" | "name" | "names" | "class" | "type" | "evolved" | "advanced" | "token" | "frontFace" | "universe" | "traits" | "cost" | "text">;
+export type PoolCard = Pick<
+  CardDefinition,
+  "id" | "printings" | "name" | "names" | "class" | "type" | "evolved" | "advanced" | "token" | "frontFace" | "universe" | "preview" | "traits" | "cost" | "text"
+>;
 
 /** The type filter: the card types of a deck, plus "evolve" for everything that goes into the evolve deck. */
 export type TypeFilter = "any" | "follower" | "spell" | "amulet" | "evolve";
@@ -62,6 +65,40 @@ export const ABILITY_TAGS = {
 } as const;
 
 export type AbilityTag = keyof typeof ABILITY_TAGS;
+
+/**
+ * The same abilities as the Japanese card text writes them, for pre-release cards (`preview`, BP22) whose English text is a
+ * placeholder: their texts write the icons as words ("ファンファーレ", "起動"), older ones in 《》.
+ */
+export const ABILITY_TAGS_JA: Readonly<Record<AbilityTag, RegExp>> = {
+  fanfare: /ファンファーレ/,
+  lastWords: /ラストワード/,
+  act: /(^|\n)《?起動/,
+  evolve: /(^|\n)《?進化(?!時)/,
+  onEvolve: /【進化時】/,
+  onSuperEvolve: /【超進化時】/,
+  strike: /【攻撃時】/,
+  storm: /【疾走】/,
+  rush: /【突進】/,
+  ward: /【守護】/,
+  drain: /【ドレイン】/,
+  bane: /【必殺】/,
+  assail: /【指定攻撃】/,
+  intimidate: /【威圧】/,
+  aura: /【オーラ】/,
+  combo: /【コンボ/,
+  sanguine: /【真紅】/,
+  overflow: /【覚醒】/,
+  necrocharge: /【ネクロチャージ/,
+  spellchain: /【スペルチェイン/,
+  stack: /【スタック】/,
+  earthRite: /【土の秘術/,
+  quick: /(^|\n)《?クイック/,
+};
+
+/** Does the card name the ability (in its English text, or its Japanese one for a pre-release card)? */
+const hasAbility = (card: PoolCard, tag: AbilityTag): boolean =>
+  card.preview ? ABILITY_TAGS_JA[tag].test(card.text.ja ?? "") : ABILITY_TAGS[tag].test(card.text.en);
 export const ABILITIES = Object.keys(ABILITY_TAGS) as AbilityTag[];
 
 /** The set code of a printing number ("BP01-001" -> "BP01", "BP03-LDⓈ01" -> "BP03"). */
@@ -116,7 +153,7 @@ export function filterPool(cards: readonly PoolCard[], f: PoolFilters, nameOf: (
     if (f.set !== "any" && !card.printings.some((p) => setOf(p) === f.set)) return false;
     if (f.universe === "none" ? card.universe !== undefined : f.universe !== "any" && card.universe !== f.universe) return false;
     if (trait !== "" && !card.traits.some((t) => traitNames(t).some((name) => name.toLowerCase().includes(trait)))) return false;
-    if (f.ability !== "any" && !ABILITY_TAGS[f.ability].test(card.text.en)) return false;
+    if (f.ability !== "any" && !hasAbility(card, f.ability)) return false;
     return matchesText(card, words, [card.id, ...card.printings]);
   });
   if (f.sort === "cost") return out.sort((a, b) => (a.cost ?? 99) - (b.cost ?? 99) || a.id.localeCompare(b.id));

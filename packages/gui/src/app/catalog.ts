@@ -48,13 +48,20 @@ export class Catalog {
   }
 }
 
-/** A card's name in the chosen card language (English when missing). */
+/**
+ * A card's name in the chosen card language (the card name when missing). A pre-release card (`preview`, BP22) has a
+ * placeholder English name (shown as it is, decided by the project owner) and its Japanese name as its card name.
+ */
 export function cardName(card: CatalogCard | undefined, lang: CardLang, fallback = "?"): string {
   if (!card) return fallback;
-  return (lang === "en" ? card.name : card.names[lang]) || card.name;
+  return card.names[lang] || card.name;
 }
 
-/** A card's text in the chosen language (English when missing, then the others). */
+/**
+ * A card's text in the chosen language (English when missing, then the others). A pre-release card's English text is a
+ * placeholder, so the other languages fall back to Japanese, its original.
+ */
 export function cardText(card: CatalogCard, lang: CardLang): string {
+  if (card.preview && lang !== "en") return card.text[lang] || card.text.ja || card.text.cn || "";
   return card.text[lang] || card.text.en || card.text.ja || card.text.cn || "";
 }

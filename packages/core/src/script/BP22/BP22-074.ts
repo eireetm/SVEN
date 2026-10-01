@@ -29,7 +29,7 @@ export default defineCard({
         },
         {
           id: "storm",
-          label: "This gains Storm",
+          label: "Gain Storm",
           *resolve(fx) {
             if (fx.game.card(fx.self)?.zone === "field") yield* fx.giveKeyword(fx.self, "storm");
           },

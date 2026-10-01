@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { createEngine, type Decision, type DeckList } from "@sve/core";
 import { ALL_CARDS, ALL_SCRIPTS } from "@sve/core/sets";
 import { describe, expect, it } from "vitest";
-import { Catalog, cardName } from "../src/app/catalog";
+import { Catalog, cardName, cardText } from "../src/app/catalog";
 import type { UiLang } from "../src/app/settings";
 import { deckProblemText, problemKind } from "../src/decks/problems";
 import { optionText, scriptLabel } from "../src/game/options";
@@ -118,6 +118,16 @@ describe("options of choices", () => {
     expect(say(choose("mode", ["1", "Give this follower Storm"]), "en")).toEqual(["Give this follower Storm"]);
     expect(say(choose("effect", ["1", "{[cost03]}: with 10 Academic cards in your cemetery, deal 8 damage and draw 2 cards"]), "en")[0]).toMatch(/^\(3\): /);
     expect(scriptLabel("A label no script has", { catalog, lang: "cn" })).toBe("A label no script has");
+  });
+
+  it("show a pre-release card (BP22) with the English placeholder, and its Japanese name and text where a language lacks them", () => {
+    const deadly = catalog.def("BP22-002")!;
+    expect([cardName(deadly, "en"), cardName(deadly, "ja"), cardName(deadly, "cn")]).toEqual(["unavailable", "デッドリーエルフ", "デッドリーエルフ"]);
+    expect([cardText(deadly, "en"), cardText(deadly, "ja").slice(0, 4), cardText(deadly, "cn").slice(0, 4)]).toEqual(["unavailable", "【必殺】", "【必杀】"]);
+    // A Chinese name another card's Chinese text gives (BP22-005 『璀璨妖精』).
+    expect(cardName(catalog.def("BP22-001"), "cn")).toBe("璀璨妖精");
+    // Reprints keep their cards' names (BP22-T05 is BP01-T03 Fairy).
+    expect(cardName(catalog.def("BP01-T03"), "en")).toBe("Fairy");
   });
 
   it("word the engine's own options in the interface language", () => {

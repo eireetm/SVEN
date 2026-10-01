@@ -77,6 +77,11 @@ export interface CardDefinition {
    * build takes it from the set (data/universes.ts). Absent for class-only cards.
    */
   universe?: Universe;
+  /**
+   * A pre-release card (data/preview.ts, e.g. BP22): implemented from its Japanese text; its English name and text are a
+   * placeholder until the English data is out. Present only when true.
+   */
+  preview?: true;
   /** CR 14.4.1 — the Trigger icon of a Cardfight!! Vanguard card (the data build reads it from its reminder text). */
   trigger?: TriggerIcon;
   /**
