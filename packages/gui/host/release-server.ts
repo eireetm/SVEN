@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 import type { HostConfig } from "./config.ts";
 import { deckPath, deleteDeckFile, listDecks, readDeckText, writeDeckText } from "./decks.ts";
 import { deleteReplayFile, listReplays, readReplayText, replayPath, writeReplayText } from "./replays.ts";
-import { IMAGE_EXTENSIONS, isSafeId, listResources } from "./resources.ts";
+import { listResources, ownCardArt } from "./resources.ts";
 
 /** The release's version (packages/gui/package.json), put in when the release is built. */
 declare const __SVE_VERSION__: string;
@@ -135,20 +135,6 @@ function fileIn(dir: string, path: string): string | null {
   return existsSync(full) && statSync(full).isFile() ? full : null;
 }
 
-/** A card's own image in public/images/cards/ (by printing, then by definition; `_back` for a back face), or null. */
-function cardArt(printing: string, def: string | null, back: boolean): string | null {
-  const dir = join(cfg.publicDir, "images", "cards");
-  for (const id of [printing, def]) {
-    if (!id || !isSafeId(id)) continue;
-    const name = back && !id.endsWith("_back") ? `${id}_back` : id;
-    for (const ext of IMAGE_EXTENSIONS) {
-      const file = join(dir, name + ext);
-      if (existsSync(file)) return file;
-    }
-  }
-  return null;
-}
-
 /** The GUI's /api (packages/gui/host/plugin.ts has the same, with the assets folder). */
 async function api(req: IncomingMessage, res: ServerResponse, url: URL): Promise<void> {
   const path = decodeURIComponent(url.pathname.slice("/api/".length));
@@ -163,7 +149,8 @@ async function api(req: IncomingMessage, res: ServerResponse, url: URL): Promise
     });
   }
   if (path.startsWith("card-art/") && req.method === "GET") {
-    const file = cardArt(path.slice("card-art/".length), url.searchParams.get("def"), url.searchParams.get("back") === "1");
+    // The player's own image only: a release has no assets folder.
+    const file = ownCardArt(cfg.publicDir, path.slice("card-art/".length), url.searchParams.get("def"), url.searchParams.get("back") === "1");
     return file ? sendFile(req, res, file, false) : sendJson(res, 404, { error: "no image" });
   }
   if (path.startsWith("misc/")) return sendJson(res, 404, { error: "no image" });

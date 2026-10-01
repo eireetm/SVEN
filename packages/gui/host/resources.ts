@@ -14,10 +14,41 @@ export const CONTENT_TYPES: Readonly<Record<string, string>> = {
   ".json": "application/json; charset=utf-8",
 };
 
-/** A printing or definition id used as a file name: letters, digits, "-" and "_" (also the circled S of BP03-LDⓈ01). */
-const SAFE_ID = /^[\p{L}\p{N}_-]{1,64}$/u;
+/**
+ * A printing or definition id used as a file name: letters, digits, "-" and "_", and the circled S of some leaders'
+ * printings (BP03-LDⓈ01), which Unicode counts as a symbol, not a letter.
+ */
+const SAFE_ID = /^[\p{L}\p{N}Ⓢ_-]{1,64}$/u;
 
 export const isSafeId = (id: string): boolean => SAFE_ID.test(id);
+
+/**
+ * The names a card's own image may have, without the file type: by printing, then by definition id; `_back` added for the
+ * back face of a double-faced card (CR 2.14). A circled S may also be written as a plain one (BP03-LDS01 for BP03-LDⓈ01),
+ * which is easier to type.
+ */
+export function cardArtNames(printing: string, def: string | null, back = false): string[] {
+  const names: string[] = [];
+  for (const id of [printing, def]) {
+    if (!id || !isSafeId(id)) continue;
+    // A back face's definition id already ends with "_back" (BP09-005_back).
+    const name = back && !id.endsWith("_back") ? `${id}_back` : id;
+    for (const n of [name, name.replace(/Ⓢ/g, "S")]) if (!names.includes(n)) names.push(n);
+  }
+  return names;
+}
+
+/** The player's own image of a card in `<publicDir>/images/cards/` (cardArtNames, any image type), or null. */
+export function ownCardArt(publicDir: string, printing: string, def: string | null, back = false): string | null {
+  const dir = join(publicDir, "images", "cards");
+  for (const name of cardArtNames(printing, def, back)) {
+    for (const ext of IMAGE_EXTENSIONS) {
+      const file = join(dir, name + ext);
+      if (existsSync(file)) return file;
+    }
+  }
+  return null;
+}
 
 /**
  * The image file to show for a card, or null (the GUI then draws a text placeholder). In order:
@@ -26,17 +57,9 @@ export const isSafeId = (id: string): boolean => SAFE_ID.test(id);
  * `back`: the back face of a double-faced card (CR 2.14): `<id>_back.*`, and the scraped `<printing>_back.webp`.
  */
 export function findCardArt(cfg: HostConfig, printing: string, def: string | null, back = false): string | null {
+  const own = ownCardArt(cfg.publicDir, printing, def, back);
+  if (own) return own;
   const suffix = back ? "_back" : "";
-  const custom = join(cfg.publicDir, "images", "cards");
-  for (const id of [printing, def]) {
-    if (!id || !isSafeId(id)) continue;
-    // A back face's definition id already ends with "_back" (BP09-005_back).
-    const name = back && !id.endsWith("_back") ? id + suffix : id;
-    for (const ext of IMAGE_EXTENSIONS) {
-      const file = join(custom, name + ext);
-      if (existsSync(file)) return file;
-    }
-  }
   if (!isSafeId(printing)) return null;
   for (const ext of [".webp", ".png", ".jpg"]) {
     const file = join(cfg.assetsDir, printing, printing + suffix + ext);

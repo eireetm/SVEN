@@ -29,13 +29,14 @@ function find(base: string, extensions: readonly string[]): string | null {
 }
 
 /**
- * The player's own image of a card in public/images/cards/: by printing, then by definition; a back face's with "_back"
- * (host/resources.ts findCardArt, which also looks in the assets folder on a computer). The Android app's card images.
+ * The player's own image of a card in public/images/cards/: by printing, then by definition; a back face's with "_back";
+ * a circled S may be a plain one (BP03-LDS01 for BP03-LDⓈ01). As host/resources.ts cardArtNames, whose findCardArt also
+ * looks in the assets folder on a computer. The Android app's card images.
  */
 export function ownCardArtUrl(printing: string, def: string, back = false): string | null {
   for (const id of [printing, def]) {
     const name = back && !id.endsWith("_back") ? `${id}_back` : id;
-    const found = find(`images/cards/${name}`, IMAGE);
+    const found = find(`images/cards/${name}`, IMAGE) ?? find(`images/cards/${name.replace(/Ⓢ/g, "S")}`, IMAGE);
     if (found) return found;
   }
   return null;
