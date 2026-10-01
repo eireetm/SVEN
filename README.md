@@ -15,7 +15,8 @@
 - **Core（规则引擎，`@sve/core`）**
   - 纯 TypeScript，结果确定，可以在没有界面的环境里运行，不依赖界面或文件。
   - 按综合规则（v1.26.1）逐条实现，规则判断都注明条款编号。
-  - 支持 56 个卡包的 3,568 个卡牌定义，共 7,296 个印刷版本，异画共用同一个定义。
+  - 支持 57 个卡包的 3,689 个卡牌定义，共 7,564 个印刷版本，异画共用同一个定义。
+  - BP22 是先行测试版：只有日文和中文数据（仓库旁边的 `BP22.json`，官方日文卡表），按日文实现、中文对照；英文卡名和文本暂时显示为 `unavailable`，还没有卡图。等英文数据出来后补齐。
 - **Bot（`@sve/bot`）**：界面上有四个难度，只用 Core 的公开 API：
   - Bot-简单：贪心，每个决策都模拟所有候选回答，评估局面后选最好的；
   - Bot-中等：规划整个回合，再模拟对手的下一回合，只用玩家看得到的信息；
@@ -71,7 +72,7 @@ npm run dev:gui
 | `npm run card -- <卡号>` | 查一张卡：各语言文本、日文类型、相关卡、官方 QA、脚本状态 |
 | `npm run bench` | 性能基准：随机对局、复制和抽样一局、Bot 每个决策的耗时 |
 | `npm run bot:arena -- [局数] [A] [B]` | Bot 互打（easy / medium / hard，试验版 medium-beta / hard-beta；sve-fool / sve-good / sve-planner 是模仿 sve-server 三个 AI 的对照组，只用于测试）：示例卡组，两局一组交换座位，打印胜率和思考时间。`--decks sd01,sd02` 选卡组，`--mirror` 双方用同一副，`--workers 8` 多进程一起打 |
-| `npm run build:cards` | 从抓取的卡牌数据（仓库旁边的 `assets/`）重新生成 `packages/core/data/*.json` |
+| `npm run build:cards` | 从抓取的卡牌数据（仓库旁边的 `assets/`，先行测试版的卡包读仓库旁边的 `BP22.json` 这类卡表）重新生成 `packages/core/data/*.json` |
 | `npm run scripts:index` | 新增卡牌脚本后，重新生成脚本注册表（`packages/core/src/script/<卡包>/index.ts`） |
 | `npm run cards:status` | 生成每张卡的实现和测试状态表（写到 `docs/card-status*.md`） |
 | `npm run rules:clauses` | 从综合规则的 PDF（仓库旁边的 `rules/`）提取条款编号表 `tools/data/cr-clauses.json` |
@@ -350,7 +351,8 @@ An unofficial rules engine, AI and client for the *Shadowverse: Evolve* trading 
 - **Core (the rules engine, `@sve/core`)**
   - Plain TypeScript and deterministic. It runs headless, with no dependency on a UI or on files.
   - It implements the Comprehensive Rules (v1.26.1) clause by clause, and every rules decision cites its clause number.
-  - It supports 3,568 card definitions from 56 sets, 7,296 printings in all; alternate arts share one definition.
+  - It supports 3,689 card definitions from 57 sets, 7,564 printings in all; alternate arts share one definition.
+  - BP22 is a pre-release set: only Japanese and Chinese data exist (`BP22.json` next to the repository, the official Japanese card list). It is implemented from the Japanese text, checked against the Chinese; English names and texts show `unavailable` for now, and there are no card images yet. They will be filled in once the English data is out.
 - **Bot (`@sve/bot`)**: four levels in the interface, on the Core's public API only:
   - Bot-Easy: greedy. For each decision it simulates every candidate answer and picks the best-scoring result.
   - Bot-Medium: plans its whole turn, then plays out the opponent's next turn. It uses only what its player can see.
@@ -406,7 +408,7 @@ Run these at the repository root:
 | `npm run card -- <card number>` | Show a card: its text in each language, Japanese traits, related cards, official Q&A, script status |
 | `npm run bench` | Benchmarks: random games, copying and sampling a game, the bot's time per decision |
 | `npm run bot:arena -- [games] [A] [B]` | Bots against each other (easy / medium / hard, the trial medium-beta / hard-beta, and sve-fool / sve-good / sve-planner, imitations of sve-server's three AIs used only as benchmarks): the sample decks, games in pairs with the seats swapped; prints the win rate and thinking time. `--decks sd01,sd02` picks decks, `--mirror` gives both players the same deck, `--workers 8` plays on several processes |
-| `npm run build:cards` | Rebuild `packages/core/data/*.json` from the scraped card data (the `assets/` folder next to the repository) |
+| `npm run build:cards` | Rebuild `packages/core/data/*.json` from the scraped card data (the `assets/` folder next to the repository; a pre-release set from its card list next to the repository, such as `BP22.json`) |
 | `npm run scripts:index` | Regenerate the card script registries (`packages/core/src/script/<set>/index.ts`) after adding scripts |
 | `npm run cards:status` | Write each card's implementation and test status (to `docs/card-status*.md`) |
 | `npm run rules:clauses` | Extract the clause table `tools/data/cr-clauses.json` from the Comprehensive Rules PDF (the `rules/` folder next to the repository) |
