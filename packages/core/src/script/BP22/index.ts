@@ -55,7 +55,69 @@ import c_BP22_052 from "./BP22-052";
 import c_BP22_053 from "./BP22-053";
 import c_BP22_054 from "./BP22-054";
 import c_BP22_055 from "./BP22-055";
+import c_BP22_056 from "./BP22-056";
+import c_BP22_057 from "./BP22-057";
+import c_BP22_058 from "./BP22-058";
+import c_BP22_059 from "./BP22-059";
+import c_BP22_060 from "./BP22-060";
+import c_BP22_061 from "./BP22-061";
+import c_BP22_062 from "./BP22-062";
+import c_BP22_063 from "./BP22-063";
+import c_BP22_064 from "./BP22-064";
+import c_BP22_065 from "./BP22-065";
+import c_BP22_066 from "./BP22-066";
+import c_BP22_067 from "./BP22-067";
+import c_BP22_068 from "./BP22-068";
+import c_BP22_069 from "./BP22-069";
+import c_BP22_070 from "./BP22-070";
+import c_BP22_071 from "./BP22-071";
+import c_BP22_072 from "./BP22-072";
+import c_BP22_073 from "./BP22-073";
+import c_BP22_074 from "./BP22-074";
+import c_BP22_075 from "./BP22-075";
+import c_BP22_076 from "./BP22-076";
+import c_BP22_077 from "./BP22-077";
+import c_BP22_078 from "./BP22-078";
+import c_BP22_079 from "./BP22-079";
+import c_BP22_080 from "./BP22-080";
+import c_BP22_081 from "./BP22-081";
+import c_BP22_082 from "./BP22-082";
+import c_BP22_083 from "./BP22-083";
+import c_BP22_084 from "./BP22-084";
+import c_BP22_085 from "./BP22-085";
+import c_BP22_086 from "./BP22-086";
+import c_BP22_087 from "./BP22-087";
+import c_BP22_088 from "./BP22-088";
+import c_BP22_089 from "./BP22-089";
+import c_BP22_090 from "./BP22-090";
+import c_BP22_091 from "./BP22-091";
+import c_BP22_092 from "./BP22-092";
+import c_BP22_093 from "./BP22-093";
+import c_BP22_094 from "./BP22-094";
+import c_BP22_095 from "./BP22-095";
+import c_BP22_096 from "./BP22-096";
+import c_BP22_097 from "./BP22-097";
+import c_BP22_098 from "./BP22-098";
+import c_BP22_099 from "./BP22-099";
+import c_BP22_100 from "./BP22-100";
+import c_BP22_101 from "./BP22-101";
+import c_BP22_102 from "./BP22-102";
+import c_BP22_103 from "./BP22-103";
+import c_BP22_104 from "./BP22-104";
+import c_BP22_106 from "./BP22-106";
+import c_BP22_107 from "./BP22-107";
+import c_BP22_108 from "./BP22-108";
+import c_BP22_109 from "./BP22-109";
+import c_BP22_110 from "./BP22-110";
+import c_BP22_111 from "./BP22-111";
+import c_BP22_112 from "./BP22-112";
+import c_BP22_113 from "./BP22-113";
+import c_BP22_114 from "./BP22-114";
+import c_BP22_115 from "./BP22-115";
 import c_BP22_116 from "./BP22-116";
+import c_BP22_117 from "./BP22-117";
+import c_BP22_118 from "./BP22-118";
+import c_BP22_T01 from "./BP22-T01";
 import c_BP22_T02 from "./BP22-T02";
 import c_BP22_T03 from "./BP22-T03";
 
@@ -119,7 +181,69 @@ export const BP22_SCRIPTS: ScriptRegistry = {
   "BP22-053": c_BP22_053,
   "BP22-054": c_BP22_054,
   "BP22-055": c_BP22_055,
+  "BP22-056": c_BP22_056,
+  "BP22-057": c_BP22_057,
+  "BP22-058": c_BP22_058,
+  "BP22-059": c_BP22_059,
+  "BP22-060": c_BP22_060,
+  "BP22-061": c_BP22_061,
+  "BP22-062": c_BP22_062,
+  "BP22-063": c_BP22_063,
+  "BP22-064": c_BP22_064,
+  "BP22-065": c_BP22_065,
+  "BP22-066": c_BP22_066,
+  "BP22-067": c_BP22_067,
+  "BP22-068": c_BP22_068,
+  "BP22-069": c_BP22_069,
+  "BP22-070": c_BP22_070,
+  "BP22-071": c_BP22_071,
+  "BP22-072": c_BP22_072,
+  "BP22-073": c_BP22_073,
+  "BP22-074": c_BP22_074,
+  "BP22-075": c_BP22_075,
+  "BP22-076": c_BP22_076,
+  "BP22-077": c_BP22_077,
+  "BP22-078": c_BP22_078,
+  "BP22-079": c_BP22_079,
+  "BP22-080": c_BP22_080,
+  "BP22-081": c_BP22_081,
+  "BP22-082": c_BP22_082,
+  "BP22-083": c_BP22_083,
+  "BP22-084": c_BP22_084,
+  "BP22-085": c_BP22_085,
+  "BP22-086": c_BP22_086,
+  "BP22-087": c_BP22_087,
+  "BP22-088": c_BP22_088,
+  "BP22-089": c_BP22_089,
+  "BP22-090": c_BP22_090,
+  "BP22-091": c_BP22_091,
+  "BP22-092": c_BP22_092,
+  "BP22-093": c_BP22_093,
+  "BP22-094": c_BP22_094,
+  "BP22-095": c_BP22_095,
+  "BP22-096": c_BP22_096,
+  "BP22-097": c_BP22_097,
+  "BP22-098": c_BP22_098,
+  "BP22-099": c_BP22_099,
+  "BP22-100": c_BP22_100,
+  "BP22-101": c_BP22_101,
+  "BP22-102": c_BP22_102,
+  "BP22-103": c_BP22_103,
+  "BP22-104": c_BP22_104,
+  "BP22-106": c_BP22_106,
+  "BP22-107": c_BP22_107,
+  "BP22-108": c_BP22_108,
+  "BP22-109": c_BP22_109,
+  "BP22-110": c_BP22_110,
+  "BP22-111": c_BP22_111,
+  "BP22-112": c_BP22_112,
+  "BP22-113": c_BP22_113,
+  "BP22-114": c_BP22_114,
+  "BP22-115": c_BP22_115,
   "BP22-116": c_BP22_116,
+  "BP22-117": c_BP22_117,
+  "BP22-118": c_BP22_118,
+  "BP22-T01": c_BP22_T01,
   "BP22-T02": c_BP22_T02,
   "BP22-T03": c_BP22_T03,
 };
