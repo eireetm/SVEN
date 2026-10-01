@@ -14,8 +14,7 @@ type ResourceStatus =
 
 /**
  * The Android app: where the player's own files go (the app's public/ folder, copied over a USB cable), importing them
- * from a zip file, and reading the folder again after copying; how many resources the app has of its own, if any
- * (docs/android.md).
+ * from a zip file, and reading the folder again after copying; how many resources the app has of its own, if any.
  */
 function ResourcesSection() {
   const t = useT();

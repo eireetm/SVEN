@@ -2,7 +2,7 @@
 // Storm. Ward.
 // {[fanfare]} If there are at least 2 amulets on your field, give this follower {[attack]}+2 and your
 // leader {[defense]}+2. (Both depend on the condition, as the English says; the Japanese
-// "…なら、これは+2する。自分のリーダーは+2する。" allows that reading, docs/open-questions.md.)
+// "…なら、これは+2する。自分のリーダーは+2する。" allows that reading.)
 import { defineCard, fanfare } from "../helpers";
 import { isAmulet } from "../targets";
 import { countIn } from "./shared";

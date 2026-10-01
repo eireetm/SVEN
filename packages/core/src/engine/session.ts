@@ -213,7 +213,7 @@ export class GameSession {
   }
 
   /**
-   * A copy of this game as `viewer` knows it (docs/bot.md): every card whose identity `viewer` can't
+   * A copy of this game as `viewer` knows it: every card whose identity `viewer` can't
    * see (CR 4.1.2) is dealt again at random from the same hidden cards (resampleHidden), and future
    * random events are reseeded, so the copy tells nothing the viewer doesn't know. The opponent's
    * deck list counts as known. Same seed, same information → same copy. Needs checkpoints and a

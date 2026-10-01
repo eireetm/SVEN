@@ -1,4 +1,4 @@
-// A connection to the other player (docs/online.md): JSON messages both ways, and whether it is direct or goes through a TURN
+// A connection to the other player: JSON messages both ways, and whether it is direct or goes through a TURN
 // relay. Made from a public network's room (rooms.ts) or from codes passed by hand (manual.ts); the rest of the app sees
 // only this.
 import { parseMessage, type NetMessage } from "./messages";

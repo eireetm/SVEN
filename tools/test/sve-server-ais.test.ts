@@ -6,7 +6,7 @@ import { ALL_CARDS, ALL_SCRIPTS } from "../../packages/core/src/sets";
 import { createBot } from "../../packages/bot/src";
 import { createSveServerBot, SVE_SERVER_AIS } from "../sve-server-ais";
 
-// sve-server's AIs imitated (tools/sve-server-ais, docs/bot.md section 10) stay usable as benchmark opponents: each plays a
+// sve-server's AIs imitated (tools/sve-server-ais) stay usable as benchmark opponents: each plays a
 // whole game against the greedy bot with legal answers, and none of its answers falls back to the default one.
 const engine = createEngine({ cards: ALL_CARDS, scripts: ALL_SCRIPTS });
 const expand = (counts: Record<string, number> | undefined) => Object.entries(counts ?? {}).flatMap(([id, n]) => Array<string>(n).fill(id));

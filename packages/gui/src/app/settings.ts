@@ -12,7 +12,7 @@ export interface Settings {
   cardLang: CardLang;
   /** The worker's pause before each bot answer. */
   botDelayMs: number;
-  /** The sound effects' volume, 0–1 (sounds play only when the player provided them: public/audio, docs/resources.md). */
+  /** The sound effects' volume, 0–1 (sounds play only when the player provided them: public/audio). */
   volume: number;
   /** The background music's volume, 0–1. */
   bgmVolume: number;
@@ -35,11 +35,11 @@ export interface Settings {
   uiTransparency: number | null;
   /** A person picks the mat slot of each card they put on the field or into the EX area (the look only). */
   manualSlots: boolean;
-  /** Manual debugging: clicks on cards, decks, leaders and point panels open what can be done by hand (docs/gui.md). */
+  /** Manual debugging: clicks on cards, decks, leaders and point panels open what can be done by hand. */
   manualDebug: boolean;
   /** After each Quick card or ability, the game waits until the person has seen it (who played what, its targets). */
   announceQuick: boolean;
-  /** Online play: the player's own TURN relay, for networks that can't connect directly (empty urls: none; docs/online.md). */
+  /** Online play: the player's own TURN relay, for networks that can't connect directly (empty urls: none). */
   turn: TurnServer;
 }
 

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 // A release is signed with the key a properties file names (storeFile, relative to that file; storePassword; keyAlias;
 // keyPassword). The file and the key stay outside the repository; scripts/android-apk.mjs --release passes its path in
-// SVE_ANDROID_SIGNING (docs/android.md). Without it, a release build is left unsigned.
+// SVE_ANDROID_SIGNING. Without it, a release build is left unsigned.
 def signingFile = System.getenv('SVE_ANDROID_SIGNING') ? file(System.getenv('SVE_ANDROID_SIGNING')) : null
 
 // The version is packages/gui/package.json's, like the PC release's (README "发行版"). versionCode must grow with every

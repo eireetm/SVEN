@@ -139,7 +139,7 @@ describe("BP03 Swordcraft", () => {
     big.attack("BP03-027", "opp:BP03-001");
     expect([big.hand(), big.zone("me", "deck"), big.stats("opp:BP03-001")]).toEqual([["V2"], ["V1"], [5, 2]]);
     // With Wood of Brambles, both Follower Strikes are pending and the player picks the order
-    // (CR 10.7.3.1; confirmed by a judge, docs/open-questions.md). Momo first: it draws and
+    // (CR 10.7.3.1; confirmed by a judge). Momo first: it draws and
     // discards, then the 2 damage destroys the defender.
     const brambles = { me: { field: ["BP03-027", "BP03-011"], hand: ["V2"], deck: ["V1"] }, opp: { field: [{ card: "V1", engaged: true }] } };
     const first = d(brambles).attack("BP03-027", "opp:V1").pending("BP03-027").pick("V2").flush();

@@ -1,4 +1,4 @@
-// Small screens (a phone held sideways; docs/android.md): the card panel of a game becomes a drawer, the table packs
+// Small screens (a phone held sideways): the card panel of a game becomes a drawer, the table packs
 // tighter (board/layout.ts), and the menus shrink (styles/app.css, the same media query).
 import { useSyncExternalStore } from "react";
 

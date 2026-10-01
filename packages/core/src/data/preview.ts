@@ -5,8 +5,8 @@ import type { RawCardJson, RawRuling } from "./raw";
 
 /**
  * Pre-release sets ("先行" data): a set published in Japanese and Chinese before its English release comes as one file
- * of the Japanese official card list instead of the scraped `assets/<card>/<card>.json` files, e.g. BP22 (2026-10-01,
- * docs/NOTE-card-scripts.md section 10). Its cards are implemented from the Japanese text, checked against the Chinese
+ * of the Japanese official card list instead of the scraped `assets/<card>/<card>.json` files, e.g. BP22 (2026-10-01).
+ * Its cards are implemented from the Japanese text, checked against the Chinese
  * text (decided by the project owner); their English name and text are a placeholder (english-text.ts PREVIEW_TEXT)
  * until the English data is out, when the set leaves this list and is built from the scraped files like every other.
  *

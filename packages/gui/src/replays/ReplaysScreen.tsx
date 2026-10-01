@@ -1,4 +1,4 @@
-// The saved replays (packages/gui/replays/, docs/gui.md "录像"): newest first, with their decks, players and result. Watch
+// The saved replays (packages/gui/replays/): newest first, with their decks, players and result. Watch
 // one, delete one, or open a replay file from elsewhere (a friend's, a bug report). Watching hands the replay to the engine
 // worker, which plays it back input by input (engine/game-host.ts), and shows the game screen with its playback bar.
 import { useEffect, useState } from "react";

@@ -66,7 +66,6 @@ const BP08_003_BACK: Partial<RawCardBack> = {
  *
  * Every entry must cite its evidence: the card's other language fields, other printings of the
  * same card, or a decision of the project owner. Anything else is reported, not fixed.
- * See docs/data-notes.md ("全卡包扫描").
  */
 export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   // English names and texts swapped within ETD02: the Japanese names, texts and costs are
@@ -80,7 +79,7 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   // Evolved followers whose printed English name is intentionally different from the base card
   // (レーヴァテインドラゴン・アタックモード). The "(Evolved)" suffix is only the data convention
   // stripEvolvedSuffix removes; the card name stays "Lævateinn Dragon, Attack Form".
-  // BP03-SL13 is the alternate art of BP03-058 (docs/data-notes.md).
+  // BP03-SL13 is the alternate art of BP03-058.
   "BP03-058": { name_en: "Lævateinn Dragon, Attack Form (Evolved)" },
   "BP03-SL13": { name_en: "Lævateinn Dragon, Attack Form (Evolved)" },
   // The same for the other two forms (レーヴァテインドラゴン・ディフェンスモード / ブラストモード);

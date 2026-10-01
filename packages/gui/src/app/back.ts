@@ -1,4 +1,4 @@
-// "Back" (the Android back button, docs/android.md): closes what was opened last and is still open (a drawer, a window, a
+// "Back" (the Android back button): closes what was opened last and is still open (a drawer, a window, a
 // menu), else goes back one screen. Each such thing registers here while it is open; the screens register going back.
 import { useEffect, useRef } from "react";
 

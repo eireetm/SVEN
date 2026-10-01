@@ -1,7 +1,7 @@
 import { expect, test, type Browser, type Page } from "@playwright/test";
 import { answer, useSettings } from "./helpers";
 
-// Online play (docs/online.md): two programs connect — by codes passed by hand (no relay: runs offline), or by a room code
+// Online play: two programs connect — by codes passed by hand (no relay: runs offline), or by a room code
 // through the public relays (SVE_E2E_ONLINE=1: needs the internet) — then chat, prepare a game (the host's rules, each
 // player's deck, ready), play it, one concedes, and they prepare another. Each page is one player's program.
 
@@ -86,7 +86,7 @@ async function readyBoth(host: Page, guest: Page): Promise<void> {
 
 /**
  * Page errors and error messages of the console, to be none. A public relay that can't be reached is not one: the browser
- * says so in the console, and the program uses the others (docs/online.md "公共服务").
+ * says so in the console, and the program uses the others.
  */
 function watchProblems(pages: Page[], problems: string[]): void {
   for (const page of pages) {

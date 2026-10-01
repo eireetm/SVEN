@@ -4,7 +4,7 @@ import { computeLayout, MAT_BOX_HEIGHT, WIDE_WIDTH } from "../src/game/board/lay
 import { mergeResources } from "../src/host/bundled";
 import { resourcePathInZip } from "../src/host/zip-paths";
 
-// The Android app (docs/android.md): where the files of an imported zip go, the resources built into a release, the back
+// The Android app: where the files of an imported zip go, the resources built into a release, the back
 // button, the table on a phone.
 
 describe("importing resources from a zip", () => {

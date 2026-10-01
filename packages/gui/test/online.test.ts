@@ -3,7 +3,7 @@ import { decodeSignal, encodeSignal, newRoomCode, normalizeRoomCode, ROOM_CODE_L
 import { BACKLOG_PIECE, parseMessage, watchedOptions, type WatchedGame } from "../src/net/messages";
 import { iceServers, STUN_SERVERS } from "../src/net/relays";
 
-// Online play (docs/online.md): the codes people pass each other, the messages two programs accept, the ICE servers.
+// Online play: the codes people pass each other, the messages two programs accept, the ICE servers.
 
 const SDP = [
   "v=0",

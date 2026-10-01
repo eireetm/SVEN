@@ -7,7 +7,7 @@ import { checkInvariants, deckPool, drive, randomAgent, randomDeck, testAmulet, 
 
 const { defineCard, activated, whenYourLeaderGainsDefense } = script;
 
-// Positions made of test cards: what the planning bots do with their turn where the greedy bot fails (docs/bot.md).
+// Positions made of test cards: what the planning bots do with their turn where the greedy bot fails.
 const cards = createEngine({
   cards: [
     testFollower("FAIRY", 1, 1, 1),

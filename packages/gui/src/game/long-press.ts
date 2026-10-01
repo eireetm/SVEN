@@ -1,4 +1,4 @@
-// A long press on a card with a finger (docs/android.md): the card panel's drawer opens and shows it (the press already
+// A long press on a card with a finger: the card panel's drawer opens and shows it (the press already
 // pointed at the card, CardTile). That press then neither clicks nor drags (board/pointer.ts; the click that follows is
 // swallowed: a tile of the deck builder isn't added or removed), and the browser's own long-press menu stays away.
 import { markLongPress } from "./board/pointer";

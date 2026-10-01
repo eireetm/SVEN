@@ -51,7 +51,7 @@ export interface BotStats {
 const EPSILON = 1e-9;
 
 /**
- * The greedy bot (docs/bot.md). For each decision it tries every candidate answer in a copy of the
+ * The greedy bot. For each decision it tries every candidate answer in a copy of the
  * game as it knows it (GameSession.determinized: the opponent's hidden cards and future random
  * events are sampled), plays on with quick answers until the next main phase decision, scores the
  * result with a card-agnostic evaluation and picks the best. In its main phase it compares every

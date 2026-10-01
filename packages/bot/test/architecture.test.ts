@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 /**
  * Bots must be reproducible (a bot's choices depend only on its seed and on what its player sees)
  * and play through the core's public API only, so they can't read hidden cards and don't break
- * when the engine's internals change (docs/bot.md).
+ * when the engine's internals change.
  */
 const SRC = join(__dirname, "..", "src");
 

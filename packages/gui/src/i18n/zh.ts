@@ -1,4 +1,4 @@
-// 中文界面文字（CLAUDE.md：显示以英文为主、中文为辅）。游戏用语以官方中文综合规则为准（rules/guide_chs.pdf，2024 年 6 月版）：
+// 中文界面文字。游戏用语以官方中文综合规则为准（rules/guide_chs.pdf，2024 年 6 月版）：
 // 种类、类型、战场、牌组、墓场、额外区、消失领域、计算领域、主要阶段、使用、启动、毁灭、虹吸、主题……；规则书里没有的，沿用
 // 卡牌数据的中文文本（进化时、超进化时、纹章……）。卡牌文本来自卡牌数据，有些用语和规则书不同（必杀、吸血、起动、消费）。
 import type { MessageKey } from "./en";
@@ -143,11 +143,11 @@ export const zh: Record<MessageKey, string> = {
   "settings.turnUrls": "TURN 中转",
   "settings.turnUsername": "用户名",
   "settings.turnCredential": "密码",
-  "settings.turnHelp": "只有双方无法直连时才需要：TURN 中转的地址（turn:主机:端口，多个用空格隔开）、用户名和密码。留空 = 不用。见 docs/online.md。",
+  "settings.turnHelp": "只有双方无法直连时才需要：TURN 中转的地址（turn:主机:端口，多个用空格隔开）、用户名和密码。留空 = 不用。",
   "settings.sound": "声音",
   "settings.bgmVolume": "背景音乐",
   "settings.sfxVolume": "音效",
-  "settings.soundHelp": "只有 packages/gui/public/audio 里有对应的文件时才有声音（docs/resources.md）。",
+  "settings.soundHelp": "只有 public/audio 文件夹里有对应的声音文件时才有声音（见 README）。",
   "settings.resources": "资源",
   "settings.resourcesFolder": "文件夹：{folder}",
   "settings.resourcesHelp": "你自己的卡图、卡背、场地、背景、声音和字体，按这个文件夹里的子文件夹放（例如 images/cards/BP01-001.png）。用数据线连接电脑把文件拷进去，再点“重新读取”；或者导入一个包含同样文件夹的 zip 文件。",

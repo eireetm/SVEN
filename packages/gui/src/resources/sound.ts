@@ -1,4 +1,4 @@
-// The sounds (docs/resources.md): background music for each screen, and sound effects for what happens in a game and for
+// The sounds: background music for each screen, and sound effects for what happens in a game and for
 // the interface's buttons. Silent unless the player put the files in public/audio. Which effects an update makes, and
 // when, is planned in sound-plan.ts (a card's own sound before the common one); this plays them.
 import type { CardId, PlayerView } from "@sve/core";

@@ -1,4 +1,4 @@
-// Online play (docs/online.md), in the online screen's module: making the connection (a room code on the public networks,
+// Online play, in the online screen's module: making the connection (a room code on the public networks,
 // or codes passed by hand), preparing a game (the host's rules, each player's locked deck, a seed both players make), and
 // the game itself: this program's answers go to the other program, the other's come to this engine worker, each with the
 // sender's state (engine/game-host.ts). After a lost connection, the same room connects again and the answers the other side
@@ -299,7 +299,7 @@ async function receive(message: NetMessage): Promise<void> {
   }
 }
 
-// Preparing a game. The seed in three steps (docs/online.md): with both decks locked, the host sends the hash of a secret;
+// Preparing a game. The seed in three steps: with both decks locked, the host sends the hash of a secret;
 // the guest answers with a random part; the host reveals its secret; the seed is the hash of both. Neither can choose it.
 // From the host's first step on, neither player can take their deck back: the host may be starting the game already.
 let secret: string | null = null;

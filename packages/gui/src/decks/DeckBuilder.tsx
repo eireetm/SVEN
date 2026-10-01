@@ -5,7 +5,7 @@
 // lists every printing (alternate arts) of a card: the same card for the rules (CR 2.1.1; the engine counts copies by
 // name, 6.1.1.4), only the picture differs. Between the files and the leader: the format and its restriction list
 // (formats/); cards go in freely, and a deck that doesn't meet them is only told so when it is saved or the builder is left.
-// Cross Craft decks have two leaders (CR Appendix B-2 6.1.1.1). On a small screen (a phone, docs/android.md) the card panel
+// Cross Craft decks have two leaders (CR Appendix B-2 6.1.1.1). On a small screen (a phone) the card panel
 // is a drawer and the deck and the pool are two tabs; a tap adds a card of the pool or removes one of the deck, a long
 // press shows the card, and nothing is dragged.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";

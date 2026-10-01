@@ -1,4 +1,4 @@
-// The online state the screens read (docs/online.md): the connection (looking, connected, closed), the chat, the
+// The online state the screens read: the connection (looking, connected, closed), the chat, the
 // preparation of a game, the game in progress (played, or watched by a spectator) and how many spectators there are. The
 // connections themselves are made in net/online.ts, which loads with the online screen; this module has no connection
 // code, so the game screen can show the state without it.

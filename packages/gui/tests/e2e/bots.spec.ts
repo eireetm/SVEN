@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { openSetup, showSidebar, startGame, useSettings } from "./helpers";
 
-// The bot levels (docs/bot.md): the setup screen offers them, and a game is played by the levels chosen. Checked by what
+// The bot levels: the setup screen offers them, and a game is played by the levels chosen. Checked by what
 // the choices are (the values settings and replays store, engine/protocol.ts SeatController), not by how they are worded.
 
 test("the setup screen offers the bot levels, Bot-Medium chosen at first, each described in its own way", async ({ page }) => {

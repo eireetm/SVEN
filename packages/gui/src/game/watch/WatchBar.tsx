@@ -1,4 +1,4 @@
-// Watching a replay (docs/gui.md "录像"): its playback bar, under the card panel on the left (the table stays whole). The
+// Watching a replay: its playback bar, under the card panel on the left (the table stays whole). The
 // engine worker plays the replay's inputs back one by one (engine/game-host.ts); this only sends what the watcher chooses:
 // play or pause, a step forward or back, the speed, a place on the progress bar (its marks are the turns), whose view, and
 // whether both players' hidden cards show.

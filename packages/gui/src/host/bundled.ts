@@ -1,5 +1,5 @@
-// Resources built into the Android app (a release with the player's resources: vite.config.ts SVE_BUNDLE_PUBLIC,
-// docs/android.md). The player's own files in the phone's public/ folder go first.
+// Resources built into the Android app (a release with the player's resources: vite.config.ts SVE_BUNDLE_PUBLIC).
+// The player's own files in the phone's public/ folder go first.
 
 /** A resource's path without its file type: "images/cards/BP01-001.png" -> "images/cards/BP01-001". */
 const withoutType = (path: string): string => path.replace(/\.[^./]+$/, "");

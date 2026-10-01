@@ -4,7 +4,7 @@ import { randomInt, shuffleInPlace, type RngState } from "../../rng/rng";
 
 /**
  * Legal answers for any decision, for bots, tools and GUIs. Every decision type has all three
- * helpers here, so a new decision type must be added here too (see docs/architecture.md 9):
+ * helpers here, so a new decision type must be added here too:
  * that is what keeps bots working when the rules grow.
  */
 

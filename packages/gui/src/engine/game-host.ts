@@ -1,7 +1,6 @@
 // The game host: runs one game at a time in the engine worker — the core session, the bots, the list of inputs (for undo
 // and replays), and what the GUI is shown: views, the pending decision and the log. No worker or DOM API here, so tests
-// run it in Node. Nothing in it decides rules: legal answers come from the core's decisions (the decision protocol in
-// docs/architecture.md).
+// run it in Node. Nothing in it decides rules: legal answers come from the core's decisions.
 import { createBot } from "@sve/bot";
 import {
   ALL_AUTO_RESOLVABLE,
@@ -121,7 +120,7 @@ function configOf(options: GameOptions) {
   return { deckRestrictions: options.deckRestrictions, autoResolve, manualActions: options.manualActions === true, firstPlayer: firstPlayerOf(options) };
 }
 
-/** A replay being watched: its inputs, played back one by one (docs/gui.md "录像"). */
+/** A replay being watched: its inputs, played back one by one. */
 interface Watching {
   inputs: RecordedInput[];
   playing: boolean;
@@ -136,7 +135,7 @@ interface Watching {
 
 /**
  * A short fingerprint of a game state (FNV-1a of its JSON, and its length). Online play: before each answer the two
- * programs must have the same state; the answer carries the sender's, the receiver compares (docs/online.md).
+ * programs must have the same state; the answer carries the sender's, the receiver compares.
  */
 export function stateHash(state: unknown): string {
   const text = JSON.stringify(state);
@@ -175,7 +174,7 @@ interface QuickPlay {
 const CARD_KEYS = new Set(["card", "newCard", "target", "attacker", "defender", "source", "follower", "evolveCard", "token", "cards", "id"]);
 
 export interface GameHostOptions {
-  /** How much the planning bots search (1: fully). A phone thinks less, so they answer in about the same time (docs/bot.md). */
+  /** How much the planning bots search (1: fully). A phone thinks less, so they answer in about the same time. */
   botEffort?: number;
 }
 
@@ -207,7 +206,7 @@ export class GameHost {
   private remoteQueue = new Map<number, { input: Input; hash: string }>();
   private desync: string | null = null;
   /**
-   * Online play, a spectator (docs/online.md "观战"): both seats are the players' programs (their answers come as
+   * Online play, a spectator: both seats are the players' programs (their answers come as
    * "remoteInput" through the host); it is shown what both players can see (CR 4.1.2), from the side chosen.
    */
   private spectating = false;

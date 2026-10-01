@@ -1,4 +1,4 @@
-// Deck codes (docs/gui.md): a deck as one line of text, to share in a chat or a forum and to import. "SVE1-", then the deck
+// Deck codes: a deck as one line of text, to share in a chat or a forum and to import. "SVE1-", then the deck
 // as compact text, zlib-compressed (its checksum catches a code copied wrong) and in base64url (letters, digits, "-", "_":
 // nothing a chat breaks). The text has a line each for the name; the leader and the second leader (Cross Craft); the main
 // deck; the evolve deck. A section lists its printings in order, "BP01-001*3" for three copies, "-002" for a printing of the

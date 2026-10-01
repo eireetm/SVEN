@@ -3,12 +3,11 @@ import type { RawCardJson } from "./raw";
 /**
  * Choosing a printing's English text, and alternate names (CR 2.13).
  *
- * The English text of a card is `effect_en` (decided by the project owner, CLAUDE.md
+ * The English text of a card is `effect_en` (decided by the project owner,
  * 2026-09-23): it comes from the same record as the Japanese text. `effect_en_official` was
  * matched to cards by card number, which is wrong wherever the English numbering differs from
  * the Japanese one (all PR cards, many alternate-art numbers, whole ranges such as
- * BP02-069..117), so it is only compared against `effect_en` for the report. See
- * docs/data-notes.md.
+ * BP02-069..117), so it is only compared against `effect_en` for the report.
  */
 
 /**

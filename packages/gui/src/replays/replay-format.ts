@@ -1,4 +1,4 @@
-// Replay files (docs/gui.md "录像"): what one must be, and the name one is saved under. No browser API here (tests run it).
+// Replay files: what one must be, and the name one is saved under. No browser API here (tests run it).
 import type { Replay } from "../engine/protocol";
 
 /** A replay read from JSON (checked only for its shape; the engine checks every input). */

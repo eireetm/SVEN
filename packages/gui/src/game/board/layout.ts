@@ -170,7 +170,7 @@ export interface TableLayout {
   /** The room beside each mat (panels, status, buttons). */
   sideWidth: number;
   /**
-   * A small screen (a phone held sideways, docs/android.md): the mats take the whole height, your hand is beside your mat
+   * A small screen (a phone held sideways): the mats take the whole height, your hand is beside your mat
    * (bottom right), the panels and the status are on the left, the buttons on the right.
    */
   compact: boolean;

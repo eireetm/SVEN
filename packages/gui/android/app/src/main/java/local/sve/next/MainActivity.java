@@ -8,7 +8,7 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import com.getcapacitor.BridgeActivity;
 
 /**
- * The game's window (docs/android.md): the whole screen, held sideways (AndroidManifest.xml). The system bars come back
+ * The game's window: the whole screen, held sideways (AndroidManifest.xml). The system bars come back
  * for a moment with a swipe from the edge and hide again; the screen stays on while the app is in front. Capacitor keeps
  * the page clear of a camera cutout (its SystemBars plugin).
  */

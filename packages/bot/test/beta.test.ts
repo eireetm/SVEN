@@ -15,7 +15,7 @@ import {
 import { ALL_CARDS, ALL_SCRIPTS } from "../../core/src/sets";
 import { checkInvariants, deckPool, drive, randomDeck, testFollower } from "../../core/src/testing";
 
-// The beta bots (docs/bot.md "beta"): Medium and Hard with a lethal search first, a mulligan by the curve, and the leader's
+// The beta bots: Medium and Hard with a lethal search first, a mulligan by the curve, and the leader's
 // defense valued on a curve.
 
 describe("the lethal search", () => {

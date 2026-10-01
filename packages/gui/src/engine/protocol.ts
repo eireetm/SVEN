@@ -1,7 +1,6 @@
 // Messages between the GUI (main thread) and the engine worker. The worker owns the game: the core session and the bots
-// run there, and the GUI only sends the human players' answers (the core's Decision / Answer protocol, see
-// docs/architecture.md) and draws what the worker publishes. Plain JSON only, so the transport can later be Electron IPC or
-// the network.
+// run there, and the GUI only sends the human players' answers (the core's Decision / Answer protocol) and draws what
+// the worker publishes. Plain JSON only, so the transport can later be Electron IPC or the network.
 import type {
   Answer,
   CardDefinition,
@@ -20,8 +19,8 @@ import type {
 } from "@sve/core";
 
 /**
- * Who plays a seat: a person at this screen, a bot run by the worker, or a person at another program (online play,
- * docs/online.md: their answers come as "remoteInput"). The bots (docs/bot.md): "greedy" is Bot-Easy (the name it had
+ * Who plays a seat: a person at this screen, a bot run by the worker, or a person at another program (online play:
+ * their answers come as "remoteInput"). The bots: "greedy" is Bot-Easy (the name it had
  * before the levels, kept for saved settings and replays), "medium" plans its turn fairly, "hard" plans reading every
  * hidden card, "hard-beta" is Hard with the beta additions (a lethal search, its mulligan, the leader's defense on a
  * curve), "random" answers at random (testing). Which bots read hidden cards is said in the README only, not in the GUI.
@@ -61,7 +60,7 @@ export interface GameOptions {
    */
   secondLeaders?: [PrintingId | null, PrintingId | null];
   /**
-   * The game accepts manual operations (GameConfig.manualActions: testing by hand, outside the rules; docs/gui.md). Local
+   * The game accepts manual operations (GameConfig.manualActions: testing by hand, outside the rules). Local
    * games allow them; the debug sidebar's "manual debugging" shows the menus.
    */
   manualActions?: boolean;
@@ -99,7 +98,7 @@ export interface ReplayInfo {
 
 /**
  * Everything needed to play a game again exactly: the core is deterministic (seed + decks + inputs). The same file is a
- * replay to watch (docs/gui.md "录像") and a bug report to load and play on from (the debug panel's "复现包").
+ * replay to watch and a bug report to load and play on from (the debug panel's "复现包").
  */
 export interface Replay {
   format: "sve-replay";
@@ -162,10 +161,10 @@ export type ToWorker =
    * state before it (stateHash), which this game must have too. Applied once this game has reached it, in order.
    */
   | { kind: "remoteInput"; index: number; input: Input; hash: string }
-  /** Watch a replay from its start (nobody plays: its inputs are played back, docs/gui.md "录像"). */
+  /** Watch a replay from its start (nobody plays: its inputs are played back). */
   | { kind: "watch"; replay: Replay }
   /**
-   * Online play, a spectator (docs/online.md "观战"): the game two other programs play, from its options (both seats
+   * Online play, a spectator: the game two other programs play, from its options (both seats
    * "remote") and its inputs so far (played at once); the players' next answers come as "remoteInput", passed on by the host.
    */
   | { kind: "spectate"; options: GameOptions; inputs: RecordedInput[] }

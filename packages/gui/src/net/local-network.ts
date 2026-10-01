@@ -1,4 +1,4 @@
-// A network for tests (docs/online.md "测试"): programs in one browser (pages of one browser context), or in one Node
+// A network for tests: programs in one browser (pages of one browser context), or in one Node
 // process, meet in a room through a BroadcastChannel instead of the public relays, and talk through it too (no WebRTC, no
 // internet). It stands in for Trystero's rooms (rooms.ts) as far as they are used there. The app uses it only when the
 // page's localStorage has "sve-test-network" = "local" (the end-to-end tests set it).

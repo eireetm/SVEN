@@ -7,7 +7,7 @@ import type { ManualOp } from "./manual";
  * network layer all use this single protocol; a replay is (seed + setup + list of inputs).
  *
  * Decisions only ever offer options that can be completed (illegal actions are never
- * selectable — see docs/architecture.md 5.2).
+ * selectable).
  */
 
 /** CR 8.2–8.4, 7.3.3 — what the active player may do in the main phase. */

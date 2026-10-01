@@ -1,5 +1,5 @@
 // The GUI's view of its local host: on a computer, the `/api` of the dev server (host/plugin.ts) or of a release's server;
-// in the Android app, the app's own folder on the phone (host/android.ts, docs/android.md); Electron's main process later.
+// in the Android app, the app's own folder on the phone (host/android.ts); Electron's main process later.
 // The rest of the app only uses this module for files: card images, the customizable resources, deck files, replays, and
 // what it hands to the person (a bug report file, a text to paste elsewhere).
 import { parseDeckFile, type DeckFile } from "../decks/format";

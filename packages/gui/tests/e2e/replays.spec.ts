@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { startGame, useSettings } from "./helpers";
 
-// Replays (docs/gui.md "录像"): a finished game is saved as a file ("Save replay"); the main menu's "Watch replays" lists it,
+// Replays: a finished game is saved as a file ("Save replay"); the main menu's "Watch replays" lists it,
 // and watching plays it back step by step, with its playback bar: pause, a step forward and back, the progress bar, whose
 // view, watch again at the end; then it is deleted.
 

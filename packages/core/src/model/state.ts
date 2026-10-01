@@ -548,7 +548,7 @@ export interface GameResult {
 
 /**
  * Resumable flow positions. The engine checkpoints the state whenever the flow reaches an
- * anchor; restoring a game replays inputs from the last checkpoint (see docs/architecture.md).
+ * anchor; restoring a game replays inputs from the last checkpoint.
  */
 export type Anchor = { kind: "setup" } | { kind: "mainPhase" };
 

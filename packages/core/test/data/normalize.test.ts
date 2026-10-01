@@ -87,7 +87,7 @@ describe("normalizePrinting", () => {
 describe("English text", () => {
   const en = (over: Partial<RawCardJson>) => englishText(raw(over));
 
-  it("takes the English text from effect_en (CLAUDE.md), comparing the official text only for the report", () => {
+  it("takes the English text from effect_en, comparing the official text only for the report", () => {
     const fan = "Ward.\nThis follower takes 1 less damage.";
     expect(en({ effect_en: fan, effect_en_official: "Ward.\nReduce damage dealt to this follower by 1." }))
       .toEqual({ text: fan, source: "effect_en", officialMismatch: false });

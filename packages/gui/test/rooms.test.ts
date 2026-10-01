@@ -4,7 +4,7 @@ import { LOCAL_NETWORK } from "../src/net/local-network";
 import { SPECTATOR_SEATS, type JoinAs, type NetMessage } from "../src/net/messages";
 import { meet, type Admission, type Meeting } from "../src/net/rooms";
 
-// Meeting in a room (docs/online.md): a program joining says which seat it wants; the host takes in the other player and up
+// Meeting in a room: a program joining says which seat it wants; the host takes in the other player and up
 // to two spectators (those who come before the other player wait), refuses the rest, and stays in the room. Here the
 // programs meet on the tests' local network (a BroadcastChannel in this process) instead of the public relays.
 

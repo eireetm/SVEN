@@ -1,4 +1,4 @@
-// What two connected programs say to each other (docs/online.md). Plain JSON; anything else that arrives is ignored (the
+// What two connected programs say to each other. Plain JSON; anything else that arrives is ignored (the
 // other side may run another version, or not be this program at all).
 import type { DeckList, Input } from "@sve/core";
 import type { FormatId, GameOptions, RecordedInput, TurnOrder } from "../engine/protocol";
@@ -37,7 +37,7 @@ export type JoinAs = "player" | "watch";
 export const SPECTATOR_SEATS = 2;
 
 /**
- * A game, for a spectator's program to play along (docs/online.md "观战"): what its engine needs to start it (both seats are
+ * A game, for a spectator's program to play along: what its engine needs to start it (both seats are
  * the players' programs there), and how many inputs the "backlog" messages bring (the game's inputs until the spectator came).
  */
 export interface WatchedGame {
@@ -80,7 +80,7 @@ export type NetMessage =
   | { t: "rules"; rules: Rules }
   /** A player's deck, locked (null: not ready any more). */
   | { t: "ready"; deck: ReadyDeck | null }
-  /** The seed, in three steps: the host's secret's hash, the guest's random part, the host's secret (docs/online.md). */
+  /** The seed, in three steps: the host's secret's hash, the guest's random part, the host's secret. */
   | { t: "commit"; hash: string }
   | { t: "nonce"; value: string }
   | { t: "start"; secret: string }

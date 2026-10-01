@@ -1,4 +1,4 @@
-// Which sounds an update makes, and when (pure: tested in Node). docs/resources.md lists the files:
+// Which sounds an update makes, and when (pure: tested in Node). The files:
 //  - common sound effects: public/audio/sfx/<name>.<ext>; a missing one tries its fallbacks (SFX), else stays silent;
 //  - a card's own sounds: public/audio/cards/<number>-p (played), -a (attacks), -d (destroyed; followers), named by the
 //    player (spells and amulets only have -p). A card's own sound comes before the common one, which is then not played

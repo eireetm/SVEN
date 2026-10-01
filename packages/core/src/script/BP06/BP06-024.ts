@@ -2,7 +2,7 @@
 // Look at the top 5 cards of your deck. From among them, you may summon any number of
 // {[swordcraft]} followers that cost 3 or less each, up to a total cost of 7. Put the rest on the
 // bottom of your deck in any order. (元のコスト: printed costs. They enter together — rulings.)
-// Picked one at a time, each time only from those that still fit (docs/open-questions.md design
+// Picked one at a time, each time only from those that still fit (the design
 // principle: only completable choices are offered).
 import type { CardId } from "../../model/ids";
 import { defineCard, spell } from "../helpers";

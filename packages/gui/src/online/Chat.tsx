@@ -1,4 +1,4 @@
-// The chat with the other player (docs/online.md), in the online screen and in a game's sidebar. Only the online state
+// The chat with the other player, in the online screen and in a game's sidebar. Only the online state
 // (net/state.ts): the game screen shows it without loading the connection code. A spectator reads both players' lines and
 // writes none.
 import { useEffect, useRef, useState } from "react";

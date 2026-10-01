@@ -1,5 +1,5 @@
 /**
- * sve-server's PlannerAI (创造性AI), imitated (docs/bot.md section 10). Each action gets an ability vector from the card
+ * sve-server's PlannerAI (创造性AI), imitated. Each action gets an ability vector from the card
  * catalog (catalog.ts), a cost and the face damage it should deal; a turn plan looks for lethal (the attacks at the leader
  * plus the damage in hand, within the play points, cards and evolution of the turn); actions are scored by formulas; a
  * rolling plan orders up to six of them by an abstract account (no simulation: beam 12, depth 6, 18 actions); the first

@@ -66,7 +66,7 @@ describe("GameHost (engine worker logic)", () => {
     expect(logged.some((e) => e.event.type === "gameEnded")).toBe(true);
   });
 
-  it("plays the planning bots (docs/bot.md): Bot-Medium against Bot-Hard to the end, paced as the setup page starts games", () => {
+  it("plays the planning bots: Bot-Medium against Bot-Hard to the end, paced as the setup page starts games", () => {
     const h = harness(["medium", "hard"]);
     h.host.handle({ kind: "start", options: { ...h.options, showEveryMainPhase: true, askEveryQuickWindow: true } });
     h.scheduler.run(20_000);

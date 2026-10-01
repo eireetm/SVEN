@@ -29,9 +29,9 @@ function onFieldSinceTurnStart(g: G, id: CardId): boolean {
  *    through Rush (12.10.2), can only attack followers;
  *  - Ward (12.8.2 iii): if an *engaged* Ward follower can be selected, one must be selected.
  *    A reserved Ward follower does not restrict (Ward is not in effect then), even for an
- *    Assail attacker (confirmed, docs/open-questions.md Q4).
+ *    Assail attacker (confirmed by the project owner).
  * Storm: that it also lifts the leader restriction of 8.4.3.1 is confirmed by the project
- * owner and by the official play guide (docs/open-questions.md Q1).
+ * owner and by the official play guide.
  * A card's "can't attack enemy leaders" (e.g. BP02-107), or an effect saying so (a Stand Trigger), removes the leader; "ignores Ward"
  * (BP04-006) lifts the Ward requirement.
  */

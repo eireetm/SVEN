@@ -4,10 +4,10 @@ import { GreedyBot } from "./greedy";
 import { PlannerBot, type PlannerBotOptions } from "./planner";
 
 /**
- * The bots a player chooses between (docs/bot.md). Easy is the greedy bot (one action at a time). Medium plans its whole
+ * The bots a player chooses between. Easy is the greedy bot (one action at a time). Medium plans its whole
  * turn with what its player can see. Hard plans the same way in the real game, reading every hidden card and the results
  * of future random events: it cheats, on purpose (the project owner's request, 2026-09-30). The beta levels are Medium and
- * Hard with what is being tried next (docs/bot.md "beta"): a lethal search first, a mulligan by the curve, and the leader's
+ * Hard with what is being tried next: a lethal search first, a mulligan by the curve, and the leader's
  * defense valued on a curve; `npm run bot:arena` compares them with the others.
  */
 export type BotLevel = "easy" | "medium" | "hard" | "medium-beta" | "hard-beta";

@@ -1,4 +1,4 @@
-// The Android app's host (docs/android.md). Its files live in the app's own folder on the phone,
+// The Android app's host. Its files live in the app's own folder on the phone,
 // Android/data/local.sve.next/files/:
 //   public/   the player's own pictures, sounds, fonts and theme.css (README "Custom resources"): copied there over a USB cable, or
 //             imported from a zip file in the settings;

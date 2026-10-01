@@ -1,5 +1,5 @@
 /**
- * sve-server's GoodAI (聪明AI), imitated (docs/bot.md section 10). Every action is scored by hand-tuned formulas; a lethal
+ * sve-server's GoodAI (聪明AI), imitated. Every action is scored by hand-tuned formulas; a lethal
  * attack goes first; when the best scores are close, the best three are tried in a copy of the real game (Battle.CloneForAI:
  * their copies keep every hidden card, as here), played on until its next input, and the position is scored: 38% formula,
  * 62% copy. Their time budgets (6.5 s, 2.6 s, 0.7 s) are counts here. Differences from theirs, where our engine differs:

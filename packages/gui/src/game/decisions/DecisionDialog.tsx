@@ -1,8 +1,7 @@
 // A person's decision that the table can't answer, in a window over the table: the order of pending abilities, choices
 // (CR 5.18 "choose" and others), confirmations (an optional cost ...), the order of cards, and a selection of cards that are
 // not all on the table (a search, a pile, cards looked at). Everything else is answered on the table (actions.ts
-// inDialog). Every option comes from the decision itself: the GUI never works out what is legal (the decision protocol in
-// docs/architecture.md).
+// inDialog). Every option comes from the decision itself: the GUI never works out what is legal.
 import { useState, type ReactNode } from "react";
 import { useBack } from "../../app/back";
 import type { Answer, CardId, Decision } from "@sve/core";

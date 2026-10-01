@@ -1,4 +1,4 @@
-// Manual debugging (docs/gui.md "手动调试"): at a main phase decision, a click on a card, a deck, a leader or a player's panel
+// Manual debugging: at a main phase decision, a click on a card, a deck, a leader or a player's panel
 // opens this window. It lists the legal actions of the decision for a card (marked legal) and everything that can be done by
 // hand (marked illegal: model/manual.ts in the core, which carries them out with its own procedures, so abilities trigger).
 // The core says which of them the rules' checks allow (update.manual: free plays, evolutions, abilities); the rest only

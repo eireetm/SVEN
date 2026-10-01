@@ -20,7 +20,7 @@ type Screen = "menu" | "settings" | "setup" | "builder" | "text" | "replays" | "
 /** Online play loads when first opened: its connection libraries stay out of the start. */
 const OnlineScreen = lazy(() => import("../online/OnlineScreen").then((m) => ({ default: m.OnlineScreen })));
 
-/** Each screen's background music (public/audio/bgm, docs/resources.md): the menus', the deck builder's, a game's. */
+/** Each screen's background music (public/audio/bgm): the menus', the deck builder's, a game's. */
 const MUSIC: Record<Screen, BgmName> = { menu: "menu", settings: "menu", setup: "menu", builder: "deck", text: "deck", replays: "menu", online: "menu", game: "battle" };
 
 /**
@@ -53,7 +53,7 @@ export function App() {
     if (resources > 0) playBgm(MUSIC[screen]);
   }, [screen, resources]);
   useEffect(() => installClickSound(), []);
-  // A game over the connection starts when both players are ready, wherever this one is (docs/online.md).
+  // A game over the connection starts when both players are ready, wherever this one is.
   useEffect(() => onGameStart(() => setScreen("game")), []);
   // "Back" (the Android back button, back.ts): one screen back. The deck builder and the online screen have their own
   // (unsaved changes, leaving a room).

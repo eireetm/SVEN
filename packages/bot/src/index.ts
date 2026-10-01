@@ -1,6 +1,6 @@
 // Bots for the Shadowverse: Evolve engine. They play through the core's public API only: the player's view, its
 // decisions and copies of the game — determinized ones (what the player knows), or for the hard bot the real game, which
-// it reads on purpose (docs/bot.md).
+// it reads on purpose.
 
 export { GreedyBot, type GreedyBotOptions, type BotStats } from "./greedy";
 export { PlannerBot, type PlannerBotOptions } from "./planner";

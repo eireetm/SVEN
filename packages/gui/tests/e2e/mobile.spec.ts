@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { useSettings } from "./helpers";
 
-// A phone held sideways (docs/android.md; the Android app is this web app in the phone's WebView): the menus fit, the
+// A phone held sideways (the Android app is this web app in the phone's WebView): the menus fit, the
 // table packs tighter with your hand beside your mat, the card panel is a drawer (its button or a long press opens it),
 // cards are played by tapping; the deck builder has a deck tab and a pool tab, a tap adds or removes, a long press reads.
 test.use({ viewport: { width: 915, height: 412 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true });
@@ -42,7 +42,7 @@ test("a phone: the menus fit, a game is played by tapping, the card panel is a d
   expect(menu.y + menu.height).toBeLessThanOrEqual(412);
   await play.tap();
   await expect(page.getByTestId("start-game")).toBeEnabled({ timeout: 60_000 });
-  // What the opponent's AI does (docs/bot.md) wraps within the phone's width; the page doesn't scroll sideways.
+  // What the opponent's AI does wraps within the phone's width; the page doesn't scroll sideways.
   const hint = (await page.getByTestId("setup-controller-hint").boundingBox())!;
   expect(hint.x + hint.width).toBeLessThanOrEqual(915);
   expect(await page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")).toBe(true);

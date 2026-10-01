@@ -1,4 +1,4 @@
-// English UI strings (the default display language, CLAUDE.md). "{name}" is replaced by a parameter.
+// English UI strings (the default display language). "{name}" is replaced by a parameter.
 export const en = {
   "app.loading": "Eudie Senpai is starting the engine for you…",
   "app.loadingNote": "Eudie Senpai is loading every card and script (a few seconds the first time).",
@@ -139,11 +139,11 @@ export const en = {
   "settings.turnUrls": "TURN relay",
   "settings.turnUsername": "User name",
   "settings.turnCredential": "Password",
-  "settings.turnHelp": "Only if the two programs can't connect directly: a TURN relay's address (turn:host:port, several separated by spaces), user name and password. Empty: none. See docs/online.md.",
+  "settings.turnHelp": "Only if the two programs can't connect directly: a TURN relay's address (turn:host:port, several separated by spaces), user name and password. Empty: none.",
   "settings.sound": "Sound",
   "settings.bgmVolume": "Music",
   "settings.sfxVolume": "Sound effects",
-  "settings.soundHelp": "Sounds play only when their files are in packages/gui/public/audio (docs/resources.md).",
+  "settings.soundHelp": "Sounds play only when their files are in the public/audio folder (see the README).",
   "settings.resources": "Your files",
   "settings.resourcesFolder": "Folder: {folder}",
   "settings.resourcesHelp": "Your own card images, card backs, playmat, backgrounds, sounds and fonts, in the folders of this one (e.g. images/cards/BP01-001.png). Copy them in over a USB cable and press Reload, or import a zip file that holds the same folders.",
@@ -231,7 +231,7 @@ export const en = {
   "controller.hard": "Bot-Hard",
   "controller.hard-beta": "Bot-Hard beta",
   "controller.random": "Random bot",
-  // What each choice of the setup screen's "Played by" does (docs/bot.md).
+  // What each choice of the setup screen's "Played by" does.
   "controllerHint.human": "A second person plays at this screen (hot seat).",
   "controllerHint.greedy": "Weighs one action at a time: often misses attacks and combinations.",
   "controllerHint.medium": "Plans its whole turn and thinks about your reply. Plays fair: it sees only what a player may see.",

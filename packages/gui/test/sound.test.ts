@@ -5,7 +5,7 @@ import { TIMING } from "../src/game/animation/plan";
 import { bgmUrl, cardSoundUrl, setResourceLists, sfxUrl } from "../src/resources/lookup";
 import { planSounds, SFX, type SoundContext } from "../src/resources/sound-plan";
 
-// The sounds (docs/resources.md): which files are looked for, and which sounds an update makes, when.
+// The sounds: which files are looked for, and which sounds an update makes, when.
 
 const entry = (event: GameEvent, cards: LogEntry["cards"] = {}): LogEntry => ({ seq: 1, turn: 1, event, cards });
 const zone = (player: 0 | 1, name: string) => ({ player, zone: name, faceUp: true }) as CardMove["to"];

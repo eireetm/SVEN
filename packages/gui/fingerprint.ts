@@ -4,7 +4,7 @@ import { join, relative } from "node:path";
 
 /**
  * A fingerprint of the rules code: the core (its source and card data) and the worker host that paces a game. Online, two
- * programs play one game only when theirs are the same (docs/online.md); line endings don't count. `gui` is packages/gui.
+ * programs play one game only when theirs are the same; line endings don't count. `gui` is packages/gui.
  * vite.config.ts builds it into the app; scripts/release-pc.ts writes it into a release's VERSION.txt.
  */
 export function engineFingerprint(gui: string): string {

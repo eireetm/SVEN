@@ -7,7 +7,7 @@ import { CITATION_DIRS, loadClauses, scanCitations } from "../lib/citations";
 const SCAN_TIMEOUT = 60_000;
 
 /**
- * CLAUDE.md: every rule decision must name its Comprehensive Rules clause. This test makes
+ * Every rule decision must name its Comprehensive Rules clause. This test makes
  * sure every cited clause exists in the current rules (tools/data/cr-clauses.json), so a rules
  * update that renumbers or removes clauses cannot silently leave stale citations behind.
  */

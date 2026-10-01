@@ -6,7 +6,7 @@
  *   --public <folder>  copy this folder's files into the release's public/ (default: none, only the empty folders)
  *   --zip              also write <folder>.zip, to send
  * The version is packages/gui/package.json's. VERSION.txt also gets the commit and the engine fingerprint: online, both
- * programs need the same fingerprint (docs/online.md).
+ * programs need the same fingerprint.
  */
 import { execFileSync } from "node:child_process";
 import { cpSync, createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";

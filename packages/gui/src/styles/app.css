@@ -2954,7 +2954,7 @@ option {
 }
 
 /* ---------------------------------------------------------------------------------------------------------------------
-   Small screens: a phone held sideways (app/compact.ts, docs/android.md). The same query as COMPACT_QUERY; the table
+   Small screens: a phone held sideways (app/compact.ts). The same query as COMPACT_QUERY; the table
    switches by its own height (board/layout.ts COMPACT_HEIGHT, data-compact).
    --------------------------------------------------------------------------------------------------------------------- */
 @media (max-height: 560px), (max-width: 760px) {

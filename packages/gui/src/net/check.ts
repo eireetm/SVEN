@@ -1,4 +1,4 @@
-// "Check the network" (docs/online.md): what this computer can reach of what online play needs — the relays of each public
+// "Check the network": what this computer can reach of what online play needs — the relays of each public
 // network (a WebSocket opens), and the STUN servers (one tells this program its public address). When two players can't
 // connect, each one's result tells what is missing on which side.
 import type { Via } from "./link";

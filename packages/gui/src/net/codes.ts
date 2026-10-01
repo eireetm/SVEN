@@ -1,4 +1,4 @@
-// The codes people pass each other to connect (docs/online.md): a short room code for the public relays, and — without any
+// The codes people pass each other to connect: a short room code for the public relays, and — without any
 // relay — a connection code (one program's WebRTC offer) and a reply code (the other's answer). Pure (tests run them).
 
 /** Room codes: 6 characters people can read out, without 0/O, 1/I/L. */

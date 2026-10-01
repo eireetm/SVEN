@@ -1,5 +1,5 @@
 /**
- * Bots against each other (docs/bot.md): npm run bot:arena -- [games] [a] [b] [options]
+ * Bots against each other: npm run bot:arena -- [games] [a] [b] [options]
  * Levels: easy | medium | hard | medium-beta | hard-beta, and sve-server's AIs imitated (sve-fool, sve-good, sve-planner;
  * tools/sve-server-ais). The sample decks (packages/gui/decks/samples, all but the Cross
  * Craft one), paced as the GUI starts games. Games come in pairs: the same decks and seed with the seats swapped, so neither

@@ -5,9 +5,9 @@ import { useApp } from "./store";
 interface Props {
   onPlayAi: () => void;
   onDeckBuilder: () => void;
-  /** The saved replays, to watch (docs/gui.md "录像"). */
+  /** The saved replays, to watch. */
   onReplays: () => void;
-  /** Online play with another person (docs/online.md). */
+  /** Online play with another person. */
   onOnline: () => void;
   onSettings: () => void;
   /** Back to the game in progress, or to the replay being watched (shown only while there is one). */

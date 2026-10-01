@@ -10,7 +10,7 @@ import type { Answer, Decision } from "../../model/decision";
  *
  * Because every Proc is deterministic given (state, answers), a paused game can always be
  * rebuilt by replaying the answers from the last checkpoint — generators themselves never
- * need to be serialized. See docs/architecture.md.
+ * need to be serialized.
  */
 export type Yielded = { kind: "decision"; decision: Decision } | { kind: "anchor" };
 

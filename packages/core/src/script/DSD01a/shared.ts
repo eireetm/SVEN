@@ -4,7 +4,7 @@ import type { EffectContext } from "../../engine/effects/context";
 
 export { academic, academicsInCemetery } from "../BP21/shared";
 
-/** The DSD01a-T01 token spell. Its data has only the Japanese name, which is its card name (docs/data-notes.md). */
+/** The DSD01a-T01 token spell. Its data has only the Japanese name, which is its card name. */
 export const MAGIC_BULLET = "マナリアの魔弾";
 /** Grea's Ember (DSD01a-009 = BP21-PR10): only the Japanese name, which is its card name. */
 export const GREAS_EMBER = "グレアの炎熱";

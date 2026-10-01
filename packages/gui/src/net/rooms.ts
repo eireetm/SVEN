@@ -1,4 +1,4 @@
-// Meeting in a room (docs/online.md): the programs join room <code> on three public networks at once — Nostr, MQTT and
+// Meeting in a room: the programs join room <code> on three public networks at once — Nostr, MQTT and
 // BitTorrent trackers — through the Trystero library, which passes the WebRTC setup messages through the networks' relays,
 // encrypted with the room code. A program joining says which seat it wants ("join": the other player's, or a spectator's)
 // to each program it meets there; only the host answers: it takes it in ("select") or has no such seat left ("full"). The

@@ -187,7 +187,7 @@ const report = [
   "",
   "## 英文官方文本对应到别的卡的定义",
   "",
-  "英文文本以 `effect_en` 为准（CLAUDE.md），这里只是记录抓取到的 `effect_en_official` 对不上（按编号匹配的问题，见 docs/data-notes.md）。PR 卡不比较。",
+  "英文文本以 `effect_en` 为准，这里只是记录抓取到的 `effect_en_official` 对不上（按编号匹配的问题）。PR 卡不比较。",
   "",
   ...officialMismatches.map((id) => `- ${id}（${bySet(id)}）`),
   "",

@@ -1,5 +1,5 @@
 /**
- * sve-server's three AIs, imitated over our engine as benchmark opponents (docs/bot.md section 10): `npm run bot:arena`
+ * sve-server's three AIs, imitated over our engine as benchmark opponents: `npm run bot:arena`
  * plays our bots against them (sve-fool 笨AI, sve-good 聪明AI, sve-planner 创造性AI). Not part of the game.
  */
 import type { Answer, Engine, GameSession } from "../../packages/core/src";

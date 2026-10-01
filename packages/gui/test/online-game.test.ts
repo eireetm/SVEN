@@ -7,7 +7,7 @@ import { GameHost } from "../src/engine/game-host";
 import type { FromWorker, GameOptions, GameUpdate, RecordedInput } from "../src/engine/protocol";
 import { parseDeckFile, toDeckList } from "../src/decks/format";
 
-// Online play (docs/online.md): two programs play the same game, each with its person's seat; only answers go between them,
+// Online play: two programs play the same game, each with its person's seat; only answers go between them,
 // each with the sender's state before it. Here two worker hosts are joined by an in-memory network.
 
 const engine = createEngine({ cards: ALL_CARDS, scripts: ALL_SCRIPTS });
@@ -183,7 +183,7 @@ describe("online play: two programs, one game", () => {
   });
 });
 
-// Spectators (docs/online.md "观战"): a third program follows the game the two players' programs play. The host passes it
+// Spectators: a third program follows the game the two players' programs play. The host passes it
 // the game's options and inputs so far, then both players' answers; its engine plays both seats as "remote".
 
 /** A spectator's worker host, started on the game of `options` with its first inputs (the backlog). */

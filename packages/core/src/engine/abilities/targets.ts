@@ -22,8 +22,7 @@ function candidatesOf(g: Env, spec: TargetSpec, controller: PlayerId, self: Card
 }
 
 /**
- * CR 10.6.2.3 target counts (interpretation confirmed by the project owner, see
- * docs/open-questions.md):
+ * CR 10.6.2.3 target counts (interpretation confirmed by the project owner):
  *  - "select N" (10.6.2.3.1 / 10.6.2.3.3): exactly N targets; with fewer than N legal
  *    targets the card or ability cannot be played at all;
  *  - "select up to N" (10.6.2.3.2): any number from 0 to N, so it never blocks playing;

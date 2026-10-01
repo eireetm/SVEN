@@ -32,7 +32,7 @@ interface Props {
  * (lit cards, their menus, the buttons beside the mats) or in the decision window over it. The log and debug tabs are a
  * sidebar, hidden unless shown: it then covers the right of the table, which keeps its size. A replay being watched has its
  * playback bar under the card on the left (nobody answers anything). Online, the connection's state is under the menu
- * button, and the chat is a tab of the sidebar. On a small screen (a phone, docs/android.md) the left column is a drawer
+ * button, and the chat is a tab of the sidebar. On a small screen (a phone) the left column is a drawer
  * like the sidebar: its button, or a long press on a card, opens it; the table takes the whole width.
  */
 export function GameScreen({ onMenu, onNewGame, onReplays, onOnline }: Props) {
@@ -181,7 +181,7 @@ function OnlineStatus({ update, chatOpen, onChat, onOnline }: { update: GameUpda
   );
 }
 
-/** The two programs' games differ: this one can't go on. A bug report file tells where (docs/online.md). */
+/** The two programs' games differ: this one can't go on. A bug report file tells where. */
 function Desync({ at }: { at: string }) {
   const t = useT();
   const save = async () => {

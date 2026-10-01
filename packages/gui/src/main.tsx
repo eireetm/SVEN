@@ -9,7 +9,7 @@ import { webHost } from "./host/web";
 // The code could be read: index.html's page for a WebView too old for it isn't needed.
 (window as { sveStarted?: boolean }).sveStarted = true;
 
-/** The Android app (docs/android.md) first sets up its host: its files are on the phone. A computer uses the `/api`. */
+/** The Android app first sets up its host: its files are on the phone. A computer uses the `/api`. */
 async function start(): Promise<void> {
   if (import.meta.env.MODE === "android") {
     const { createAndroidHost, installAndroidShell } = await import("./host/android");

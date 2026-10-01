@@ -47,7 +47,7 @@ export interface PlannerBotOptions {
   maxDecisionsPerTurn?: number;
   /**
    * Before planning a turn, look for lethal with this many answers at most (0: don't): a search that ranks positions only by
-   * the defense the opponent's leader keeps if every attack on it we could declare now lands (docs/bot.md, the beta bots).
+   * the defense the opponent's leader keeps if every attack on it we could declare now lands (the beta bots).
    */
   lethalSearch?: number;
   /** "curve": keep or redraw by the curve of the first turns (mulligan.ts); "greedy" (default): the greedy bot's rule. */
@@ -75,7 +75,7 @@ interface Node {
 type Stop = "decide" | "turnOver" | "gameOver";
 
 /**
- * A bot that plans its whole turn (docs/bot.md): at a decision in its main phase it searches sequences of its answers
+ * A bot that plans its whole turn: at a decision in its main phase it searches sequences of its answers
  * (plays, evolves, abilities, attacks, and the choices they ask for) with a beam search, scoring every plan at the same
  * point — its turn ended there — then plays the opponent's next turn after the best few plans and keeps the one that holds
  * up best. It plays the first answer of that plan and plans again at its next decision. Decisions outside its main phase
@@ -239,7 +239,7 @@ export class PlannerBot {
   }
 
   /**
-   * Lethal first (the beta bots, docs/bot.md): a beam search over this turn's answers ranked by the defense the opponent's
+   * Lethal first (the beta bots): a beam search over this turn's answers ranked by the defense the opponent's
    * leader keeps once every attack on it we could declare now lands. A play that only opens the way (a Ward taken out, a
    * Storm follower played, an attacker made stronger) ranks high, which the normal search, ranking whole positions, may not
    * see in time. Searched only when lethal is within reach; returns a plan that wins the game, or null.

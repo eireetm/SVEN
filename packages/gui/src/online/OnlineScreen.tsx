@@ -1,4 +1,4 @@
-// Online play (docs/online.md). Make a room (a code to pass to the other player) or join one; or pass connection codes by
+// Online play. Make a room (a code to pass to the other player) or join one; or pass connection codes by
 // hand when the public networks can't be reached. Connected, it shows how (which network, direct or through a relay), the
 // round trip, whether both programs are the same, a chat, and the next game's preparation: the host's rules, each player's
 // deck, ready. Both ready, the game starts (on the game screen); after it, the next one is prepared here. A lost connection

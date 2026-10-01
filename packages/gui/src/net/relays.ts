@@ -1,9 +1,9 @@
-// Where two players' programs find each other (docs/online.md). No server of this project's: public services pass the few
+// Where two players' programs find each other. No server of this project's: public services pass the few
 // messages that set a connection up (signaling), and public STUN servers tell each program its address as seen from the
 // internet. After that the two programs talk directly (WebRTC); a TURN relay (the player's own, in the settings) carries
 // the connection only when a direct one can't be made.
 //
-// The lists were checked from a test machine on 2026-09-29 (docs/online.md "公共服务"): the connection library's own
+// The lists were checked from a test machine on 2026-09-29: the connection library's own
 // relays that answered, plus a relay in Japan and STUN servers in China, since players may be in different countries.
 
 /**

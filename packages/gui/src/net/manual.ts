@@ -1,4 +1,4 @@
-// Connecting without any relay (docs/online.md "手动连接"): the host's program makes a WebRTC offer with all its addresses
+// Connecting without any relay: the host's program makes a WebRTC offer with all its addresses
 // (the connection code), the guest's answers it (the reply code); people pass the codes by any chat. Works whenever the two
 // programs can connect directly (or through the player's TURN relay).
 import { decodeSignal, encodeSignal } from "./codes";

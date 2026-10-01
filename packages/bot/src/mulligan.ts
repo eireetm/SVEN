@@ -3,7 +3,7 @@ import { randomInt } from "./core";
 
 /**
  * Whether to redraw (CR 6.2.1.8: the whole hand goes to the bottom of the deck, the same number of cards is drawn from its
- * top — no shuffle), judged by the curve of the first turns (the beta bots, docs/bot.md). Card-agnostic: only the costs.
+ * top — no shuffle), judged by the curve of the first turns (the beta bots). Card-agnostic: only the costs.
  */
 
 /** A card for the curve: its cost, and the turn of ours it is in hand from (1: the opening hand; a later draw: later). */

@@ -1,4 +1,4 @@
-// The table moves with the game, in an order that reads without the log (docs/gui.md 3, "动画"). Each update's events
+// The table moves with the game, in an order that reads without the log. Each update's events
 // (already hidden for the viewer) say what happened; the snapshot says where things were; plan.ts puts them in order
 // (planTimeline, which the sounds follow too):
 //  1. cards fly from their old places to their new ones; a card that is hit waits where it was until it has been hit;

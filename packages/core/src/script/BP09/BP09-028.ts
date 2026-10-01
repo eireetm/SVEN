@@ -2,7 +2,7 @@
 // While this card is on your field, each Queen Hemera the White on your field has Assail.
 // {[act]} {[engage]}: Select up to 2 other {[swordcraft]} followers on your field and give them
 // {[attack]}+1. (effect_en says {[defense]}+1; the Japanese, Chinese and official English texts say
-// {[attack]}+1 — implemented as those, docs/open-questions.md.)
+// {[attack]}+1 — implemented as those.)
 import { activated, defineCard } from "../helpers";
 import { anotherYourFollower, isClass } from "../targets";
 

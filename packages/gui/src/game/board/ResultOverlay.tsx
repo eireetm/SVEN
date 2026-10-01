@@ -1,4 +1,4 @@
-// The end of the game over the table: who won and why, then save its replay (docs/gui.md "录像"), a new game (online:
+// The end of the game over the table: who won and why, then save its replay, a new game (online:
 // another one with the same player), the main menu, or a last look at the board. The end of a replay being watched: watch
 // it again, or back to the replays.
 import { useState } from "react";

@@ -1,6 +1,6 @@
 /**
- * sve-server's AIs imitated over our engine (docs/bot.md section 10): benchmark opponents for `npm run bot:arena`, not part
- * of the game. Their logic is ported from the decompiled Game.dll (its author agreed to its use, CLAUDE.md). This file is
+ * sve-server's AIs imitated over our engine: benchmark opponents for `npm run bot:arena`, not part
+ * of the game. Their logic is ported from the decompiled Game.dll (its author agreed to its use). This file is
  * their view of a game: cards and players with the fields their code reads, built from our session.
  */
 import type { Answer, CardId, CardView, Decision, Engine, GameReader, GameSession, HiddenCardView, MainAction, PlayerId, PlayerSideView, PlayerView, QuickAction } from "../../packages/core/src";

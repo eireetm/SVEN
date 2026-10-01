@@ -5,7 +5,7 @@ import { shuffleInPlace, type RngState } from "../rng/rng";
 import { cardVisibleTo } from "../view/visibility";
 
 /**
- * Information-set sampling for bots (docs/bot.md): deal the cards `viewer` can't identify (CR 4.1.2)
+ * Information-set sampling for bots: deal the cards `viewer` can't identify (CR 4.1.2)
  * again at random, so that a copy of the game tells nothing the viewer doesn't know.
  *
  * Pools of cards that could be swapped with each other, as the viewer sees them:

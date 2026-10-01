@@ -3,7 +3,7 @@
 // On Evolve - Choose 1. (1) Select another follower on the field and give it {[attack]}+2/{[defense]}-2. (2) Put a
 // Ravenous Sweetness token into your EX area. ((1) needs its target — ruling.)
 // The scraped English (effect_en) says {[attack]}-2/{[defense]}-2, but the official English text, the Japanese
-// (攻撃力+2/体力-2) and the Chinese all say +2/-2, so this follows them (docs/data-notes.md).
+// (攻撃力+2/体力-2) and the Chinese all say +2/-2, so this follows them.
 import { defineCard, onEvolve } from "../helpers";
 import { anotherFollower } from "../targets";
 import { gilneliseDrain } from "./shared-neutral";

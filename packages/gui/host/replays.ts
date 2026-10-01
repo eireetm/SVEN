@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, wri
 import { dirname, resolve, sep } from "node:path";
 import type { HostConfig } from "./config.ts";
 
-/** A saved replay in replays/ (docs/gui.md "录像"), with what the list of replays shows of it. */
+/** A saved replay in replays/, with what the list of replays shows of it. */
 export interface ReplayFileEntry {
   file: string;
   /** When the file was last written (ms since 1970). */

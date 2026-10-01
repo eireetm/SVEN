@@ -1,4 +1,4 @@
-// Build the Android app (docs/android.md): the web part for Android (vite --mode android), Capacitor's copy of it into the
+// Build the Android app: the web part for Android (vite --mode android), Capacitor's copy of it into the
 // Android project, and Gradle's APK. Uses Android Studio's JDK and the Android SDK where JAVA_HOME / ANDROID_HOME don't say
 // otherwise. The version is packages/gui/package.json's (android/app/build.gradle reads it too). `npm run android:apk` at the
 // repository root builds a debug APK; options (after `--`):
@@ -52,7 +52,7 @@ if (bundle) {
 if (release) {
   const signing = option("--signing") ?? join(gui, "..", "..", "..", "SVE-signing", "keystore.properties");
   if (!existsSync(signing)) {
-    console.error(`No signing key: ${signing} (docs/android.md, "发行版").`);
+    console.error(`No signing key: ${signing} (--signing <file>; README "安卓版").`);
     process.exit(1);
   }
   env.SVE_ANDROID_SIGNING = signing;

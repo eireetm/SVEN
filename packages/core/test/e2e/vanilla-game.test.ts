@@ -19,7 +19,7 @@ const DECK: DeckList = {
 };
 
 function newGame(seed: string | number, config: Record<string, unknown> = {}): GameSession {
-  // 10 copies per card: deck construction restrictions are switched off (CLAUDE.md "构筑限制").
+  // 10 copies per card: deck construction restrictions are switched off.
   return engine.newGame({ seed, players: [DECK, DECK], config: { deckRestrictions: false, firstPlayer: 0, ...config } });
 }
 

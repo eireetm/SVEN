@@ -20,7 +20,7 @@ export default defineCard({
     }),
     strike({
       *resolve(fx) {
-        // Its attack when this resolves; gone from the field, there is none (docs/open-questions.md).
+        // Its attack when this resolves; gone from the field, there is none.
         if (fx.game.card(fx.self)?.zone !== "field") return;
         yield* fx.dealDamage(fx.game.leader(fx.game.opponent(fx.controller)), fx.game.info(fx.self).attack ?? 0);
       },

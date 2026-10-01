@@ -7,7 +7,7 @@ import { listReplays, replayPath } from "../host/replays";
 import { parseReplay, replayFileName } from "../src/replays/replay-format";
 import type { Replay } from "../src/engine/protocol";
 
-// Saved replays (docs/gui.md "录像"): the local host's replays/ folder and the files' names.
+// Saved replays: the local host's replays/ folder and the files' names.
 
 let dir: string | null = null;
 afterEach(() => {

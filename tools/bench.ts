@@ -1,7 +1,7 @@
 /**
  * Engine and bot speed (npm run bench [games]): random games, copying a game, and the greedy bot.
  * Decks are random from every supported set. For spotting performance regressions; the numbers
- * depend on the machine, so compare runs on the same one (docs/bot.md has reference numbers).
+ * depend on the machine, so compare runs on the same one.
  */
 import { createEngine } from "../packages/core/src";
 import { ALL_CARDS, ALL_SCRIPTS } from "../packages/core/src/sets";

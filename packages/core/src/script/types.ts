@@ -294,7 +294,7 @@ export interface EarthRiteSpec {
 /**
  * CR 10.6.2.3 — a target selection made while playing the card or ability.
  * "Select N": exactly N, and the card / ability cannot be played with fewer than N legal
- * targets. "Select up to N": 0..N. (Confirmed interpretation, docs/open-questions.md.)
+ * targets. "Select up to N": 0..N. (Confirmed interpretation.)
  * Opponent's cards with Aura on the field are removed from the candidates (CR 12.15).
  */
 /**

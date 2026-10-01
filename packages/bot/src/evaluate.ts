@@ -46,7 +46,7 @@ export interface EvalWeights {
 }
 
 /**
- * The leader's defense valued on a curve (the beta bots, docs/bot.md): the n-th point is worth
+ * The leader's defense valued on a curve (the beta bots): the n-th point is worth
  * `base + extra · e^(−(n−1)/scale)`, so the last points, which decide the game, are worth the most, and spare points at full
  * defense less (they can pay for trades). Before the curve, the defense counted is lowered by `threat` times the attack of
  * the other side's followers: what they could deal on their next turn.

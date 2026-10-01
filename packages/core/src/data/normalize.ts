@@ -131,7 +131,7 @@ function parseClass(cardNo: string, raw: string): CardClass {
  * CR 2.4 — traits, taken from the Japanese data only (`traits_ja`, e.g. "妖精・獣").
  * Japanese is the original printing; the English `traits` field is a translation with
  * inconsistencies (untranslated entries, swapped names), so it is ignored on purpose
- * (decided by the project owner, see docs/data-notes.md).
+ * (decided by the project owner).
  *
  * Several traits are joined with "・". A trait may itself contain "・" inside 〈〉 brackets
  * (e.g. "プリコネ・〈ジオ・ゲヘナ〉"), so separators inside brackets do not split.
@@ -233,7 +233,7 @@ const isMagicalItem = (token: boolean, text: string | null, treatedAs: string | 
   token && (treatedAs === MAGICAL_ITEM || (text ?? "").includes("put 5 Magical Item tokens into your EX area"));
 
 /**
- * Japanese-only data (some promos and deck products, docs/data-notes.md): the scraped `name_en` holds the Japanese name and
+ * Japanese-only data (some promos and deck products): the scraped `name_en` holds the Japanese name and
  * `name_ja` is empty. The Japanese name is then the card name too, evolved cards included (no " (Evolved)" to strip).
  */
 const japaneseOnlyName = (raw: RawCardJson): boolean => !(raw.name_ja ?? "").trim() && /[\u3040-\u30ff\u3400-\u9fff]/.test(raw.name_en);

@@ -1,4 +1,4 @@
-// Importing the player's resources from a zip file (the Android app, docs/android.md): where each file of the zip goes in
+// Importing the player's resources from a zip file (the Android app): where each file of the zip goes in
 // public/. Pure: tested without a phone (test/android-host.test.ts).
 
 /** The folders of public/ a zip may fill (README "Custom resources"), and its style sheet. */

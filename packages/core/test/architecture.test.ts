@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 /**
- * The core must stay pure, deterministic and host-independent (CLAUDE.md): no hidden
+ * The core must stay pure, deterministic and host-independent: no hidden
  * randomness, clocks, IO or host APIs. The tsconfig already excludes DOM and Node types; this
  * test catches the ES built-ins that the type checker cannot forbid.
  */

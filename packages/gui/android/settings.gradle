@@ -1,4 +1,4 @@
-// Capacitor's plugins compile with a Java 21 toolchain (docs/android.md): Gradle downloads one when this machine has none.
+// Capacitor's plugins compile with a Java 21 toolchain: Gradle downloads one when this machine has none.
 plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
