@@ -228,12 +228,14 @@ export const en = {
   "controller.greedy": "Bot-Easy",
   "controller.medium": "Bot-Medium",
   "controller.hard": "Bot-Hard",
+  "controller.hard-beta": "Bot-Hard beta",
   "controller.random": "Random bot",
   // What each choice of the setup screen's "Played by" does (docs/bot.md).
   "controllerHint.human": "A second person plays at this screen (hot seat).",
   "controllerHint.greedy": "Weighs one action at a time: often misses attacks and combinations.",
   "controllerHint.medium": "Plans its whole turn and thinks about your reply. Plays fair: it sees only what a player may see.",
   "controllerHint.hard": "Plans like Bot-Medium, but cheats: it sees your hand, both decks in order and what random effects will do.",
+  "controllerHint.hard-beta": "An AI based on heuristic evaluation + MCTS.",
   "controllerHint.random": "Answers at random (for testing).",
   "controller.remote": "online opponent",
 

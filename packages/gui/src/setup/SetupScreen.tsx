@@ -11,9 +11,9 @@ import { readReplayFile } from "../game/replay-files";
 import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
 
-const CONTROLLERS: readonly SeatController[] = ["human", "greedy", "medium", "hard", "random"];
+const CONTROLLERS: readonly SeatController[] = ["human", "greedy", "medium", "hard", "hard-beta", "random"];
 /** The opponent: an AI (by level, docs/bot.md), or a second person at the same screen (hot seat). */
-const OPPONENTS: readonly SeatController[] = ["greedy", "medium", "hard", "random", "human"];
+const OPPONENTS: readonly SeatController[] = ["greedy", "medium", "hard", "hard-beta", "random", "human"];
 /** Who goes first: as the rules say (a random player decides, CR 6.2.1.6) first, then the testing choices. */
 const TURN_ORDERS: readonly TurnOrder[] = ["choose", "random", "player1", "player2"];
 

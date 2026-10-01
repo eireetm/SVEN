@@ -69,7 +69,7 @@ interface Bot {
  */
 function makeBot(engine: Engine, controller: SeatController, seed: string, seat: PlayerId, effort: number): Bot | null {
   if (controller === "greedy") return createBot(engine, "easy", `${seed}:greedy:${seat}`);
-  if (controller === "medium" || controller === "hard") return createBot(engine, controller, `${seed}:${controller}:${seat}`, effort);
+  if (controller === "medium" || controller === "hard" || controller === "hard-beta") return createBot(engine, controller, `${seed}:${controller}:${seat}`, effort);
   if (controller === "random") {
     const rng = seedRng(`${seed}:random:${seat}`);
     return { decide: (game) => randomAnswer(rng, game.decision!) };

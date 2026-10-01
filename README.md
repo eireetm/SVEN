@@ -16,10 +16,12 @@
   - 纯 TypeScript，结果确定，可以在没有界面的环境里运行，不依赖界面或文件。
   - 按综合规则（v1.26.1）逐条实现，规则判断都注明条款编号。
   - 支持 56 个卡包的 3,568 个卡牌定义，共 7,296 个印刷版本，异画共用同一个定义。
-- **Bot（`@sve/bot`）**：三个难度，只用 Core 的公开 API：
+- **Bot（`@sve/bot`）**：界面上有四个难度，只用 Core 的公开 API：
   - Bot-简单：贪心，每个决策都模拟所有候选回答，评估局面后选最好的；
   - Bot-中等：规划整个回合，再模拟对手的下一回合，只用玩家看得到的信息；
-  - Bot-困难：同样规划，但直接读完整的局面（对手的手牌、双方牌组的顺序），会作弊。
+  - Bot-困难：同样规划，但直接读完整的局面（对手的手牌、双方牌组的顺序），**会作弊**；
+  - Bot-困难 beta：在困难的基础上加了单独的斩杀搜索、按费用曲线换牌、主战者体力的价值曲线，同样**会作弊**。
+  - 哪些 AI 作弊只写在这里，界面上不标明。另有试验版 medium-beta（中等加上同样三项，不作弊），只在 `npm run bot:arena` 里。
 - **GUI（`@sve/gui`）**：Web 界面（Vite + React），引擎和 Bot 在 Web Worker 里运行。
   - 牌桌按场地图摆放，点击或拖拽操作，有动画、箭头和音效；
   - 组卡界面：筛选、异画、赛制和禁卡表、卡组码；
@@ -344,10 +346,12 @@ An unofficial rules engine, AI and client for the *Shadowverse: Evolve* trading 
   - Plain TypeScript and deterministic. It runs headless, with no dependency on a UI or on files.
   - It implements the Comprehensive Rules (v1.26.1) clause by clause, and every rules decision cites its clause number.
   - It supports 3,568 card definitions from 56 sets, 7,296 printings in all; alternate arts share one definition.
-- **Bot (`@sve/bot`)**: three levels, on the Core's public API only:
+- **Bot (`@sve/bot`)**: four levels in the interface, on the Core's public API only:
   - Bot-Easy: greedy. For each decision it simulates every candidate answer and picks the best-scoring result.
   - Bot-Medium: plans its whole turn, then plays out the opponent's next turn. It uses only what its player can see.
-  - Bot-Hard: plans the same way, but reads the whole game (the opponent's hand, both decks in order): it cheats.
+  - Bot-Hard: plans the same way, but reads the whole game (the opponent's hand, both decks in order): **it cheats**.
+  - Bot-Hard beta: Bot-Hard with a separate lethal search, a mulligan by the cost curve and the leader's defense valued on a curve: **it cheats** too.
+  - Which bots cheat is said only here, not in the interface. A trial medium-beta (Bot-Medium with the same three, fair) is only in `npm run bot:arena`.
 - **GUI (`@sve/gui`)**: a web interface (Vite + React). The engine and the bots run in a Web Worker.
   - A table laid out on the playmat picture, played by clicking and dragging, with animations, arrows and sounds.
   - A deck builder with filters, alternate arts, formats and restriction lists, and deck codes.
