@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "ECP01",
- "printings": 162,
+ "printings": 176,
  "cards": [
   {
    "id": "ECP01-001",
@@ -278,7 +278,9 @@
     "ECP01-010",
     "ECP01-SL05",
     "ECP01-SP05",
-    "ECP01-SSP05"
+    "ECP01-SSP05",
+    "BP22-R18",
+    "BP22-SL30"
    ],
    "name": "Gentildonna",
    "names": {
@@ -309,7 +311,9 @@
     "ECP01-011",
     "ECP01-SL06",
     "ECP01-SP06",
-    "ECP01-SSP06"
+    "ECP01-SSP06",
+    "BP22-R19",
+    "BP22-SL31"
    ],
    "name": "Gentildonna",
    "names": {
@@ -371,7 +375,9 @@
     "ECP01-013",
     "ECP01-SL08",
     "ECP01-SP08",
-    "ECP01-SSP08"
+    "ECP01-SSP08",
+    "BP22-R20",
+    "BP22-SL32"
    ],
    "name": "Sirius Symboli [Escorte Étoile]",
    "names": {
@@ -548,7 +554,9 @@
     "ECP01-019",
     "ECP01-SL09",
     "ECP01-SP09",
-    "ECP01-SSP09"
+    "ECP01-SSP09",
+    "BP22-R21",
+    "BP22-SL33"
    ],
    "name": "Cheval Grand",
    "names": {
@@ -579,7 +587,9 @@
     "ECP01-020",
     "ECP01-SL10",
     "ECP01-SP10",
-    "ECP01-SSP10"
+    "ECP01-SSP10",
+    "BP22-R22",
+    "BP22-SL34"
    ],
    "name": "Cheval Grand",
    "names": {
@@ -910,7 +920,9 @@
     "ECP01-031",
     "ECP01-SL16",
     "ECP01-SP16",
-    "ECP01-SSP16"
+    "ECP01-SSP16",
+    "BP22-R23",
+    "BP22-SL35"
    ],
    "name": "Katsuragi Ace",
    "names": {
@@ -1449,7 +1461,9 @@
     "ECP01-049",
     "ECP01-SL24",
     "ECP01-SP24",
-    "ECP01-SSP24"
+    "ECP01-SSP24",
+    "BP22-R24",
+    "BP22-SL36"
    ],
    "name": "Jungle Pocket",
    "names": {

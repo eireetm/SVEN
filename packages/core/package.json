@@ -63,6 +63,7 @@
     "./sets/lcs01": "./src/sets/lcs01.ts",
     "./sets/scs01": "./src/sets/scs01.ts",
     "./sets/pr": "./src/sets/pr.ts",
+    "./sets/bp22": "./src/sets/bp22.ts",
     "./testing": "./src/testing/index.ts"
   }
 }

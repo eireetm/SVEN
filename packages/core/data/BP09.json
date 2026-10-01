@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "BP09",
- "printings": 223,
+ "printings": 226,
  "cards": [
   {
    "id": "BP09-001",
@@ -1035,7 +1035,8 @@
    "id": "BP09-035",
    "printings": [
     "BP09-035",
-    "BP09-SL07"
+    "BP09-SL07",
+    "BP22-R05"
    ],
    "name": "Ceridwen, Eternity Hunter",
    "names": {
@@ -1064,7 +1065,8 @@
    "id": "BP09-036",
    "printings": [
     "BP09-036",
-    "BP09-SL08"
+    "BP09-SL08",
+    "BP22-R06"
    ],
    "name": "Ceridwen, Eternity Hunter",
    "names": {
@@ -2146,7 +2148,8 @@
    "printings": [
     "BP09-071",
     "BP09-SL15",
-    "BP09-U05"
+    "BP09-U05",
+    "BP22-R10"
    ],
    "name": "Arcus, Spirited Manager",
    "names": {

@@ -1,14 +1,15 @@
 {
  "format": 1,
  "set": "BP13",
- "printings": 236,
+ "printings": 240,
  "cards": [
   {
    "id": "BP13-001",
    "printings": [
     "BP13-001",
     "BP13-SL01",
-    "BP13-U01"
+    "BP13-U01",
+    "BP22-R01"
    ],
    "name": "Sekka, Fatebound Fox",
    "names": {
@@ -40,7 +41,8 @@
     "BP13-002",
     "BP13-SL02",
     "BP13-SP01",
-    "BP18-SP03"
+    "BP18-SP03",
+    "BP22-R02"
    ],
    "name": "Sekka, Ninefold Blaze",
    "names": {
@@ -2614,7 +2616,8 @@
    "id": "BP13-091",
    "printings": [
     "BP13-091",
-    "PR-415"
+    "PR-415",
+    "BP22-R14"
    ],
    "name": "Lunerian Paladin",
    "names": {
@@ -2643,7 +2646,8 @@
    "id": "BP13-092",
    "printings": [
     "BP13-092",
-    "PR-416"
+    "PR-416",
+    "BP22-R15"
    ],
    "name": "Lunerian Paladin",
    "names": {

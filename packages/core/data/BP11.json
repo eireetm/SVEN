@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "BP11",
- "printings": 233,
+ "printings": 234,
  "cards": [
   {
    "id": "BP11-001",
@@ -1636,7 +1636,8 @@
    "printings": [
     "BP11-058",
     "SD08-009",
-    "PR-347"
+    "PR-347",
+    "BP22-R09"
    ],
    "name": "Dragon-Devouring Dread",
    "names": {

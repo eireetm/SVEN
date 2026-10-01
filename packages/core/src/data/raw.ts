@@ -1,3 +1,5 @@
+import type { Universe } from "../model/card";
+
 /**
  * Shape of one scraped card file: `assets/<card_no>/<card_no>.json`.
  * Field names mirror the scraper output exactly; only the data layer may touch this type.
@@ -40,6 +42,16 @@ export interface RawCardJson {
    * CP02's unit printings (the card name is the small type above the unit name).
    */
   treated_as?: string;
+  /**
+   * Set only by data/preview.ts: a pre-release printing (Japanese and Chinese data only). Its English name and text are a
+   * placeholder; a card the scraped data doesn't know yet has an empty `name_en` and is named by its Japanese name.
+   */
+  preview?: true;
+  /**
+   * Set only by data/preview.ts: the printing's universe (CR 2.12.2.1), which the pre-release data doesn't give; otherwise
+   * it comes from the set (data/universes.ts).
+   */
+  universe?: Universe;
 }
 
 /**

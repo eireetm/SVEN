@@ -9,6 +9,9 @@
  * supported set (SUPPORTED_SETS) become definitions; each is written to the data file of its
  * canonical printing's set. Also writes docs/card-data-report.md.
  *
+ * Pre-release sets (data/preview.ts, e.g. BP22) are read from their Japanese data file next to the assets folder
+ * (D:\SVE\BP22.json) instead.
+ *
  * The core package never reads the file system; this tool is the only place that does.
  */
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -16,6 +19,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { CardDataError, groupPrintings, normalizePrinting, type NormalizedPrinting } from "../packages/core/src/data/normalize";
 import { applyDataFixes, DATA_FIXES } from "../packages/core/src/data/fixes";
+import { PREVIEW_SETS, previewRawCards, type PreviewKind, type PreviewSetFile } from "../packages/core/src/data/preview";
 import type { RawCardJson } from "../packages/core/src/data/raw";
 import { CardDatabase } from "../packages/core/src/data/database";
 import { CARD_SET_FORMAT, type CardSetFile } from "../packages/core/src/data/set-file";
@@ -68,18 +72,64 @@ for (const folder of readdirSync(assetsDir).sort()) {
 }
 if (errors.length > 0) throw new CardDataError(`${errors.length} card data error(s):\n${errors.join("\n")}`);
 
-const { cards, setOf, textVariants, noEnglishText, officialMismatches, japaneseVariants } = groupPrintings(printings, SUPPORTED_SETS);
+// Pre-release sets (data/preview.ts): their reprints of scraped cards are found by Japanese name and kind.
+const kindKey = (k: PreviewKind, ja: string) => `${k.type}|${k.evolved}|${k.token}|${k.advanced}|${ja}`;
+const englishByJapanese = new Map<string, Set<string>>();
+for (const p of printings) {
+  if (!p.def.names.ja) continue;
+  const key = kindKey({ type: p.def.type, evolved: p.def.evolved, token: p.def.token, advanced: p.def.advanced === true }, p.def.names.ja);
+  englishByJapanese.set(key, (englishByJapanese.get(key) ?? new Set()).add(p.def.name));
+}
+interface PreviewSummary {
+  set: string;
+  file: string;
+  printings: string[];
+  /** Printings of cards the scraped data already has, and the card's English name. */
+  reprints: { printing: string; name: string }[];
+}
+const previews: PreviewSummary[] = [];
+for (const [set, fileName] of Object.entries(PREVIEW_SETS)) {
+  if (!supported.has(set)) continue;
+  const file = resolve(assetsDir, "..", fileName);
+  if (!existsSync(file)) throw new Error(`pre-release set ${set}: ${file} not found (data/preview.ts)`);
+  const json = JSON.parse(readFileSync(file, "utf8")) as PreviewSetFile;
+  if (json.収録コード !== set) throw new Error(`${file}: 収録コード ${json.収録コード}, expected ${set}`);
+  const summary: PreviewSummary = { set, file, printings: [], reprints: [] };
+  const englishNameOf = (ja: string, kind: PreviewKind): string | null => {
+    const names = englishByJapanese.get(kindKey(kind, ja));
+    if (!names) return null;
+    if (names.size > 1) throw new CardDataError(`${set}: the Japanese name ${ja} belongs to several cards (${[...names].join(", ")})`);
+    return [...names][0]!;
+  };
+  for (const converted of previewRawCards(json, englishNameOf)) {
+    // Once the scraped data has the set, it is built from the scraped files: take it out of PREVIEW_SETS.
+    if (raws.has(converted.card_no)) throw new Error(`${converted.card_no} is in ${assetsDir} too: take ${set} out of PREVIEW_SETS (data/preview.ts)`);
+    const raw = applyDataFixes(converted);
+    raws.set(raw.card_no, raw);
+    printings.push(normalizePrinting(raw));
+    summary.printings.push(raw.card_no);
+    if (raw.name_en) summary.reprints.push({ printing: raw.card_no, name: raw.name_en });
+  }
+  previews.push(summary);
+}
+
+const { cards, setOf, textVariants, noEnglishText, officialMismatches, japaneseVariants, previewDefinitions } = groupPrintings(
+  printings,
+  SUPPORTED_SETS,
+);
 new CardDatabase(cards); // index validation (duplicate printings, unique token names, ...)
 
 for (const c of cards) {
   if (c.frontFace !== undefined) continue; // a back face (CR 2.14): checked with its front
   for (const p of c.printings) {
     const raw = raws.get(p)!;
+    if (raw.preview) continue; // no images yet (the report's pre-release section)
     if (!existsSync(join(assetsDir, p, raw.image))) warnings.push(`${p}: image file ${raw.image} missing`);
     if (raw.back && !existsSync(join(assetsDir, p, raw.back.image))) warnings.push(`${p}: image file ${raw.back.image} missing`);
   }
   // The definition shows the canonical printing's texts, so only its gaps matter.
   const raw = raws.get(c.id)!;
+  if (raw.preview) continue; // the report's pre-release section lists what they lack
   if (!raw.name_cn) warnings.push(`${c.id}: missing Chinese name`);
   if (raw.effect_ja && !raw.effect_cn) warnings.push(`${c.id}: missing Chinese text`);
 }
@@ -144,6 +194,21 @@ const report = [
   "## 别名印刷（CR 2.13）",
   "",
   ...cards.flatMap((c) => Object.entries(c.alternateNames ?? {}).map(([p, n]) => `- ${p}「${n.en}」是 ${c.id} ${c.name} 的别名印刷`)),
+  "",
+  "## 测试版（先行）卡包",
+  "",
+  "只有日文和中文数据的卡包（`data/preview.ts`），按日文实现、中文对照。英文卡名和文本是占位符 `unavailable`；还没有卡图。",
+  "",
+  ...previews.flatMap((p) => {
+    const defs = previewDefinitions.filter((id) => setOf[id] === p.set).map((id) => cards.find((c) => c.id === id)!);
+    const withoutCn = defs.filter((c) => !c.names.cn);
+    return [
+      `- ${p.set}：\`${p.file}\`，${p.printings.length} 个印刷版本；新定义 ${defs.length} 个；${p.reprints.length} 个是已有卡的再录或衍生物，并入已有的定义`,
+      `  - 再录：${p.reprints.map((r) => `${r.printing}（${r.name}）`).join("、")}`,
+      `  - 中文卡名：${defs.length - withoutCn.length} 个取自其他卡的中文文本；${withoutCn.length} 个没有（界面显示日文卡名）`,
+      `  - 没有中文卡名的：${withoutCn.map((c) => `${c.id} ${c.name}`).join("、")}`,
+    ];
+  }),
   "",
   "## 双面卡（CR 2.14）",
   "",

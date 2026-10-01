@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "BP15",
- "printings": 269,
+ "printings": 275,
  "cards": [
   {
    "id": "BP15-001",
@@ -1696,7 +1696,8 @@
    "id": "BP15-060",
    "printings": [
     "BP15-060",
-    "BP15-SL18"
+    "BP15-SL18",
+    "BP22-R07"
    ],
    "name": "Celestial Dragoon",
    "names": {
@@ -1724,7 +1725,8 @@
    "id": "BP15-061",
    "printings": [
     "BP15-061",
-    "BP15-SL19"
+    "BP15-SL19",
+    "BP22-R08"
    ],
    "name": "Celestial Dragoon",
    "names": {
@@ -2260,7 +2262,8 @@
    "id": "BP15-080",
    "printings": [
     "BP15-080",
-    "BP15-P17"
+    "BP15-P17",
+    "BP22-R11"
    ],
    "name": "Yuzuki, Bloodlord",
    "names": {
@@ -2288,7 +2291,8 @@
    "id": "BP15-081",
    "printings": [
     "BP15-081",
-    "BP15-P18"
+    "BP15-P18",
+    "BP22-R12"
    ],
    "name": "Yuzuki, Bloodlord",
    "names": {
@@ -3205,7 +3209,8 @@
    "printings": [
     "BP15-113",
     "BP15-SL29",
-    "BP15-SP02"
+    "BP15-SP02",
+    "BP22-R16"
    ],
    "name": "Gilnelise, Ravenous Craving",
    "names": {
@@ -3235,7 +3240,8 @@
     "BP15-114",
     "BP15-SL30",
     "BP15-U07",
-    "SCS01-009"
+    "SCS01-009",
+    "BP22-R17"
    ],
    "name": "Gilnelise, Ravenous Craving",
    "names": {

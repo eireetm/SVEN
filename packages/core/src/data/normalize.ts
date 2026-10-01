@@ -1,5 +1,5 @@
 import { backFaceId, CARD_CLASSES, type CardClass, type CardDefinition, type CardType, type LocalizedText, type TriggerIcon } from "../model/card";
-import { englishText, japaneseKey, treatedAs, withoutReminders, withoutTreatedAs, wordDice, type TextSource } from "./english-text";
+import { englishText, japaneseKey, japaneseWordsKey, PREVIEW_TEXT, treatedAs, withoutReminders, withoutTreatedAs, wordDice, type TextSource } from "./english-text";
 import type { RawCardJson } from "./raw";
 import { MAGICAL_ITEM, UNIVERSE_OF_SET } from "./universes";
 
@@ -36,6 +36,8 @@ export interface NormalizedPrinting {
   alternateName: LocalizedText | null;
   /** Japanese text, normalized, to check that printings grouped together say the same thing. */
   jaKey: string;
+  /** The same from the text with the icons written as words, to check pre-release printings (english-text.ts). */
+  jaWordsKey: string;
   /** CR 2.14 — the back face of a double-faced card. */
   back: NormalizedBack | null;
   /**
@@ -242,18 +244,24 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
   checkStats(cardNo, type, evolved, raw.cost, raw.atk, raw.def);
   const doubleFaced = raw.back !== undefined && raw.back !== null;
 
-  const rawName = raw.name_en.trim();
-  const japaneseOnly = japaneseOnlyName(raw);
+  // A pre-release printing of a card the scraped data doesn't know (data/preview.ts) is named by its Japanese name, like
+  // Japanese-only data, evolved cards included; a reprint keeps its card's English name, so that it joins the card.
+  const previewName = raw.preview === true && raw.name_en.trim() === "";
+  const rawName = previewName ? raw.name_ja.trim() : raw.name_en.trim();
+  const japaneseOnly = previewName || japaneseOnlyName(raw);
   const nameJa = japaneseOnly ? rawName : raw.name_ja;
   const ownEvolvedName = evolved && !doubleFaced && !japaneseOnly && !rawName.endsWith(EVOLVED_SUFFIX);
   const printedName = ownEvolvedName || japaneseOnly ? rawName : stripEvolvedSuffix(cardNo, rawName, evolved, doubleFaced);
-  const en = englishText(raw);
+  // A pre-release printing has no English text yet: a placeholder where it has text (english-text.ts PREVIEW_TEXT).
+  const en = raw.preview
+    ? { text: (raw.effect_ja ?? "").trim() === "" ? "" : PREVIEW_TEXT, source: "preview" as const, officialMismatch: false }
+    : englishText(raw);
   // CR 2.13: "(This card is treated as X.)" — X is the card name, the printed name an alternate name.
   const magicalItem = isMagicalItem(token, en.text, raw.treated_as);
   const alias = magicalItem ? MAGICAL_ITEM : (raw.treated_as ?? treatedAs(en.text));
   const name = alias === null ? printedName : stripEvolvedSuffix(cardNo, alias, false);
   if (name === "") throw new CardDataError(`${cardNo}: empty English name`);
-  const universe = UNIVERSE_OF_SET[raw.set];
+  const universe = raw.universe ?? UNIVERSE_OF_SET[raw.set];
   const trigger = triggerIcon(cardNo, raw.effect_en, raw.effect_ja);
 
   return {
@@ -261,7 +269,11 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
     set: raw.set,
     def: {
       name,
-      names: magicalItem ? MAGICAL_ITEM_NAMES : alias === null ? { en: name, cn: raw.name_cn, ja: nameJa } : { en: name, cn: null, ja: null },
+      names: magicalItem
+        ? MAGICAL_ITEM_NAMES
+        : alias !== null
+          ? { en: name, cn: null, ja: null }
+          : { en: raw.preview ? PREVIEW_TEXT : name, cn: raw.name_cn, ja: nameJa },
       class: parseClass(cardNo, raw.class),
       type,
       evolved,
@@ -284,6 +296,7 @@ export function normalizePrinting(raw: RawCardJson): NormalizedPrinting {
     officialMismatch: en.officialMismatch,
     alternateName: alias === null ? null : { en: printedName, cn: raw.name_cn, ja: nameJa },
     jaKey: japaneseKey(raw),
+    jaWordsKey: japaneseWordsKey(raw),
     back: doubleFaced ? normalizeBack(cardNo, raw) : null,
     ownEvolvedName,
   };
@@ -376,6 +389,8 @@ export interface GroupResult {
   officialMismatches: string[];
   /** Printings grouped with a card whose Japanese text differs from the canonical printing's. */
   japaneseVariants: { canonical: string; variant: string }[];
+  /** Definitions of pre-release cards (canonical printing from a pre-release file, data/preview.ts). */
+  previewDefinitions: string[];
 }
 
 const PRINTING_KIND_ORDER: readonly RegExp[] = [
@@ -427,6 +442,7 @@ export function groupPrintings(printings: readonly NormalizedPrinting[], support
   const noEnglishText: string[] = [];
   const officialMismatches: string[] = [];
   const japaneseVariants: GroupResult["japaneseVariants"] = [];
+  const previewDefinitions: string[] = [];
   for (const list of groups.values()) {
     if (!list.some((p) => supported.includes(p.set))) continue;
     try {
@@ -438,7 +454,8 @@ export function groupPrintings(printings: readonly NormalizedPrinting[], support
   }
   if (errors.length > 0) throw new CardDataError(`${errors.length} card data error(s):\n${errors.join("\n")}`);
   defs.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-  return { cards: defs, setOf, textVariants, noEnglishText, officialMismatches, japaneseVariants };
+  previewDefinitions.sort();
+  return { cards: defs, setOf, textVariants, noEnglishText, officialMismatches, japaneseVariants, previewDefinitions };
 
   /** One group of printings with the same identity: its definition (and back face), or a CardDataError. */
   function groupOne(list: NormalizedPrinting[]): void {
@@ -458,7 +475,8 @@ export function groupPrintings(printings: readonly NormalizedPrinting[], support
         );
       }
       const differs = wordDice(withoutReminders(other.def.text.en), withoutReminders(canonical.def.text.en)) < 0.6;
-      if (other.textSource !== "none" && canonical.textSource !== "none" && differs) {
+      const compared = (s: TextSource) => s === "effect_en";
+      if (compared(other.textSource) && compared(canonical.textSource) && differs) {
         textVariants.push({
           canonical: canonical.printing,
           variant: other.printing,
@@ -466,7 +484,10 @@ export function groupPrintings(printings: readonly NormalizedPrinting[], support
           variantText: other.def.text.en,
         });
       }
-      if (other.jaKey !== "" && canonical.jaKey !== "" && other.jaKey !== canonical.jaKey) {
+      // A pre-release printing has the Japanese text only with the icons written as words (data/preview.ts).
+      const words = other.textSource === "preview" || canonical.textSource === "preview";
+      const [a, b] = words ? [other.jaWordsKey, canonical.jaWordsKey] : [other.jaKey, canonical.jaKey];
+      if (a !== "" && b !== "" && a !== b) {
         japaneseVariants.push({ canonical: canonical.printing, variant: other.printing });
       }
     }
@@ -480,6 +501,7 @@ export function groupPrintings(printings: readonly NormalizedPrinting[], support
       );
     }
     if (canonical.textSource === "none" && canonical.jaKey !== "") noEnglishText.push(canonical.printing);
+    if (canonical.textSource === "preview") previewDefinitions.push(canonical.printing);
     if (canonical.officialMismatch) officialMismatches.push(canonical.printing);
     const def: CardDefinition = { id: canonical.printing, printings: list.map((p) => p.printing), ...canonical.def, traits: [...traits] };
     // CR 2.12.2.1 — the universe of the printings from universe sets (reprints elsewhere carry none); they must agree.

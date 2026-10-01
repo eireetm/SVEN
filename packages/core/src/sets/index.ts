@@ -56,6 +56,7 @@ import { PCS02_CARDS, PCS02_SCRIPTS } from "./pcs02";
 import { LCS01_CARDS, LCS01_SCRIPTS } from "./lcs01";
 import { SCS01_CARDS, SCS01_SCRIPTS } from "./scs01";
 import { PR_CARDS, PR_SCRIPTS } from "./pr";
+import { BP22_CARDS, BP22_SCRIPTS } from "./bp22";
 import type { SupportedSet } from "./supported";
 
 export { SUPPORTED_SETS, type SupportedSet } from "./supported";
@@ -122,6 +123,7 @@ export const SETS: Readonly<Record<SupportedSet, { cards: readonly CardDefinitio
   LCS01: { cards: LCS01_CARDS, scripts: LCS01_SCRIPTS },
   SCS01: { cards: SCS01_CARDS, scripts: SCS01_SCRIPTS },
   PR: { cards: PR_CARDS, scripts: PR_SCRIPTS },
+  BP22: { cards: BP22_CARDS, scripts: BP22_SCRIPTS },
 };
 
 export const ALL_CARDS: readonly CardDefinition[] = Object.values(SETS).flatMap((s) => s.cards);

@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "BP08",
- "printings": 223,
+ "printings": 224,
  "cards": [
   {
    "id": "BP08-001",
@@ -2458,7 +2458,8 @@
    "id": "BP08-086",
    "printings": [
     "BP08-086",
-    "BP08-SL16"
+    "BP08-SL16",
+    "BP22-R13"
    ],
    "name": "Holylord Eachtar",
    "names": {

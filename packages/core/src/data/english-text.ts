@@ -11,8 +11,17 @@ import type { RawCardJson } from "./raw";
  * docs/data-notes.md.
  */
 
-/** Where a printing's English text comes from ("none": no text, or a Japan-only printing). */
-export type TextSource = "effect_en" | "none";
+/**
+ * Where a printing's English text comes from ("none": no text, or a Japan-only printing; "preview": a pre-release
+ * printing with Japanese and Chinese data only, data/preview.ts).
+ */
+export type TextSource = "effect_en" | "none" | "preview";
+
+/**
+ * The English name and text of a pre-release card (data/preview.ts) until the English data is out: a placeholder the
+ * GUI shows as it is (decided by the project owner, 2026-10-01).
+ */
+export const PREVIEW_TEXT = "unavailable";
 
 export interface EnglishText {
   text: string;
@@ -113,7 +122,19 @@ export function withoutTreatedAs(text: string): string {
  * "―――") and reminder text in parentheses (starter-deck reprints explain keywords) dropped.
  */
 export function japaneseKey(raw: RawCardJson): string {
-  return (raw.effect_ja ?? "")
+  return comparableJapanese(raw.effect_ja);
+}
+
+/**
+ * The same from the text that writes the icons as words (`effect_ja_sve`, "ファンファーレ" for {[fanfare]}), the only form
+ * pre-release data has (data/preview.ts): a pre-release reprint is compared with its card's printings by this one.
+ */
+export function japaneseWordsKey(raw: RawCardJson): string {
+  return comparableJapanese(raw.effect_ja_sve);
+}
+
+function comparableJapanese(text: string | null): string {
+  return (text ?? "")
     .split("―")[0]!
     .replace(/（[^（）]*）|\([^()]*\)/g, "")
     .replace(/[\s\u3000]+/g, "");

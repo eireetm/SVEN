@@ -282,6 +282,15 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
   "BP09-SL14": { back: BP09_070_BACK },
   "BP09-090": { back: BP09_090_BACK },
   "BP09-P27": { back: BP09_090_BACK },
+  // BP22 (pre-release data, data/preview.ts): Chinese texts missing a word. BP22-051's Chinese text is empty and its Japanese
+  // text is only 【疾走】, which this set's Chinese texts write 【疾驰】 (BP22-034, 117). BP22-085's lacks the Fanfare icon its
+  // Japanese text starts with (ファンファーレ, 《入场曲》 in this set's Chinese texts, e.g. BP22-090).
+  "BP22-051": { effect_cn: "【疾驰】" },
+  "BP22-P28": { effect_cn: "【疾驰】" },
+  "BP22-085": {
+    effect_cn:
+      "《入场曲》从下述之中抉择1项。\n【1】使这张卡《攻击力》+1。\n【2】使这张卡获得【疾驰】能力。\n【3】《消费1》：从自己的牌堆之中搜寻1张『福金与雾尼』卡，并召唤到场上。",
+  },
 };
 
 /** Apply the fix table to one raw card file. */

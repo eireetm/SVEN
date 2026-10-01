@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "BP01",
- "printings": 535,
+ "printings": 541,
  "cards": [
   {
    "id": "BP01-001",
@@ -5435,7 +5435,8 @@
     "BP13-T06",
     "ETD03-T01",
     "EBD01-T01",
-    "PR-187"
+    "PR-187",
+    "BP22-T04"
    ],
    "name": "Fairy Wisp",
    "names": {
@@ -5478,7 +5479,8 @@
     "SD01-T01",
     "EBD01-T02",
     "SP01-T01",
-    "PR-108"
+    "PR-108",
+    "BP22-T05"
    ],
    "name": "Fairy",
    "names": {
@@ -5569,7 +5571,8 @@
   {
    "id": "BP01-T06",
    "printings": [
-    "BP01-T06"
+    "BP01-T06",
+    "BP22-T06"
    ],
    "name": "Viking",
    "names": {
@@ -5638,7 +5641,8 @@
     "BP09-T08",
     "BP12-T06",
     "SD03-T01",
-    "PR-111"
+    "PR-111",
+    "BP22-T08"
    ],
    "name": "Strikeform Golem",
    "names": {
@@ -5670,7 +5674,8 @@
     "BP09-T09",
     "BP12-T07",
     "SD03-T02",
-    "PR-112"
+    "PR-112",
+    "BP22-T09"
    ],
    "name": "Guardform Golem",
    "names": {
@@ -5706,7 +5711,8 @@
     "BP09-T10",
     "BP10-T07",
     "BP11-T08",
-    "EBD02-T01"
+    "EBD02-T01",
+    "BP22-T10"
    ],
    "name": "Magic Sediment",
    "names": {

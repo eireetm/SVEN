@@ -1,7 +1,7 @@
 {
  "format": 1,
  "set": "BP14",
- "printings": 222,
+ "printings": 225,
  "cards": [
   {
    "id": "BP14-001",
@@ -494,7 +494,8 @@
    "id": "BP14-018",
    "printings": [
     "BP14-018",
-    "BP14-SL04"
+    "BP14-SL04",
+    "BP22-R03"
    ],
    "name": "Taketsumi, Aconite Paladin",
    "names": {
@@ -523,7 +524,8 @@
    "id": "BP14-019",
    "printings": [
     "BP14-019",
-    "BP14-SL05"
+    "BP14-SL05",
+    "BP22-R04"
    ],
    "name": "Taketsumi, Creator of Paradise",
    "names": {
@@ -3449,7 +3451,8 @@
    "printings": [
     "BP14-T02",
     "BP16-T15",
-    "PR-376"
+    "PR-376",
+    "BP22-T07"
    ],
    "name": "Glittering Gold",
    "names": {
