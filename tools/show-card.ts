@@ -1,8 +1,8 @@
 /**
  * Print everything needed to script a card: all printings, EN / JA / CN text, stats,
  * Japanese traits, related definitions (same name: base / evolved card), token definitions
- * named in the text, official rulings (Japanese Q&A, from the scraped assets) and the script
- * status.
+ * named in the text, official rulings (Japanese Q&A, from the scraped assets, or a pre-release set's data file —
+ * data/preview.ts) and the script status.
  *
  *   npm run card -- BP01-006 BP01-SL01 ...     # canonical ids or any printing number
  *   npm run card -- --assets <dir> BP01-006    # assets directory (default ../assets)
@@ -11,6 +11,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createEngine, type CardDefinition } from "../packages/core/src";
+import { PREVIEW_SETS, previewRawCards, type PreviewSetFile } from "../packages/core/src/data/preview";
 import type { RawCardJson } from "../packages/core/src/data/raw";
 import { ALL_CARDS, ALL_SCRIPTS } from "../packages/core/src/sets";
 
@@ -28,9 +29,23 @@ if (args.length === 0) {
 const engine = createEngine({ cards: ALL_CARDS, scripts: ALL_SCRIPTS });
 const db = engine.db;
 
+/** Printings of the pre-release sets' data files (data/preview.ts), read when first needed. */
+let previews: Map<string, RawCardJson> | null = null;
+function previewRaw(printing: string): RawCardJson | null {
+  if (!previews) {
+    previews = new Map();
+    for (const fileName of Object.values(PREVIEW_SETS)) {
+      const file = join(assetsDir, "..", fileName);
+      if (!existsSync(file)) continue;
+      for (const r of previewRawCards(JSON.parse(readFileSync(file, "utf8")) as PreviewSetFile)) previews.set(r.card_no, r);
+    }
+  }
+  return previews.get(printing) ?? null;
+}
+
 function raw(printing: string): RawCardJson | null {
   const file = join(assetsDir, printing, `${printing}.json`);
-  return existsSync(file) ? (JSON.parse(readFileSync(file, "utf8")) as RawCardJson) : null;
+  return existsSync(file) ? (JSON.parse(readFileSync(file, "utf8")) as RawCardJson) : previewRaw(printing);
 }
 
 function stats(c: CardDefinition): string {
