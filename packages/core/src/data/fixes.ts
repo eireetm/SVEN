@@ -291,6 +291,11 @@ export const DATA_FIXES: Readonly<Record<string, DataFix>> = {
     effect_cn:
       "《入场曲》从下述之中抉择1项。\n【1】使这张卡《攻击力》+1。\n【2】使这张卡获得【疾驰】能力。\n【3】《消费1》：从自己的牌堆之中搜寻1张『福金与雾尼』卡，并召唤到场上。",
   },
+  // BP22-115's Chinese text puts the rest on the bottom of the deck; the printed card (Japanese, D:\xm\xm4\BP22-115.png) and the
+  // Japanese text put them into the cemetery ("残りを墓場に置く", confirmed by the project owner). Written as this set's Chinese
+  // texts write it (e.g. BP22-090 "将自己的牌堆顶2张卡置于墓场").
+  "BP22-115": { effect_cn: "《入场曲》查看自己的牌堆顶2张卡。从那之中，可以将1张哥布林类型·卡片公开并加入手牌。将剩余的卡置于墓场。" },
+  "BP22-P67": { effect_cn: "《入场曲》查看自己的牌堆顶2张卡。从那之中，可以将1张哥布林类型·卡片公开并加入手牌。将剩余的卡置于墓场。" },
 };
 
 /** Apply the fix table to one raw card file. */

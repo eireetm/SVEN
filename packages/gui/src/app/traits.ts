@@ -49,7 +49,7 @@ export const TRAIT_NAMES: Readonly<Record<string, TraitNames>> = {
   "盗賊": { en: "Thief", cn: "盗贼" },
   "死霊術師": { en: "Necromancer", cn: "死灵术师" },
   "吸血鬼": { en: "Vampire", cn: "吸血鬼" },
-  "錬金術師": { en: "Alchemist", cn: "炼金术士" },
+  "錬金術師": { en: "Alchemist", cn: "炼金术师" }, // the Chinese texts write both; the newest (BP21-T04) and BP22's names 炼金术师
   "アルカナ": { en: "Arcana", cn: "阿尔卡纳" },
   "植物族": { en: "Verdant", cn: "植物族" },
   "天使": { en: "Angel", cn: "天使" },

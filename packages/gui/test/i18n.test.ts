@@ -122,10 +122,12 @@ describe("options of choices", () => {
 
   it("show a pre-release card (BP22) with the English placeholder, and its Japanese name and text where a language lacks them", () => {
     const deadly = catalog.def("BP22-002")!;
-    expect([cardName(deadly, "en"), cardName(deadly, "ja"), cardName(deadly, "cn")]).toEqual(["unavailable", "デッドリーエルフ", "デッドリーエルフ"]);
+    // The Chinese name from the translation table (data/preview-bp22.ts).
+    expect([cardName(deadly, "en"), cardName(deadly, "ja"), cardName(deadly, "cn")]).toEqual(["unavailable", "デッドリーエルフ", "死噬精灵"]);
     expect([cardText(deadly, "en"), cardText(deadly, "ja").slice(0, 4), cardText(deadly, "cn").slice(0, 4)]).toEqual(["unavailable", "【必殺】", "【必杀】"]);
-    // A Chinese name another card's Chinese text gives (BP22-005 『璀璨妖精』).
-    expect(cardName(catalog.def("BP22-001"), "cn")).toBe("璀璨妖精");
+    // Without a Chinese name or text, the Japanese ones, not the placeholder.
+    const bare = { ...deadly, names: { ...deadly.names, cn: null }, text: { ...deadly.text, cn: null } };
+    expect([cardName(bare, "cn"), cardText(bare, "cn").slice(0, 4)]).toEqual(["デッドリーエルフ", "【必殺】"]);
     // Reprints keep their cards' names (BP22-T05 is BP01-T03 Fairy).
     expect(cardName(catalog.def("BP01-T03"), "en")).toBe("Fairy");
   });

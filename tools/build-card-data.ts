@@ -88,9 +88,9 @@ interface PreviewSummary {
   reprints: { printing: string; name: string }[];
 }
 const previews: PreviewSummary[] = [];
-for (const [set, fileName] of Object.entries(PREVIEW_SETS)) {
+for (const [set, preview] of Object.entries(PREVIEW_SETS)) {
   if (!supported.has(set)) continue;
-  const file = resolve(assetsDir, "..", fileName);
+  const file = resolve(assetsDir, "..", preview.file);
   if (!existsSync(file)) throw new Error(`pre-release set ${set}: ${file} not found (data/preview.ts)`);
   const json = JSON.parse(readFileSync(file, "utf8")) as PreviewSetFile;
   if (json.収録コード !== set) throw new Error(`${file}: 収録コード ${json.収録コード}, expected ${set}`);
@@ -205,8 +205,8 @@ const report = [
     return [
       `- ${p.set}：\`${p.file}\`，${p.printings.length} 个印刷版本；新定义 ${defs.length} 个；${p.reprints.length} 个是已有卡的再录或衍生物，并入已有的定义`,
       `  - 再录：${p.reprints.map((r) => `${r.printing}（${r.name}）`).join("、")}`,
-      `  - 中文卡名：${defs.length - withoutCn.length} 个取自其他卡的中文文本；${withoutCn.length} 个没有（界面显示日文卡名）`,
-      `  - 没有中文卡名的：${withoutCn.map((c) => `${c.id} ${c.name}`).join("、")}`,
+      `  - 中文卡名：${defs.length - withoutCn.length} 个（\`data/preview.ts\` 登记的译名表，或其他卡的中文文本）；${withoutCn.length} 个没有（界面显示日文卡名）`,
+      ...(withoutCn.length > 0 ? [`  - 没有中文卡名的：${withoutCn.map((c) => `${c.id} ${c.name}`).join("、")}`] : []),
     ];
   }),
   "",

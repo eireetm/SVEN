@@ -34,7 +34,7 @@ let previews: Map<string, RawCardJson> | null = null;
 function previewRaw(printing: string): RawCardJson | null {
   if (!previews) {
     previews = new Map();
-    for (const fileName of Object.values(PREVIEW_SETS)) {
+    for (const { file: fileName } of Object.values(PREVIEW_SETS)) {
       const file = join(assetsDir, "..", fileName);
       if (!existsSync(file)) continue;
       for (const r of previewRawCards(JSON.parse(readFileSync(file, "utf8")) as PreviewSetFile)) previews.set(r.card_no, r);

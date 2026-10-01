@@ -240,7 +240,7 @@ export const ja: Record<MessageKey, string> = {
   "controllerHint.greedy": "一度に一つの行動だけを考えます。攻撃や組み合わせをよく見逃します。",
   "controllerHint.medium": "ターン全体を計画し、あなたの次のターンの反撃も考えます。公平です：プレイヤーに見える情報だけを使います。",
   "controllerHint.hard": "Bot-ふつうと同じように計画しますが、ずるをします：あなたの手札、両方のデッキの順番、ランダムな効果の結果が見えます。",
-  "controllerHint.hard-beta": "ヒューリスティック評価＋MCTSに基づくAI。",
+  "controllerHint.hard-beta": "ヒューリスティック評価＋ビームサーチに基づくAI。",
   "controllerHint.random": "ランダムに操作します（テスト用）。",
   "controller.remote": "オンラインの相手",
 

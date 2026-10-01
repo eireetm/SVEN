@@ -239,7 +239,7 @@ export const zh: Record<MessageKey, string> = {
   "controllerHint.greedy": "每次只考虑一个动作：常常错过攻击和连续的配合。",
   "controllerHint.medium": "规划整个回合，也考虑你下一回合的反击。公平：只用玩家能看到的信息。",
   "controllerHint.hard": "像 Bot-中等一样规划，但会作弊：能看到你的手牌、双方牌组的顺序和随机效果的结果。",
-  "controllerHint.hard-beta": "基于启发评估+MCTS的AI。",
+  "controllerHint.hard-beta": "基于启发评估+束搜索的AI。",
   "controllerHint.random": "随机操作（测试用）。",
   "controller.remote": "联机对手",
 

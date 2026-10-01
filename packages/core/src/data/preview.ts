@@ -1,5 +1,6 @@
 import type { CardClass, Universe } from "../model/card";
 import { CardDataError } from "./normalize";
+import { BP22_CHINESE_NAMES } from "./preview-bp22";
 import type { RawCardJson, RawRuling } from "./raw";
 
 /**
@@ -12,9 +13,18 @@ import type { RawCardJson, RawRuling } from "./raw";
  * Pure functions: the build tool (tools/build-card-data.ts) reads the files.
  */
 
-/** Pre-release sets and their files, in the folder that holds the assets folder (D:\SVE\BP22.json). */
-export const PREVIEW_SETS: Readonly<Record<string, string>> = {
-  BP22: "BP22.json",
+/** A pre-release set: its file, in the folder that holds the assets folder (D:\SVE\BP22.json), and its cards' Chinese names. */
+export interface PreviewSet {
+  file: string;
+  /**
+   * Chinese card names by Japanese name, which the official Japanese list doesn't give (e.g. data/preview-bp22.ts, from the
+   * project owner's translation table). Names it lacks come from other cards' Chinese texts (chineseNamesFromTexts).
+   */
+  chineseNames?: Readonly<Record<string, string>>;
+}
+
+export const PREVIEW_SETS: Readonly<Record<string, PreviewSet>> = {
+  BP22: { file: "BP22.json", chineseNames: BP22_CHINESE_NAMES },
 };
 
 /**
@@ -123,9 +133,14 @@ export function chineseNamesFromTexts(cards: readonly PreviewCard[]): Map<string
  * reprints of scraped cards, so that they join those cards (normalize.ts groupPrintings); every other card is new and is
  * named by its Japanese name.
  */
-export function previewRawCards(file: PreviewSetFile, englishNameOf: EnglishNameOf = () => null): RawCardJson[] {
+export function previewRawCards(
+  file: PreviewSetFile,
+  englishNameOf: EnglishNameOf = () => null,
+  chineseNames: Readonly<Record<string, string>> = PREVIEW_SETS[file.収録コード]?.chineseNames ?? {},
+): RawCardJson[] {
   const set = file.収録コード;
-  const chinese = chineseNamesFromTexts(file.カード);
+  const fromTexts = chineseNamesFromTexts(file.カード);
+  const chinese = (ja: string): string | null => chineseNames[ja] ?? fromTexts.get(ja) ?? null;
   return file.カード.map((c): RawCardJson => {
     const cardNo = c.カード番号;
     if (!cardNo.startsWith(`${set}-`)) throw new CardDataError(`${cardNo}: not a printing of ${set}`);
@@ -149,7 +164,7 @@ export function previewRawCards(file: PreviewSetFile, englishNameOf: EnglishName
       // CR 5.16.1.1.1: the scraped data names an evolved card "<name> (Evolved)" (normalize.ts).
       name_en: english === null ? "" : kind.evolved ? `${english} (Evolved)` : english,
       name_ja: c.カード名,
-      name_cn: chinese.get(c.カード名) ?? null,
+      name_cn: chinese(c.カード名),
       set,
       rarity: "",
       class: cls,
