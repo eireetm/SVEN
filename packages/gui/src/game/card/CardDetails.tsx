@@ -34,9 +34,11 @@ export function CardDetails() {
   const view = focus.view;
   // The name in the card language, then in the other two (each drawn in its own language's characters).
   const name = cardName(def, cardLang);
+  // Only the languages' own names, each once (a language without one would repeat the card name, e.g. a pre-release card's
+  // Japanese name where it has no Chinese one).
   const others = LANGS.filter((l) => l !== cardLang)
-    .map((l) => ({ lang: l, name: cardName(def, l, "") }))
-    .filter((o) => o.name !== "" && o.name !== name);
+    .map((l) => ({ lang: l, name: def.names[l] ?? "" }))
+    .filter((o, i, all) => o.name !== "" && o.name !== name && all.findIndex((x) => x.name === o.name) === i);
   const stat = (label: string, now: number | null | undefined, printed: number | null) =>
     printed === null && (now === null || now === undefined) ? null : (
       <div className="sve-details-stat">
