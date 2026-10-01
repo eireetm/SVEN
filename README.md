@@ -68,7 +68,7 @@ npm run dev:gui
 | `npm run release:pc -- --zip` | 打 PC 发行版（见"发行版"） |
 | `npm run card -- <卡号>` | 查一张卡：各语言文本、日文类型、相关卡、官方 QA、脚本状态 |
 | `npm run bench` | 性能基准：随机对局、复制和抽样一局、Bot 每个决策的耗时 |
-| `npm run bot:arena -- [局数] [A] [B]` | Bot 互打（easy / medium / hard）：示例卡组，两局一组交换座位，打印胜率和思考时间 |
+| `npm run bot:arena -- [局数] [A] [B]` | Bot 互打（easy / medium / hard，试验版 medium-beta / hard-beta；sve-fool / sve-good / sve-planner 是模仿 sve-server 三个 AI 的对照组，只用于测试）：示例卡组，两局一组交换座位，打印胜率和思考时间。`--decks sd01,sd02` 选卡组，`--mirror` 双方用同一副，`--workers 8` 多进程一起打 |
 | `npm run build:cards` | 从抓取的卡牌数据（仓库旁边的 `assets/`）重新生成 `packages/core/data/*.json` |
 | `npm run scripts:index` | 新增卡牌脚本后，重新生成脚本注册表（`packages/core/src/script/<卡包>/index.ts`） |
 | `npm run cards:status` | 生成每张卡的实现和测试状态表（写到 `docs/card-status*.md`） |
@@ -396,7 +396,7 @@ Run these at the repository root:
 | `npm run release:pc -- --zip` | Build the PC release (see "Releases") |
 | `npm run card -- <card number>` | Show a card: its text in each language, Japanese traits, related cards, official Q&A, script status |
 | `npm run bench` | Benchmarks: random games, copying and sampling a game, the bot's time per decision |
-| `npm run bot:arena -- [games] [A] [B]` | Bots against each other (easy / medium / hard): the sample decks, games in pairs with the seats swapped; prints the win rate and thinking time |
+| `npm run bot:arena -- [games] [A] [B]` | Bots against each other (easy / medium / hard, the trial medium-beta / hard-beta, and sve-fool / sve-good / sve-planner, imitations of sve-server's three AIs used only as benchmarks): the sample decks, games in pairs with the seats swapped; prints the win rate and thinking time. `--decks sd01,sd02` picks decks, `--mirror` gives both players the same deck, `--workers 8` plays on several processes |
 | `npm run build:cards` | Rebuild `packages/core/data/*.json` from the scraped card data (the `assets/` folder next to the repository) |
 | `npm run scripts:index` | Regenerate the card script registries (`packages/core/src/script/<set>/index.ts`) after adding scripts |
 | `npm run cards:status` | Write each card's implementation and test status (to `docs/card-status*.md`) |
