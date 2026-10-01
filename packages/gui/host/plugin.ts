@@ -6,6 +6,7 @@ import { hostConfig, type HostConfig } from "./config.ts";
 import { deckPath, deleteDeckFile, listDecks, readDeckText, writeDeckText } from "./decks.ts";
 import { deleteReplayFile, listReplays, readReplayText, replayPath, writeReplayText } from "./replays.ts";
 import { CONTENT_TYPES, findCardArt, findMisc, listMisc, listResources } from "./resources.ts";
+import { readSettingsText, writeSettingsText } from "./settings-file.ts";
 
 /** Information about the local files, for the GUI's settings and debug panel (GET /api/host). */
 export interface HostInfo {
@@ -78,6 +79,8 @@ function readBody(req: IncomingMessage): Promise<string> {
  *  GET  /api/replays/<file>                a replay file
  *  PUT  /api/replays/<file>                save a replay (JSON body)
  *  DELETE /api/replays/<file>              delete a replay
+ *  GET  /api/settings-file                 { path, text }: the settings file (HostConfig.settingsFile; path null: none)
+ *  PUT  /api/settings-file                 write the settings file (text body)
  */
 export function hostPlugin(cfg: HostConfig = hostConfig()): Plugin {
   const handle = async (req: IncomingMessage, res: ServerResponse, next: Next): Promise<void> => {
@@ -153,6 +156,15 @@ export function hostPlugin(cfg: HostConfig = hostConfig()): Plugin {
           const text = await readBody(req);
           JSON.parse(text); // refuse what isn't JSON
           writeReplayText(full, text);
+          return sendJson(res, 200, { ok: true });
+        }
+      }
+      if (path === "settings-file") {
+        // None unless SVE_SETTINGS_FILE names one: the app keeps its settings in the browser only.
+        if (req.method === "GET" && !cfg.settingsFile) return sendJson(res, 200, { path: null, text: null });
+        if (req.method === "GET" && cfg.settingsFile) return sendJson(res, 200, { path: cfg.settingsFile, text: readSettingsText(cfg.settingsFile) });
+        if (req.method === "PUT" && cfg.settingsFile) {
+          writeSettingsText(cfg.settingsFile, await readBody(req));
           return sendJson(res, 200, { ok: true });
         }
       }

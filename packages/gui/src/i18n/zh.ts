@@ -162,6 +162,10 @@ export const zh: Record<MessageKey, string> = {
   "settings.game": "对局",
   "settings.announceQuick": "每次快速结算后暂停并提示",
   "settings.announceQuickHelp": "快速卡或快速能力结算后，弹窗告知谁使用了什么、目标和选择，点“确定”后游戏继续。",
+  "settings.fileHelp": "这些设置也保存在 {path}，可以直接编辑：在游戏关闭时改，或者保存后刷新这个页面。",
+  "settingsFile.about": "中文：游戏的设置。在游戏关闭时修改，或者保存后刷新游戏页面（F5）；在游戏里改的设置会写到这里。缺少的项和写错的值用默认值。",
+  "settingsFile.transparencyEmpty": "留空：用样式自带的（public/theme.css 或内置样式）",
+  "settingsFile.plainPassword": "以明文保存在这个文件里",
 
   "setup.title": "对战 AI",
   "setup.you": "你",

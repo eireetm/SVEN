@@ -283,6 +283,10 @@ export async function createAndroidHost(): Promise<Host> {
       await Clipboard.write({ string: text });
     },
 
+    // No settings file on a phone: the settings stay in the app's own storage.
+    readSettingsFile: async () => null,
+    writeSettingsFile: () => Promise.reject(new Error("the Android app keeps no settings file")),
+
     importResources: importZip,
   };
 }

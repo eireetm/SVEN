@@ -158,6 +158,10 @@ export const en = {
   "settings.game": "Game",
   "settings.announceQuick": "Pause after each Quick card or ability",
   "settings.announceQuickHelp": "When a Quick card or ability resolves, a window tells who played what, its targets and choices; the game goes on after OK.",
+  "settings.fileHelp": "These settings are also kept in {path}, which you can edit by hand: while the game is closed, or reload this page after saving it.",
+  "settingsFile.about": "English: the game's settings. Edit them while the game is closed, or reload the game's page (F5) after saving; a setting changed in the game is written here. A missing key or a wrong value: the default.",
+  "settingsFile.transparencyEmpty": "empty: the style's own (public/theme.css or the built-in one)",
+  "settingsFile.plainPassword": "kept in this file as plain text",
 
   "setup.title": "Play vs AI",
   "setup.you": "You",

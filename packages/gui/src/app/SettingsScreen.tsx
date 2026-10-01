@@ -4,6 +4,7 @@ import { useT } from "../i18n";
 import { engine } from "./store";
 import { applyUiTransparency, currentUiTransparency, loadResources } from "../resources/resources";
 import { updateSettings, useSettings, type CardLang, type UiLang } from "./settings";
+import { settingsFilePath } from "./settings-file";
 
 type ResourceStatus =
   | { kind: "idle" }
@@ -69,7 +70,10 @@ function ResourcesSection() {
   );
 }
 
-/** The settings (remembered in this browser): the languages (the interface's and the card text's), the appearance. */
+/**
+ * The settings (remembered in this browser, and in the PC release's settings.ini too): the languages (the interface's and
+ * the card text's), the appearance, sound, the game, online play.
+ */
 export function SettingsScreen({ onBack }: { onBack: () => void }) {
   const t = useT();
   const settings = useSettings();
@@ -79,10 +83,16 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
     updateSettings({ uiTransparency: value });
   };
   const transparency = settings.uiTransparency ?? currentUiTransparency();
+  const file = settingsFilePath();
   return (
     <div className="sve-menu">
       <div className="sve-menu-panel sve-settings">
         <h2>{t("settings.title")}</h2>
+        {file ? (
+          <p className="sve-hint" data-testid="settings-file">
+            {t("settings.fileHelp", { path: file })}
+          </p>
+        ) : null}
         <section className="sve-settings-group">
           <h3>{t("settings.language")}</h3>
           <label className="sve-settings-row">

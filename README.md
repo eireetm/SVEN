@@ -155,6 +155,7 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
   - 都按这个顺序找，同名的只用第一个。
 - 界面启动时读一次文件清单。放进新文件后刷新页面；图片有缓存时按 Ctrl+F5。
 - 按卡查找的资源，先找印刷编号（如 `BP01-SL01`，每个异画各有一个），再找卡牌定义编号（如 `BP01-001`）。给本体放一个文件，所有异画都会用它。
+- 编号里的 `Ⓢ`（如 `BP03-LDⓈ01`）在文件名里也可以写成普通的 `S`（`BP03-LDS01.png`）。
 
 **图片**（下表的路径都在 `public/` 下，省略扩展名）
 
@@ -286,6 +287,10 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
     - 三语的 `README.txt`，以及写着版本、提交和引擎指纹的 `VERSION.txt`。
   - `--public <文件夹>`：把这个文件夹里的资源一起放进 `public/`（默认不放）。
   - 朋友的电脑要装 Node.js 20 以上。
+  - **设置文件 `settings.ini`**：第一次启动时在这个文件夹里生成（带着浏览器里原有的设置）。
+    - 里面是设置页的各项（语言、界面透明度、音量、快速提示、TURN 中转）和调试页的几项（动画、Bot 速度、手动选择卡片位置、手动调试），每项上面有三语的说明。
+    - 文件优先：启动时读取，缺少的项和写错的值用默认值；在游戏里改的设置会写回文件，只改那一项，其他的行和注释保留。
+    - 在游戏关着时改，或者改完后刷新页面。设置跟着文件夹走，换端口、换浏览器也不会丢；从旧版更新时保留它。
 - **安卓版**：`npm run android:apk -- --release --public <资源文件夹> --out <APK 路径>`（选项见"安卓版"）。
   - 每次都要用同一个密钥签名（默认是仓库旁边的 `SVE-signing/`），换了密钥就不能覆盖安装。
   - 密钥要备份，不要给别人。
@@ -491,6 +496,7 @@ The game's look and sound can be replaced or extended with your own files, with 
   - They are tried in that order, and only the first match is used.
 - The interface reads the list of files once when it starts. After adding files, reload the page, with Ctrl+F5 if pictures are cached.
 - Per-card resources are looked up by printing number first (e.g. `BP01-SL01`; each alternate art has its own), then by card definition number (e.g. `BP01-001`). One file for the base card serves all its alternate arts.
+- A `Ⓢ` in a number (e.g. `BP03-LDⓈ01`) may also be a plain `S` in the file name (`BP03-LDS01.png`).
 
 **Pictures** (paths under `public/`, extension left out)
 
@@ -622,6 +628,10 @@ The versions for friends (e.g. 0.1.2) come in two kinds: for PCs and for Android
     - `README.txt` in three languages, and `VERSION.txt` with the version, the commit and the engine fingerprint.
   - `--public <folder>`: copies that folder's resources into `public/` (none by default).
   - Friends need Node.js 20 or newer.
+  - **Settings file `settings.ini`**: written into the folder at the first start (with the settings the browser had).
+    - It holds the settings page's settings (languages, interface transparency, volumes, the Quick pause, the TURN relay) and a few of the debug panel's (animations, bot speed, choosing card spots by hand, manual debugging), each with a comment in three languages.
+    - The file comes first: it is read at the start (a missing key or a wrong value: the default), and a setting changed in the game is written back to it, that key only; other lines and comments stay.
+    - Edit it while the game is closed, or reload the page after saving. The settings go with the folder, so another port or browser doesn't lose them; keep the file when updating from an older version.
 - **Android**: `npm run android:apk -- --release --public <resource folder> --out <APK path>` (options under "Android app").
   - Always sign with the same key (by default `SVE-signing/` next to the repository). With another key, the APK can't be installed over the old one.
   - Back the key up, and keep it to yourself.

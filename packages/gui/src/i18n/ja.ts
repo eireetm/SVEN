@@ -163,6 +163,10 @@ export const ja: Record<MessageKey, string> = {
   "settings.game": "対戦",
   "settings.announceQuick": "クイックのたびに一時停止して知らせる",
   "settings.announceQuickHelp": "クイックのカードや能力が解決すると、誰が何をプレイしたか、対象と選択をウィンドウで知らせ、「OK」で対戦が続きます。",
+  "settings.fileHelp": "これらの設定は {path} にも保存され、直接編集できます：ゲームを閉じているときに編集するか、保存後にこのページを再読み込みしてください。",
+  "settingsFile.about": "日本語：ゲームの設定です。ゲームを閉じているときに編集するか、保存後にゲームのページを再読み込み（F5）してください。ゲーム内で変えた設定はここに書き込まれます。ない項目や間違った値は初期値になります。",
+  "settingsFile.transparencyEmpty": "空欄：スタイルの値（public/theme.css または組み込みのもの）",
+  "settingsFile.plainPassword": "このファイルに平文で保存されます",
 
   "setup.title": "AI と対戦",
   "setup.you": "あなた",

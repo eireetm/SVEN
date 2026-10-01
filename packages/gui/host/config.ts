@@ -25,6 +25,11 @@ export interface HostConfig {
    * optionally the backgrounds `background_m` (main menu), `background_d` (deck builder) and `background_f` (battlefield).
    */
   miscDir: string;
+  /**
+   * The settings file (settings.ini, src/app/settings-file.ts): the PC release's is next to server.mjs. The dev server
+   * keeps none unless the environment variable SVE_SETTINGS_FILE names one (the settings stay in the browser).
+   */
+  settingsFile?: string;
 }
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -38,5 +43,6 @@ export function hostConfig(root: string = packageRoot): HostConfig {
     replaysDir: join(root, "replays"),
     assetsDir,
     miscDir: join(assetsDir, "Misc"),
+    ...(process.env.SVE_SETTINGS_FILE ? { settingsFile: resolve(process.env.SVE_SETTINGS_FILE) } : {}),
   };
 }

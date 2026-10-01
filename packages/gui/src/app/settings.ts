@@ -1,5 +1,5 @@
 // Per-viewer settings, remembered in the browser (localStorage). Everything works without it (private windows, blocked
-// storage): the defaults are used.
+// storage): the defaults are used. The PC release also keeps most of them in its settings.ini (settings-file.ts).
 import { useSyncExternalStore } from "react";
 import type { FormatId, SeatController, TurnOrder } from "../engine/protocol";
 import type { TurnServer } from "../net/relays";
@@ -44,7 +44,7 @@ export interface Settings {
 }
 
 const KEY = "sve-gui-settings";
-const DEFAULTS: Settings = {
+export const DEFAULT_SETTINGS: Settings = {
   uiLang: "en",
   cardLang: "en",
   botDelayMs: 600,
@@ -68,15 +68,15 @@ const DEFAULTS: Settings = {
 /** Settings saved by an older version, brought up to date: "deck restrictions" off became the unlimited format. */
 export function migrateSettings(saved: Partial<Settings> & { setupRestrictions?: boolean }): Settings {
   const { setupRestrictions, ...rest } = saved;
-  return { ...DEFAULTS, ...(setupRestrictions === false && rest.format === undefined ? { format: "unlimited" as const } : {}), ...rest };
+  return { ...DEFAULT_SETTINGS, ...(setupRestrictions === false && rest.format === undefined ? { format: "unlimited" as const } : {}), ...rest };
 }
 
 function load(): Settings {
   try {
     const raw = localStorage.getItem(KEY);
-    return raw ? migrateSettings(JSON.parse(raw) as Partial<Settings>) : DEFAULTS;
+    return raw ? migrateSettings(JSON.parse(raw) as Partial<Settings>) : DEFAULT_SETTINGS;
   } catch {
-    return DEFAULTS;
+    return DEFAULT_SETTINGS;
   }
 }
 

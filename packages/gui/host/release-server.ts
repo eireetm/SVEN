@@ -1,6 +1,6 @@
 // The PC release's local server (scripts/release-pc.ts bundles it into the release as server.mjs, README "发行版"): the
-// built app (app/), the player's own files (public/), and the GUI's /api/* (decks, replays, the list of public/ files) —
-// the same deck / replay / resource code the dev server's plugin.ts uses. No assets folder: card images and the game's
+// built app (app/), the player's own files (public/), and the GUI's /api/* (decks, replays, the list of public/ files, the
+// settings file settings.ini) — the same deck / replay / resource code the dev server's plugin.ts uses. No assets folder: card images and the game's
 // look come only from public/ (else the built-in style). Only this computer can reach it (127.0.0.1).
 import { spawn } from "node:child_process";
 import { createReadStream, existsSync, mkdirSync, statSync } from "node:fs";
@@ -12,6 +12,7 @@ import type { HostConfig } from "./config.ts";
 import { deckPath, deleteDeckFile, listDecks, readDeckText, writeDeckText } from "./decks.ts";
 import { deleteReplayFile, listReplays, readReplayText, replayPath, writeReplayText } from "./replays.ts";
 import { listResources, ownCardArt } from "./resources.ts";
+import { readSettingsText, writeSettingsText } from "./settings-file.ts";
 
 /** The release's version (packages/gui/package.json), put in when the release is built. */
 declare const __SVE_VERSION__: string;
@@ -19,6 +20,8 @@ declare const __SVE_VERSION__: string;
 // The release's folder: where server.mjs, the bundle of this file, is.
 const root = dirname(fileURLToPath(import.meta.url));
 const appDir = join(root, "app");
+// The settings the app keeps here as well as in the browser (src/app/settings-file.ts): a person can edit them by hand.
+const settingsFile = join(root, "settings.ini");
 const cfg: HostConfig = {
   root,
   publicDir: join(root, "public"),
@@ -27,6 +30,7 @@ const cfg: HostConfig = {
   // No assets folder in a release.
   assetsDir: "",
   miscDir: "",
+  settingsFile,
 };
 for (const dir of [cfg.publicDir, cfg.decksDir, cfg.replaysDir]) mkdirSync(dir, { recursive: true });
 
@@ -186,6 +190,13 @@ async function api(req: IncomingMessage, res: ServerResponse, url: URL): Promise
       const text = await readBody(req);
       JSON.parse(text); // refuse what isn't JSON
       writeReplayText(full, text);
+      return sendJson(res, 200, { ok: true });
+    }
+  }
+  if (path === "settings-file") {
+    if (req.method === "GET") return sendJson(res, 200, { path: settingsFile, text: readSettingsText(settingsFile) });
+    if (req.method === "PUT") {
+      writeSettingsText(settingsFile, await readBody(req));
       return sendJson(res, 200, { ok: true });
     }
   }
