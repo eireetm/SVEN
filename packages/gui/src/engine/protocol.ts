@@ -165,6 +165,13 @@ export type ToWorker =
   /** Watch a replay from its start (nobody plays: its inputs are played back, docs/gui.md "录像"). */
   | { kind: "watch"; replay: Replay }
   /**
+   * Online play, a spectator (docs/online.md "观战"): the game two other programs play, from its options (both seats
+   * "remote") and its inputs so far (played at once); the players' next answers come as "remoteInput", passed on by the host.
+   */
+  | { kind: "spectate"; options: GameOptions; inputs: RecordedInput[] }
+  /** A spectator: which side of the table is at the bottom (both are shown as the other player sees them). */
+  | { kind: "spectatorSide"; perspective: PlayerId }
+  /**
    * The playback of the replay being watched: play or pause, its speed, go to a position (0: the start), one step forward
    * or back, whose view (with or without both players' hidden cards: HostSettings.revealAll).
    */
@@ -257,8 +264,11 @@ export interface GameUpdate {
   announcement: QuickAnnouncement | null;
   /** A replay being watched (null: a game being played). */
   watch: WatchState | null;
-  /** Online play (null: a local game): whose seat is played by the other program, and whether the two games differ. */
-  online: { seat: PlayerId; remote: PlayerId; desync: string | null } | null;
+  /**
+   * Online play (null: a local game): this program's seat and the one the other program plays (both null: a spectator,
+   * who watches the two players' programs), and whether the games differ.
+   */
+  online: { seat: PlayerId | null; remote: PlayerId | null; desync: string | null; spectating: boolean } | null;
   /** Whose view this is (the human's seat; in hot seat, the player who must decide). */
   perspective: PlayerId;
   view: PlayerView;

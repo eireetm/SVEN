@@ -1,13 +1,16 @@
 // The chat with the other player (docs/online.md), in the online screen and in a game's sidebar. Only the online state
-// (net/state.ts): the game screen shows it without loading the connection code.
+// (net/state.ts): the game screen shows it without loading the connection code. A spectator reads both players' lines and
+// writes none.
 import { useEffect, useRef, useState } from "react";
 import { useT } from "../i18n";
 import { CHAT_MAX } from "../net/messages";
-import { sendChat, useOnline } from "../net/state";
+import { canChat, sendChat, useOnline } from "../net/state";
 
 export function Chat() {
   const t = useT();
-  const { chat, phase } = useOnline();
+  const online = useOnline();
+  const { chat, room } = online;
+  const spectator = room?.role === "spectator";
   const [line, setLine] = useState("");
   const lines = useRef<HTMLDivElement>(null);
   // The newest line in view.
@@ -18,26 +21,32 @@ export function Chat() {
   return (
     <div className="sve-online-chat-box">
       <div className="sve-online-chat" ref={lines} data-testid="online-chat">
-        {chat.length === 0 ? <p className="sve-hint">{t("online.chatEmpty")}</p> : null}
+        {chat.length === 0 && !spectator ? <p className="sve-hint">{t("online.chatEmpty")}</p> : null}
         {chat.map((c, i) => (
           <p key={i} className={c.from === "me" ? "sve-online-mine" : "sve-online-theirs"}>
-            <strong>{t(c.from === "me" ? "online.me" : "online.them")}</strong> {c.text}
+            <strong>{c.from === "me" ? t("online.me") : c.from === "peer" ? t("online.them") : t("online.playerSaid", { n: c.from + 1 })}</strong> {c.text}
           </p>
         ))}
       </div>
-      <form
-        className="sve-online-join"
-        onSubmit={(e) => {
-          e.preventDefault();
-          sendChat(line);
-          setLine("");
-        }}
-      >
-        <input value={line} onChange={(e) => setLine(e.target.value)} maxLength={CHAT_MAX} placeholder={t("online.chatPlaceholder")} data-testid="online-chat-input" />
-        <button type="submit" disabled={line.trim() === "" || phase.kind !== "connected"} data-testid="online-send">
-          {t("online.send")}
-        </button>
-      </form>
+      {spectator ? (
+        <p className="sve-hint" data-testid="online-chat-readonly">
+          {t("online.watchChat")}
+        </p>
+      ) : (
+        <form
+          className="sve-online-join"
+          onSubmit={(e) => {
+            e.preventDefault();
+            sendChat(line);
+            setLine("");
+          }}
+        >
+          <input value={line} onChange={(e) => setLine(e.target.value)} maxLength={CHAT_MAX} placeholder={t("online.chatPlaceholder")} data-testid="online-chat-input" />
+          <button type="submit" disabled={line.trim() === "" || !canChat(online)} data-testid="online-send">
+            {t("online.send")}
+          </button>
+        </form>
+      )}
     </div>
   );
 }

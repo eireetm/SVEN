@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { decodeSignal, encodeSignal, newRoomCode, normalizeRoomCode, ROOM_CODE_LENGTH } from "../src/net/codes";
-import { parseMessage } from "../src/net/messages";
+import { BACKLOG_PIECE, parseMessage, watchedOptions, type WatchedGame } from "../src/net/messages";
 import { iceServers, STUN_SERVERS } from "../src/net/relays";
 
 // Online play (docs/online.md): the codes people pass each other, the messages two programs accept, the ICE servers.
@@ -94,6 +94,43 @@ describe("messages", () => {
     }
     expect(parseMessage({ t: "resume", game: "seed", have: 40 })).toEqual({ t: "resume", game: "seed", have: 40 });
     expect(parseMessage({ t: "resume", game: "seed", have: "40" })).toBeNull();
+  });
+
+  it("carry what spectators need: the seat asked for, the game watched and its inputs so far, the chat's speaker", () => {
+    expect(parseMessage({ t: "join", as: "watch" })).toEqual({ t: "join", as: "watch" });
+    expect(parseMessage({ t: "join", as: "player" })).toEqual({ t: "join", as: "player" });
+    expect(parseMessage({ t: "join", as: "referee" })).toBeNull();
+    expect(parseMessage({ t: "watchers", n: 2 })).toEqual({ t: "watchers", n: 2 });
+    expect(parseMessage({ t: "watchers", n: 3 })).toBeNull();
+    expect(parseMessage({ t: "chat", text: "gl", seat: 1 })).toEqual({ t: "chat", text: "gl", seat: 1 });
+    expect(parseMessage({ t: "chat", text: "gl", seat: 2 })).toBeNull();
+    const deck = { leader: "SD01-LD01", main: ["SD01-001"], evolve: [] };
+    const game = {
+      id: "seed",
+      decks: [deck, deck],
+      deckNames: ["A", "B"],
+      deckRestrictions: true,
+      format: "standard",
+      restrictionList: null,
+      secondLeaders: [null, null],
+      turnOrder: "choose",
+      backlog: 2,
+    };
+    expect(parseMessage({ t: "watch", game })).toEqual({ t: "watch", game });
+    expect(parseMessage({ t: "watch", game: null })).toEqual({ t: "watch", game: null });
+    for (const bad of [{ ...game, decks: [deck] }, { ...game, deckNames: ["A", 1] }, { ...game, format: "modern" }, { ...game, backlog: -1 }, { ...game, secondLeaders: [7, null] }]) {
+      expect(parseMessage({ t: "watch", game: bad })).toBeNull();
+    }
+    // The options a spectator's engine plays it with: both seats the players' programs, the players' pacing.
+    expect(watchedOptions(game as unknown as WatchedGame)).toMatchObject({ seed: "seed", controllers: ["remote", "remote"], showEveryMainPhase: true, askEveryQuickWindow: true, manualActions: false });
+    const input = { type: "mainPhase", action: { type: "endMainPhase" } };
+    expect(parseMessage({ t: "backlog", start: 0, inputs: [{ input, by: 0 }, { input: { type: "quick", action: { type: "pass" } }, by: null }] })).toEqual({
+      t: "backlog",
+      start: 0,
+      inputs: [{ input, by: 0 }, { input: { type: "quick", action: { type: "pass" } }, by: null }],
+    });
+    expect(parseMessage({ t: "backlog", start: 0, inputs: [{ input, by: 2 }] })).toBeNull();
+    expect(parseMessage({ t: "backlog", start: 0, inputs: Array(BACKLOG_PIECE + 1).fill({ input, by: 0 }) })).toBeNull();
   });
 });
 

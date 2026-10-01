@@ -257,8 +257,12 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
 - **房间号**：一方创建房间，把 6 位房间号发给对方。双方借用公共的免费服务（Nostr、MQTT、BitTorrent）找到对方，然后用 WebRTC 直连。
 - **手动连接**：房间号连不上时，双方互相发送连接码（`SVE1-O-…` / `SVE1-A-…`）。
 - **连不上时**：可以在设置里填自己的 TURN 中转；"检测网络"会显示这台电脑的网络情况。
-- **版本**：两边的程序要是同一个版本（卡牌、规则代码、禁卡表的指纹都相同）才能开始。
+- **版本**：两边的联机协议、卡牌（定义、实现状态和禁卡表）和规则代码的指纹都相同才能开始，联机界面会显示是否相同；版本号本身不比。各自 `public/` 里的资源（卡图、音效、背景、字体、`theme.css`）、设置、界面语言、卡组都不用一样，电脑版和安卓版也能互相联机。
 - **对局**：双方各自运行同一局，只同步每一步的回答。断线后可以重连，接着打。
+- **观战**：知道房间号的人点"观战"进房间看对局，每个房间最多 2 人。
+  - 只能看双方都看得到的信息（看不到手牌），可以换边；不能操作，也不能发言（能看到聊天）。
+  - 对局中途进来的马上追上进度；断线后自动重连。
+  - 只有用房间号连接时才能观战（手动连接不行）。
 
 ### 录像和复现包
 
@@ -286,6 +290,7 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
   - 密钥要备份，不要给别人。
 - **联机**：双方的引擎指纹一样才能对局（`VERSION.txt` 和联机界面里都能看到）。
   - 改了 `packages/core/` 或 `packages/gui/src/engine/` 的代码，指纹就会变，大家都要换新版。
+  - 联机协议（`packages/gui/src/net/` 的 `PROTOCOL`）变了也一样；只改了界面的版本可以和旧版互相联机。
 - **建议的步骤**：
   1. 提交代码；
   2. 改版本号并提交；
@@ -587,8 +592,12 @@ Sound effects (26):
 - **Room code**: one player creates a room and sends the 6-letter code to the other. Both find each other through free public services (Nostr, MQTT, BitTorrent), then connect directly with WebRTC.
 - **Manual connection**: when a room code doesn't connect, the players exchange connection codes (`SVE1-O-…` / `SVE1-A-…`).
 - **If you can't connect**: set your own TURN relay in the settings; "Check the network" shows what this computer can reach.
-- **Versions**: both programs must be the same version (cards, rules code and restriction lists have the same fingerprints) to start a game.
+- **Versions**: a game starts only when both programs have the same online protocol and the same fingerprints of the cards (definitions, implementation status, restriction lists) and of the rules code; the online screen says whether they do. The version number itself isn't compared. The resources in each one's `public/` (card pictures, sounds, backgrounds, fonts, `theme.css`), the settings, the interface language and the decks can all differ, and the PC and Android versions can play each other.
 - **The game**: each program runs the same game and only the answers are exchanged. After a lost connection, reconnect and play on.
+- **Watching**: anyone with the room code can click "Watch" to watch the room's games, 2 spectators a room at most.
+  - Spectators see only what both players can see (no hands) and can swap sides; they can't play or chat (they read the chat).
+  - One who comes in the middle of a game catches up at once; a lost connection connects again by itself.
+  - Watching needs a room code (not a manual connection).
 
 ### Replays and bug report files
 
@@ -616,6 +625,7 @@ The versions for friends (e.g. 0.1.2) come in two kinds: for PCs and for Android
   - Back the key up, and keep it to yourself.
 - **Online play**: both sides need the same engine fingerprint (shown in `VERSION.txt` and in the online screen).
   - Changing code in `packages/core/` or `packages/gui/src/engine/` changes it, and everyone needs the new release.
+  - So does a new online protocol (`PROTOCOL` in `packages/gui/src/net/`); a release that only changes the interface plays with the older one.
 - **Suggested steps**:
   1. Commit.
   2. Change the version, and commit.

@@ -6,8 +6,11 @@
 // The lists were checked from a test machine on 2026-09-29 (docs/online.md "公共服务"): the connection library's own
 // relays that answered, plus a relay in Japan and STUN servers in China, since players may be in different countries.
 
-/** Tells this program's rooms apart from other programs' on the same public relays (a new version of the protocol: a new id). */
-export const APP_ID = "sve-evolve-gui-online-1";
+/**
+ * Tells this program's rooms apart from other programs' on the same public relays (a new version of the protocol: a new id).
+ * 2: programs say which seat they want when they join a room (spectators, online-3).
+ */
+export const APP_ID = "sve-evolve-gui-online-2";
 
 /** Nostr relays (the library's default network; hundreds exist, these answered). */
 export const NOSTR_RELAYS = [

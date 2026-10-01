@@ -206,6 +206,12 @@ export class GameHost {
   /** Online play: the other program's answers waiting for this game to reach them, by index; why the two games differ. */
   private remoteQueue = new Map<number, { input: Input; hash: string }>();
   private desync: string | null = null;
+  /**
+   * Online play, a spectator (docs/online.md "观战"): both seats are the players' programs (their answers come as
+   * "remoteInput" through the host); it is shown what both players can see (CR 4.1.2), from the side chosen.
+   */
+  private spectating = false;
+  private spectatorSide: PlayerId = 0;
 
   constructor(
     private readonly engine: Engine,
@@ -218,7 +224,16 @@ export class GameHost {
     switch (message.kind) {
       case "start":
         this.watching = null;
+        this.spectating = false;
         return this.begin(message.options, []);
+      case "spectate":
+        this.watching = null;
+        this.spectating = true;
+        return this.begin(message.options, message.inputs);
+      case "spectatorSide":
+        if (!this.spectating) return;
+        this.spectatorSide = message.perspective;
+        return this.pump();
       case "answer":
         return this.watching ? undefined : this.answer(message.seat, message.answer);
       case "concede":
@@ -226,19 +241,21 @@ export class GameHost {
       case "rewind":
         if (this.watching) return this.seek(message.inputs, false);
         // Online, both programs play the same game: nobody takes an answer back.
-        if (this.remoteSeat() !== null) return;
+        if (this.remotes().length > 0) return;
         if (this.options) this.begin(this.options, this.inputs.slice(0, Math.max(0, message.inputs)));
         return;
       case "remoteInput":
         return this.remoteInput(message.index, message.input, message.hash);
       case "loadReplay": {
         this.watching = null;
+        this.spectating = false;
         // An online game's replay goes on here with a person at each seat: the other program isn't there.
         const options = message.replay.options;
         const controllers = options.controllers.map((c) => (c === "remote" ? "human" : c)) as GameOptions["controllers"];
         return this.begin({ ...options, controllers }, message.replay.inputs.slice(0, message.inputs ?? message.replay.inputs.length));
       }
       case "watch":
+        this.spectating = false;
         return this.startWatching(message.replay);
       case "watchControl":
         return this.controlWatch(message);
@@ -317,6 +334,8 @@ export class GameHost {
         this.apply(recorded.input, recorded.by);
       } catch (err) {
         this.error(err, `the replay stopped at input ${this.inputs.length + 1}`);
+        // A spectator's game can't follow the players' any further.
+        if (this.spectating) this.desync = `${this.inputs.length + 1}`;
         break;
       }
     }
@@ -332,7 +351,7 @@ export class GameHost {
     // A manual operation (testing by hand) may come from a person at any main phase decision, a bot's too (bots paused).
     const manual = isManualInput(answer);
     const notYours = manual ? this.bots[seat] !== null : decision.player !== seat || this.bots[seat];
-    if (notYours || seat === this.remoteSeat() || this.desync) return this.error(`it is not player ${seat + 1}'s decision`);
+    if (notYours || this.isRemote(seat) || this.desync) return this.error(`it is not player ${seat + 1}'s decision`);
     const problem = manual && answer.action.type === "manual" ? game.manualOpError(answer.action.op) : validateAnswer(decision, answer);
     if (problem) return this.error(`illegal answer: ${problem}`);
     this.announcement = null; // whoever answers has seen the table
@@ -348,7 +367,7 @@ export class GameHost {
 
   private concede(seat: PlayerId): void {
     const game = this.game;
-    if (!game || game.isOver || seat === this.remoteSeat()) return;
+    if (!game || game.isOver || this.isRemote(seat)) return;
     const input: Input = { type: "concede", player: seat };
     const sent = this.outgoing();
     try {
@@ -360,35 +379,41 @@ export class GameHost {
     this.pump();
   }
 
-  /** Online play: the seat the other program plays (null: a local game). */
-  private remoteSeat(): PlayerId | null {
+  /** Online play: the seats other programs play (none: a local game; both: a spectator's). */
+  private remotes(): PlayerId[] {
     const controllers = this.options?.controllers;
-    if (!controllers || this.watching) return null;
-    return controllers[0] === "remote" ? 0 : controllers[1] === "remote" ? 1 : null;
+    if (!controllers || this.watching) return [];
+    return ([0, 1] as const).filter((p) => controllers[p] === "remote");
+  }
+
+  private isRemote(seat: PlayerId | null): boolean {
+    return seat !== null && this.remotes().includes(seat);
   }
 
   /** Online play: before this person's answer, where it goes and the state it follows; once played, it is sent. */
   private outgoing(): ((input: Input) => void) | null {
     const game = this.game;
-    if (!game || this.remoteSeat() === null) return null;
+    if (!game || this.remotes().length !== 1) return null;
     const index = this.inputs.length;
     const hash = stateHash(game.state);
     return (input) => this.send({ kind: "localInput", index, input, hash });
   }
 
   /**
-   * Online play: an answer of the other program's person. Played once this game has reached it (the host's own passes and
-   * pauses come first, the same on both sides), after checking that both games are the same there. Conceding comes at once.
+   * Online play: an answer of the other program's person (a spectator: of either player, passed on by the host). Played once
+   * this game has reached it (the host's own passes and pauses come first, the same on both sides), after checking that both
+   * games are the same there. Conceding comes at once.
    */
   private remoteInput(index: number, input: Input, hash: string): void {
     const game = this.game;
-    const remote = this.remoteSeat();
-    if (!game || remote === null || this.desync) return;
+    const remotes = this.remotes();
+    if (!game || remotes.length === 0 || this.desync) return;
     if (input.type === "concede") {
-      // CR 1.2.3: a player may concede at any time.
-      if (!game.isOver) {
+      // CR 1.2.3: a player may concede at any time. The other program concedes for its own seat only.
+      const seat = remotes.length === 1 ? remotes[0]! : input.player;
+      if (!game.isOver && (seat === 0 || seat === 1)) {
         try {
-          this.apply({ type: "concede", player: remote }, remote);
+          this.apply({ type: "concede", player: seat }, seat);
         } catch (err) {
           return this.error(err);
         }
@@ -424,7 +449,6 @@ export class GameHost {
     this.passing = false;
     this.settleQuick();
     if (game.isOver) this.announcement = null;
-    const remote = this.remoteSeat();
     for (;;) {
       const decision = game.decision;
       if (this.announcement || this.desync || !decision) break;
@@ -454,7 +478,7 @@ export class GameHost {
         continue;
       }
       // Online: the other program's answer for this decision, if it has come.
-      if (remote === null || decision.player !== remote) break;
+      if (!this.isRemote(decision.player)) break;
       const index = this.inputs.length;
       const next = this.remoteQueue.get(index);
       if (!next) break;
@@ -464,7 +488,7 @@ export class GameHost {
         break;
       }
       try {
-        this.apply(next.input, remote);
+        this.apply(next.input, decision.player);
       } catch (err) {
         // The same state, and still an answer this engine refuses: the two programs differ after all.
         this.desync = `${index + 1}`;
@@ -628,8 +652,10 @@ export class GameHost {
   }
 
   private onlineState(): GameUpdate["online"] {
-    const remote = this.remoteSeat();
-    return remote === null ? null : { seat: opponentOf(remote), remote, desync: this.desync };
+    const remotes = this.remotes();
+    if (remotes.length === 0) return null;
+    if (remotes.length === 2) return { seat: null, remote: null, desync: this.desync, spectating: true };
+    return { seat: opponentOf(remotes[0]!), remote: remotes[0]!, desync: this.desync, spectating: false };
   }
 
   private watchState(): WatchState | null {
@@ -738,9 +764,13 @@ export class GameHost {
     return ([0, 1] as const).filter((p) => this.bots[p] === null && (this.watching || this.options?.controllers[p] !== "remote"));
   }
 
-  /** Whose view to show: the only person; in hot seat, the player who must decide; with bots only, player 1; watching, the one chosen. */
+  /**
+   * Whose view to show: the only person; in hot seat, the player who must decide; with bots only, player 1; watching a
+   * replay or spectating, the side chosen.
+   */
   private perspective(): PlayerId {
     if (this.watching) return this.watching.perspective;
+    if (this.spectating) return this.spectatorSide;
     const humans = this.humans();
     if (humans.length === 1) return humans[0]!;
     if (humans.length === 2) {
@@ -755,19 +785,24 @@ export class GameHost {
   private seesAll(): boolean {
     if (this.watching) return this.settings.revealAll;
     // Online, a person sees their own side's hidden cards only (CR 4.1.2), whatever the debug settings say.
-    if (this.remoteSeat() !== null) return false;
+    if (this.remotes().length > 0) return false;
     return this.settings.revealAll || this.humans().length === 0;
   }
 
-  /** Whose information the log shows: the one person, else everything (hot seat, watching bots, debugging); a replay's viewer. */
-  private logViewer(): PlayerId | "all" {
+  /**
+   * Whose information the log shows: the one person, else everything (hot seat, watching bots, debugging); a replay's
+   * viewer; a spectator, what both players see ("public").
+   */
+  private logViewer(): PlayerId | "all" | "public" {
     if (this.watching) return this.settings.revealAll ? "all" : this.watching.perspective;
+    if (this.spectating) return "public";
     const humans = this.humans();
     return this.seesAll() || humans.length !== 1 ? "all" : humans[0]!;
   }
 
   private view(viewer: PlayerId): PlayerView {
     const game = this.game!;
+    if (this.spectating) return this.publicView(viewer);
     const view = game.view(viewer);
     if (!this.seesAll()) return view;
     // Each side as its own player sees it (CR 4.1.2): hands and evolve decks become visible; decks stay unknown.
@@ -777,10 +812,21 @@ export class GameHost {
     return { ...view, players };
   }
 
+  /**
+   * What both players see (CR 4.1.2), from `viewer`'s side of the table: each side as its opponent sees it (no hand, no
+   * facedown card), and no decision of anyone's. A spectator's view.
+   */
+  private publicView(viewer: PlayerId): PlayerView {
+    const game = this.game!;
+    const view = game.view(viewer);
+    const players: [PlayerSideView, PlayerSideView] = [game.view(1).players[0], game.view(0).players[1]];
+    return { ...view, players, decision: null };
+  }
+
   private decisionInfo(): DecisionInfo | null {
     const game = this.game!;
     const decision = game.decision;
-    if (!decision || this.bots[decision.player] || this.passing || this.watching || decision.player === this.remoteSeat()) return null;
+    if (!decision || this.bots[decision.player] || this.passing || this.watching || this.isRemote(decision.player)) return null;
     const visible = new Map<CardId, CardInfo>();
     forEachCard(game.view(decision.player), (card) => visible.set(card.id, { def: card.def, printing: card.printing }));
     const cards: Record<CardId, CardInfo> = {};
@@ -859,9 +905,10 @@ export class GameHost {
     const game = this.game!;
     const viewer = this.logViewer();
     for (const raw of events) {
-      // A "look at" event is its player's only (CR 5.11); moves are hidden zone by zone (redactEvent, CR 4.1.2).
+      // A "look at" event is its player's only (CR 5.11); moves are hidden zone by zone (redactEvent, CR 4.1.2): for a
+      // spectator, from both players (what either can't see is hidden).
       if (viewer !== "all" && raw.type === "cardsLookedAt" && raw.player !== viewer) continue;
-      const event = viewer === "all" ? raw : redactEvent(raw, viewer);
+      const event = viewer === "all" ? raw : viewer === "public" ? redactEvent(redactEvent(raw, 0), 1) : redactEvent(raw, viewer);
       this.learn(event);
       this.log.push({ seq: ++this.logSeq, turn: game.state.turn, event, cards: this.cardsIn(event) });
     }
@@ -871,7 +918,7 @@ export class GameHost {
   private rememberVisible(): void {
     const game = this.game!;
     const viewer = this.logViewer();
-    const views = viewer === "all" ? [game.view(0), game.view(1)] : [game.view(viewer)];
+    const views = viewer === "all" ? [game.view(0), game.view(1)] : viewer === "public" ? [this.publicView(0)] : [game.view(viewer)];
     for (const view of views) forEachCard(view, (card) => this.known.set(card.id, { def: card.def, printing: card.printing }));
   }
 
@@ -939,7 +986,7 @@ export class GameHost {
       waitingFor: this.passing || this.watching ? null : (game.decision?.player ?? null),
       thinking,
       inputCount: this.inputs.length,
-      humanInputs: this.inputs.flatMap((r, i) => (r.by !== null && this.bots[r.by] === null && r.by !== this.remoteSeat() && r.input.type !== "concede" ? [i] : [])),
+      humanInputs: this.inputs.flatMap((r, i) => (r.by !== null && this.bots[r.by] === null && !this.isRemote(r.by) && r.input.type !== "concede" ? [i] : [])),
       result: game.result,
       log: this.log,
       logReset: this.logReset,

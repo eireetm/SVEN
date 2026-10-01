@@ -67,7 +67,7 @@ export function ResultOverlay({ update, onNewGame, onMenu, onReplays }: Props) {
           <>
             <div className="sve-result-buttons">
               <button type="button" className="sve-primary" onClick={onNewGame} data-testid="result-new-game">
-                {t(update.online ? "result.rematch" : "game.newGame")}
+                {t(update.online?.spectating ? "result.backToRoom" : update.online ? "result.rematch" : "game.newGame")}
               </button>
               <button type="button" disabled={done?.file !== undefined} onClick={() => void save()} data-testid="result-save-replay">
                 {t("result.saveReplay")}

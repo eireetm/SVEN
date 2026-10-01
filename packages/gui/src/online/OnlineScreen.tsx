@@ -2,7 +2,8 @@
 // hand when the public networks can't be reached. Connected, it shows how (which network, direct or through a relay), the
 // round trip, whether both programs are the same, a chat, and the next game's preparation: the host's rules, each player's
 // deck, ready. Both ready, the game starts (on the game screen); after it, the next one is prepared here. A lost connection
-// can be made again, and the game goes on where it was.
+// can be made again, and the game goes on where it was. A room's games can also be watched (a spectator's seat, "观战"):
+// the spectator sees them, and the chat, and does nothing else.
 import { useEffect, useState } from "react";
 import { errorText } from "../app/errors";
 import { updateSettings, useSettings } from "../app/settings";
@@ -15,7 +16,7 @@ import { hostApi, type DeckFileEntry } from "../host/api";
 import { useT } from "../i18n";
 import { checkNetwork, type NetworkCheck } from "../net/check";
 import { normalizeRoomCode } from "../net/codes";
-import type { Rules } from "../net/messages";
+import { SPECTATOR_SEATS, type Rules } from "../net/messages";
 import {
   acceptReply,
   cancel,
@@ -34,6 +35,7 @@ import {
   samePrograms,
   updateRules,
   useOnline,
+  watchRoom,
   type OnlinePhase,
 } from "../net/online";
 import { Chat } from "./Chat";
@@ -153,18 +155,38 @@ function Phase({ phase, since, identified, going, onGame, onEditDecks }: PhasePr
           <CodeBox code={phase.code} large testId="online-room-code" />
           <p className="sve-hint">{t("online.hostWaiting", { s: seconds })}</p>
           {slow ? <p className="sve-hint">{t("online.slowHint")}</p> : null}
-          <button type="button" onClick={cancel}>
-            {t("online.cancel")}
-          </button>
+          <WatchersFact />
+          {going ? (
+            // The other player comes back to this room: the game waits meanwhile.
+            <>
+              <button type="button" onClick={onGame} data-testid="online-to-game">
+                {t("online.toGame")}
+              </button>
+              <button type="button" className="sve-concede" onClick={() => leaveAsking(t)} data-testid="online-leave">
+                {t("online.leaveGame")}
+              </button>
+            </>
+          ) : (
+            <button type="button" onClick={cancel}>
+              {t("online.cancel")}
+            </button>
+          )}
         </div>
       );
     case "joining":
       return (
         <div className="sve-online-step">
-          <p>{t("online.searching", { code: phase.code, s: seconds })}</p>
+          <p data-testid="online-searching">
+            {phase.as === "watch" ? t("online.searchingWatch", { code: phase.code, s: seconds }) : t("online.searching", { code: phase.code, s: seconds })}
+          </p>
           {slow ? <p className="sve-hint">{t("online.slowHint")}</p> : null}
+          {going && phase.as === "watch" ? (
+            <button type="button" onClick={onGame} data-testid="online-to-game">
+              {t("online.toWatch")}
+            </button>
+          ) : null}
           <button type="button" onClick={cancel}>
-            {t("online.cancel")}
+            {t(phase.as === "watch" ? "online.leaveWatch" : "online.cancel")}
           </button>
         </div>
       );
@@ -188,7 +210,11 @@ function Phase({ phase, since, identified, going, onGame, onEditDecks }: PhasePr
         </div>
       );
     case "connected":
-      return <Connected phase={phase} identified={identified} going={going} onGame={onGame} onEditDecks={onEditDecks} />;
+      return phase.role === "spectator" ? (
+        <Watching phase={phase} identified={identified} going={going} onGame={onGame} />
+      ) : (
+        <Connected phase={phase} identified={identified} going={going} onGame={onGame} onEditDecks={onEditDecks} />
+      );
     case "closed":
       return <Closed reason={phase.reason} going={going} onGame={onGame} />;
   }
@@ -216,7 +242,11 @@ function Start() {
         <button type="submit" disabled={!room} data-testid="online-join">
           {t("online.join")}
         </button>
+        <button type="button" disabled={!room} onClick={() => room && watchRoom(room)} data-testid="online-watch">
+          {t("online.watch")}
+        </button>
       </form>
+      <p className="sve-hint">{t("online.watchHint")}</p>
       <details className="sve-online-manual">
         <summary>{t("online.manual")}</summary>
         <p className="sve-hint">{t("online.manualHelp")}</p>
@@ -234,10 +264,30 @@ function Start() {
   );
 }
 
-/** The connection ended. A game in progress waits: connect again (the same room, or any other way) and it goes on. */
-function Closed({ reason, going, onGame }: { reason: "left" | "lost" | "full"; going: boolean; onGame: () => void }) {
+/**
+ * The connection ended. A game in progress waits: connect again (the same room, or any other way) and it goes on. A
+ * spectator connects again by itself.
+ */
+function Closed({ reason, going, onGame }: { reason: "left" | "lost" | "full" | "watchFull"; going: boolean; onGame: () => void }) {
   const t = useT();
   const room = useOnline().room;
+  if (room?.role === "spectator" && reason === "lost") {
+    return (
+      <div className="sve-online-step">
+        <p className="sve-problem" data-testid="online-closed">
+          {t("online.watchLost")}
+        </p>
+        {going ? (
+          <button type="button" onClick={onGame} data-testid="online-to-game">
+            {t("online.toWatch")}
+          </button>
+        ) : null}
+        <button type="button" onClick={leave} data-testid="online-leave">
+          {t("online.leaveWatch")}
+        </button>
+      </div>
+    );
+  }
   return (
     <div className="sve-online-step">
       <p className="sve-problem" data-testid="online-closed">
@@ -264,6 +314,76 @@ function Closed({ reason, going, onGame }: { reason: "left" | "lost" | "full"; g
           {t("online.again")}
         </button>
       )}
+    </div>
+  );
+}
+
+/** How many spectators the room has (the host counts them). */
+function WatchersFact() {
+  const t = useT();
+  const { watchers, room } = useOnline();
+  if (!room) return null;
+  return (
+    <p className="sve-hint" data-testid="online-watchers" data-n={watchers}>
+      {t("online.watchersLabel")}
+      {t("online.watchersCount", { n: watchers, max: SPECTATOR_SEATS })}
+    </p>
+  );
+}
+
+interface WatchingProps {
+  phase: Extract<OnlinePhase, { kind: "connected" }>;
+  identified: boolean;
+  going: boolean;
+  onGame: () => void;
+}
+
+/**
+ * A spectator, connected to the host: how, how fast, whether the programs are the same (another version's games can't be
+ * followed); the game being played (to watch it) or the next one awaited; the chat, read only.
+ */
+function Watching({ phase, identified, going, onGame }: WatchingProps) {
+  const t = useT();
+  const same = identified ? samePrograms(phase.peer) : null;
+  return (
+    <div className="sve-online-step" data-testid="online-watching">
+      <p className="sve-online-ok" data-testid="online-connected">
+        {t("online.spectating")}
+      </p>
+      <ul className="sve-online-facts">
+        <li>
+          {t("online.viaLabel")}
+          <span data-testid="online-via">{t(`online.via.${phase.via}` as const)}</span>
+        </li>
+        <li>
+          {t("online.routeLabel")}
+          {t(`online.route.${phase.route}` as const)}
+        </li>
+        <li>
+          {t("online.rttLabel")}
+          <span data-testid="online-rtt">{phase.rtt === null ? "…" : `${phase.rtt} ms`}</span>
+        </li>
+        <li className={same === false ? "sve-problem" : undefined} data-testid="online-same">
+          {same === null ? t("online.peerUnknown") : same ? t("online.peerSame") : t("online.watchDifferent")}
+        </li>
+      </ul>
+      <WatchersFact />
+      {going ? (
+        <div className="sve-online-game" data-testid="online-game">
+          <p>{t("online.watchGoing")}</p>
+          <button type="button" className="sve-primary" onClick={onGame} data-testid="online-to-game">
+            {t("online.toWatch")}
+          </button>
+        </div>
+      ) : (
+        <p className="sve-hint" data-testid="online-watch-waiting">
+          {t("online.watchWaiting")}
+        </p>
+      )}
+      <Chat />
+      <button type="button" onClick={leave} data-testid="online-leave">
+        {t("online.leaveWatch")}
+      </button>
     </div>
   );
 }
@@ -373,6 +493,7 @@ function Connected({ phase, identified, going, onGame, onEditDecks }: ConnectedP
           {same === null ? t("online.peerUnknown") : same ? t("online.peerSame") : t("online.peerDifferent")}
         </li>
       </ul>
+      <WatchersFact />
       {going && online.game ? (
         <div className="sve-online-game" data-testid="online-game">
           <p>{t("online.gameGoing", { deck: online.game.opponent })}</p>
@@ -381,7 +502,7 @@ function Connected({ phase, identified, going, onGame, onEditDecks }: ConnectedP
           </button>
         </div>
       ) : (
-        <Prep role={phase.role} same={same} onEditDecks={onEditDecks} />
+        <Prep role={phase.role === "host" ? "host" : "guest"} same={same} onEditDecks={onEditDecks} />
       )}
       <Chat />
       <button type="button" onClick={() => leaveAsking(t)} data-testid="online-leave">

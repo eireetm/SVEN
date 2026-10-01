@@ -2,6 +2,8 @@
   // Node side of the GUI: the Vite config, the local host (dev-server API), scripts and tests.
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    // The DOM's types too: tests load GUI modules that name browser types (net/link.ts: WebRTC), as this package may.
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "types": ["node"],
     // Vite loads its config with Node's own TypeScript support, which needs the ".ts" in relative imports.
     "allowImportingTsExtensions": true

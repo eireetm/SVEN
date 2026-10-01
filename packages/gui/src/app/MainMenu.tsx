@@ -23,8 +23,12 @@ export function MainMenu({ onPlayAi, onDeckBuilder, onReplays, onOnline, onSetti
   const ready = useApp((s) => s.ready);
   const watching = useApp((s) => s.update?.watch != null);
   const startError = useApp((s) => s.startError);
-  const onlineGame = useApp((s) => s.update?.online != null && !s.update.result);
-  const connected = useOnline().phase.kind === "connected";
+  // A game played online, or a room watched (its next games come to this engine): no other game meanwhile.
+  const played = useApp((s) => s.update?.online != null && !s.update.online.spectating && !s.update.result);
+  const online = useOnline();
+  const spectator = online.room?.role === "spectator";
+  const onlineGame = played || spectator;
+  const connected = online.phase.kind === "connected";
   return (
     <div className="sve-menu">
       <div className="sve-menu-panel">
@@ -52,7 +56,7 @@ export function MainMenu({ onPlayAi, onDeckBuilder, onReplays, onOnline, onSetti
             {t("menu.settings")}
           </button>
         </nav>
-        {onlineGame ? <p className="sve-hint sve-menu-hint">{t("menu.onlineGameHint")}</p> : null}
+        {onlineGame ? <p className="sve-hint sve-menu-hint">{t(spectator ? "menu.watchingHint" : "menu.onlineGameHint")}</p> : null}
         {startError ? (
           <div className="sve-menu-status sve-problem">
             {t("app.engineFailed")}: {startError}

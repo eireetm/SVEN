@@ -68,6 +68,7 @@ export function GameScreen({ onMenu, onNewGame, onReplays, onOnline }: Props) {
     );
   }
   const seat = update.controllers[update.perspective] === "human" && !update.watch ? update.perspective : null;
+  const spectating = online?.spectating === true;
   const concede = () => {
     if (seat !== null && window.confirm(t("game.concedeConfirm"))) engine.send({ kind: "concede", seat });
   };
@@ -89,6 +90,16 @@ export function GameScreen({ onMenu, onNewGame, onReplays, onOnline }: Props) {
             {seat !== null && !update.result ? (
               <button type="button" className="sve-concede" onClick={concede} data-testid="game-concede">
                 {t("game.concede")}
+              </button>
+            ) : null}
+            {spectating ? (
+              // A spectator chooses which player is at the bottom (both are shown as the other player sees them).
+              <button
+                type="button"
+                onClick={() => engine.send({ kind: "spectatorSide", perspective: update.perspective === 0 ? 1 : 0 })}
+                data-testid="game-swap-sides"
+              >
+                {t("game.swapSides")}
               </button>
             ) : null}
             {drawer ? (
@@ -135,21 +146,28 @@ export function GameScreen({ onMenu, onNewGame, onReplays, onOnline }: Props) {
 
 /**
  * Online: connected (and the round trip) or not (the game waits; the online screen connects again), and the other player's
- * messages not yet seen.
+ * messages not yet seen. A spectator: watching, or connecting again by itself.
  */
 function OnlineStatus({ update, chatOpen, onChat, onOnline }: { update: GameUpdate; chatOpen: boolean; onChat: () => void; onOnline: () => void }) {
   const t = useT();
   const { phase, chat } = useOnline();
+  const spectating = update.online?.spectating === true;
   const [seen, setSeen] = useState(chat.length);
   useEffect(() => {
     if (chatOpen) setSeen(chat.length);
   }, [chatOpen, chat.length]);
-  const unread = chat.slice(seen).filter((line) => line.from === "peer").length;
+  const unread = chat.slice(seen).filter((line) => line.from !== "me").length;
   const connected = phase.kind === "connected";
+  const rtt = connected && phase.rtt !== null ? `${phase.rtt} ms` : "…";
+  const status = spectating
+    ? t(connected ? "game.online.watching" : "game.online.watchLost", { rtt })
+    : connected
+      ? t("game.online.connected", { rtt })
+      : t("game.online.lost");
   return (
     <div className={`sve-game-online${connected ? "" : " sve-game-online-lost"}`} data-testid="game-online" data-connected={connected ? "yes" : "no"}>
-      <span>{connected ? t("game.online.connected", { rtt: phase.rtt === null ? "…" : `${phase.rtt} ms` }) : t("game.online.lost")}</span>
-      {!connected && !update.result ? (
+      <span>{status}</span>
+      {!connected && !update.result && !spectating ? (
         <button type="button" onClick={onOnline} data-testid="game-reconnect">
           {t("game.online.reconnect")}
         </button>

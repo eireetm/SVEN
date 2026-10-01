@@ -84,12 +84,15 @@ async function readyBoth(host: Page, guest: Page): Promise<void> {
   for (const page of [host, guest]) await expect(page.locator(".sve-table")).toBeVisible({ timeout: 30_000 });
 }
 
-/** Page errors and error messages of the console, to be none. */
+/**
+ * Page errors and error messages of the console, to be none. A public relay that can't be reached is not one: the browser
+ * says so in the console, and the program uses the others (docs/online.md "公共服务").
+ */
 function watchProblems(pages: Page[], problems: string[]): void {
   for (const page of pages) {
     page.on("pageerror", (e) => problems.push(`page error: ${e.message}`));
     page.on("console", (m) => {
-      if (m.type() === "error") problems.push(`console: ${m.text()}`);
+      if (m.type() === "error" && !/^WebSocket connection to 'wss:\/\/[^']+' failed/.test(m.text())) problems.push(`console: ${m.text()}`);
     });
   }
 }
@@ -254,6 +257,118 @@ test("a lost connection: the game waits, the two programs connect again, and it 
   expect(problems).toEqual([]);
 });
 
+/**
+ * Programs in one browser context that meet on the tests' local network (net/local-network.ts: a BroadcastChannel instead
+ * of the public relays), each page one program.
+ */
+async function localRoom(browser: Browser, settings: Record<string, unknown>) {
+  const context = await browser.newContext();
+  await context.addInitScript({ content: `localStorage.setItem("sve-test-network", "local");` });
+  return async (): Promise<Page> => {
+    const page = await context.newPage();
+    await useSettings(page, { uiLang: "en", ...settings });
+    await page.goto("/");
+    await expect(page.getByTestId("menu-online")).toBeEnabled({ timeout: 120_000 });
+    await page.getByTestId("menu-online").click();
+    await expect(page.getByTestId("online")).toHaveAttribute("data-phase", "idle");
+    return page;
+  };
+}
+
+/** A spectator's seat in room `code`. */
+async function watchRoom(page: Page, code: string): Promise<void> {
+  await page.getByTestId("online-code").fill(code);
+  await page.getByTestId("online-watch").click();
+}
+
+/** The cards of a player's hand on a page's table, and how many of them show their faces. */
+async function handFaces(page: Page, seat: 0 | 1): Promise<{ cards: number; faces: number }> {
+  const cards = await page.locator(`[data-zone="${seat}:hand"] [data-card]`).count();
+  const backs = await page.locator(`[data-zone="${seat}:hand"] [data-card][data-hidden="true"]`).count();
+  return { cards, faces: cards - backs };
+}
+
+test("a room's games can be watched: spectators follow the game from its start or its middle, see no hand, can't chat", async ({ browser }) => {
+  test.setTimeout(300_000);
+  const problems: string[] = [];
+  const open = await localRoom(browser, { botDelayMs: 0, setupDecks: ["samples/sd04.json", "samples/sd02.json"] });
+  const host = await open();
+  const early = await open();
+  const guest = await open();
+  watchProblems([host, early, guest], problems);
+  await host.getByTestId("online-host").click();
+  const code = (await host.getByTestId("online-room-code").innerText()).trim();
+
+  // A spectator who comes before the other player waits for them.
+  await watchRoom(early, code);
+  await expect(early.getByTestId("online-searching")).toContainText(`room ${code} to watch`);
+  await guest.getByTestId("online-code").fill(code);
+  await guest.getByTestId("online-join").click();
+  for (const page of [host, guest]) await expect(page.getByTestId("online-connected")).toBeVisible({ timeout: 30_000 });
+  await expect(host.getByTestId("online-via")).toHaveText("the tests' channel in this browser");
+  await expect(early.getByTestId("online-watching")).toBeVisible({ timeout: 30_000 });
+  await expect(early.getByTestId("online-watch-waiting")).toBeVisible();
+  for (const page of [host, guest, early]) await expect(page.getByTestId("online-watchers")).toHaveAttribute("data-n", "1");
+
+  // The spectator reads the players' chat (whose line it is), and writes nothing.
+  await host.getByTestId("online-chat-input").fill("welcome");
+  await host.getByTestId("online-send").click();
+  await guest.getByTestId("online-chat-input").fill("hi");
+  await guest.getByTestId("online-send").click();
+  await expect(early.getByTestId("online-chat")).toContainText("Player 1: welcome");
+  await expect(early.getByTestId("online-chat")).toContainText("Player 2: hi");
+  await expect(early.getByTestId("online-chat-input")).toHaveCount(0);
+  await expect(early.getByTestId("online-chat-readonly")).toBeVisible();
+
+  // The game starts: the spectator's screen shows it by itself, with nothing to do but swap sides.
+  await readyBoth(host, guest);
+  await expect(early.locator(".sve-table")).toBeVisible({ timeout: 30_000 });
+  await expect(early.getByTestId("game-online")).toContainText("Watching");
+  await expect(early.getByTestId("game-swap-sides")).toBeVisible();
+  await expect(early.getByTestId("game-concede")).toHaveCount(0);
+  await playAtRandom(host, guest, 30, problems);
+
+  // One more spectator comes in the middle of the game: it gets the game so far. A third is turned away.
+  const late = await open();
+  watchProblems([late], problems);
+  await watchRoom(late, code);
+  await expect(late.locator(".sve-table")).toBeVisible({ timeout: 30_000 });
+  const third = await open();
+  await watchRoom(third, code);
+  await expect(third.getByTestId("online-closed")).toHaveText("That room's spectator seats are taken (2 at most).", { timeout: 30_000 });
+  await playAtRandom(host, guest, 20, problems, 9);
+
+  // All four follow the same game; the spectators see no card of either hand.
+  await expect
+    .poll(async () => {
+      const counts = await Promise.all([host, guest, early, late].map((p) => p.locator(".sve-decision").getAttribute("data-inputs")));
+      return new Set(counts).size;
+    })
+    .toBe(1);
+  for (const page of [early, late]) {
+    for (const seat of [0, 1] as const) {
+      const hand = await handFaces(page, seat);
+      expect(hand.faces).toBe(0);
+    }
+    expect(await page.getByTestId("game-desync").count()).toBe(0);
+  }
+  // Swapping sides: player 2's side at the bottom.
+  await expect(early.locator(".sve-hand-own")).toHaveAttribute("data-zone", "0:hand");
+  await early.getByTestId("game-swap-sides").click();
+  await expect(early.locator(".sve-hand-own")).toHaveAttribute("data-zone", "1:hand");
+
+  // The host leaves (conceding): the spectators see the end, and go back to the room from there.
+  if ((await host.locator(".sve-decision").getAttribute("data-decision")) !== "over") {
+    host.once("dialog", (dialog) => void dialog.accept());
+    await host.getByTestId("game-menu").click();
+    await host.getByTestId("menu-online").click();
+    await host.getByTestId("online-leave").click();
+    await expect(guest.locator(".sve-result-panel h2")).toHaveText("Victory");
+  }
+  for (const page of [early, late]) await expect(page.getByTestId("result-new-game")).toHaveText("Back to the room");
+  expect(problems).toEqual([]);
+});
+
 test("two programs meet in a room through the public relays", async ({ browser }) => {
   test.skip(!process.env.SVE_E2E_ONLINE, "needs the internet: SVE_E2E_ONLINE=1");
   test.setTimeout(180_000);
@@ -306,5 +421,35 @@ test("a game in a room: the connection drops, both reconnect to the same room, a
   await playAtRandom(host, guest, 12, problems, 22);
   await expectSameInputs(host, guest);
   expect(Number(await host.locator(".sve-decision").getAttribute("data-inputs"))).toBeGreaterThan(before);
+  expect(problems).toEqual([]);
+});
+
+test("a spectator watches a game in a room through the public relays", async ({ browser }) => {
+  test.skip(!process.env.SVE_E2E_ONLINE, "needs the internet: SVE_E2E_ONLINE=1");
+  test.setTimeout(300_000);
+  const problems: string[] = [];
+  const settings = { botDelayMs: 0 };
+  const host = await openOnline(browser, { ...settings, setupDecks: ["samples/sd03.json", "samples/sd01.json"] });
+  const guest = await openOnline(browser, { ...settings, setupDecks: ["samples/sd08.json", "samples/sd01.json"] });
+  const spectator = await openOnline(browser, settings);
+  watchProblems([host, guest, spectator], problems);
+  await host.getByTestId("online-host").click();
+  const code = (await host.getByTestId("online-room-code").innerText()).trim();
+  await guest.getByTestId("online-code").fill(code);
+  await guest.getByTestId("online-join").click();
+  for (const page of [host, guest]) await expect(page.getByTestId("online-connected")).toBeVisible({ timeout: 120_000 });
+  await spectator.getByTestId("online-code").fill(code);
+  await spectator.getByTestId("online-watch").click();
+  await expect(spectator.getByTestId("online-watching")).toBeVisible({ timeout: 120_000 });
+  await expect(host.getByTestId("online-watchers")).toHaveAttribute("data-n", "1");
+  await readyBoth(host, guest);
+  await expect(spectator.locator(".sve-table")).toBeVisible({ timeout: 60_000 });
+  await playAtRandom(host, guest, 20, problems, 31);
+  await expect
+    .poll(async () => {
+      const counts = await Promise.all([host, guest, spectator].map((p) => p.locator(".sve-decision").getAttribute("data-inputs")));
+      return new Set(counts).size;
+    }, { timeout: 30_000 })
+    .toBe(1);
   expect(problems).toEqual([]);
 });

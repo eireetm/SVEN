@@ -3,8 +3,11 @@
 // only this.
 import { parseMessage, type NetMessage } from "./messages";
 
-/** How the connection was set up: the public network whose relays passed its setup messages, or codes passed by hand. */
-export type Via = "nostr" | "mqtt" | "torrent" | "manual";
+/**
+ * How the connection was set up: the public network whose relays passed its setup messages, codes passed by hand, or the
+ * tests' channel in the browser (local-network.ts).
+ */
+export type Via = "nostr" | "mqtt" | "torrent" | "manual" | "local";
 
 /** Direct between the two programs, or through a TURN relay (unknown until the connection's stats say). */
 export type Route = "direct" | "relay" | "unknown";

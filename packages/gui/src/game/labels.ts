@@ -7,10 +7,12 @@ import { findCard } from "../engine/view-utils";
 import type { MessageKey, Translate } from "../i18n";
 import { displayOf } from "./card/display";
 
+/** "Player 1", with who plays it ("Player 2 (Bot-Medium)"); a spectator's two players are just "Player 1" and "Player 2". */
 export function playerLabel(p: PlayerId, update: Pick<GameUpdate, "controllers">, t: Translate): string {
   const name = t("game.playerN", { n: p + 1 });
   const controller = update.controllers[p];
-  return controller === "human" ? name : t("game.playerWithController", { player: name, controller: t(`controller.${controller}` as const) });
+  const watched = update.controllers[0] === "remote" && update.controllers[1] === "remote";
+  return controller === "human" || watched ? name : t("game.playerWithController", { player: name, controller: t(`controller.${controller}` as const) });
 }
 
 /** A card's name as its viewer knows it: from the board, or from what the decision told them; "a card" otherwise. */
