@@ -1,27 +1,39 @@
 import { expect, test } from "@playwright/test";
-import { openSetup, startGame, useSettings } from "./helpers";
+import { readFileSync } from "node:fs";
+import { openSetup, showSidebar, startGame, useSettings } from "./helpers";
 
-// The bot levels (docs/bot.md): the setup screen offers them and says what each does, and the planning bots play a game
-// in the engine worker.
+// The bot levels (docs/bot.md): the setup screen offers them, and a game is played by the levels chosen. Checked by what
+// the choices are (the values settings and replays store, engine/protocol.ts SeatController), not by how they are worded.
 
-test("the setup screen offers Bot-Easy, Bot-Medium (the default) and Bot-Hard, and says what each does", async ({ page }) => {
-  await useSettings(page, { uiLang: "zh" });
+test("the setup screen offers the bot levels, Bot-Medium chosen at first, each described in its own way", async ({ page }) => {
+  await useSettings(page, { uiLang: "en" });
   await openSetup(page);
   const select = page.getByTestId("setup-controller-1");
+  const values: (string | null)[] = [];
+  for (const option of await select.locator("option").all()) values.push(await option.getAttribute("value"));
+  expect(values).toEqual(["greedy", "medium", "hard", "random", "human"]);
   await expect(select).toHaveValue("medium");
-  expect(await select.locator("option").allTextContents()).toEqual(["Bot-简单", "Bot-中等", "Bot-困难", "随机 Bot", "人类"]);
+  // The description under the choice follows it: there is one for each level, and they differ.
   const hint = page.getByTestId("setup-controller-hint");
-  await expect(hint).toContainText("规划整个回合");
-  await select.selectOption("hard");
-  await expect(hint).toContainText("作弊");
-  await page.screenshot({ path: "test-results/bots-setup.png" });
-  await select.selectOption("greedy");
-  await expect(hint).toContainText("每次只考虑一个动作");
+  const descriptions = new Set<string>();
+  for (const level of ["greedy", "medium", "hard"]) {
+    await select.selectOption(level);
+    await expect(hint).not.toBeEmpty();
+    descriptions.add((await hint.textContent()) ?? "");
+  }
+  expect(descriptions.size).toBe(3);
 });
 
-test("Bot-Medium and Bot-Hard play a game to the end", async ({ page }) => {
+test("Bot-Medium against Bot-Hard: they play a game to the end, and its bug report file names those levels", async ({ page }) => {
   await useSettings(page, { uiLang: "en", botDelayMs: 0, setupControllers: ["medium", "hard"], setupDecks: ["samples/sd01.json", "samples/sd02.json"] });
   await startGame(page, "bot-levels");
   await expect(page.locator(".sve-decision")).toHaveAttribute("data-decision", "over", { timeout: 300_000 });
+  // The file holds the game's options as the engine's worker got them.
+  await showSidebar(page);
+  await page.getByRole("button", { name: /^Debug$/ }).click();
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: /^Save a bug report file$/ }).click();
+  const report = JSON.parse(readFileSync((await (await download).path())!, "utf8")) as { options: { controllers: string[] } };
+  expect(report.options.controllers).toEqual(["medium", "hard"]);
   await expect(page.locator(".sve-toast")).toHaveCount(0);
 });
