@@ -4,7 +4,8 @@
 
 export { GreedyBot, type GreedyBotOptions, type BotStats } from "./greedy";
 export { PlannerBot, type PlannerBotOptions } from "./planner";
-export { createBot, MEDIUM_OPTIONS, HARD_OPTIONS, type Bot, type BotLevel } from "./levels";
-export { evaluate, DEFAULT_WEIGHTS, type EvalWeights } from "./evaluate";
+export { createBot, BOT_LEVELS, MEDIUM_OPTIONS, HARD_OPTIONS, MEDIUM_BETA_OPTIONS, HARD_BETA_OPTIONS, LEADER_CURVE, type Bot, type BotLevel } from "./levels";
+export { curveScore, redrawByExpectation, redrawKnowingDeck, type CurveCard } from "./mulligan";
+export { evaluate, curveValue, DEFAULT_WEIGHTS, type EvalWeights, type LeaderCurve } from "./evaluate";
 export { fastAnswer, lookupFromView, lookupFromReader, staticValue, type CardFacts, type CardLookup } from "./policy";
 export { candidateAnswers } from "./candidates";

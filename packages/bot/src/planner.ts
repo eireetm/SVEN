@@ -1,18 +1,22 @@
 import {
   defaultAnswer,
+  opponentOf,
   seedRng,
   validateAnswer,
   type Answer,
+  type CardId,
   type Decision,
   type Engine,
   type GameSession,
   type MainAction,
   type PlayerId,
+  type PlayerView,
   type RngState,
 } from "./core";
 import { candidateAnswers } from "./candidates";
 import { DEFAULT_WEIGHTS, evaluate, type EvalWeights } from "./evaluate";
 import { GreedyBot, type BotStats } from "./greedy";
+import { redrawByExpectation, redrawKnowingDeck } from "./mulligan";
 import { fastAnswer, lookupFromReader, type CardLookup } from "./policy";
 
 export interface PlannerBotOptions {
@@ -41,6 +45,13 @@ export interface PlannerBotOptions {
   maxActionsPerTurn?: number;
   /** Decisions per turn in its main phase; after that it gives default answers, which stop any cycle it can stop. */
   maxDecisionsPerTurn?: number;
+  /**
+   * Before planning a turn, look for lethal with this many answers at most (0: don't): a search that ranks positions only by
+   * the defense the opponent's leader keeps if every attack on it we could declare now lands (docs/bot.md, the beta bots).
+   */
+  lethalSearch?: number;
+  /** "curve": keep or redraw by the curve of the first turns (mulligan.ts); "greedy" (default): the greedy bot's rule. */
+  mulligan?: "greedy" | "curve";
 }
 
 /** A point of a plan: a copy of the game at one of our decisions in our main phase, or where the plan ends. */
@@ -52,6 +63,10 @@ interface Node {
   depth: number;
   /** The position scored as it stands (the search's ranking). */
   value: number;
+  /** The face damage our attacks declarable now could deal (at a choice inside an action: as at its parent). */
+  reach: number;
+  /** The lethal search's ranking: the opponent's leader defense left once that damage lands (lower first), then its defense. */
+  lethal: number;
   /** The game ended, or our turn did: nothing left to plan. */
   done: boolean;
   key: string;
@@ -81,6 +96,8 @@ export class PlannerBot {
   private readonly rng: RngState;
   private readonly replyModel: "greedy" | "planner";
   private readonly opponentQuick: boolean;
+  private readonly lethalSearch: number;
+  private readonly mulliganMode: "greedy" | "curve";
   private readonly greedy: GreedyBot;
   private plans = 0;
   /** Opponent models made so far (each simulation gets a fresh one: the greedy bot counts actions per turn). */
@@ -108,6 +125,8 @@ export class PlannerBot {
     this.rng = seedRng(`planner:${this.seed}`);
     this.replyModel = options.replyModel ?? "greedy";
     this.opponentQuick = options.opponentQuick ?? false;
+    this.lethalSearch = options.lethalSearch ?? 0;
+    this.mulliganMode = options.mulligan ?? "greedy";
     this.greedy = new GreedyBot(engine, { seed: `${this.seed}:greedy` });
   }
 
@@ -134,6 +153,7 @@ export class PlannerBot {
   private choose(session: GameSession, d: Decision): Answer {
     const me = d.player;
     const state = session.state;
+    if (d.type === "mulligan" && this.mulliganMode === "curve") return this.mulligan(session, d);
     if (state.activePlayer !== me || state.phase !== "main" || d.type === "chooseTurnOrder" || d.type === "mulligan") return this.greedy.decide(session);
     if (state.turn !== this.turn) {
       this.turn = state.turn;
@@ -165,6 +185,10 @@ export class PlannerBot {
     const seed = `${this.seed}:${this.plans++}`;
     const world = () => (this.cheat ? game.clone() : game.determinized(me, seed));
     const root = this.node(world(), null, null, me, turn, "decide");
+    if (this.lethalSearch > 0 && root.session.decision?.type === "mainPhase") {
+      const lethal = this.findLethal(root, me, turn, world);
+      if (lethal) return this.carryOut(lethal, turn);
+    }
     const finished: Node[] = [];
     const seen = new Set<string>([root.key]);
     let frontier = [root];
@@ -203,10 +227,63 @@ export class PlannerBot {
         choiceValue = value;
       }
     }
+    return this.carryOut(choice, turn);
+  }
+
+  /** Take the plan that ends at `choice` as the current one: its first answer now, the next ones while the game goes as planned. */
+  private carryOut(choice: Node, turn: number): Answer {
     const path: Node[] = [];
     for (let n: Node | null = choice; n && n.parent; n = n.parent) path.unshift(n);
     this.current = { path, given: path.length > 0 ? 1 : 0, turn };
     return path[0]?.answer ?? endMainPhase();
+  }
+
+  /**
+   * Lethal first (the beta bots, docs/bot.md): a beam search over this turn's answers ranked by the defense the opponent's
+   * leader keeps once every attack on it we could declare now lands. A play that only opens the way (a Ward taken out, a
+   * Storm follower played, an attacker made stronger) ranks high, which the normal search, ranking whole positions, may not
+   * see in time. Searched only when lethal is within reach; returns a plan that wins the game, or null.
+   */
+  private findLethal(root: Node, me: PlayerId, turn: number, world: () => GameSession): Node | null {
+    if (!lethalWithinReach(root, me)) return null;
+    const seen = new Set<string>([root.key]);
+    let frontier = [root];
+    let budget = this.lethalSearch;
+    for (let depth = 0; depth < 16 && frontier.length > 0 && budget > 0; depth++) {
+      const children: Node[] = [];
+      for (const node of frontier) {
+        for (const answer of this.branches(node.session.decision!, lookupFromReader(node.session.reader()))) {
+          if (budget-- <= 0) break;
+          const child = this.expand(node, answer, me, turn, world);
+          if (!child) continue;
+          if (child.done) {
+            if (child.session.result?.winner === me) return child;
+          } else if (!seen.has(child.key)) {
+            seen.add(child.key);
+            children.push(child);
+          }
+        }
+      }
+      children.sort((a, b) => a.lethal - b.lethal);
+      frontier = children.slice(0, Math.max(8, this.beamWidth));
+    }
+    return null;
+  }
+
+  /**
+   * CR 6.2.1.8: keep or redraw by the curve of the first four turns (mulligan.ts). A cheating bot knows the deck's order, so
+   * it compares the hand with the four cards on top; a fair one compares with what the rest of its deck list gives on average
+   * (the cards of its own deck, which a player knows, not their order).
+   */
+  private mulligan(game: GameSession, d: Extract<Decision, { type: "mulligan" }>): Answer {
+    const me = d.player;
+    const reader = game.reader();
+    const cost = (id: CardId) => Math.max(0, reader.info(id).cost ?? 0);
+    const hand = d.hand.map(cost);
+    const deck = reader.cards(me, "deck").map(cost);
+    const first = game.state.firstPlayer === me;
+    const redraw = this.cheat ? redrawKnowingDeck(hand, deck, first) : redrawByExpectation(hand, deck.sort((a, b) => a - b), first, this.rng);
+    return redraw ? { type: "mulligan", redraw: true, bottomOrder: [...d.hand] } : { type: "mulligan", redraw: false };
   }
 
   /** The answers worth trying at a decision of a plan: main phase actions by kind in turns, the rest as the greedy bot does. */
@@ -278,12 +355,17 @@ export class PlannerBot {
 
   private node(session: GameSession, parent: Node | null, answer: Answer | null, me: PlayerId, turn: number, stop: Stop): Node {
     const view = session.view(me);
+    const decision = session.decision;
+    const reach = decision?.type === "mainPhase" && decision.player === me ? faceReach(view, decision, me) : (parent?.reach ?? 0);
+    const defense = view.players[opponentOf(me)].leaderDefense;
     return {
       session,
       parent,
       answer,
       depth: parent ? parent.depth + 1 : 0,
       value: evaluate(view, me, this.weights),
+      reach,
+      lethal: (defense - reach) * 10 + defense,
       done: stop !== "decide",
       key: JSON.stringify(view),
     };
@@ -316,6 +398,31 @@ export class PlannerBot {
       return node.value - 1_000;
     }
   }
+}
+
+/** The face damage of the attacks on the opponent's leader that can be declared at this main phase decision (each attacker once). */
+function faceReach(view: PlayerView, d: Extract<Decision, { type: "mainPhase" }>, me: PlayerId): number {
+  const leader = view.players[opponentOf(me)].leader?.id;
+  const attackers = new Set<CardId>();
+  for (const a of d.actions) if (a.type === "attack" && a.target === leader) attackers.add(a.attacker);
+  let sum = 0;
+  for (const card of view.players[me].field) if (!card.hidden && attackers.has(card.id)) sum += Math.max(0, card.attack ?? 0);
+  return sum;
+}
+
+/**
+ * Is lethal worth searching for? The opponent's defense is low, or at most the face damage we can declare now, plus the
+ * attack of the Storm followers we could play (CR 12.9.2), plus a margin for what spells, evolutions and abilities may add.
+ */
+function lethalWithinReach(root: Node, me: PlayerId): boolean {
+  const view = root.session.view(me);
+  const side = view.players[me];
+  let storm = 0;
+  for (const card of side.hand) {
+    if (!card.hidden && card.type === "follower" && card.keywords.includes("storm") && (card.cost ?? 99) <= side.playPoints) storm += Math.max(0, card.attack ?? 0);
+  }
+  const defense = view.players[opponentOf(me)].leaderDefense;
+  return defense <= 10 || defense <= root.reach + storm + 6;
 }
 
 function canEnd(d: Decision): boolean {
