@@ -295,7 +295,7 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
   - 每次都要用同一个密钥签名（默认是仓库旁边的 `SVE-signing/`），换了密钥就不能覆盖安装。
   - 密钥要备份，不要给别人。
 - **联机**：双方的引擎指纹一样才能对局（`VERSION.txt` 和联机界面里都能看到）。
-  - 改了 `packages/core/` 或 `packages/gui/src/engine/` 的代码，指纹就会变，大家都要换新版。
+  - 改了 `packages/core/` 或 `packages/gui/src/engine/` 的代码（只改注释也算），指纹就会变，大家都要换新版。
   - 联机协议（`packages/gui/src/net/` 的 `PROTOCOL`）变了也一样；只改了界面的版本可以和旧版互相联机。
 - **建议的步骤**：
   1. 提交代码；
@@ -636,7 +636,7 @@ The versions for friends (e.g. 0.1.2) come in two kinds: for PCs and for Android
   - Always sign with the same key (by default `SVE-signing/` next to the repository). With another key, the APK can't be installed over the old one.
   - Back the key up, and keep it to yourself.
 - **Online play**: both sides need the same engine fingerprint (shown in `VERSION.txt` and in the online screen).
-  - Changing code in `packages/core/` or `packages/gui/src/engine/` changes it, and everyone needs the new release.
+  - Changing code in `packages/core/` or `packages/gui/src/engine/` (even only comments) changes it, and everyone needs the new release.
   - So does a new online protocol (`PROTOCOL` in `packages/gui/src/net/`); a release that only changes the interface plays with the older one.
 - **Suggested steps**:
   1. Commit.
