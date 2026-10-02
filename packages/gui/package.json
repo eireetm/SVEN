@@ -1,6 +1,6 @@
 {
   "name": "@sve/gui",
-  "version": "0.1.2",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "Web GUI for the Shadowverse: Evolve engine (personal and test use only; no card images are shipped).",
