@@ -13,10 +13,10 @@ test("the setup's format and restriction list decide which decks can start a gam
 
   // Asia's list bans Stardust Trumpeter, which the CSD03a sample has.
   await page.locator(".sve-advanced summary").click();
-  await page.getByTestId("format-list").selectOption("01_26_JPN");
-  await expect(page.getByTestId("setup-problems-0")).toContainText("is banned (01_26_JPN)");
+  await page.getByTestId("format-list").selectOption("10_26_JPN");
+  await expect(page.getByTestId("setup-problems-0")).toContainText("is banned (10_26_JPN)");
   await expect(start).toBeDisabled();
-  await expect(page.getByTestId("setup-format")).toHaveText("Format: Standard · 01_26_JPN");
+  await expect(page.getByTestId("setup-format")).toHaveText("Format: Standard · 10_26_JPN");
 
   // Unlimited: no list, anything the engine can play.
   await page.getByTestId("format-select").selectOption("unlimited");
@@ -36,7 +36,7 @@ test("a Cross Craft game: two leaders on each mat, in a window like a pile, and 
     uiLang: "en",
     botDelayMs: 0,
     format: "crossCraft",
-    restrictionLists: { crossCraft: "05_26_JPN_CROSS" },
+    restrictionLists: { crossCraft: "10_26_JPN_CROSS" },
     setupControllers: ["human", "greedy"],
     setupDecks: ["samples/cross-sd01-sd02.json", "samples/cross-sd01-sd02.json"],
   });

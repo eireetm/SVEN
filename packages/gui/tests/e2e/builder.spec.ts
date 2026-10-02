@@ -123,11 +123,11 @@ test("Cross Craft: two leaders; saving and leaving tell what the deck doesn't me
   const problems: string[] = [];
   page.on("pageerror", (e) => problems.push(e.message));
   page.on("dialog", (d) => void d.accept());
-  await useSettings(page, { uiLang: "en", builderDeck: null, format: "crossCraft", restrictionLists: { crossCraft: "09_26_EN_CROSS" } });
+  await useSettings(page, { uiLang: "en", builderDeck: null, format: "crossCraft", restrictionLists: { crossCraft: "11_26_EN_CROSS" } });
   await openBuilder(page);
   await page.getByRole("button", { name: /^New$/ }).click();
   await expect(page.getByTestId("format-select")).toHaveValue("crossCraft");
-  await expect(page.getByTestId("format-list")).toHaveValue("09_26_EN_CROSS");
+  await expect(page.getByTestId("format-list")).toHaveValue("11_26_EN_CROSS");
 
   // A Forestcraft and a Swordcraft leader.
   await page.getByTestId("builder-leader").click();

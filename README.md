@@ -252,7 +252,7 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
   - 也能导入 SVE Simulator（另一个模拟器）的卡组码，按卡名找卡。
 - **赛制和禁卡表**：
   - 赛制有标准、双职业（综合规则附录 B-2）、无限制；
-  - 禁卡表在 `packages/gui/restrictions/`，每张一个文件；
+  - 禁卡表（亚洲、欧美、中国大陆）在 `packages/gui/restrictions/`，每张一个文件；
   - 组卡时只提醒不符合的地方，开局时不符合就不能开始。
 
 ### 联机
@@ -606,7 +606,7 @@ Sound effects (26):
   - It also imports deck codes of SVE Simulator (another simulator), finding the cards by name.
 - **Formats and restriction lists**:
   - The formats are Standard, Cross Craft (Comprehensive Rules Appendix B-2) and Unlimited.
-  - The restriction lists are in `packages/gui/restrictions/`, one file each.
+  - The restriction lists (Asia, English, Mainland China) are in `packages/gui/restrictions/`, one file each.
   - The deck builder only points out what a deck doesn't meet; a game can't start with such a deck.
 
 ### Online play

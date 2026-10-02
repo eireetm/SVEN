@@ -203,6 +203,7 @@ export const en = {
   "format.noList": "None",
   "format.region.asia": "Asia",
   "format.region.en": "English",
+  "format.region.china": "Mainland China",
   "format.listLabel": "{id} ({region}, {date})",
   "formatProblem.twoLeaders": "Cross Craft needs two leader cards (CR B-2 6.1.1.1)",
   "formatProblem.leaderClasses": "The two leaders must be of two different classes, not Neutral: {classes} (CR B-2 6.1.1.1)",

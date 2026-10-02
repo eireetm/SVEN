@@ -1,0 +1,31 @@
+{
+  "format": "crossCraft",
+  "region": "asia",
+  "updated": "2026-10-02",
+  "source": "https://shadowverse-evolve.com/rules/crossover/",
+  "banned": [
+    {
+      "card": "BP19-104",
+      "name": "セイントタイガー",
+      "since": "2026-05-22"
+    },
+    {
+      "card": "BP12-044",
+      "name": "運命への反逆",
+      "since": "2025-11-21"
+    },
+    {
+      "card": "BP03-101",
+      "name": "ブリキの兵隊",
+      "since": "2026-10-02"
+    }
+  ],
+  "limited": [
+    {
+      "card": "BP14-022",
+      "name": "天下の大泥棒・ジエモン",
+      "since": "2025-11-21",
+      "note": "The evolved Jiemon (BP14-023) is not limited: up to 3 in the evolve deck (news 2025-11-13)."
+    }
+  ]
+}

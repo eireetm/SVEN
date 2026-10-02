@@ -16,11 +16,12 @@ export interface RestrictionList {
   /** The file's name ("01_26_JPN"). */
   id: string;
   format: Exclude<FormatId, "unlimited">;
-  /** asia: the Japanese site's lists; en: the English site's. */
-  region: "asia" | "en";
+  /** asia: the Japanese site's lists; en: the English site's; china: mainland China's. */
+  region: "asia" | "en" | "china";
   /** The official list's last update (YYYY-MM-DD). */
   updated: string;
-  source: string;
+  /** The official page, if there is one. */
+  source?: string;
   /** Cross Craft: cards of each leader's class the main deck needs at least (the region's rule; CR Appendix B-2: 1). */
   minimumPerLeaderClass?: number;
   /** Not one copy in a deck. */

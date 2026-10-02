@@ -208,6 +208,7 @@ export const ja: Record<MessageKey, string> = {
   "format.noList": "なし",
   "format.region.asia": "アジア",
   "format.region.en": "英語版",
+  "format.region.china": "中国大陸",
   "format.listLabel": "{id}（{region}、{date}）",
   "formatProblem.twoLeaders": "クロスオーバーにはリーダーカードが2枚必要です（CR B-2 6.1.1.1）",
   "formatProblem.leaderClasses": "2枚のリーダーはニュートラル以外の異なる2クラスでなければなりません：{classes}（CR B-2 6.1.1.1）",

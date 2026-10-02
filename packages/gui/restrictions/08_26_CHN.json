@@ -1,0 +1,15 @@
+{
+  "format": "standard",
+  "region": "china",
+  "updated": "2026-08-28",
+  "banned": [
+    { "card": "BP13-107", "name": "世界殒灭", "since": "2026-08-28" },
+    { "card": "BP12-044", "name": "反叛命运", "since": "2026-07-31" },
+    { "card": "BP04-037", "name": "星之铠甲", "since": "2026-06-26" }
+  ],
+  "limited": [
+    { "card": "BP02-062", "name": "龙女巫的仪式", "since": "2026-08-28" },
+    { "card": "BP07-072", "name": "丹紫抵御者·安镍儿", "since": "2026-08-28", "note": "The official list writes 丹紫抵御者·安涅儿; the Chinese card data writes 安镍儿 on every Aenea card." },
+    { "card": "BP03-048", "name": "糖果屋", "since": "2025-10-31" }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "format": "standard",
+  "region": "en",
+  "updated": "2026-11-02",
+  "source": "https://en.shadowverse-evolve.com/news/post-167",
+  "banned": [
+    { "card": "CSD03a-016", "name": "Stardust Trumpeter", "since": "2026-11-02" },
+    { "card": "CSD03b-016", "name": "Lizard Runner, Undeux", "since": "2026-11-02" },
+    { "card": "BP05-018", "name": "Octrice, Omen of Usurpation", "since": "2026-11-02" },
+    { "card": "BP13-107", "name": "Planetary Fracture", "since": "2026-08-21" },
+    { "card": "BP12-044", "name": "Rebel Against Fate", "since": "2026-07-24" },
+    { "card": "BP04-037", "name": "Armor of the Stars", "since": "2026-05-22" }
+  ],
+  "limited": [
+    { "card": "BP15-066", "name": "Adherent of Ardor", "since": "2026-11-02" },
+    { "card": "BP02-062", "name": "Dracomancer's Rites", "since": "2026-08-21" }
+  ]
+}

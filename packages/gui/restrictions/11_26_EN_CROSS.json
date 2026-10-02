@@ -1,0 +1,17 @@
+{
+  "format": "crossCraft",
+  "region": "en",
+  "updated": "2026-11-02",
+  "source": "https://en.shadowverse-evolve.com/news/post-167",
+  "rules": "https://en.shadowverse-evolve.com/rules/cross-craft/",
+  "minimumPerLeaderClass": 9,
+  "banned": [
+    { "card": "BP03-101", "name": "Tin Soldier", "since": "2026-11-02" },
+    { "card": "BP19-104", "name": "Sacred Tiger", "since": "2026-09-25" },
+    { "card": "BP12-044", "name": "Rebel Against Fate", "since": "2026-07-24" },
+    { "card": "BP04-037", "name": "Armor of the Stars", "since": "2026-05-22" }
+  ],
+  "limited": [
+    { "card": "BP14-022", "name": "Jiemon, Thief Lord", "since": "2026-11-02" }
+  ]
+}

@@ -207,6 +207,7 @@ export const zh: Record<MessageKey, string> = {
   "format.noList": "无",
   "format.region.asia": "亚洲",
   "format.region.en": "欧美",
+  "format.region.china": "中国大陆",
   "format.listLabel": "{id}（{region}，{date}）",
   "formatProblem.twoLeaders": "双职业需要两张主战者卡（CR B-2 6.1.1.1）",
   "formatProblem.leaderClasses": "两张主战者必须是两个不同的职业，且不能是中立：{classes}（CR B-2 6.1.1.1）",
