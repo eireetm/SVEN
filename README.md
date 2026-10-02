@@ -68,6 +68,7 @@ npm run dev:gui
 | `npm run typecheck` | 类型检查（源码、测试、工具） |
 | `npm run test:gui` | GUI 的端到端测试（Playwright） |
 | `npm run android:apk` | 打安卓 APK（见"安卓版"） |
+| `npm run ios:ipa` | 打 iOS 的 IPA（见"iOS 版"，要在 Mac 上） |
 | `npm run release:pc -- --zip` | 打 PC 发行版（见"发行版"） |
 | `npm run card -- <卡号>` | 查一张卡：各语言文本、日文类型、相关卡、官方 QA、脚本状态 |
 | `npm run bench` | 性能基准：随机对局、复制和抽样一局、Bot 每个决策的耗时 |
@@ -129,6 +130,7 @@ packages/
     replays/            保存的录像（不进仓库）
     restrictions/       禁卡表，一个文件一张（格式见其中的 README.md）
     android/            安卓工程（Capacitor）
+    ios/                iOS 工程（Capacitor，Xcode）
     scripts/            打安卓 APK、生成示例卡组
     test/               单元测试（随 npm test 运行）
     tests/e2e/          端到端测试（Playwright）
@@ -327,6 +329,16 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
   - 返回键先关掉打开的东西。
 - **平板**：屏幕够大时用电脑版的排版，按手指操作：点一下卡组里的卡移除一张，长按卡牌看详情，用手指把卡拖到场上使用；菜单比屏幕高时可以上下滑动。
 
+### iOS 版
+
+- **构建**：`npm run ios:ipa`，得到不签名的 IPA `SVEN-<版本>-ios.ipa`（在仓库旁边；`--out <文件>` 可改，`--public <文件夹>` 和安卓版一样把资源打包进 App）。
+  - Xcode 只能在 Mac 上运行：在别的系统上，这个命令只做到网页部分和 Capacitor 的拷贝（`packages/gui/ios/`）。
+  - 没有 Mac 时用 GitHub 的工作流：仓库页面 › Actions › "iOS IPA" › Run workflow，跑完后在这次运行的 Artifacts 里下载 `SVEN-ios`（里面就是 IPA）。
+- **安装**：IPA 没有签名，用自己的 Apple ID 签名安装（例如 AltStore、Sideloadly）。
+- **设备上的文件**：在"文件"App 的"我的 iPhone（iPad）› SVE NEXT"里：`public/`（资源：用"文件"App 拷进去，或者在设置页导入 zip）、`decks/`、`replays/`、`exports/`。
+- **要求**：iOS / iPadOS 16.4 以上。横屏全屏，屏幕常亮；iPad 用宽屏排版、手指操作（见"安卓版"的平板）。
+- 和同一版本的电脑版、安卓版可以互相联机。
+
 ### 在代码里使用 Core
 
 ```ts
@@ -410,6 +422,7 @@ Run these at the repository root:
 | `npm run typecheck` | Type-check sources, tests and tools |
 | `npm run test:gui` | The GUI's end-to-end tests (Playwright) |
 | `npm run android:apk` | Build the Android APK (see "Android app") |
+| `npm run ios:ipa` | Build the iOS IPA (see "iOS app"; on a Mac) |
 | `npm run release:pc -- --zip` | Build the PC release (see "Releases") |
 | `npm run card -- <card number>` | Show a card: its text in each language, Japanese traits, related cards, official Q&A, script status |
 | `npm run bench` | Benchmarks: random games, copying and sampling a game, the bot's time per decision |
@@ -471,6 +484,7 @@ packages/
     replays/            saved replays (not in the repository)
     restrictions/       restriction lists, one file each (format in its README.md)
     android/            the Android project (Capacitor)
+    ios/                the iOS project (Capacitor, Xcode)
     scripts/            building the Android APK, generating the sample decks
     test/               unit tests (run by npm test)
     tests/e2e/          end-to-end tests (Playwright)
@@ -668,6 +682,16 @@ The versions for friends (e.g. 0.1.2) come in two kinds: for PCs and for Android
   - The deck builder has a "Deck" tab and a "Card pool" tab.
   - The back button first closes whatever is open.
 - **Tablets**: a big enough screen keeps the PC layout, used with fingers: tap a deck's card to take it out, hold a card to read it, drag a card onto the field with a finger; a menu taller than the screen scrolls.
+
+### iOS app
+
+- **Build**: `npm run ios:ipa` makes an unsigned IPA, `SVEN-<version>-ios.ipa` next to the repository (`--out <file>` changes it; `--public <folder>` builds resources into the app, as for Android).
+  - Xcode runs only on a Mac: elsewhere the command does the web part and Capacitor's copy (`packages/gui/ios/`) only.
+  - Without a Mac, use the GitHub workflow: the repository's Actions > "iOS IPA" > Run workflow, then download the artifact `SVEN-ios` (the IPA) from the run.
+- **Install**: the IPA isn't signed; sign and install it with your own Apple ID (e.g. AltStore, Sideloadly).
+- **Files on the device**: in the Files app, On My iPhone (iPad) > SVE NEXT: `public/` (resources: copied with the Files app, or a zip imported in the settings), `decks/`, `replays/`, `exports/`.
+- **Requirements**: iOS / iPadOS 16.4 or later. Played sideways on the whole screen, which stays on; an iPad has the wide layout used with fingers (see the tablets under "Android app").
+- It plays online with the PC program and the Android app of the same version.
 
 ### Using the Core in code
 

@@ -15,7 +15,8 @@ type ResourceStatus =
   | { kind: "failed"; error: string };
 
 /**
- * The Android app: where the player's own files go (the app's public/ folder, copied over a USB cable), importing them
+ * The Android and iOS apps: where the player's own files go (the app's public/ folder, copied over a USB cable or with the
+ * Files app), importing them
  * from a zip file, and reading the folder again after copying; how many resources the app has of its own, if any.
  */
 function ResourcesSection() {
@@ -40,8 +41,10 @@ function ResourcesSection() {
   return (
     <section className="sve-settings-group" data-testid="settings-resources">
       <h3>{t("settings.resources")}</h3>
-      <p className="sve-settings-folder">{t("settings.resourcesFolder", { folder: hostApi.resourceFolder ?? "" })}</p>
-      <p className="sve-hint">{t("settings.resourcesHelp")}</p>
+      <p className="sve-settings-folder">
+        {t(hostApi.platform === "ios" ? "settings.resourcesFolderIos" : "settings.resourcesFolder", { folder: hostApi.resourceFolder ?? "" })}
+      </p>
+      <p className="sve-hint">{t(hostApi.platform === "ios" ? "settings.resourcesHelpIos" : "settings.resourcesHelp")}</p>
       {hostApi.bundledResources ? <p className="sve-hint">{t("settings.resourcesBundled", { n: hostApi.bundledResources })}</p> : null}
       <div className="sve-settings-buttons">
         <label className={`sve-file-button${busy ? " sve-disabled" : ""}`}>
@@ -135,7 +138,7 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
             </span>
           </div>
         </section>
-        {hostApi.platform === "android" ? <ResourcesSection /> : null}
+        {hostApi.platform !== "web" ? <ResourcesSection /> : null}
         <section className="sve-settings-group">
           <h3>{t("settings.sound")}</h3>
           {(
@@ -161,7 +164,7 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
               </span>
             </div>
           ))}
-          <p className="sve-hint">{t(hostApi.platform === "android" ? "settings.soundHelpAndroid" : "settings.soundHelp")}</p>
+          <p className="sve-hint">{t(hostApi.platform !== "web" ? "settings.soundHelpAndroid" : "settings.soundHelp")}</p>
         </section>
         <section className="sve-settings-group">
           <h3>{t("settings.game")}</h3>

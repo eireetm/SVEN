@@ -1,8 +1,9 @@
 <!doctype html>
 <!--
-  The Android app's page for a phone whose WebView is too old to run it: Capacitor opens it instead of
-  the app when the WebView is older than capacitor.config.ts minWebViewVersion, and index.html sends the app here when its
-  code can't be read at all. vite.config.ts copies it into the Android build. Plain HTML and old JavaScript, on purpose.
+  The apps' page for a device whose web view is too old to run them: Capacitor opens it instead of the Android app when
+  the WebView is older than capacitor.config.ts minWebViewVersion, and index.html sends either app here when its code can't
+  be read at all. vite.config.ts copies it into the apps' builds. On an iPhone or iPad it speaks of iOS (the app's own
+  minimum, ios/App/App.xcodeproj, is 16.4). Plain HTML and old JavaScript, on purpose.
 -->
 <html lang="zh">
   <head>
@@ -43,7 +44,7 @@
     </style>
   </head>
   <body>
-    <main>
+    <main id="android">
       <section lang="zh">
         <h1>无法打开：这台手机的 WebView 版本太旧</h1>
         <p>本 App 需要 Android System WebView（或 Chrome）103 以上的版本，这台手机是 <span class="v">?</span>。请在应用商店（Google Play 或手机自带的应用商店）更新“Android System WebView”，然后重新打开本 App。</p>
@@ -57,7 +58,26 @@
         <p>このアプリには Android System WebView（または Chrome）103 以降が必要です（このスマホは <span class="v">?</span>）。ストア（Google Play または端末のストア）で「Android System WebView」を更新してから、もう一度開いてください。</p>
       </section>
     </main>
+    <main id="ios" style="display: none">
+      <section lang="zh">
+        <h1>无法打开：这台设备的系统版本太旧</h1>
+        <p>本 App 需要 iOS / iPadOS 16.4 以上。请在“设置 › 通用 › 软件更新”里更新系统，然后重新打开本 App。</p>
+      </section>
+      <section lang="en">
+        <h1>Can't start: this device's system is too old</h1>
+        <p>This app needs iOS / iPadOS 16.4 or later. Update it in Settings › General › Software Update, then open the app again.</p>
+      </section>
+      <section lang="ja">
+        <h1>起動できません：この端末のシステムが古すぎます</h1>
+        <p>このアプリには iOS / iPadOS 16.4 以降が必要です。「設定 › 一般 › ソフトウェアアップデート」で更新してから、もう一度開いてください。</p>
+      </section>
+    </main>
     <script>
+      // An iPhone or iPad (an iPad says it's a Mac, but has a touch screen): the iOS page.
+      if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) {
+        document.getElementById("android").style.display = "none";
+        document.getElementById("ios").style.display = "block";
+      }
       var match = navigator.userAgent.match(/Chrome\/(\d+)/);
       var spans = document.getElementsByClassName("v");
       for (var i = 0; i < spans.length; i++) spans[i].textContent = match ? match[1] : "?";

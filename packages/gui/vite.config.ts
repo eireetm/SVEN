@@ -23,12 +23,12 @@ function filesUnder(dir: string, prefix = ""): string[] {
 }
 
 /**
- * The Android build's own files: the page for a WebView too old for the app (capacitor.config.ts), and
- * the list of the resources built into the app, from the folder `bundle` (host/android.ts; none without it).
+ * The apps' own files (Android, iOS): the page for a web view too old for the app (capacitor.config.ts), and the list of
+ * the resources built into the app, from the folder `bundle` (host/native.ts; none without it).
  */
-function androidFiles(bundle: string | null): Plugin {
+function appFiles(bundle: string | null): Plugin {
   return {
-    name: "sve-android-files",
+    name: "sve-app-files",
     generateBundle() {
       this.emitFile({ type: "asset", fileName: "webview-old.html", source: readFileSync(join(here, "src/host/webview-old.html"), "utf8") });
       this.emitFile({ type: "asset", fileName: "bundled-resources.json", source: JSON.stringify(bundle ? filesUnder(bundle) : []) });
@@ -38,23 +38,23 @@ function androidFiles(bundle: string | null): Plugin {
 
 // `npm run dev:gui` (repository root) starts this dev server and opens the browser (its --open flag; a plain `vite`, as the
 // end-to-end tests run it, opens nothing). SVE_GUI_PORT changes the port (default 5173, or the next free one).
-// `vite build --mode android` builds the Android app's web part: without public/ (the player's own files
-// are on the phone, in the app's folder), into dist-android/ for Capacitor. SVE_BUNDLE_PUBLIC names a folder of resources
-// to build into the app instead (a release with resources: scripts/android-apk.mjs --public).
+// `vite build --mode android` (or `--mode ios`) builds the Android (iOS) app's web part: without public/ (the player's own
+// files are on the device, in the app's folder), into dist-android/ (dist-ios/) for Capacitor. SVE_BUNDLE_PUBLIC names a
+// folder of resources to build into the app instead (a release with resources: scripts/android-apk.mjs --public).
 export default defineConfig(({ mode }) => {
-  const android = mode === "android";
-  const bundle = android ? process.env.SVE_BUNDLE_PUBLIC || null : null;
+  const app = mode === "android" || mode === "ios";
+  const bundle = app ? process.env.SVE_BUNDLE_PUBLIC || null : null;
   return {
-    plugins: [react(), hostPlugin(), ...(android ? [androidFiles(bundle)] : [])],
+    plugins: [react(), hostPlugin(), ...(app ? [appFiles(bundle)] : [])],
     server: {
       port: Number(process.env.SVE_GUI_PORT ?? 5173),
       // Not the builds' output: an APK build writes thousands of files there (with resources, hundreds of MB), whose
       // watching can fail on a file still being written and stop the server, and whose HTML files reload open pages.
-      watch: { ignored: ["**/dist/**", "**/dist-android/**", "**/android/**"] },
+      watch: { ignored: ["**/dist/**", "**/dist-android/**", "**/dist-ios/**", "**/android/**", "**/ios/**"] },
     },
     worker: { format: "es" },
-    publicDir: android ? (bundle ?? false) : "public",
-    build: { target: "es2022", chunkSizeWarningLimit: 10_000, outDir: android ? "dist-android" : "dist" },
+    publicDir: app ? (bundle ?? false) : "public",
+    build: { target: "es2022", chunkSizeWarningLimit: 10_000, outDir: app ? `dist-${mode}` : "dist" },
     define: { __ENGINE_FINGERPRINT__: JSON.stringify(engineFingerprint(here)), __APP_VERSION__: JSON.stringify(version) },
     // Online play loads when first opened (src/online): its libraries are prepared when the server starts, else the dev
     // server finds them only then and reloads every open page. The libraries are found from the app's page only, not from

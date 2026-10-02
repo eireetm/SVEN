@@ -1,0 +1,27 @@
+# The iOS app as an unsigned IPA, built on a Mac runner (Xcode runs only on macOS; the project is developed on Windows).
+# Run it by hand: Actions > "iOS IPA" > Run workflow. The IPA is the run's artifact "SVEN-ios" (README "iOS").
+name: iOS IPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ipa:
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run ios:ipa -- --out SVEN-ios.ipa
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SVEN-ios
+          path: SVEN-ios.ipa
+          if-no-files-found: error

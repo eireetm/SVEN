@@ -13,6 +13,7 @@
     "build:gui": "npm run build -w @sve/gui",
     "test:gui": "npm run test:e2e -w @sve/gui",
     "android:apk": "node packages/gui/scripts/android-apk.mjs",
+    "ios:ipa": "node packages/gui/scripts/ios-ipa.mjs",
     "release:pc": "tsx packages/gui/scripts/release-pc.ts",
     "typecheck": "tsc -p packages/core/tsconfig.json && tsc -p packages/core/tsconfig.test.json && tsc -p packages/bot/tsconfig.json && tsc -p packages/bot/tsconfig.test.json && tsc -p tools/tsconfig.json && tsc -p packages/gui/tsconfig.json && tsc -p packages/gui/tsconfig.node.json",
     "build:cards": "tsx tools/build-card-data.ts",

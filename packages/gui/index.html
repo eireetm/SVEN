@@ -2,7 +2,7 @@
 <html lang="en" translate="no">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <!-- The app speaks three languages itself: a browser translating the page changes it under React, which breaks it. -->
     <meta name="google" content="notranslate" />
     <title>SVE</title>
@@ -11,8 +11,8 @@
   <body>
     <div id="root"></div>
     <script>
-      // In the Android app, when the app's code can't even be read (a syntax error before main.tsx starts: a WebView too
-      // old for it), show the page that says so rather than a blank screen. Old JavaScript, on purpose.
+      // In the Android or iOS app, when the app's code can't even be read (a syntax error before main.tsx starts: a web view
+      // too old for it), show the page that says so rather than a blank screen. Old JavaScript, on purpose.
       window.addEventListener("error", function (e) {
         if (window.sveStarted || !window.Capacitor || !/SyntaxError/.test(String(e && e.message))) return;
         location.replace("/webview-old.html");

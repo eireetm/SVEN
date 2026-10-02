@@ -146,6 +146,12 @@ option {
   background: rgb(58 51 34 / var(--sve-ui-alpha));
 }
 
+/* The iOS app: the screen's rounded corners, notch and home bar stay clear of the game (index.html viewport-fit=cover; the
+   Android app keeps clear of a camera cutout natively). */
+:root[data-platform="ios"] .sve-app {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
 .sve-screen {
   flex: 1;
   min-height: 0;

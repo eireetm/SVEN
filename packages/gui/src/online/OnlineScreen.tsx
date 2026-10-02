@@ -471,7 +471,8 @@ interface ConnectedProps {
 /** A program's version and platform as a person reads them ("0.2.1 · Android"); programs before 0.2.1 don't say. */
 function programLabel(app: string | undefined, platform: string | undefined, t: Translate): string {
   if (!app) return t("online.versionOld");
-  const where = platform === "android" ? t("online.platform.android") : platform === "pc" ? t("online.platform.pc") : null;
+  const where =
+    platform === "android" ? t("online.platform.android") : platform === "ios" ? t("online.platform.ios") : platform === "pc" ? t("online.platform.pc") : null;
   return where ? `${app} · ${where}` : app;
 }
 

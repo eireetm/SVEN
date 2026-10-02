@@ -11,15 +11,16 @@ import { webHost } from "./host/web";
 (window as { sveStarted?: boolean }).sveStarted = true;
 
 /**
- * The Android app first sets up its host: its files are on the phone. A computer uses the `/api`. Then the PC release's
+ * The Android and iOS apps first set up their host: their files are on the device. A computer uses the `/api`. Then the PC release's
  * settings file, before anything is shown in the browser's settings.
  */
 async function start(): Promise<void> {
-  if (import.meta.env.MODE === "android") {
-    const { createAndroidHost, installAndroidShell } = await import("./host/android");
-    setHost(await createAndroidHost());
-    await installAndroidShell();
-    document.documentElement.dataset.platform = "android";
+  const app = import.meta.env.MODE;
+  if (app === "android" || app === "ios") {
+    const { createNativeHost, installNativeShell } = await import("./host/native");
+    setHost(await createNativeHost(app));
+    await installNativeShell(app);
+    document.documentElement.dataset.platform = app;
   } else {
     setHost(webHost);
   }

@@ -1,12 +1,13 @@
-// The Android app's host. Its files live in the app's own folder on the phone,
-// Android/data/local.sve.next/files/:
-//   public/   the player's own pictures, sounds, fonts and theme.css (README "Custom resources"): copied there over a USB cable, or
-//             imported from a zip file in the settings;
+// The phone and tablet apps' host (Android, iOS). Its files live in the app's own folder on the device —
+// Android/data/local.sve.next/files/ on Android, the app's Documents folder on iOS (the Files app shows it as
+// "On My iPhone > SVE NEXT"):
+//   public/   the player's own pictures, sounds, fonts and theme.css (README "Custom resources"): copied there (a USB cable,
+//             the Files app), or imported from a zip file in the settings;
 //   decks/    deck files; the sample decks are put into decks/samples/ at the start when missing;
 //   replays/  saved replays;
 //   exports/  files handed to the person (a bug report file), shared from there.
 // No assets folder: card images are only the player's own, or those built into the app (a release with resources,
-// host/bundled.ts). Loaded by main.tsx in the Android build only.
+// host/bundled.ts). Loaded by main.tsx in the apps' builds only (vite --mode android / ios).
 import { App } from "@capacitor/app";
 import { Clipboard } from "@capacitor/clipboard";
 import { Capacitor } from "@capacitor/core";
@@ -22,7 +23,14 @@ import type { DeckFileEntry, Host, HostInfo, ImportResult, ReplayFileEntry } fro
 import { mergeResources } from "./bundled";
 import { resourcePathInZip } from "./zip-paths";
 
-const DIR = Directory.External;
+/** The app's platform: its own folder and its back button differ. */
+export type AppPlatform = "android" | "ios";
+
+/**
+ * The app's own folder: on Android the one a file manager or a USB cable reaches; on iOS the Documents folder, which the
+ * Files app shows (Info.plist UIFileSharingEnabled).
+ */
+let DIR = Directory.External;
 
 /** public/'s folders (README "Custom resources"), made at the start so the player sees where to copy their files. */
 const PUBLIC_FOLDERS = ["audio/bgm", "audio/sfx", "audio/cards", "images/cards", "images/backs", "textures/board", "textures/menu", "textures/icons", "fonts"];
@@ -178,14 +186,19 @@ async function bundledResources(): Promise<string[]> {
   }
 }
 
-/** The app's folder as the person finds it with a file manager or over USB ("Android/data/local.sve.next/files"). */
-function shownFolder(uri: string): string {
+/**
+ * The app's folder as the person finds it: with a file manager or over USB on Android ("Android/data/local.sve.next/files");
+ * in the Files app on iOS ("SVE NEXT", under "On My iPhone").
+ */
+function shownFolder(uri: string, platform: AppPlatform): string {
+  if (platform === "ios") return "SVE NEXT";
   const path = decodeURIComponent(uri.replace(/^file:\/\//, ""));
   return path.replace(/^\/storage\/emulated\/\d+\//, "").replace(/^\/sdcard\//, "");
 }
 
-/** Prepare the app's folder and return the Android host (main.tsx, before anything is shown). */
-export async function createAndroidHost(): Promise<Host> {
+/** Prepare the app's folder and return the app's host (main.tsx, before anything is shown). */
+export async function createNativeHost(platform: AppPlatform): Promise<Host> {
+  DIR = platform === "ios" ? Directory.Documents : Directory.External;
   for (const folder of PUBLIC_FOLDERS) await makeFolder(`public/${folder}`);
   for (const folder of ["decks/samples", "replays", "exports"]) await makeFolder(folder);
   for (const [source, text] of Object.entries(SAMPLES)) {
@@ -193,7 +206,7 @@ export async function createAndroidHost(): Promise<Host> {
     if (!(await exists(target))) await writeText(target, text);
   }
   const root = (await Filesystem.getUri({ path: "", directory: DIR })).uri.replace(/\/$/, "");
-  const folder = shownFolder(root);
+  const folder = shownFolder(root, platform);
   const encode = (path: string) => path.split("/").map(encodeURIComponent).join("/");
   const url = (path: string) => Capacitor.convertFileSrc(`${root}/${encode(path)}`);
   // The built-in resources are served from the app itself; the player's files (as last listed) go before them.
@@ -202,7 +215,7 @@ export async function createAndroidHost(): Promise<Host> {
   let own = new Set<string>();
 
   return {
-    platform: "android",
+    platform,
     resourceFolder: `${folder}/public`,
     bundledResources: bundled.length,
 
@@ -283,16 +296,20 @@ export async function createAndroidHost(): Promise<Host> {
       await Clipboard.write({ string: text });
     },
 
-    // No settings file on a phone: the settings stay in the app's own storage.
+    // No settings file in the apps: the settings stay in the app's own storage.
     readSettingsFile: async () => null,
-    writeSettingsFile: () => Promise.reject(new Error("the Android app keeps no settings file")),
+    writeSettingsFile: () => Promise.reject(new Error("the apps keep no settings file")),
 
     importResources: importZip,
   };
 }
 
-/** The back button: closes what is open or goes back a screen (app/back.ts); on the main menu the app goes to the background. */
-export async function installAndroidShell(): Promise<void> {
+/**
+ * Android's back button: closes what is open or goes back a screen (app/back.ts); on the main menu the app goes to the
+ * background. An iPhone has no back button: the app's own buttons go back.
+ */
+export async function installNativeShell(platform: AppPlatform): Promise<void> {
+  if (platform !== "android") return;
   await App.addListener("backButton", () => {
     if (!goBack()) void App.minimizeApp();
   });
