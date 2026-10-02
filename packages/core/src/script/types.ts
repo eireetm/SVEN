@@ -380,6 +380,12 @@ export interface PlayOption {
    * Targets are selected before the cost is determined (CR 10.6.2.3, 10.6.2.5).
    */
   targetFilter?(game: GameReader, card: CardId): boolean;
+  /**
+   * CR 13.3.3 — the process is "Earth Rite (N)", N Stack counters (BP22-039 "When playing this card, Earth Rite (9): ...").
+   * The card has Earth Rite then: a search for "a card with Earth Rite" finds it (GameReader.hasEarthRite). Set by
+   * costs.ts earthRiteOption.
+   */
+  earthRite?: number;
 }
 
 /** CR 10.1.1.1 */

@@ -166,5 +166,9 @@ describe("BP03 Runecraft", () => {
     expect([skip.hand(), skip.zone("me", "deck")]).toEqual([[], ["BP03-041", "V2"]]);
     const none = d({ me: { hand: ["BP03-054"], deck: ["V1"], playPoints: 1 } }).play("BP03-054");
     expect(none.zone("me", "deck")).toEqual(["V1"]);
+    // BP22-039's Earth Rite is a way to play it ("When playing this card, Earth Rite (9): ..."): it has Earth Rite too.
+    const option = d({ me: { hand: ["BP03-054"], deck: ["BP22-039", "V1"], playPoints: 1 } });
+    option.play("BP03-054").pick("BP22-039");
+    expect(option.hand()).toEqual(["BP22-039"]);
   });
 });

@@ -5,6 +5,7 @@ import type { CardId, PlayerId } from "../model/ids";
 import { opponentOf } from "../model/ids";
 import type { Keyword } from "../model/keyword";
 import type { CardInstance, GameState, PlayerZone, ReturnedCard, ZoneName } from "../model/state";
+import type { CardScript } from "../script/types";
 import type { Env } from "./state/access";
 import { ATTACKS_KEY, leaderOf, usesThisTurn } from "./state/access";
 import { equipmentOf, equippedFollower } from "./abilities/equipment";
@@ -238,6 +239,19 @@ export interface GameReader {
  * be reused for as long as its context lives. Building one creates dozens of closures, and the
  * engine asks for a reader on almost every rules check (it was ~40% of a random game's time).
  */
+/**
+ * CR 13.3.3 — does a card have Earth Rite: its script has an Earth Rite cost on an ability or on a mode, or a play option whose
+ * process is Earth Rite (BP22-039)? "A card with Earth Rite" (BP03-054, BP08-049, BP14-038, BP21-040) is one whose own text
+ * has it, not one that only mentions it; test/engine/earth-rite.test.ts checks every card against its Japanese text.
+ */
+export function scriptHasEarthRite(script: CardScript | undefined): boolean {
+  if (script === undefined) return false;
+  return (
+    (script.abilities ?? []).some((a) => ("earthRite" in a && a.earthRite !== undefined) || ("modes" in a && a.modes?.some((m) => m.earthRite))) ||
+    (script.playOptions ?? []).some((o) => o.earthRite !== undefined)
+  );
+}
+
 const readers = new WeakMap<Env, GameReader>();
 
 export function makeReader(env: Env): GameReader {
@@ -376,13 +390,7 @@ export function makeReader(env: Env): GameReader {
     },
     hasEarthRite: (id) => {
       const def = state().cards[id]?.def;
-      if (def === undefined) return false;
-      const abilities = env.scripts[def]?.abilities ?? [];
-      return abilities.some(
-        (a) =>
-          ("earthRite" in a && a.earthRite !== undefined) ||
-          ("modes" in a && a.modes?.some((m) => m.earthRite)),
-      );
+      return def !== undefined && scriptHasEarthRite(env.scripts[def]);
     },
   };
   readers.set(env, reader);

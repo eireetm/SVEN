@@ -5,15 +5,13 @@
 // (When playing this card, Earth Rite (9): this card costs 1 to play — an optional additional cost removing 9 Stack counters from
 // one amulet (CR 10.4.7.3, 13.3.3; ruling). Ward. Fanfare - Select up to 3 enemy followers on the field and destroy them; deal 3
 // damage to each enemy leader and give your leader +3 defense — also with no follower selected (ruling).)
-import { earthRiteCost } from "../costs";
+import { earthRiteOption } from "../costs";
 import { defineCard, fanfare } from "../helpers";
 import { enemyFollower } from "../targets";
 
-const rite9 = earthRiteCost(9);
-
 export default defineCard({
   keywords: ["ward"],
-  playOptions: [{ id: "rite9", label: "Earth Rite (9): this costs 1", canPay: rite9.canPay, pay: rite9.pay, setCost: 1 }],
+  playOptions: [earthRiteOption(9, { id: "rite9", label: "Earth Rite (9): this costs 1", setCost: 1 })],
   abilities: [
     fanfare({
       targets: [enemyFollower({ count: 3, upTo: true })],

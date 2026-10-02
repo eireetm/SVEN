@@ -1,6 +1,6 @@
 import type { CardId, PlayerId } from "../model/ids";
 import type { GameReader } from "../engine/query";
-import type { CustomCost } from "./types";
+import type { CustomCost, PlayOption } from "./types";
 
 /**
  * Reusable costs ("[cost]: [effect]"). Costs are paid from your own zones only (BP01-123
@@ -246,6 +246,15 @@ export function earthRiteCost(count = 1): CustomCost {
       yield* fx.payEarthRite(count);
     },
   };
+}
+
+/**
+ * CR 10.4.7.3 / 13.3.3 — a play option whose process is "Earth Rite (N)" (BP22-039 "When playing this card, Earth Rite (9):
+ * This card costs 1"). It says so (`earthRite`), so the card counts as one with Earth Rite (GameReader.hasEarthRite).
+ */
+export function earthRiteOption(count: number, option: Omit<PlayOption, "canPay" | "pay" | "earthRite">): PlayOption {
+  const cost = earthRiteCost(count);
+  return { ...option, canPay: cost.canPay, pay: cost.pay, earthRite: count };
 }
 
 /** A play-point cost of an automatic ability, e.g. "{[fanfare]} {[cost03]} ..." (CR 10.4.4, 10.4.7.4). */
