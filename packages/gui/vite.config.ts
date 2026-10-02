@@ -7,6 +7,8 @@ import { engineFingerprint } from "./fingerprint.ts";
 import { hostPlugin } from "./host/plugin.ts";
 
 const here = fileURLToPath(new URL(".", import.meta.url));
+/** The program's version (package.json), shown in the main menu and told to the other program online (src/app/version.ts). */
+const version = (JSON.parse(readFileSync(join(here, "package.json"), "utf8")) as { version: string }).version;
 
 /** Every file under `dir` ("images/cards/BP01-001.webp"), hidden files left out. */
 function filesUnder(dir: string, prefix = ""): string[] {
@@ -53,7 +55,7 @@ export default defineConfig(({ mode }) => {
     worker: { format: "es" },
     publicDir: android ? (bundle ?? false) : "public",
     build: { target: "es2022", chunkSizeWarningLimit: 10_000, outDir: android ? "dist-android" : "dist" },
-    define: { __ENGINE_FINGERPRINT__: JSON.stringify(engineFingerprint(here)) },
+    define: { __ENGINE_FINGERPRINT__: JSON.stringify(engineFingerprint(here)), __APP_VERSION__: JSON.stringify(version) },
     // Online play loads when first opened (src/online): its libraries are prepared when the server starts, else the dev
     // server finds them only then and reloads every open page. The libraries are found from the app's page only, not from
     // the pages of the builds' output (dist-android/, android/).

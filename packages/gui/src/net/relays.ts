@@ -7,8 +7,10 @@
 // relays that answered, plus a relay in Japan and STUN servers in China, since players may be in different countries.
 
 /**
- * Tells this program's rooms apart from other programs' on the same public relays (a new version of the protocol: a new id).
- * 2: programs say which seat they want when they join a room (spectators, online-3).
+ * Tells this program's rooms apart from other programs' on the same public relays. 2: programs say which seat they want when
+ * they join a room (spectators, online-3). It stays as it is from now on (2026-10-02): programs of every version meet in the
+ * same rooms and are told when they differ (the "hello" message) rather than never finding each other; a new protocol
+ * changes online.ts PROTOCOL and keeps the room's own messages (join, select, full, hello) as they are.
  */
 export const APP_ID = "sve-evolve-gui-online-2";
 

@@ -9,7 +9,7 @@
 // is a drawer and the deck and the pool are two tabs; a tap adds a card of the pool or removes one of the deck, a long
 // press shows the card, and nothing is dragged.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";
-import { useCompact } from "../app/compact";
+import { useCompact, useTouch } from "../app/compact";
 import { setDetailsOpen, useDetailsOpen } from "../game/details";
 import { installLongPress } from "../game/long-press";
 import { cardName } from "../app/catalog";
@@ -73,14 +73,16 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
   const [dropping, setDropping] = useState(false);
   const dirty = JSON.stringify(deck) !== saved;
   const compact = useCompact();
+  // Fingers (a phone, or a tablet with the wide layout): a tap adds or removes, a long press reads; no mouse drag and drop.
+  const touch = useTouch();
   const [tab, setTab] = useState<"deck" | "pool">("deck");
   const detailsOpen = useDetailsOpen();
   const drawer = compact && detailsOpen;
   const rootRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const root = rootRef.current;
-    return compact && root ? installLongPress(root) : undefined;
-  }, [compact]);
+    return touch && root ? installLongPress(root) : undefined;
+  }, [touch]);
   useEffect(() => () => setDetailsOpen(false), []);
 
   const deckRef = useRef<HTMLDivElement>(null);
@@ -273,19 +275,19 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
                 key={`${printing}:${i}`}
                 className="sve-deck-tile"
                 data-printing={printing}
-                draggable={!compact}
+                draggable={!touch}
                 onDragStart={(e) => startDrag(e, DECK_DATA, JSON.stringify({ section: key, printing }))}
-                onClick={compact ? () => remove(key, printing) : undefined}
+                onClick={touch ? () => remove(key, printing) : undefined}
                 onContextMenu={(e) => {
                   e.preventDefault();
-                  if (!compact) remove(key, printing);
+                  if (!touch) remove(key, printing);
                 }}
               >
                 <CardTile info={{ def: card?.id ?? printing, printing }} />
               </div>
             );
           })}
-          {copies.length === 0 ? <div className="sve-deck-empty">{t(compact ? "builder.emptySectionTouch" : "builder.emptySection")}</div> : null}
+          {copies.length === 0 ? <div className="sve-deck-empty">{t(compact ? "builder.emptySectionTouch" : touch ? "builder.emptySectionTap" : "builder.emptySection")}</div> : null}
         </div>
       </section>
     );
@@ -411,7 +413,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
             <button type="button" onClick={() => setCodeOpen(true)} data-testid="builder-deck-code">
               {t("builder.deckCode")}
             </button>
-            <span className="sve-hint">{t(compact ? "builder.removeHintTouch" : "builder.removeHint")}</span>
+            <span className="sve-hint">{t(touch ? "builder.removeHintTouch" : "builder.removeHint")}</span>
           </div>
         </div>
         <div
@@ -513,7 +515,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
           </div>
           <header className="sve-builder-pool-header">
             <strong>{t(allPrintings ? "builder.resultsPrintings" : "builder.results", { n: results.length })}</strong>
-            <span className="sve-hint">{t(compact ? "builder.addHintTouch" : "builder.addHint")}</span>
+            <span className="sve-hint">{t(touch ? "builder.addHintTouch" : "builder.addHint")}</span>
           </header>
         </div>
         {/* data-stale: the pool still shows the previous filters (they are applied in the background, useDeferredValue). */}
@@ -533,7 +535,7 @@ export function DeckBuilder({ onBack, onTextEditor, initialFile }: Props) {
               <div
                 key={printing}
                 className="sve-pool-tile"
-                draggable={!compact}
+                draggable={!touch}
                 onDragStart={(e) => startDrag(e, POOL_DATA, printing)}
                 onClick={() => add(card, printing)}
                 data-printing={printing}

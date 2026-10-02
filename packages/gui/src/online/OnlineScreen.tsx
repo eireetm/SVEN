@@ -13,7 +13,8 @@ import type { TurnOrder } from "../engine/protocol";
 import { formatProblemText, type FormatProblem } from "../formats/formats";
 import { FormatPicker } from "../formats/FormatPicker";
 import { hostApi, type DeckFileEntry } from "../host/api";
-import { useT } from "../i18n";
+import { useT, type Translate } from "../i18n";
+import { APP_VERSION, PLATFORM } from "../app/version";
 import { checkNetwork, type NetworkCheck } from "../net/check";
 import { normalizeRoomCode } from "../net/codes";
 import { SPECTATOR_SEATS, type Rules } from "../net/messages";
@@ -154,7 +155,7 @@ function Phase({ phase, since, identified, going, onGame, onEditDecks }: PhasePr
           <p>{t("online.roomCode")}</p>
           <CodeBox code={phase.code} large testId="online-room-code" />
           <p className="sve-hint">{t("online.hostWaiting", { s: seconds })}</p>
-          {slow ? <p className="sve-hint">{t("online.slowHint")}</p> : null}
+          {slow ? <p className="sve-hint">{t("online.slowHint", { version: APP_VERSION })}</p> : null}
           <WatchersFact />
           {going ? (
             // The other player comes back to this room: the game waits meanwhile.
@@ -179,7 +180,7 @@ function Phase({ phase, since, identified, going, onGame, onEditDecks }: PhasePr
           <p data-testid="online-searching">
             {phase.as === "watch" ? t("online.searchingWatch", { code: phase.code, s: seconds }) : t("online.searching", { code: phase.code, s: seconds })}
           </p>
-          {slow ? <p className="sve-hint">{t("online.slowHint")}</p> : null}
+          {slow ? <p className="sve-hint">{t("online.slowHint", { version: APP_VERSION })}</p> : null}
           {going && phase.as === "watch" ? (
             <button type="button" onClick={onGame} data-testid="online-to-game">
               {t("online.toWatch")}
@@ -366,6 +367,7 @@ function Watching({ phase, identified, going, onGame }: WatchingProps) {
         <li className={same === false ? "sve-problem" : undefined} data-testid="online-same">
           {same === null ? t("online.peerUnknown") : same ? t("online.peerSame") : t("online.watchDifferent")}
         </li>
+        <Versions peer={phase.peer} />
       </ul>
       <WatchersFact />
       {going ? (
@@ -466,6 +468,24 @@ interface ConnectedProps {
   onEditDecks: () => void;
 }
 
+/** A program's version and platform as a person reads them ("0.2.1 · Android"); programs before 0.2.1 don't say. */
+function programLabel(app: string | undefined, platform: string | undefined, t: Translate): string {
+  if (!app) return t("online.versionOld");
+  const where = platform === "android" ? t("online.platform.android") : platform === "pc" ? t("online.platform.pc") : null;
+  return where ? `${app} · ${where}` : app;
+}
+
+/** Both programs' versions: the same version plays together, on a computer or on a phone. */
+function Versions({ peer }: { peer: { app?: string; platform?: string } | null }) {
+  const t = useT();
+  return (
+    <li data-testid="online-versions">
+      {t("online.versionsLabel")}
+      {t("online.versions", { mine: programLabel(APP_VERSION, PLATFORM, t), theirs: peer ? programLabel(peer.app, peer.platform, t) : "…" })}
+    </li>
+  );
+}
+
 /** Connected: how, how fast, the same programs or not; the game in progress, or the next one's preparation; the chat. */
 function Connected({ phase, identified, going, onGame, onEditDecks }: ConnectedProps) {
   const t = useT();
@@ -492,6 +512,7 @@ function Connected({ phase, identified, going, onGame, onEditDecks }: ConnectedP
         <li className={same === false ? "sve-problem" : undefined} data-testid="online-same">
           {same === null ? t("online.peerUnknown") : same ? t("online.peerSame") : t("online.peerDifferent")}
         </li>
+        <Versions peer={phase.peer} />
       </ul>
       <WatchersFact />
       {going && online.game ? (

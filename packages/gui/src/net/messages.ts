@@ -5,13 +5,16 @@ import type { FormatId, GameOptions, RecordedInput, TurnOrder } from "../engine/
 
 /**
  * Who a program is: the protocol, a fingerprint of its card data and one of its engine (the rules code): two programs play
- * a game only when all three are the same.
+ * a game only when all three are the same. Its version and platform are shown to the person (programs before 0.2.1 don't
+ * say them).
  */
 export interface Hello {
   t: "hello";
   version: string;
   cards: string;
   engine: string;
+  app?: string;
+  platform?: string;
 }
 
 /** The game's rules, set by the host. */
@@ -179,7 +182,16 @@ export function parseMessage(value: unknown): NetMessage | null {
   const m = value as Record<string, unknown>;
   switch (m.t) {
     case "hello":
-      return isString(m.version) && isString(m.cards) && isString(m.engine) ? { t: "hello", version: m.version, cards: m.cards, engine: m.engine } : null;
+      return isString(m.version) && isString(m.cards) && isString(m.engine)
+        ? {
+            t: "hello",
+            version: m.version,
+            cards: m.cards,
+            engine: m.engine,
+            ...(isString(m.app, 20) ? { app: m.app } : {}),
+            ...(isString(m.platform, 20) ? { platform: m.platform } : {}),
+          }
+        : null;
     case "select":
     case "full":
     case "bye":

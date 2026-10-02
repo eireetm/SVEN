@@ -55,6 +55,21 @@ describe("connection codes (by hand)", () => {
 describe("messages", () => {
   it("accept only what the protocol says, trimmed to size", () => {
     expect(parseMessage({ t: "hello", version: "online-2", cards: "abc", engine: "def" })).toEqual({ t: "hello", version: "online-2", cards: "abc", engine: "def" });
+    // Since 0.2.1 a program also says its version and platform (shown to the person; programs before don't say them).
+    expect(parseMessage({ t: "hello", version: "online-3", cards: "abc", engine: "def", app: "0.2.1", platform: "android" })).toEqual({
+      t: "hello",
+      version: "online-3",
+      cards: "abc",
+      engine: "def",
+      app: "0.2.1",
+      platform: "android",
+    });
+    expect(parseMessage({ t: "hello", version: "online-3", cards: "abc", engine: "def", app: 3, platform: "x".repeat(21) })).toEqual({
+      t: "hello",
+      version: "online-3",
+      cards: "abc",
+      engine: "def",
+    });
     expect(parseMessage({ t: "chat", text: "x".repeat(900) })).toEqual({ t: "chat", text: "x".repeat(500) });
     expect(parseMessage({ t: "ping", n: 3 })).toEqual({ t: "ping", n: 3 });
     expect(parseMessage({ t: "select", extra: 1 })).toEqual({ t: "select" });

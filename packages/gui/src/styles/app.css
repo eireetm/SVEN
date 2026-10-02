@@ -217,16 +217,24 @@ option {
   word-break: break-word;
 }
 
-/* Main menu, settings and game setup: a panel in the middle of the window, over the main menu's background (background_m). */
+/* Main menu, settings and game setup: a panel in the middle of the window, over the main menu's background (background_m).
+   The screen scrolls when the panel is taller than it (a tablet, a small window); the panel's auto margins center it while
+   it fits. */
 .sve-menu {
   height: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  overflow-y: auto;
+  padding: 8px 0;
   background:
     var(--sve-background-shade),
     var(--sve-menu-image) center / cover no-repeat,
     var(--sve-backdrop);
+}
+
+.sve-menu > * {
+  margin: auto;
 }
 
 .sve-menu-panel {
@@ -254,6 +262,13 @@ option {
   margin: 0 0 10px;
   color: var(--sve-muted);
   font-size: 13px;
+}
+
+/* The program's version, under the subtitle: players compare it to play together online. */
+.sve-menu-version {
+  margin: -8px 0 6px;
+  color: var(--sve-muted);
+  font-size: 12px;
 }
 
 .sve-menu-buttons {
@@ -2982,17 +2997,7 @@ option {
     --sve-left-width: 0px;
   }
 
-  /* The menus: smaller, and they scroll when still too tall (centered while they fit). */
-  .sve-menu {
-    overflow-y: auto;
-    align-items: flex-start;
-    padding: 8px 0;
-  }
-
-  .sve-menu > * {
-    margin: auto;
-  }
-
+  /* The menus: smaller (they scroll when still too tall, as on any screen). */
   .sve-menu-panel {
     padding: 14px 24px;
     gap: 8px;
@@ -3056,8 +3061,9 @@ option {
   right: 8px;
 }
 
-/* A finger on the table: no scrolling, zooming or long-press menu of the browser (dragging a card is the table's). */
-.sve-game-compact .sve-table {
+/* A finger on the table (a phone, a tablet): no scrolling, zooming or long-press menu of the browser (dragging a card is
+   the table's). Its windows scroll on their own: they are scroll containers. */
+.sve-table {
   touch-action: none;
   -webkit-touch-callout: none;
 }

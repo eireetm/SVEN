@@ -34,6 +34,8 @@ async function connectByHand(host: Page, guest: Page): Promise<void> {
   for (const page of [host, guest]) {
     await expect(page.getByTestId("online-connected")).toBeVisible({ timeout: 60_000 });
     await expect(page.getByTestId("online-same")).toHaveText("Both programs are the same version (cards, rules, restriction lists).");
+    // Each says its version and platform (a person compares them when two programs can't play together).
+    await expect(page.getByTestId("online-versions")).toHaveText(/^Versions: yours [\d.]+ · PC, theirs [\d.]+ · PC$/);
   }
 }
 

@@ -8,6 +8,7 @@
 import type { Catalog } from "../app/catalog";
 import { getSettings } from "../app/settings";
 import { engine, getApp } from "../app/store";
+import { APP_VERSION, PLATFORM } from "../app/version";
 import { DECK_FORMAT, toDeckList, type DeckFile } from "../decks/format";
 import type { FromWorker, GameOptions, RecordedInput } from "../engine/protocol";
 import { checkDeck } from "../formats/check";
@@ -31,7 +32,7 @@ declare const __ENGINE_FINGERPRINT__: string;
 export const ENGINE = typeof __ENGINE_FINGERPRINT__ === "string" ? __ENGINE_FINGERPRINT__ : "dev";
 
 // What this program tells the other one (the card data's fingerprint once the catalog is known).
-let hello: Hello = { t: "hello", version: PROTOCOL, cards: "", engine: ENGINE };
+let hello: Hello = { t: "hello", version: PROTOCOL, cards: "", engine: ENGINE, app: APP_VERSION, platform: PLATFORM };
 
 async function sha256(text: string): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
@@ -49,7 +50,7 @@ export async function cardsFingerprint(catalog: Catalog): Promise<string> {
 }
 
 export async function identify(catalog: Catalog): Promise<void> {
-  hello = { t: "hello", version: PROTOCOL, cards: await cardsFingerprint(catalog), engine: ENGINE };
+  hello = { t: "hello", version: PROTOCOL, cards: await cardsFingerprint(catalog), engine: ENGINE, app: APP_VERSION, platform: PLATFORM };
   // Connected before the fingerprint was ready: the other side learns it now.
   currentLink()?.send(hello);
   for (const w of watchers) w.link.send(hello);

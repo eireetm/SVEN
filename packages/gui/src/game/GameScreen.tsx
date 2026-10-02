@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useBack } from "../app/back";
-import { useCompact } from "../app/compact";
+import { useCompact, useTouch } from "../app/compact";
 import { engine, useApp } from "../app/store";
 import type { GameUpdate } from "../engine/protocol";
 import { hostApi } from "../host/api";
@@ -41,13 +41,15 @@ export function GameScreen({ onMenu, onNewGame, onReplays, onOnline }: Props) {
   const [tab, setTab] = useState<Tab>("log");
   const [sidebar, setSidebar] = useState(false);
   const compact = useCompact();
+  // Fingers (a phone, or a tablet with the wide layout): a long press reads a card (on a phone, in the drawer).
+  const touch = useTouch();
   const detailsOpen = useDetailsOpen();
   const drawer = compact && detailsOpen;
   const gameRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const root = gameRef.current;
-    return compact && root ? installLongPress(root) : undefined;
-  }, [compact, update === null]);
+    return touch && root ? installLongPress(root) : undefined;
+  }, [touch, update === null]);
   // Leaving the game closes the drawer (it is closed when a game is shown again).
   useEffect(() => () => setDetailsOpen(false), []);
   useBack(sidebar, () => setSidebar(false));
