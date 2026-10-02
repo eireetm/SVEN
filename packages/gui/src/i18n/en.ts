@@ -651,6 +651,7 @@ export const en = {
   "log.empty": "Nothing yet.",
   "log.turn": "Turn {n} — {player}",
   "log.gameStarted": "{player} goes first.",
+  "log.turnOrder": "{first} goes first, {second} goes second.",
   "log.mulligan.keep": "{player} keeps the hand.",
   "log.mulligan.redraw": "{player} redraws.",
   "log.phase": "{phase}",

@@ -6,6 +6,9 @@ import { join } from "node:path";
 import { firstPlayerOf, GameHost, type Scheduler } from "../src/engine/game-host";
 import type { FromWorker, GameOptions, GameUpdate, Replay, SeatController } from "../src/engine/protocol";
 import { parseDeckFile, toDeckList } from "../src/decks/format";
+import { Catalog } from "../src/app/catalog";
+import { describeEntry } from "../src/game/log/format";
+import { translate } from "../src/i18n";
 
 // The engine worker's logic, run in Node with a manual scheduler (bots answer when the test lets them).
 const engine = createEngine({ cards: ALL_CARDS, scripts: ALL_SCRIPTS });
@@ -110,6 +113,22 @@ describe("GameHost (engine worker logic)", () => {
     h.host.handle({ kind: "answer", seat, answer: { type: "confirm", yes: true } });
     expect(h.errors().length).toBe(2);
     expect(h.last().inputCount).toBe(0);
+  });
+
+  it("logs who goes first and who second as soon as it is chosen, before the redraws (CR 6.2.1.6)", () => {
+    const h = harness(["human", "human"]);
+    h.host.handle({ kind: "start", options: h.options });
+    const chooser = h.last().decision!.decision.player;
+    h.host.handle({ kind: "answer", seat: chooser, answer: { type: "chooseTurnOrder", goFirst: false } });
+    const update = h.last();
+    expect(update.decision?.decision.type).toBe("mulligan");
+    const entry = h.messages.flatMap((m) => (m.kind === "update" ? m.update.log : [])).find((e) => e.event.type === "turnOrderChosen")!;
+    const catalog = new Catalog(engine.db.all().map((def) => ({ ...def, status: engine.implementationStatus(def.id) })));
+    const line = (lang: "zh" | "en") =>
+      describeEntry(entry, { t: (key, params) => translate(lang, key, params), catalog, lang: "cn", uiLang: lang, update }, false)?.text;
+    const [first, second] = [2 - chooser, chooser + 1];
+    expect(line("zh")).toBe(`玩家 ${first}先手，玩家 ${second}后手。`);
+    expect(line("en")).toBe(`Player ${first} goes first, Player ${second} goes second.`);
   });
 
   it("rewinds to an earlier input and loads replays, reproducing the same game exactly", () => {

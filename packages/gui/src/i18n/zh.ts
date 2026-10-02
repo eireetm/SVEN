@@ -654,6 +654,7 @@ export const zh: Record<MessageKey, string> = {
   "log.empty": "还没有记录。",
   "log.turn": "第 {n} 回合 — {player}",
   "log.gameStarted": "{player}先手。",
+  "log.turnOrder": "{first}先手，{second}后手。",
   "log.mulligan.keep": "{player}保留手牌。",
   "log.mulligan.redraw": "{player}重抽。",
   "log.phase": "{phase}",

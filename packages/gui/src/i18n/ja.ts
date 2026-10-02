@@ -655,6 +655,7 @@ export const ja: Record<MessageKey, string> = {
   "log.empty": "まだありません。",
   "log.turn": "{n}ターン目 — {player}",
   "log.gameStarted": "{player}が先攻。",
+  "log.turnOrder": "{first}が先攻、{second}が後攻。",
   "log.mulligan.keep": "{player}は手札をそのままにした。",
   "log.mulligan.redraw": "{player}は引き直した。",
   "log.phase": "{phase}",

@@ -53,6 +53,11 @@ export function describeEntry(entry: LogEntry, ctx: LogContext, showAll: boolean
       return line(t("log.turn", { n: event.turn, player: player(event.player) }), "turn");
     case "gameStarted":
       return line(t("log.gameStarted", { player: player(event.firstPlayer) }));
+    case "turnOrderChosen": {
+      // CR 6.2.1.6: who goes first and who second, as soon as it is chosen (before the redraws, 6.2.1.8).
+      const first = (event.goFirst ? event.player : 1 - event.player) as 0 | 1;
+      return line(t("log.turnOrder", { first: player(first), second: player((1 - first) as 0 | 1) }));
+    }
     case "mulligan":
       return line(t(event.redraw ? "log.mulligan.redraw" : "log.mulligan.keep", { player: player(event.player) }));
     case "cardsMoved":
