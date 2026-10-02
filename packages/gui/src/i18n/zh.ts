@@ -13,7 +13,7 @@ export const zh: Record<MessageKey, string> = {
 
   "menu.title": "Shadowverse: Evolve NEXT",
   "menu.subtitle": "欧丝先辈的对战工坊",
-  "menu.version": "版本 {version}",
+  "settings.version": "Shadowverse: Evolve NEXT 版本 {version}",
   "menu.playAi": "对战 AI",
   "menu.settings": "设置",
   "menu.continue": "继续对局",

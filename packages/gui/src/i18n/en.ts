@@ -9,7 +9,7 @@ export const en = {
 
   "menu.title": "Shadowverse: Evolve NEXT",
   "menu.subtitle": "Eudie Senpai's SVE Workshop",
-  "menu.version": "Version {version}",
+  "settings.version": "Shadowverse: Evolve NEXT {version}",
   "menu.playAi": "Play vs AI",
   "menu.settings": "Settings",
   "menu.continue": "Continue the game",

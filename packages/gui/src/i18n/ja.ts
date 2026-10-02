@@ -14,7 +14,7 @@ export const ja: Record<MessageKey, string> = {
 
   "menu.title": "Shadowverse: Evolve NEXT",
   "menu.subtitle": "エース先輩のSVE工房",
-  "menu.version": "バージョン {version}",
+  "settings.version": "Shadowverse: Evolve NEXT バージョン {version}",
   "menu.playAi": "AI と対戦",
   "menu.settings": "設定",
   "menu.continue": "対戦を続ける",

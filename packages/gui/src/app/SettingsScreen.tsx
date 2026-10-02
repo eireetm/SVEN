@@ -5,6 +5,7 @@ import { engine } from "./store";
 import { applyUiTransparency, currentUiTransparency, loadResources } from "../resources/resources";
 import { updateSettings, useSettings, type CardLang, type UiLang } from "./settings";
 import { settingsFilePath } from "./settings-file";
+import { APP_VERSION } from "./version";
 
 type ResourceStatus =
   | { kind: "idle" }
@@ -204,6 +205,9 @@ export function SettingsScreen({ onBack }: { onBack: () => void }) {
         <button type="button" className="sve-menu-button" onClick={onBack}>
           {t("common.back")}
         </button>
+        <p className="sve-settings-version" data-testid="settings-version">
+          {t("settings.version", { version: APP_VERSION })}
+        </p>
       </div>
     </div>
   );

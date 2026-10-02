@@ -9,6 +9,8 @@ test("the main menu leads to the settings, where the interface language changes 
   await page.goto("/");
   await expect(page.getByTestId("menu-play")).toHaveText("Play vs AI");
   await page.getByTestId("menu-settings").click();
+  // The program's version is at the bottom of the settings (players compare it to play together online).
+  await expect(page.getByTestId("settings-version")).toHaveText(/^Shadowverse: Evolve NEXT \d+\.\d+\.\d+$/);
   await page.getByTestId("settings-ui-lang").selectOption("zh");
   // The interface's transparency: 30% makes panels 0.7 opaque; "default" gives the style's own back.
   const alpha = () => page.evaluate<string>("getComputedStyle(document.documentElement).getPropertyValue('--sve-ui-alpha').trim()");

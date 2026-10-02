@@ -264,9 +264,9 @@ option {
   font-size: 13px;
 }
 
-/* The program's version, under the subtitle: players compare it to play together online. */
-.sve-menu-version {
-  margin: -8px 0 6px;
+/* The program's version, at the bottom of the settings: players compare it to play together online. */
+.sve-settings-version {
+  margin: 0;
   color: var(--sve-muted);
   font-size: 12px;
 }

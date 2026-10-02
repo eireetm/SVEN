@@ -259,7 +259,7 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
 - **房间号**：一方创建房间，把 6 位房间号发给对方。双方借用公共的免费服务（Nostr、MQTT、BitTorrent）找到对方，然后用 WebRTC 直连。
 - **手动连接**：房间号连不上时，双方互相发送连接码（`SVE1-O-…` / `SVE1-A-…`）。
 - **连不上时**：可以在设置里填自己的 TURN 中转；"检测网络"会显示这台电脑的网络情况。
-- **版本**：两边的联机协议、卡牌（定义、实现状态和禁卡表）和规则代码的指纹都相同才能开始，联机界面会显示是否相同；版本号本身不比。各自 `public/` 里的资源（卡图、音效、背景、字体、`theme.css`）、设置、界面语言、卡组都不用一样。同一版本的电脑版和安卓版可以互相联机；主菜单和联机界面都显示版本号，连不上时先确认双方的版本一样。
+- **版本**：两边的联机协议、卡牌（定义、实现状态和禁卡表）和规则代码的指纹都相同才能开始，联机界面会显示是否相同；版本号本身不比。各自 `public/` 里的资源（卡图、音效、背景、字体、`theme.css`）、设置、界面语言、卡组都不用一样。同一版本的电脑版和安卓版可以互相联机；设置页最下面和联机界面都显示版本号，连不上时先确认双方的版本一样。
 - **对局**：双方各自运行同一局，只同步每一步的回答。断线后可以重连，接着打。
 - **观战**：知道房间号的人点"观战"进房间看对局，每个房间最多 2 人。
   - 只能看双方都看得到的信息（看不到手牌），可以换边；不能操作，也不能发言（能看到聊天）。
@@ -601,7 +601,7 @@ Sound effects (26):
 - **Room code**: one player creates a room and sends the 6-letter code to the other. Both find each other through free public services (Nostr, MQTT, BitTorrent), then connect directly with WebRTC.
 - **Manual connection**: when a room code doesn't connect, the players exchange connection codes (`SVE1-O-…` / `SVE1-A-…`).
 - **If you can't connect**: set your own TURN relay in the settings; "Check the network" shows what this computer can reach.
-- **Versions**: a game starts only when both programs have the same online protocol and the same fingerprints of the cards (definitions, implementation status, restriction lists) and of the rules code; the online screen says whether they do. The version number itself isn't compared. The resources in each one's `public/` (card pictures, sounds, backgrounds, fonts, `theme.css`), the settings, the interface language and the decks can all differ. The PC program and the Android app of one version play each other; the main menu and the online screen show the version: when two can't connect, check that both have the same one.
+- **Versions**: a game starts only when both programs have the same online protocol and the same fingerprints of the cards (definitions, implementation status, restriction lists) and of the rules code; the online screen says whether they do. The version number itself isn't compared. The resources in each one's `public/` (card pictures, sounds, backgrounds, fonts, `theme.css`), the settings, the interface language and the decks can all differ. The PC program and the Android app of one version play each other; the bottom of the settings page and the online screen show the version: when two can't connect, check that both have the same one.
 - **The game**: each program runs the same game and only the answers are exchanged. After a lost connection, reconnect and play on.
 - **Watching**: anyone with the room code can click "Watch" to watch the room's games, 2 spectators a room at most.
   - Spectators see only what both players can see (no hands) and can swap sides; they can't play or chat (they read the chat).

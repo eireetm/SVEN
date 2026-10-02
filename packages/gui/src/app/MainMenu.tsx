@@ -1,7 +1,6 @@
 import { useT } from "../i18n";
 import { useOnline } from "../net/state";
 import { useApp } from "./store";
-import { APP_VERSION } from "./version";
 
 interface Props {
   onPlayAi: () => void;
@@ -35,9 +34,6 @@ export function MainMenu({ onPlayAi, onDeckBuilder, onReplays, onOnline, onSetti
       <div className="sve-menu-panel">
         <h1 className="sve-menu-title">{t("menu.title")}</h1>
         <p className="sve-menu-subtitle">{t("menu.subtitle")}</p>
-        <p className="sve-menu-version" data-testid="menu-version">
-          {t("menu.version", { version: APP_VERSION })}
-        </p>
         <nav className="sve-menu-buttons">
           {onContinue ? (
             <button type="button" className="sve-menu-button" onClick={onContinue} data-testid="menu-continue">
