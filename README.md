@@ -16,13 +16,13 @@
   - 纯 TypeScript，结果确定，可以在没有界面的环境里运行，不依赖界面或文件。
   - 按综合规则（v1.26.1）逐条实现，规则判断都注明条款编号。
   - 支持 57 个卡包的 3,689 个卡牌定义，共 7,564 个印刷版本，异画共用同一个定义。
-  - BP22 是先行测试版：只有日文和中文数据（仓库旁边的 `BP22.json`，官方日文卡表），按日文实现、中文对照；英文卡名和文本暂时显示为 `unavailable`，还没有卡图。等英文数据出来后补齐。
+  - BP22 是先行测试版：只有日文和中文数据（仓库旁边的 `BP22.json`，官方日文卡表），按日文实现、中文对照；英文卡名和文本暂时显示为 `unavailable`。等英文数据出来后补齐。
 - **Bot（`@sve/bot`）**：界面上有四个难度，只用 Core 的公开 API：
   - Bot-简单：贪心，每个决策都模拟所有候选回答，评估局面后选最好的；
   - Bot-中等：规划整个回合，再模拟对手的下一回合，只用玩家看得到的信息；
-  - Bot-困难：同样规划，但直接读完整的局面（对手的手牌、双方牌组的顺序），**会作弊**；
-  - Bot-困难 beta：在困难的基础上加了单独的斩杀搜索、按费用曲线换牌、主战者体力的价值曲线，同样**会作弊**。
-  - 哪些 AI 作弊只写在这里，界面上不标明。另有试验版 medium-beta（中等加上同样三项，不作弊），只在 `npm run bot:arena` 里。
+  - Bot-困难：同样规划，但作弊，直接透过引擎读完整的局面（对手的手牌、双方牌组的顺序）；
+  - Bot-困难 beta：在困难的基础上加了单独的斩杀搜索、按费用曲线换牌、主战者体力的价值曲线，同样读对手信息。
+  - 另有试验版 medium-beta（中等加上同样三项，不作弊），只在 `npm run bot:arena` 里。
 - **GUI（`@sve/gui`）**：Web 界面（Vite + React），引擎和 Bot 在 Web Worker 里运行。
   - 牌桌按场地图摆放，点击或拖拽操作，有动画、箭头和音效；
   - 组卡界面：筛选、异画、赛制和禁卡表、卡组码；
@@ -275,7 +275,7 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
 
 ### 发行版
 
-给朋友用的版本（例如 0.1.2）有 PC 版和安卓版两种。
+有 PC 版和安卓版两种。
 
 - **版本号**：`packages/gui/package.json` 的 `version`，PC 版和安卓版都用它，发新版前先改。
   - 安卓的 versionCode 按版本号算（0.1.2 → 102，0.2.0 → 200）。每次都比上一次大，朋友才能直接覆盖安装，并保留数据。
@@ -288,7 +288,7 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
     - 示例卡组、空的 `replays/` 和 `public/` 文件夹结构；
     - 三语的 `README.txt`，以及写着版本、提交和引擎指纹的 `VERSION.txt`。
   - `--public <文件夹>`：把这个文件夹里的资源一起放进 `public/`（默认不放）。
-  - 朋友的电脑要装 Node.js 20 以上。
+  - 需要 Node.js 20 以上。
   - **设置文件 `settings.ini`**：第一次启动时在这个文件夹里生成（带着浏览器里原有的设置）。
     - 里面是设置页的各项（语言、界面透明度、音量、快速提示、TURN 中转）和调试页的几项（动画、Bot 速度、手动选择卡片位置、手动调试），每项上面有三语的说明。
     - 文件优先：启动时读取，缺少的项和写错的值用默认值；在游戏里改的设置会写回文件，只改那一项，其他的行和注释保留。
@@ -333,7 +333,7 @@ tools/                  卡牌数据构建、查卡、条款提取和核对、�
 
 - **构建**：`npm run ios:ipa`，得到不签名的 IPA `SVEN-<版本>-ios.ipa`（在仓库旁边；`--out <文件>` 可改，`--public <文件夹>` 和安卓版一样把资源打包进 App）。
   - Xcode 只能在 Mac 上运行：在别的系统上，这个命令只做到网页部分和 Capacitor 的拷贝（`packages/gui/ios/`）。
-  - 没有 Mac 时用 GitHub 的工作流：仓库页面 › Actions › "iOS IPA" › Run workflow，跑完后在这次运行的 Artifacts 里下载 `SVEN-ios`（里面就是 IPA）。
+  - 没有 Mac 时可采用 GitHub 的工作流：仓库页面 › Actions › "iOS IPA" › Run workflow，跑完后在这次运行的 Artifacts 里下载 `SVEN-ios`（里面就是 IPA）。
 - **安装**：IPA 没有签名，用自己的 Apple ID 签名安装（例如 AltStore、Sideloadly）。
 - **设备上的文件**：在"文件"App 的"我的 iPhone（iPad）› SVE NEXT"里：`public/`（资源：用"文件"App 拷进去，或者在设置页导入 zip）、`decks/`、`replays/`、`exports/`。
 - **要求**：iOS / iPadOS 16.4 以上。横屏全屏，屏幕常亮；iPad 用宽屏排版、手指操作（见"安卓版"的平板）。
@@ -370,13 +370,13 @@ An unofficial rules engine, AI and client for the *Shadowverse: Evolve* trading 
   - Plain TypeScript and deterministic. It runs headless, with no dependency on a UI or on files.
   - It implements the Comprehensive Rules (v1.26.1) clause by clause, and every rules decision cites its clause number.
   - It supports 3,689 card definitions from 57 sets, 7,564 printings in all; alternate arts share one definition.
-  - BP22 is a pre-release set: only Japanese and Chinese data exist (`BP22.json` next to the repository, the official Japanese card list). It is implemented from the Japanese text, checked against the Chinese; English names and texts show `unavailable` for now, and there are no card images yet. They will be filled in once the English data is out.
+  - BP22 is a pre-release set: only Japanese and Chinese data exist (`BP22.json` next to the repository, the official Japanese card list). It is implemented from the Japanese text, checked against the Chinese; English names and texts show `unavailable` for now. They will be filled in once the English data is out.
 - **Bot (`@sve/bot`)**: four levels in the interface, on the Core's public API only:
   - Bot-Easy: greedy. For each decision it simulates every candidate answer and picks the best-scoring result.
   - Bot-Medium: plans its whole turn, then plays out the opponent's next turn. It uses only what its player can see.
-  - Bot-Hard: plans the same way, but reads the whole game (the opponent's hand, both decks in order): **it cheats**.
-  - Bot-Hard beta: Bot-Hard with a separate lethal search, a mulligan by the cost curve and the leader's defense valued on a curve: **it cheats** too.
-  - Which bots cheat is said only here, not in the interface. A trial medium-beta (Bot-Medium with the same three, fair) is only in `npm run bot:arena`.
+  - Bot-Hard: plans the same way, but cheats: reads the whole game (the opponent's hand, both decks in order).
+  - Bot-Hard beta: Bot-Hard with a separate lethal search, a mulligan by the cost curve and the leader's defense valued on a curve: also read the whole game.
+  - A trial medium-beta (Bot-Medium with the same three, fair) is only in `npm run bot:arena`.
 - **GUI (`@sve/gui`)**: a web interface (Vite + React). The engine and the bots run in a Web Worker.
   - A table laid out on the playmat picture, played by clicking and dragging, with animations, arrows and sounds.
   - A deck builder with filters, alternate arts, formats and restriction lists, and deck codes.
@@ -629,10 +629,10 @@ Sound effects (26):
 
 ### Releases
 
-The versions for friends (e.g. 0.1.2) come in two kinds: for PCs and for Android.
+Come in two kinds: for PCs and for Android.
 
 - **Version**: the `version` in `packages/gui/package.json`, used by both. Change it before building a new release.
-  - Android's versionCode comes from it (0.1.2 → 102, 0.2.0 → 200). It must grow every time, so friends can install the new APK over the old one and keep their data.
+  - Android's versionCode comes from it (0.1.2 → 102, 0.2.0 → 200). It must grow every time, so people can install the new APK over the old one and keep their data.
 - **PC**: `npm run release:pc -- --zip`
   - It writes a folder `SVEN-<version>-pc/` next to the repository, and a zip of it.
   - It never writes into an existing folder: pass another `--out <folder>`, or delete the old one first.
@@ -642,7 +642,7 @@ The versions for friends (e.g. 0.1.2) come in two kinds: for PCs and for Android
     - the sample decks, an empty `replays/`, and the `public/` folder structure;
     - `README.txt` in three languages, and `VERSION.txt` with the version, the commit and the engine fingerprint.
   - `--public <folder>`: copies that folder's resources into `public/` (none by default).
-  - Friends need Node.js 20 or newer.
+  - Requires Node.js 20 or newer.
   - **Settings file `settings.ini`**: written into the folder at the first start (with the settings the browser had).
     - It holds the settings page's settings (languages, interface transparency, volumes, the Quick pause, the TURN relay) and a few of the debug panel's (animations, bot speed, choosing card spots by hand, manual debugging), each with a comment in three languages.
     - The file comes first: it is read at the start (a missing key or a wrong value: the default), and a setting changed in the game is written back to it, that key only; other lines and comments stay.
@@ -687,7 +687,7 @@ The versions for friends (e.g. 0.1.2) come in two kinds: for PCs and for Android
 
 - **Build**: `npm run ios:ipa` makes an unsigned IPA, `SVEN-<version>-ios.ipa` next to the repository (`--out <file>` changes it; `--public <folder>` builds resources into the app, as for Android).
   - Xcode runs only on a Mac: elsewhere the command does the web part and Capacitor's copy (`packages/gui/ios/`) only.
-  - Without a Mac, use the GitHub workflow: the repository's Actions > "iOS IPA" > Run workflow, then download the artifact `SVEN-ios` (the IPA) from the run.
+  - Without a Mac, one can use the GitHub workflow: the repository's Actions > "iOS IPA" > Run workflow, then download the artifact `SVEN-ios` (the IPA) from the run.
 - **Install**: the IPA isn't signed; sign and install it with your own Apple ID (e.g. AltStore, Sideloadly).
 - **Files on the device**: in the Files app, On My iPhone (iPad) > SVE NEXT: `public/` (resources: copied with the Files app, or a zip imported in the settings), `decks/`, `replays/`, `exports/`.
 - **Requirements**: iOS / iPadOS 16.4 or later. Played sideways on the whole screen, which stays on; an iPad has the wide layout used with fingers (see the tablets under "Android app").
